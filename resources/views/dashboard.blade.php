@@ -14,4 +14,9 @@
             </div>
         </div>
     </div>
+    <div class="text-xs sm:text-sm md:text-lg lg:text-xl text-white">
+        This text changes size based on screen width.
+    </div>
+    <div class=""></div>
+
 </x-app-layout>

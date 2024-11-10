@@ -4,44 +4,34 @@
             {{ __('Add New Customer') }}
         </h2>
     </x-slot>
-    <div class="bootstrap-wrapper">
-        <div class="container">
-            <form action="{{ route('customers.store') }}" method="POST">
-                @csrf
-
-                <!-- customerFirstName -->
-                <div class="mb-3">
-                    <label for="firstname" class="form-label">First Name</label>
-                    <input type="text" class="form-control" id="firstname" name="customerFirstName" required>
-                </div>
-
-                <!-- customerLastName -->
-                <div class="mb-3">
-                    <label for="lastname" class="form-label">Last Name</label>
-                    <input type="text" class="form-control" id="lastname" name="customerLastName" required>
-                </div>
-
-                <!-- city -->
-                <div class="mb-3">
-                    <label for="city" class="form-label">City</label>
-                    <input type="text" class="form-control" id="city" name="city">
-                </div>
-
-                <!-- customerEmail -->
-                <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
-                    <input type="email" class="form-control" id="email" name="customerEmail">
-                </div>
-
-                <!-- customerPhoneNo -->
-                <div class="mb-3">
-                    <label for="phoneno" class="form-label">Phone Number</label>
-                    <input type="text" class="form-control" id="phoneno" name="customerPhoneNo" required>
-                </div>
-
-                <!-- button -->
-                <button type="submit" class="btn btn-primary">Add Customer</button>
-            </form>
+    <div class="container mx-auto px-4 py-6">
+        <div class="overflow-x-auto bg-white rounded-lg shadow-lg">
+            <table class="min-w-full table-auto text-left text-sm text-white-700">
+                <thead class="bg-gray-100 text-white-600">
+                    <tr>
+                        <th class="px-4 py-3 font-semibold">First Name</th>
+                        <th class="px-4 py-3 font-semibold">Last Name</th>
+                        <th class="px-4 py-3 font-semibold">City</th>
+                        <th class="px-4 py-3 font-semibold">Email</th>
+                        <th class="px-4 py-3 font-semibold">Phone Number</th>
+                        <th class="px-4 py-3 font-semibold">Created By</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    @foreach($customers as $customer)
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2">{{ $customer->customerFirstName }}</td>
+                            <td class="px-4 py-2">{{ $customer->customerLastName }}</td>
+                            <td class="px-4 py-2">{{ $customer->city }}</td>
+                            <td class="px-4 py-2">{{ $customer->customerEmail }}</td>
+                            <td class="px-4 py-2">{{ $customer->customerPhoneNo }}</td>
+                            <td class="px-4 py-2">{{ $customer->user->fullname }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
+    </div>
+
     </div>
 </x-app-layout>
