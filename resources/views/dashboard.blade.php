@@ -19,31 +19,74 @@
     </div>
     <div class=""></div>
 
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; padding: 2rem;">
-
-        <button class="feature-btn">Dashboard</button>
-        <button class="feature-btn">User Administration</button>
-        <button class="feature-btn">Balance Sheet</button>
-        <button class="feature-btn">Customers</button>
-        <button class="feature-btn">Products</button>
-        <button class="feature-btn">Stock</button>
-        <button class="feature-btn">Orders</button>
-        <button class="feature-btn">Carts</button>
-        <button class="feature-btn">Sales</button>
-        <button class="feature-btn">Delivery</button>
-        <button class="feature-btn">Projects</button>
-        <button class="feature-btn">Purchases</button>
-        <button class="feature-btn">Suppliers</button>
-        <button class="feature-btn">Expenses</button>
-        <button class="feature-btn">Invoices</button>
-        <button class="feature-btn">Reports</button>
-        <button class="feature-btn">Returns</button>
-        <button class="feature-btn">Payments</button>
-        <button class="feature-btn">Notifications</button>
-        <button class="feature-btn">Settings</button>
-        <button class="feature-btn">Analytics</button>
-        <button class="feature-btn">Support</button>
-
+    <div class="flex flex-col items-center gap-4 p-6">
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Dashboard
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            User Administration
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Balance Sheet
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Customers
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Products
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Stock
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Orders
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Carts
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Sales
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Delivery
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Projects
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Purchases
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Suppliers
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Expenses
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Invoices
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Reports
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Returns
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Payments
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Notifications
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Settings
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Analytics
+        </button>
+        <button class="feature-btn bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 w-full max-w-xs hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Support
+        </button>
     </div>
+
 
 </x-app-layout>
