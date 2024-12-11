@@ -108,14 +108,14 @@ class MakeResourceModelControllerMigrationFromTable extends Command
         // Index Method
         $controllerContent .= "    public function index()\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        \$items = {$modelName}::all();\n";
-        $controllerContent .= "        return view('{$table}.index', compact('items'));\n";
+        $controllerContent .= "        \$product = {$modelName}::all();\n";
+        $controllerContent .= "        return view('" . Str::plural($table) . ".index', compact('product'));\n";
         $controllerContent .= "    }\n\n";
 
         // Create Method
         $controllerContent .= "    public function create()\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        return view('{$table}.create');\n";
+        $controllerContent .= "        return view('" . Str::plural($table) . ".create');\n";
         $controllerContent .= "    }\n\n";
 
         // Store Method
@@ -135,13 +135,13 @@ class MakeResourceModelControllerMigrationFromTable extends Command
         // Show Method
         $controllerContent .= "    public function show({$modelName} \$" . Str::camel($modelName) . ")\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        return view('{$table}.show', ['" . Str::camel($modelName) . "' => \$" . Str::camel($modelName) . "]);\n";
+        $controllerContent .= "        return view('" . Str::plural($table) . ".show', ['" . Str::camel($modelName) . "' => \$" . Str::camel($modelName) . "]);\n";
         $controllerContent .= "    }\n\n";
 
         // Edit Method
         $controllerContent .= "    public function edit({$modelName} \$" . Str::camel($modelName) . ")\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        return view('{$table}.edit', ['" . Str::camel($modelName) . "' => \$" . Str::camel($modelName) . "]);\n";
+        $controllerContent .= "        return view('" . Str::plural($table) . ".edit', ['" . Str::camel($modelName) . "' => \$" . Str::camel($modelName) . "]);\n";
         $controllerContent .= "    }\n\n";
 
         // Update Method
@@ -269,26 +269,158 @@ class MakeResourceModelControllerMigrationFromTable extends Command
     }
 
     protected function generateViews($table)
-    {
-        $viewDirectory = resource_path('views/' . Str::plural(Str::studly($table)));
+{
+    $viewDirectory = resource_path('views/' . Str::plural(Str::studly($table)));
 
-        // Create views directory if not exists
-        if (!File::exists($viewDirectory)) {
-            File::makeDirectory($viewDirectory, 0755, true);
-        }
-
-        // Generate basic CRUD views
-        $views = [
-            'index' => "<!-- Index View for {$table} -->\n\n@extends('layouts.app')\n\n@section('content')\n    <h1>Index for {$table}</h1>\n    <!-- Add Table/List of {$table} records here -->\n@endsection",
-            'create' => "<!-- Create View for {$table} -->\n\n@extends('layouts.app')\n\n@section('content')\n    <h1>Create {$table}</h1>\n    <!-- Add Create Form for {$table} here -->\n@endsection",
-            'edit' => "<!-- Edit View for {$table} -->\n\n@extends('layouts.app')\n\n@section('content')\n    <h1>Edit {$table}</h1>\n    <!-- Add Edit Form for {$table} here -->\n@endsection",
-            'show' => "<!-- Show View for {$table} -->\n\n@extends('layouts.app')\n\n@section('content')\n    <h1>Show {$table} Details</h1>\n    <!-- Display details for one {$table} record here -->\n@endsection"
-        ];
-
-        foreach ($views as $viewName => $viewContent) {
-            File::put($viewDirectory . "/{$viewName}.blade.php", $viewContent);
-        }
-
-        $this->info("Views created for {$table}");
+    // Create views directory if not exists
+    if (!File::exists($viewDirectory)) {
+        File::makeDirectory($viewDirectory, 0755, true);
     }
+
+    // Get table columns
+    $columns = Schema::getColumnListing($table);
+
+    // Generate basic CRUD views
+    $views = [
+        'index' => $this->generateIndexView($table, $columns),
+        'create' => $this->generateCreateView($table, $columns),
+        'edit' => $this->generateEditView($table, $columns),
+        'show' => $this->generateShowView($table, $columns)
+    ];
+
+    // Create the views
+    foreach ($views as $viewName => $viewContent) {
+        File::put($viewDirectory . "/{$viewName}.blade.php", $viewContent);
+    }
+
+    $this->info("Views created for {$table}");
+}
+
+protected function generateIndexView($table, $columns)
+{
+    $columnHeaders = implode('', array_map(function ($column) {
+        return "<th>" . ucfirst(str_replace('_', ' ', $column)) . "</th>";
+    }, $columns));
+
+    $columnData = implode('', array_map(function ($column) use ($table) {
+        return "<td>{{ \${$table}->{$column} }}</td>";
+    }, $columns));
+
+    return <<<EOT
+<!-- Index View for {$table} -->
+
+@extends('layouts.app')
+
+@section('content')
+    <h1 class="text-3xl font-bold mb-4">Index for product</h1>
+
+    <!-- Buttons for different actions -->
+    <div class="mb-4">
+        <a href="{{ route('product.create') }}" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-700">Create New Item</a>
+        <a href="{{ route('product.index') }}" class="bg-green-500 text-white py-2 px-4 rounded hover:bg-green-700">View All Items</a>
+    </div>
+
+    <table class="min-w-full table-auto bg-gray-800 text-white">
+        <thead>
+            <tr class="border-b border-gray-700">
+                {$columnHeaders}
+                <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(\${$table} as \${$table})
+                <tr class="hover:bg-gray-700">
+                    {$columnData}
+                    <td class="px-4 py-2">
+                        <a href="{{ route('{$table}.edit', \${$table}->id) }}" class="text-blue-400 hover:text-blue-600">Edit</a>
+                        <form action="{{ route('{$table}.destroy', \${$table}->id) }}" method="POST" class="inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-red-500 hover:text-red-700">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endsection
+
+EOT;
+}
+
+protected function generateCreateView($table, $columns)
+{
+    $formFields = implode('', array_map(function ($column) {
+        if ($column == 'id') return '';  // Skip the ID field
+        return "<label for='{$column}'>" . ucfirst(str_replace('_', ' ', $column)) . "</label>
+                <input type='text' name='{$column}' id='{$column}' required><br><br>";
+    }, $columns));
+
+    return <<<EOT
+<!-- Create View for {$table} -->
+
+@extends('layouts.app')
+
+@section('content')
+    <h1>Create {$table}</h1>
+    <form action="{{ route('{$table}.store') }}" method="POST">
+        @csrf
+        {$formFields}
+        <button type="submit">Create</button>
+    </form>
+@endsection
+EOT;
+}
+
+protected function generateEditView($table, $columns)
+{
+    $formFields = implode('', array_map(function ($column) use ($table) {
+        if ($column == 'id') return '';  // Skip the ID field
+        return "<label for='{$column}'>" . ucfirst(str_replace('_', ' ', $column)) . "</label>
+                <input type='text' name='{$column}' id='{$column}' value='{{ \${$table}->{$column} }}' required><br><br>";
+    }, $columns));
+
+    return <<<EOT
+<!-- Edit View for {$table} -->
+
+@extends('layouts.app')
+
+@section('content')
+    <h1>Edit {$table}</h1>
+    <form action="{{ route('{$table}.update', \${$table}->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        {$formFields}
+        <button type="submit">Update</button>
+    </form>
+@endsection
+EOT;
+}
+
+protected function generateShowView($table, $columns)
+{
+    $columnData = implode('', array_map(function ($column) use ($table) {
+        return "<p><strong>" . ucfirst(str_replace('_', ' ', $column)) . ":</strong> {{ \${$table}->{$column} }}</p>";
+    }, $columns));
+
+    return <<<EOT
+<!-- Show View for {$table} -->
+
+@extends('layouts.app')
+
+@section('content')
+    <h1>Show {$table} Details</h1>
+    {$columnData}
+    <a href="{{ route('{$table}.edit', \${$table}->id) }}">Edit</a>
+    <form action="{{ route('{$table}.destroy', \${$table}->id) }}" method="POST">
+        @csrf
+        @method('DELETE')
+        <button type="submit">Delete</button>
+    </form>
+@endsection
+EOT;
+}
+
+
+
 }
