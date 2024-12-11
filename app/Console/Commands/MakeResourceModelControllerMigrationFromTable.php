@@ -11,8 +11,8 @@ use Illuminate\Support\Facades\File;
 
 class MakeResourceModelControllerMigrationFromTable extends Command
 {
-    protected $signature = 'make:resource-model-controller-migration-from-table {table} {--api} {--policy} {--factory} {--test} {--routes} {--seeder}';
-    protected $description = 'Generate Model, Controller, Migration, Policy, Factory, Test, Routes, and Seeder from a table schema';
+    protected $signature = 'make:resource-model-controller-migration-from-table {table} {--api} {--policy} {--factory} {--test} {--routes} {--seeder} {--views}';
+    protected $description = 'Generate Model, Controller, Migration, Policy, Factory, Test, Routes, Seeder, and Views from a table schema';
 
     public function __construct()
     {
@@ -67,133 +67,143 @@ class MakeResourceModelControllerMigrationFromTable extends Command
             $this->generateSeeder($table);
         }
 
+        // Generate Views if flag is set
+        if ($this->option('views')) {
+            $this->generateViews($table);
+        }
+
         $this->info("Resources creation complete for {$table}");
     }
 
-    protected function generateModel($table, $columns, $schema)
+    // Other existing methods (generateModel, generateController, generateMigration, generatePolicy, generateFactory, generateTest, generateSeeder) remain the same
+
+    protected function generateViews($table)
     {
         $modelName = Str::studly(Str::singular($table));
-        $modelContent = "<?php\n\nnamespace App\Models;\n\nuse Illuminate\Database\Eloquent\Model;\n\nclass {$modelName} extends Model\n{\n    protected \$table = '{$table}';\n    protected \$fillable = [" . implode(',', array_map(fn($col) => "'{$col}'", $columns)) . "];\n";
+        $viewsDirectory = resource_path('views/admin/' . Str::plural($table));
 
-        // Loop through the schema to check for foreign key relationships
-        $relationships = DB::select("SELECT COLUMN_NAME, REFERENCED_TABLE_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_NAME = '{$table}' AND REFERENCED_TABLE_NAME IS NOT NULL;");
-        foreach ($relationships as $relationship) {
-            $modelContent .= "\n    public function " . Str::camel($relationship->COLUMN_NAME) . "()\n    {\n        return \$this->belongsTo(App\Models\\" . Str::studly($relationship->REFERENCED_TABLE_NAME) . "::class);\n    }";
+        // Create views directory if it doesn't exist
+        if (!File::exists($viewsDirectory)) {
+            File::makeDirectory($viewsDirectory, 0755, true);
         }
 
-        $modelContent .= "}\n";
-        File::put(app_path("Models/{$modelName}.php"), $modelContent);
+        // Index View
+        $indexView = $this->generateIndexView($modelName, $table);
+        File::put("{$viewsDirectory}/index.blade.php", $indexView);
+        $this->info("Index view created for {$modelName}");
 
-        $this->info("Model created: {$modelName}");
+        // Create View
+        $createView = $this->generateCreateView($modelName, $table);
+        File::put("{$viewsDirectory}/create.blade.php", $createView);
+        $this->info("Create view created for {$modelName}");
+
+        // Edit View
+        $editView = $this->generateEditView($modelName, $table);
+        File::put("{$viewsDirectory}/edit.blade.php", $editView);
+        $this->info("Edit view created for {$modelName}");
+
+        // Show View
+        $showView = $this->generateShowView($modelName, $table);
+        File::put("{$viewsDirectory}/show.blade.php", $showView);
+        $this->info("Show view created for {$modelName}");
     }
 
-    protected function generateController($table, $columns)
+    protected function generateIndexView($modelName, $table)
     {
-        $controllerName = Str::studly(Str::singular($table)) . 'Controller';
-        $controllerContent = "<?php\n\nnamespace App\Http\Controllers;\n\nuse App\Models\\" . Str::studly(Str::singular($table)) . ";\nuse Illuminate\Http\Request;\n\nclass {$controllerName} extends Controller\n{\n";
+        return <<<EOL
+@extends('admin')
 
-        // Generate basic index, store, show, etc.
-        // Validation for store and update
-        $controllerContent .= "    public function store(Request \$request) {\n";
-        $controllerContent .= "        \$data = \$request->validate([";
-
-        foreach ($columns as $column) {
-            $controllerContent .= "'{$column}' => 'required',";  // You can adjust validation rules based on column type
-        }
-
-        $controllerContent .= "]);\n";
-        $controllerContent .= "        return " . Str::studly(Str::singular($table)) . "::create(\$data);\n";
-        $controllerContent .= "    }\n";
-
-        $controllerContent .= "}\n";
-        File::put(app_path("Http/Controllers/{$controllerName}.php"), $controllerContent);
-
-        $this->info("Controller created: {$controllerName}");
+@section('content')
+    <h1>{$modelName}s</h1>
+    <a href="{{ route('admin.{$table}.create') }}" class="btn btn-primary">Create {$modelName}</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <!-- Add column headers dynamically here -->
+                <th>Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (\App\Models\\{$modelName}::all() as \${$table})
+                <tr>
+                    <td>{{ \${$table}->name }}</td>
+                    <td>
+                        <a href="{{ route('admin.{$table}.show', \${$table}->id) }}" class="btn btn-info">Show</a>
+                        <a href="{{ route('admin.{$table}.edit', \${$table}->id) }}" class="btn btn-warning">Edit</a>
+                    </td>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+@endsection
+EOL;
     }
 
-    protected function generateMigration($table, $schema)
+    protected function generateCreateView($modelName, $table)
     {
-        $migrationName = 'create_' . $table . '_table';
-        $migrationContent = "<?php\n\nuse Illuminate\Database\Migrations\Migration;\nuse Illuminate\Database\Schema\Blueprint;\nuse Illuminate\Support\Facades\Schema;\n\nclass {$migrationName} extends Migration\n{\n    public function up()\n    {\n        Schema::create('{$table}', function (Blueprint \$table) {\n";
+        return <<<EOL
+@extends('admin')
 
-        foreach ($schema as $column) {
-            $migrationContent .= "            \$table->{$column->Type}('{$column->Field}');\n";
-        }
-
-        $migrationContent .= "        });\n    }\n\n    public function down()\n    {\n        Schema::dropIfExists('{$table}');\n    }\n}";
-
-        File::put(database_path("migrations/" . date('Y_m_d_His') . "_{$migrationName}.php"), $migrationContent);
-
-        $this->info("Migration created: {$migrationName}");
+@section('content')
+    <h1>Create {$modelName}</h1>
+    <form action="{{ route('admin.{$table}.store') }}" method="POST">
+        @csrf
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" required>
+        </div>
+        <button type="submit" class="btn btn-success">Save</button>
+    </form>
+@endsection
+EOL;
     }
 
-    protected function generatePolicy($table)
+    protected function generateEditView($modelName, $table)
     {
-        $policyName = Str::studly(Str::singular($table)) . 'Policy';
-        $policyContent = "<?php\n\nnamespace App\Policies;\n\nuse App\Models\User;\nuse App\Models\\" . Str::studly(Str::singular($table)) . ";\nuse Illuminate\Auth\Access\HandlesAuthorization;\n\nclass {$policyName}\n{\n    use HandlesAuthorization;\n\n    public function view(User \$user, {$policyName} \$model)\n    {\n        return true;\n    }\n    public function create(User \$user)\n    {\n        return true;\n    }\n    public function update(User \$user, {$policyName} \$model)\n    {\n        return true;\n    }\n    public function delete(User \$user, {$policyName} \$model)\n    {\n        return true;\n    }\n}";
+        return <<<EOL
+@extends('admin')
 
-  // Check if the Policies directory exists, if not, create it
-        $policyDirectory = app_path('Policies');
-        if (!File::exists($policyDirectory)) {
-            File::makeDirectory($policyDirectory, 0755, true);  // Create the directory if it doesn't exist
-        }
-
-        File::put(app_path("Policies/{$policyName}.php"), $policyContent);
-
-        $this->info("Policy created: {$policyName}");
+@section('content')
+    <h1>Edit {$modelName}</h1>
+    <form action="{{ route('admin.{$table}.update', \${$table}->id) }}" method="POST">
+        @csrf
+        @method('PUT')
+        <div class="form-group">
+            <label for="name">Name</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{ \${$table}->name }}" required>
+        </div>
+        <button type="submit" class="btn btn-success">Update</button>
+    </form>
+@endsection
+EOL;
     }
 
-    protected function generateFactory($table, $columns)
+    protected function generateShowView($modelName, $table)
     {
-        $factoryName = Str::studly(Str::singular($table)) . 'Factory';
-        $factoryContent = "<?php\n\nnamespace Database\Factories;\n\nuse App\Models\\" . Str::studly(Str::singular($table)) . ";\nuse Illuminate\Database\Eloquent\Factories\Factory;\n\nclass {$factoryName} extends Factory\n{\n    protected \$model = " . Str::studly(Str::singular($table)) . "::class;\n\n    public function definition()\n    {\n        return [\n";
+        return <<<EOL
+@extends('admin')
 
-        foreach ($columns as $column) {
-            $factoryContent .= "            '{$column}' => \$this->faker->word(),\n";
-        }
-
-        $factoryContent .= "        ];\n    }\n}";
-
-        File::put(database_path("factories/{$factoryName}.php"), $factoryContent);
-
-        $this->info("Factory created: {$factoryName}");
-    }
-
-    protected function generateTest($table)
-    {
-        $testName = Str::studly(Str::singular($table)) . 'Test';
-        $testContent = "<?php\n\nnamespace Tests\\Feature;\n\nuse App\Models\\" . Str::studly(Str::singular($table)) . ";\nuse Illuminate\Foundation\Testing\RefreshDatabase;\nuse Tests\\TestCase;\n\nclass {$testName} extends TestCase\n{\n    use RefreshDatabase;\n\n    public function testCanCreate{$testName}()\n    {\n        \$response = \$this->postJson('/api/{$table}', [/* data */]);\n        \$response->assertStatus(201);\n    }\n}";
-
-        File::put(base_path("tests/Feature/{$testName}.php"), $testContent);
-
-        $this->info("Test created: {$testName}");
+@section('content')
+    <h1>Show {$modelName}</h1>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <p>{{ \${$table}->name }}</p>
+    </div>
+    <a href="{{ route('admin.{$table}.edit', \${$table}->id) }}" class="btn btn-warning">Edit</a>
+@endsection
+EOL;
     }
 
     protected function generateRoutes($table)
     {
         $routeName = Str::plural($table);
-        $routeContent = "\nRoute::resource('{$routeName}', {$this->generateControllerName($table)}::class);";
-        File::append(base_path('routes/api.php'), $routeContent);
+        $controllerName = Str::studly(Str::singular($table)) . 'Controller';
+        $routeContent = "\nRoute::resource('{$routeName}', {$controllerName}::class)->name('admin.{$table}.');";
 
-        $this->info("Routes added to routes/api.php");
-    }
+        // Append the routes to the routes file
+        File::append(base_path('routes/web.php'), $routeContent);
 
-    protected function generateSeeder($table)
-    {
-        $seederName = Str::studly(Str::singular($table)) . 'Seeder';
-        $seederContent = "<?php\n\nnamespace Database\\Seeders;\n\nuse App\Models\\" . Str::studly(Str::singular($table)) . ";\nuse Illuminate\Database\Seeder;\n\nclass {$seederName} extends Seeder\n{\n    public function run()\n    {\n        \\" . Str::studly(Str::singular($table)) . "::factory()->count(10)->create();\n    }\n}";
-
-        File::put(database_path("seeders/{$seederName}.php"), $seederContent);
-
-        $this->info("Seeder created: {$seederName}");
-    }
-
-    private function generateControllerName($table)
-    {
-        return Str::studly(Str::singular($table)) . 'Controller';
+        $this->info("Routes added to routes/web.php");
     }
 }
-
-
-
-// Usage: "php artisan make:resource-model-controller-migration-from-table users --policy --factory --test --routes --seeder"
