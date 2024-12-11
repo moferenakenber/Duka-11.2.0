@@ -1,0 +1,1 @@
+<!-- show view for product -->
