@@ -30,6 +30,9 @@
             Balance Sheet
         </button>
         <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+            Calender
+        </button>
+        <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 hover:bg-gray-100 focus:ring focus:ring-gray-200">
             Customers
         </button>
         <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-6 py-3 hover:bg-gray-100 focus:ring focus:ring-gray-200">
