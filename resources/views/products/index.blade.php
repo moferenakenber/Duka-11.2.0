@@ -1,1 +1,1 @@
-<!-- index view for product -->
+index view for product
