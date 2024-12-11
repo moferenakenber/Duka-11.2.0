@@ -11,8 +11,10 @@ use Illuminate\Support\Facades\File;
 
 class MakeResourceModelControllerMigrationFromTable extends Command
 {
-    protected $signature = 'make:resource-model-controller-migration-from-table {table} {--api} {--policy} {--factory} {--test} {--routes} {--seeder} {--views}';
-    protected $description = 'Generate Model, Controller, Migration, Policy, Factory, Test, Routes, Seeder, and Views from a table schema';
+    protected $signature = 'make:resource-model-controller-migration-from-table {table} {--api} {--policy}
+                                  {--factory} {--test} {--routes} {--seeder} {--views}';
+    protected $description = 'Generate Model, Controller, Migration, Policy, Factory, Test, Routes,
+                                  Seeder, and Views from a table schema';
 
     public function __construct()
     {
@@ -90,7 +92,6 @@ class MakeResourceModelControllerMigrationFromTable extends Command
         File::put(app_path("Models/{$modelName}.php"), $modelContent);
         $this->info("Model created: {$modelName}");
     }
-
     protected function generateController($table, $columns)
     {
         $controllerName = Str::studly(Str::singular($table)) . 'Controller';
@@ -107,7 +108,7 @@ class MakeResourceModelControllerMigrationFromTable extends Command
         // Index Method
         $controllerContent .= "    public function index()\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        $" . "items = {$modelName}::all();\n";
+        $controllerContent .= "        \$items = {$modelName}::all();\n";
         $controllerContent .= "        return view('{$table}.index', compact('items'));\n";
         $controllerContent .= "    }\n\n";
 
@@ -118,50 +119,50 @@ class MakeResourceModelControllerMigrationFromTable extends Command
         $controllerContent .= "    }\n\n";
 
         // Store Method
-        $controllerContent .= "    public function store(Request $request)\n";
+        $controllerContent .= "    public function store(Request \$request)\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        $columns = Schema::getColumnListing('$table');\n";
-        $controllerContent .= "        $rules = [];\n";
-        $controllerContent .= "        foreach ($columns as $column) {\n";
-        $controllerContent .= "            if (!in_array($column, ['id', 'created_at', 'updated_at', 'deleted_at'])) {\n";
-        $controllerContent .= "                $rules[$column] = 'required';\n";
+        $controllerContent .= "        \$columns = Schema::getColumnListing('$table');\n";
+        $controllerContent .= "        \$rules = [];\n";
+        $controllerContent .= "        foreach (\$columns as \$column) {\n";
+        $controllerContent .= "            if (!in_array(\$column, ['id', 'created_at', 'updated_at', 'deleted_at'])) {\n";
+        $controllerContent .= "                \$rules[\$column] = 'required';\n";
         $controllerContent .= "            }\n";
         $controllerContent .= "        }\n";
-        $controllerContent .= "        $data = $request->validate($rules);\n";
-        $controllerContent .= "        return {$modelName}::create($data);\n";
+        $controllerContent .= "        \$data = \$request->validate(\$rules);\n";
+        $controllerContent .= "        return {$modelName}::create(\$data);\n";
         $controllerContent .= "    }\n\n";
 
         // Show Method
-        $controllerContent .= "    public function show({$modelName} $" . Str::camel($modelName) . "\n";
+        $controllerContent .= "    public function show({$modelName} \$" . Str::camel($modelName) . ")\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        return view('{$table}.show', ['" . Str::camel($modelName) . "' => $" . Str::camel($modelName) . "]);\n";
+        $controllerContent .= "        return view('{$table}.show', ['" . Str::camel($modelName) . "' => \$" . Str::camel($modelName) . "]);\n";
         $controllerContent .= "    }\n\n";
 
         // Edit Method
-        $controllerContent .= "    public function edit({$modelName} $" . Str::camel($modelName) . "\n";
+        $controllerContent .= "    public function edit({$modelName} \$" . Str::camel($modelName) . ")\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        return view('{$table}.edit', ['" . Str::camel($modelName) . "' => $" . Str::camel($modelName) . "]);\n";
+        $controllerContent .= "        return view('{$table}.edit', ['" . Str::camel($modelName) . "' => \$" . Str::camel($modelName) . "]);\n";
         $controllerContent .= "    }\n\n";
 
         // Update Method
-        $controllerContent .= "    public function update(Request $request, {$modelName} $" . Str::camel($modelName) . "\n";
+        $controllerContent .= "    public function update(Request \$request, {$modelName} \$" . Str::camel($modelName) . ")\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        $columns = Schema::getColumnListing('$table');\n";
-        $controllerContent .= "        $rules = [];\n";
-        $controllerContent .= "        foreach ($columns as $column) {\n";
-        $controllerContent .= "            if (!in_array($column, ['id', 'created_at', 'updated_at', 'deleted_at'])) {\n";
-        $controllerContent .= "                $rules[$column] = 'sometimes|required';\n";
+        $controllerContent .= "        \$columns = Schema::getColumnListing('$table');\n";
+        $controllerContent .= "        \$rules = [];\n";
+        $controllerContent .= "        foreach (\$columns as \$column) {\n";
+        $controllerContent .= "            if (!in_array(\$column, ['id', 'created_at', 'updated_at', 'deleted_at'])) {\n";
+        $controllerContent .= "                \$rules[\$column] = 'sometimes|required';\n";
         $controllerContent .= "            }\n";
         $controllerContent .= "        }\n";
-        $controllerContent .= "        $data = $request->validate($rules);\n";
-        $controllerContent .= "        $" . Str::camel($modelName) . "->update($data);\n";
-        $controllerContent .= "        return $" . Str::camel($modelName) . ";\n";
+        $controllerContent .= "        \$data = \$request->validate(\$rules);\n";
+        $controllerContent .= "        \$" . Str::camel($modelName) . "->update(\$data);\n";
+        $controllerContent .= "        return \$" . Str::camel($modelName) . ";\n";
         $controllerContent .= "    }\n\n";
 
         // Destroy Method
-        $controllerContent .= "    public function destroy({$modelName} $" . Str::camel($modelName) . "\n";
+        $controllerContent .= "    public function destroy({$modelName} \$" . Str::camel($modelName) . ")\n";
         $controllerContent .= "    {\n";
-        $controllerContent .= "        $" . Str::camel($modelName) . "->delete();\n";
+        $controllerContent .= "        \$" . Str::camel($modelName) . "->delete();\n";
         $controllerContent .= "        return response()->json(['message' => 'Deleted successfully']);\n";
         $controllerContent .= "    }\n";
 
@@ -171,6 +172,7 @@ class MakeResourceModelControllerMigrationFromTable extends Command
 
         $this->info("Controller created: {$controllerName}");
     }
+
 
 
     protected function generateMigration($table, $schema)
@@ -232,12 +234,30 @@ class MakeResourceModelControllerMigrationFromTable extends Command
         $isApi = $this->option('api');
         $controllerName = Str::studly(Str::singular($table)) . 'Controller';
         $routeMethod = $isApi ? 'apiResource' : 'resource';
+
+        // Determine route file based on API or web
         $routeFile = $isApi ? base_path('routes/api.php') : base_path('routes/web.php');
 
+        // Generate the route content
         $routeContent = "{$routeMethod}('{$table}', {$controllerName}::class);\n";
+
+        // Append the route to the determined file
         File::append($routeFile, $routeContent);
+
+        // Provide feedback
         $this->info("Routes added to {$routeFile}");
+
+        // If it's an API route, also add it to `web.php` for web-specific routes
+        if ($isApi) {
+            $webRouteFile = base_path('routes/web.php');
+            $webRouteContent = "// Web route for {$table}\n";
+            $webRouteContent .= "Route::resource('{$table}', {$controllerName}::class);\n";
+
+            File::append($webRouteFile, $webRouteContent);
+            $this->info("Web routes also added to {$webRouteFile}");
+        }
     }
+
 
     protected function generateSeeder($table)
     {
