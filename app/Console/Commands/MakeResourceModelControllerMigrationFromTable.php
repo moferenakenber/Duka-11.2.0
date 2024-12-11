@@ -94,24 +94,84 @@ class MakeResourceModelControllerMigrationFromTable extends Command
     protected function generateController($table, $columns)
     {
         $controllerName = Str::studly(Str::singular($table)) . 'Controller';
-        $controllerContent = "<?php\n\nnamespace App\Http\Controllers;\n\nuse App\Models\\" . Str::studly(Str::singular($table)) . ";\nuse Illuminate\Http\Request;\n\nclass {$controllerName} extends Controller\n{\n";
+        $modelName = Str::studly(Str::singular($table));
+
+        $controllerContent = "<?php\n\n";
+        $controllerContent .= "namespace App\\Http\\Controllers;\n\n";
+        $controllerContent .= "use App\\Models\\{$modelName};\n";
+        $controllerContent .= "use Illuminate\\Http\\Request;\n";
+        $controllerContent .= "use Illuminate\\Support\\Facades\\Schema;\n\n";
+        $controllerContent .= "class {$controllerName} extends Controller\n";
+        $controllerContent .= "{\n";
+
+        // Index Method
+        $controllerContent .= "    public function index()\n";
+        $controllerContent .= "    {\n";
+        $controllerContent .= "        $" . "items = {$modelName}::all();\n";
+        $controllerContent .= "        return view('{$table}.index', compact('items'));\n";
+        $controllerContent .= "    }\n\n";
+
+        // Create Method
+        $controllerContent .= "    public function create()\n";
+        $controllerContent .= "    {\n";
+        $controllerContent .= "        return view('{$table}.create');\n";
+        $controllerContent .= "    }\n\n";
 
         // Store Method
-        $controllerContent .= "    public function store(Request \$request) {\n";
-        $controllerContent .= "        \$data = \$request->validate([";
+        $controllerContent .= "    public function store(Request $request)\n";
+        $controllerContent .= "    {\n";
+        $controllerContent .= "        $columns = Schema::getColumnListing('$table');\n";
+        $controllerContent .= "        $rules = [];\n";
+        $controllerContent .= "        foreach ($columns as $column) {\n";
+        $controllerContent .= "            if (!in_array($column, ['id', 'created_at', 'updated_at', 'deleted_at'])) {\n";
+        $controllerContent .= "                $rules[$column] = 'required';\n";
+        $controllerContent .= "            }\n";
+        $controllerContent .= "        }\n";
+        $controllerContent .= "        $data = $request->validate($rules);\n";
+        $controllerContent .= "        return {$modelName}::create($data);\n";
+        $controllerContent .= "    }\n\n";
 
-        foreach ($columns as $column) {
-            $controllerContent .= "'{$column}' => 'required',";  // Customize validation as needed
-        }
+        // Show Method
+        $controllerContent .= "    public function show({$modelName} $" . Str::camel($modelName) . "\n";
+        $controllerContent .= "    {\n";
+        $controllerContent .= "        return view('{$table}.show', ['" . Str::camel($modelName) . "' => $" . Str::camel($modelName) . "]);\n";
+        $controllerContent .= "    }\n\n";
 
-        $controllerContent .= "]);\n";
-        $controllerContent .= "        return " . Str::studly(Str::singular($table)) . "::create(\$data);\n";
+        // Edit Method
+        $controllerContent .= "    public function edit({$modelName} $" . Str::camel($modelName) . "\n";
+        $controllerContent .= "    {\n";
+        $controllerContent .= "        return view('{$table}.edit', ['" . Str::camel($modelName) . "' => $" . Str::camel($modelName) . "]);\n";
+        $controllerContent .= "    }\n\n";
+
+        // Update Method
+        $controllerContent .= "    public function update(Request $request, {$modelName} $" . Str::camel($modelName) . "\n";
+        $controllerContent .= "    {\n";
+        $controllerContent .= "        $columns = Schema::getColumnListing('$table');\n";
+        $controllerContent .= "        $rules = [];\n";
+        $controllerContent .= "        foreach ($columns as $column) {\n";
+        $controllerContent .= "            if (!in_array($column, ['id', 'created_at', 'updated_at', 'deleted_at'])) {\n";
+        $controllerContent .= "                $rules[$column] = 'sometimes|required';\n";
+        $controllerContent .= "            }\n";
+        $controllerContent .= "        }\n";
+        $controllerContent .= "        $data = $request->validate($rules);\n";
+        $controllerContent .= "        $" . Str::camel($modelName) . "->update($data);\n";
+        $controllerContent .= "        return $" . Str::camel($modelName) . ";\n";
+        $controllerContent .= "    }\n\n";
+
+        // Destroy Method
+        $controllerContent .= "    public function destroy({$modelName} $" . Str::camel($modelName) . "\n";
+        $controllerContent .= "    {\n";
+        $controllerContent .= "        $" . Str::camel($modelName) . "->delete();\n";
+        $controllerContent .= "        return response()->json(['message' => 'Deleted successfully']);\n";
         $controllerContent .= "    }\n";
 
         $controllerContent .= "}\n";
+
         File::put(app_path("Http/Controllers/{$controllerName}.php"), $controllerContent);
+
         $this->info("Controller created: {$controllerName}");
     }
+
 
     protected function generateMigration($table, $schema)
     {
