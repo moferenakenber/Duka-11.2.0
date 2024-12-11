@@ -174,30 +174,15 @@ class MakeResourceModelControllerMigrationFromTable extends Command
         $routeMethod = $isApi ? 'apiResource' : 'resource';
         $routeFile = $isApi ? base_path('routes/api.php') : base_path('routes/web.php');
 
-        // Check if the routes file exists
-        if (!File::exists($routeFile)) {
-            $this->error("The route file {$routeFile} does not exist.");
-            return;
-        }
-
-        // Check if the route already exists in the file to avoid duplication
-        $routePattern = "Route::{$routeMethod}('{$table}', {$controllerName}::class);";
-        $routesFileContent = File::get($routeFile);
-
-        if (strpos($routesFileContent, $routePattern) !== false) {
-            $this->info("Route for '{$table}' already exists in {$routeFile}.");
-            return;
-        }
-
-        // Add the route to the routes file
-        File::append($routeFile, "\nRoute::{$routeMethod}('{$table}', {$controllerName}::class);");
-        $this->info("Route created for '{$table}' in {$routeFile}.");
+        $routeContent = "{$routeMethod}('{$table}', {$controllerName}::class);\n";
+        File::append($routeFile, $routeContent);
+        $this->info("Routes added to {$routeFile}");
     }
 
     protected function generateSeeder($table)
     {
         $seederName = Str::studly(Str::singular($table)) . 'Seeder';
-        $seederContent = "<?php\n\nnamespace Database\\Seeders;\n\nuse App\Models\\" . Str::studly(Str::singular($table)) . ";\nuse Illuminate\Database\Seeder;\n\nclass {$seederName} extends Seeder\n{\n    public function run()\n    {\n        " . Str::studly(Str::singular($table)) . "::factory(10)->create();\n    }\n}";
+        $seederContent = "<?php\n\nnamespace Database\\Seeders;\n\nuse Illuminate\\Database\\Seeder;\nuse App\\Models\\" . Str::studly(Str::singular($table)) . ";\n\nclass {$seederName} extends Seeder\n{\n    public function run()\n    {\n        " . Str::studly(Str::singular($table)) . "::factory(10)->create();\n    }\n}";
 
         File::put(database_path("seeders/{$seederName}.php"), $seederContent);
         $this->info("Seeder created: {$seederName}");
@@ -205,20 +190,25 @@ class MakeResourceModelControllerMigrationFromTable extends Command
 
     protected function generateViews($table)
     {
-        // Create basic view files for index, create, and show
-        $views = ['index', 'create', 'show'];
-        $viewDirectory = resource_path('views/' . Str::plural($table));
+        $viewDirectory = resource_path('views/' . Str::plural(Str::studly($table)));
 
-        // Check if the views directory exists, if not, create it
+        // Create views directory if not exists
         if (!File::exists($viewDirectory)) {
             File::makeDirectory($viewDirectory, 0755, true);
         }
 
-        foreach ($views as $view) {
-            $viewContent = "<!-- {$view} view for {$table} -->";
-            File::put($viewDirectory . "/{$view}.blade.php", $viewContent);
+        // Generate basic CRUD views
+        $views = [
+            'index' => "<!-- Index View for {$table} -->\n\n@extends('layouts.app')\n\n@section('content')\n    <h1>Index for {$table}</h1>\n    <!-- Add Table/List of {$table} records here -->\n@endsection",
+            'create' => "<!-- Create View for {$table} -->\n\n@extends('layouts.app')\n\n@section('content')\n    <h1>Create {$table}</h1>\n    <!-- Add Create Form for {$table} here -->\n@endsection",
+            'edit' => "<!-- Edit View for {$table} -->\n\n@extends('layouts.app')\n\n@section('content')\n    <h1>Edit {$table}</h1>\n    <!-- Add Edit Form for {$table} here -->\n@endsection",
+            'show' => "<!-- Show View for {$table} -->\n\n@extends('layouts.app')\n\n@section('content')\n    <h1>Show {$table} Details</h1>\n    <!-- Display details for one {$table} record here -->\n@endsection"
+        ];
+
+        foreach ($views as $viewName => $viewContent) {
+            File::put($viewDirectory . "/{$viewName}.blade.php", $viewContent);
         }
 
-        $this->info("Views created for {$table}.");
+        $this->info("Views created for {$table}");
     }
 }
