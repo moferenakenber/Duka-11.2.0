@@ -29,7 +29,7 @@ class MakeResourceModelControllerMigrationFromTable extends Command
         }
 
         $columns = Schema::getColumnListing($table);
-        $schema = DB::select("DESCRIBE {$table}");
+        $schema = DB::select("DESCRIBE `{$table}`");
 
         $this->info("Creating resources for table: {$table}");
 
@@ -131,6 +131,12 @@ class MakeResourceModelControllerMigrationFromTable extends Command
     {
         $policyName = Str::studly(Str::singular($table)) . 'Policy';
         $policyContent = "<?php\n\nnamespace App\Policies;\n\nuse App\Models\User;\nuse App\Models\\" . Str::studly(Str::singular($table)) . ";\nuse Illuminate\Auth\Access\HandlesAuthorization;\n\nclass {$policyName}\n{\n    use HandlesAuthorization;\n\n    public function view(User \$user, {$policyName} \$model)\n    {\n        return true;\n    }\n    public function create(User \$user)\n    {\n        return true;\n    }\n    public function update(User \$user, {$policyName} \$model)\n    {\n        return true;\n    }\n    public function delete(User \$user, {$policyName} \$model)\n    {\n        return true;\n    }\n}";
+
+  // Check if the Policies directory exists, if not, create it
+        $policyDirectory = app_path('Policies');
+        if (!File::exists($policyDirectory)) {
+            File::makeDirectory($policyDirectory, 0755, true);  // Create the directory if it doesn't exist
+        }
 
         File::put(app_path("Policies/{$policyName}.php"), $policyContent);
 
