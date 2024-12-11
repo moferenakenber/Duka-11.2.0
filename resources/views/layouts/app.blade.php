@@ -30,6 +30,7 @@
             <!-- Page Content -->
             <main>
                 {{ $slot }}
+                @yield('content') <!-- Fallback for views that don't pass content through $slot -->
             </main>
         </div>
     </body>
