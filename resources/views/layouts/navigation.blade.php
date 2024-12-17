@@ -80,13 +80,13 @@
         </div>
 
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+            <x-responsive-nav-link :href="route('user_management.index')" :active="request()->routeIs('user_management.index')">
                 {{ __('User Management') }}
             </x-responsive-nav-link>
         </div>
 
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('customers.index')">
+            <x-responsive-nav-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
                 {{ __('Customers') }}
             </x-responsive-nav-link>
         </div>

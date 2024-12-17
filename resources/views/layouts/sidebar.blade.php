@@ -24,7 +24,7 @@
                     </x-sidebar-link>
 
 
-                    <x-sidebar-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
+                    <x-sidebar-link :href="route('user_management.index')" :active="request()->routeIs('user_management.index')">
                         {{ __('User Management') }}
                     </x-sidebar-link>
 
