@@ -3,6 +3,7 @@
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
         Route::get('/', function () {
@@ -16,6 +17,10 @@ use Illuminate\Support\Facades\Route;
         Route::resource('customers', CustomerController::class)
             ->middleware(['auth', 'verified']);
 
+            // Web route for user_management
+        Route::resource('user_management', UserManagementController::class)
+            ->middleware(['auth', 'verified']);
+
         Route::resource('products', ProductController::class)
              ->middleware(['auth', 'verified']);
 
@@ -27,3 +32,4 @@ use Illuminate\Support\Facades\Route;
         });
 
 require __DIR__.'/auth.php';
+

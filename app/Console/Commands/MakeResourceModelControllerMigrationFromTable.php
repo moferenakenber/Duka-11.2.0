@@ -270,7 +270,7 @@ class MakeResourceModelControllerMigrationFromTable extends Command
 
     protected function generateViews($table)
 {
-    $viewDirectory = resource_path('views/' . Str::plural(Str::studly($table)));
+    $viewDirectory = resource_path('views/' . Str::plural($table));
 
     // Create views directory if not exists
     if (!File::exists($viewDirectory)) {
