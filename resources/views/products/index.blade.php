@@ -17,7 +17,7 @@
 
     <!-- Product Table -->
     <div class="bootstrap-wrapper">
-        <div class="container flex justify-center">
+        <div class="container flex">
             <div class="w-full max-w-4xl">
                 <table class="table table-striped text-black border-collapse w-full">
                     <thead>
