@@ -1,6 +1,6 @@
 <!-- Sidebar -->
 
-<aside x-data="{ open: false }" class="hidden w-60 bg-gray-900 text-white h-screen flex-shrink-0 sm:flex items-center justify-center basis-1/4">
+<aside x-data="{ open: false }" class="hidden w-30 bg-gray-900 text-white h-screen flex-shrink-0 sm:flex items-center justify-center basis-1/8">
 
     <div class="flex flex-col h-full">
         <div class="flex flex-col items-center justify-center">
