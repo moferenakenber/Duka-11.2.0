@@ -21,7 +21,7 @@ use Illuminate\Support\Facades\Route;
         Route::resource('user_management', UserManagementController::class)
             ->middleware(['auth', 'verified']);
 
-        Route::resource('products', ProductController::class)
+        Route::resource('product', ProductController::class)
              ->middleware(['auth', 'verified']);
 
 
@@ -33,3 +33,4 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
+// Web route for produc

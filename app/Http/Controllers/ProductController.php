@@ -4,20 +4,61 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Schema;
 
 class ProductController extends Controller
 {
-    // Add the index method to handle displaying the products
     public function index()
     {
-        // Fetch all products from the database
-        $products = Product::all();
-
-        // Return the products to the view
-        return view('products.index', compact('products'));
+        $product = Product::all();
+        return view('products.index', compact('product'));
     }
-    public function store(Request $request) {
-        $data = $request->validate(['id' => 'required','userId' => 'required','title' => 'required','metaTitle' => 'required','slug' => 'required','summary' => 'required','type' => 'required','sku' => 'required','price' => 'required','discount' => 'required','quantity' => 'required','shop' => 'required','createdAt' => 'required','updatedAt' => 'required','publishedAt' => 'required','startsAt' => 'required','endsAt' => 'required','content' => 'required',]);
+
+    public function create()
+    {
+        return view('products.create');
+    }
+
+    public function store(Request $request)
+    {
+        $columns = Schema::getColumnListing('product');
+        $rules = [];
+        foreach ($columns as $column) {
+            if (!in_array($column, ['id', 'created_at', 'updated_at', 'deleted_at'])) {
+                $rules[$column] = 'required';
+            }
+        }
+        $data = $request->validate($rules);
         return Product::create($data);
+    }
+
+    public function show(Product $product)
+    {
+        return view('products.show', ['product' => $product]);
+    }
+
+    public function edit(Product $product)
+    {
+        return view('products.edit', ['product' => $product]);
+    }
+
+    public function update(Request $request, Product $product)
+    {
+        $columns = Schema::getColumnListing('product');
+        $rules = [];
+        foreach ($columns as $column) {
+            if (!in_array($column, ['id', 'created_at', 'updated_at', 'deleted_at'])) {
+                $rules[$column] = 'sometimes|required';
+            }
+        }
+        $data = $request->validate($rules);
+        $product->update($data);
+        return $product;
+    }
+
+    public function destroy(Product $product)
+    {
+        $product->delete();
+        return response()->json(['message' => 'Deleted successfully']);
     }
 }

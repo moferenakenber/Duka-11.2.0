@@ -32,6 +32,10 @@
                         {{ __('Customers') }}
                     </x-sidebar-link>
 
+
+                    <x-sidebar-link :href="route('product.index')" :active="request()->routeIs('product.index')">
+                        {{ __('Products') }}
+                    </x-sidebar-link>
             </nav>
 
         </div>
