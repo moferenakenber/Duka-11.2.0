@@ -16,6 +16,15 @@ use Illuminate\Support\Facades\Route;
             return view('dashboard');
         })->middleware(['auth', 'verified'])->name('dashboard');
 
+        Route::get('/test', function () {
+            return view('test');
+        })->middleware(['auth', 'verified'])->name('test');
+
+        Route::get('/flowbite', function () {
+            return view('flowbite');
+        })->middleware(['auth', 'verified'])->name('flowbite');
+
+
         Route::resource('customers', CustomerController::class)
             ->middleware(['auth', 'verified']);
 
