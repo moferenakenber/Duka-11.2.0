@@ -37,11 +37,20 @@
                         {{ __('Products') }}
                     </x-sidebar-link>
 
+                    <x-sidebar-link :href="route('sale.index')" :active="request()->routeIs('sale.index')">
+                        {{ __('Sales') }}
+                    </x-sidebar-link>
+
+                    <x-sidebar-link :href="route('purchase.index')" :active="request()->routeIs('purchase.index')">
+                        {{ __('Purchases') }}
+                    </x-sidebar-link>
 
 
 
 
-                    <div class="relative inline-block text-left">
+
+
+                    {{-- <div class="relative inline-block text-left">
                         <button type="button" id="dropdownButton" class="inline-flex justify-center w-full rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                             Inventory
                             <svg class="-mr-1 ml-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -75,7 +84,7 @@
                                 document.getElementById('dropdownContent').classList.add('hidden');
                             }
                         });
-                    </script>
+                    </script> --}}
 
 
 

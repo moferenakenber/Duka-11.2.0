@@ -16,23 +16,36 @@
     </x-slot>
 
 
-    <!-- Customer Table -->
-    <div class="bootstrap-wrapper">
-        <div class="container">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>City</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
-                    <th>Created By</th>
-                </tr>
-                </thead>
+    <div class="flex items-center justify-between w-full">
+        <a href="#" class="text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400">Payroll</a>
+        <a href="#" class="text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400">Payroll Process</a>
+        <a href="#" class="text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400">Payment History</a>
+    </div>
 
-            </table>
-        </div>
+
+    <div class="container mx-auto">
+        <table class="w-full table-auto divide-y divide-gray-200">
+            <thead>
+                <tr class="bg-gray-50">
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">First Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Last Name</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">City</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Phone Number</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created By</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                    <td class="px-6 py-4 whitespace-nowrap">Mark</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Otto</td>
+                    <td class="px-6 py-4 whitespace-nowrap">San Francisco</td>
+                    <td class="px-6 py-4 whitespace-nowrap">mdo@example.com</td>
+                    <td class="px-6 py-4 whitespace-nowrap">123-456-7890</td>
+                    <td class="px-6 py-4 whitespace-nowrap">Admin</td>
+                </tr>
+                </tbody>
+        </table>
     </div>
 
     <div class="flex justify-center mt-10">

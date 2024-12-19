@@ -3,6 +3,8 @@
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\SaleController;
+use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\UserManagementController;
 use Illuminate\Support\Facades\Route;
 
@@ -24,6 +26,12 @@ use Illuminate\Support\Facades\Route;
         Route::resource('product', ProductController::class)
              ->middleware(['auth', 'verified']);
 
+        Route::resource('sale', SaleController::class)
+             ->middleware(['auth', 'verified']);
+
+        Route::resource('purchase', PurchaseController::class)
+            ->middleware(['auth', 'verified']);
+
 
         Route::middleware('auth')->group(function () {
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -33,4 +41,3 @@ use Illuminate\Support\Facades\Route;
 
 require __DIR__.'/auth.php';
 
-// Web route for produc
