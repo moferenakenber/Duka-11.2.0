@@ -17,24 +17,29 @@
         </div>
     </x-slot>
 
-
-    <!-- Customer Table -->
-    <div class="bootstrap-wrapper">
-        <div class="container">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>City</th>
-                    <th>Email</th>
-                    <th>Phone Number</th>
-                    <th>Created By</th>
+    <div class="w-full overflow-x-auto">
+        <table class="w-full table-auto divide-y divide-gray-200">
+            <thead>
+                <tr class="bg-gray-50">
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Meta Title</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Summary</th>
                 </tr>
-                </thead>
-
-            </table>
-        </div>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                    <td class="px-4 py-4 whitespace-nowrap">1</td>
+                    <td class="px-4 py-4 whitespace-nowrap">1001</td>
+                    <td class="px-4 py-4 whitespace-nowrap">Sample Product</td>
+                    <td class="px-4 py-4 whitespace-nowrap">Meta title example</td>
+                    <td class="px-4 py-4 whitespace-nowrap">sample-product</td>
+                    <td class="px-4 py-4 whitespace-nowrap">This is a sample summary.</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 
 

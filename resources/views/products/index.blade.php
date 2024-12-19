@@ -15,182 +15,30 @@
     </x-slot>
 
 
-    <!-- Product Table -->
-    <div class="bootstrap-wrapper">
-        <div class="container flex">
-            <div class="w-full max-w-4xl">
-                <table class="table table-striped text-black border-collapse w-full">
-                    <thead>
-                        <tr class="bg-gray-200">
-                            <th class="px-4 py-2 border border-gray-300">ID</th>
-                            <th class="px-4 py-2 border border-gray-300">User ID</th>
-                            <th class="px-4 py-2 border border-gray-300">Title</th>
-                            <th class="px-4 py-2 border border-gray-300">Meta Title</th>
-                            <th class="px-4 py-2 border border-gray-300">Slug</th>
-                            <th class="px-4 py-2 border border-gray-300">Summary</th>
-                            <th class="px-4 py-2 border border-gray-300">Type</th>
-                            <th class="px-4 py-2 border border-gray-300">SKU</th>
-                            <th class="px-4 py-2 border border-gray-300">Price</th>
-                            <th class="px-4 py-2 border border-gray-300">Discount</th>
-                            <th class="px-4 py-2 border border-gray-300">Quantity</th>
-                            <th class="px-4 py-2 border border-gray-300">Shop</th>
-                            <th class="px-4 py-2 border border-gray-300">Created At</th>
-                            <th class="px-4 py-2 border border-gray-300">Updated At</th>
-                            <th class="px-4 py-2 border border-gray-300">Published At</th>
-                            <th class="px-4 py-2 border border-gray-300">Starts At</th>
-                            <th class="px-4 py-2 border border-gray-300">Ends At</th>
-                            <th class="px-4 py-2 border border-gray-300">Content</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <!-- Example Row (Replace with dynamic data) -->
-                        <tr class="bg-gray-200">
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">1001</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample Product</td>
-                            <td class="px-4 py-2 border border-gray-300">Meta title example</td>
-                            <td class="px-4 py-2 border border-gray-300">sample-product</td>
-                            <td class="px-4 py-2 border border-gray-300">This is a sample summary.</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">SP123</td>
-                            <td class="px-4 py-2 border border-gray-300">$100.00</td>
-                            <td class="px-4 py-2 border border-gray-300">$10.00</td>
-                            <td class="px-4 py-2 border border-gray-300">50</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-01 10:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-10 12:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-15 09:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-05 08:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-20 18:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample content here.</td>
-                        </tr>
-                        <tr class="bg-gray-200">
-                            <td class="px-4 py-2 border border-gray-300">2</td>
-                            <td class="px-4 py-2 border border-gray-300">1001</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample Product</td>
-                            <td class="px-4 py-2 border border-gray-300">Meta title example</td>
-                            <td class="px-4 py-2 border border-gray-300">sample-product</td>
-                            <td class="px-4 py-2 border border-gray-300">This is a sample summary.</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">SP123</td>
-                            <td class="px-4 py-2 border border-gray-300">$100.00</td>
-                            <td class="px-4 py-2 border border-gray-300">$10.00</td>
-                            <td class="px-4 py-2 border border-gray-300">50</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-01 10:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-10 12:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-15 09:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-05 08:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-20 18:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample content here.</td>
-                        </tr>
-                        <tr class="bg-gray-200">
-                            <td class="px-4 py-2 border border-gray-300">3</td>
-                            <td class="px-4 py-2 border border-gray-300">1001</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample Product</td>
-                            <td class="px-4 py-2 border border-gray-300">Meta title example</td>
-                            <td class="px-4 py-2 border border-gray-300">sample-product</td>
-                            <td class="px-4 py-2 border border-gray-300">This is a sample summary.</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">SP123</td>
-                            <td class="px-4 py-2 border border-gray-300">$100.00</td>
-                            <td class="px-4 py-2 border border-gray-300">$10.00</td>
-                            <td class="px-4 py-2 border border-gray-300">50</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-01 10:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-10 12:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-15 09:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-05 08:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-20 18:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample content here.</td>
-                        </tr>
-                        <tr class="bg-gray-200">
-                            <td class="px-4 py-2 border border-gray-300">4</td>
-                            <td class="px-4 py-2 border border-gray-300">1001</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample Product</td>
-                            <td class="px-4 py-2 border border-gray-300">Meta title example</td>
-                            <td class="px-4 py-2 border border-gray-300">sample-product</td>
-                            <td class="px-4 py-2 border border-gray-300">This is a sample summary.</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">SP123</td>
-                            <td class="px-4 py-2 border border-gray-300">$100.00</td>
-                            <td class="px-4 py-2 border border-gray-300">$10.00</td>
-                            <td class="px-4 py-2 border border-gray-300">50</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-01 10:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-10 12:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-15 09:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-05 08:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-20 18:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample content here.</td>
-                        </tr>
-                        <tr class="bg-gray-200">
-                            <td class="px-4 py-2 border border-gray-300">5</td>
-                            <td class="px-4 py-2 border border-gray-300">1001</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample Product</td>
-                            <td class="px-4 py-2 border border-gray-300">Meta title example</td>
-                            <td class="px-4 py-2 border border-gray-300">sample-product</td>
-                            <td class="px-4 py-2 border border-gray-300">This is a sample summary.</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">SP123</td>
-                            <td class="px-4 py-2 border border-gray-300">$100.00</td>
-                            <td class="px-4 py-2 border border-gray-300">$10.00</td>
-                            <td class="px-4 py-2 border border-gray-300">50</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-01 10:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-10 12:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-15 09:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-05 08:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-20 18:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample content here.</td>
-                        </tr>
-                        <tr class="bg-gray-200">
-                            <td class="px-4 py-2 border border-gray-300">6</td>
-                            <td class="px-4 py-2 border border-gray-300">1001</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample Product</td>
-                            <td class="px-4 py-2 border border-gray-300">Meta title example</td>
-                            <td class="px-4 py-2 border border-gray-300">sample-product</td>
-                            <td class="px-4 py-2 border border-gray-300">This is a sample summary.</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">SP123</td>
-                            <td class="px-4 py-2 border border-gray-300">$100.00</td>
-                            <td class="px-4 py-2 border border-gray-300">$10.00</td>
-                            <td class="px-4 py-2 border border-gray-300">50</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-01 10:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-10 12:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-15 09:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-05 08:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-20 18:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample content here.</td>
-                        </tr>
-                        <tr class="bg-gray-200">
-                            <td class="px-4 py-2 border border-gray-300">7</td>
-                            <td class="px-4 py-2 border border-gray-300">1001</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample Product</td>
-                            <td class="px-4 py-2 border border-gray-300">Meta title example</td>
-                            <td class="px-4 py-2 border border-gray-300">sample-product</td>
-                            <td class="px-4 py-2 border border-gray-300">This is a sample summary.</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">SP123</td>
-                            <td class="px-4 py-2 border border-gray-300">$100.00</td>
-                            <td class="px-4 py-2 border border-gray-300">$10.00</td>
-                            <td class="px-4 py-2 border border-gray-300">50</td>
-                            <td class="px-4 py-2 border border-gray-300">1</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-01 10:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-10 12:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-15 09:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-05 08:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">2024-12-20 18:00:00</td>
-                            <td class="px-4 py-2 border border-gray-300">Sample content here.</td>
-                        </tr>
-                        <!-- Repeat rows for each product -->
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <div class="w-full overflow-x-auto">
+        <table class="w-full table-auto divide-y divide-gray-200">
+            <thead>
+                <tr class="bg-gray-50">
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Meta Title</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
+                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Summary</th>
+                </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+                <tr>
+                    <td class="px-4 py-4 whitespace-nowrap">1</td>
+                    <td class="px-4 py-4 whitespace-nowrap">1001</td>
+                    <td class="px-4 py-4 whitespace-nowrap">Sample Product</td>
+                    <td class="px-4 py-4 whitespace-nowrap">Meta title example</td>
+                    <td class="px-4 py-4 whitespace-nowrap">sample-product</td>
+                    <td class="px-4 py-4 whitespace-nowrap">This is a sample summary.</td>
+                </tr>
+            </tbody>
+        </table>
     </div>
-
 
 
 
