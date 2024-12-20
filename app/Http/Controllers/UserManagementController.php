@@ -10,8 +10,11 @@ class UserManagementController extends Controller
 {
     public function index()
     {
-        $product = UserManagement::all();
-        return view('user_managements.index', compact('product'));
+
+        //$product = UserManagement::all();
+
+        $users = \App\Models\User::all(); // Fetch all users
+        return view('user_managements.index', compact('users'));
     }
 
     public function create()
