@@ -17,30 +17,44 @@
         </div>
     </x-slot>
 
-    <div class="w-full overflow-x-auto">
-        <table class="w-full table-auto divide-y divide-gray-200">
-            <thead>
-                <tr class="bg-gray-50">
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User ID</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Meta Title</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Slug</th>
-                    <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Summary</th>
-                </tr>
-            </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
-                <tr>
-                    <td class="px-4 py-4 whitespace-nowrap">1</td>
-                    <td class="px-4 py-4 whitespace-nowrap">1001</td>
-                    <td class="px-4 py-4 whitespace-nowrap">Sample Product</td>
-                    <td class="px-4 py-4 whitespace-nowrap">Meta title example</td>
-                    <td class="px-4 py-4 whitespace-nowrap">sample-product</td>
-                    <td class="px-4 py-4 whitespace-nowrap">This is a sample summary.</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
 
+    <div class="drawer">
+        <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col">
+          <!-- Navbar -->
+          <div class="navbar bg-base-300 w-full">
+            <div class="flex-none lg:hidden">
+              <label for="my-drawer-3" aria-label="open sidebar" class="btn btn-square btn-ghost">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  class="inline-block h-6 w-6 stroke-current">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"></path>
+                </svg>
+              </label>
+            </div>
+            <div class="mx-2 flex-1 px-2">Purchases</div>
+            <div class="hidden flex-none lg:block">
+              <ul class="menu menu-horizontal">
+                <!-- Navbar menu content here -->
+                    <li><a href="#">Open Purchases</a></li>
+                    <li><a href="#">Supplier Management</a></li>
+                    <li><a href="#">Inventory Replenishment</a></li>
+                    <li><a href="#">Purchase Order</a></li>
+                    <li><a href="#">Payments</a></li>
+                    <li><a href="#">Deliveries</a></li>
+                    <li><a href="#">Returns and Refunds</a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- Page content here -->
+
+        </div>
+    </div>
 
 </x-app-layout>

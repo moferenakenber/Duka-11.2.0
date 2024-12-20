@@ -15,12 +15,50 @@
         </div>
     </x-slot>
 
+    <div class="drawer">
+        <input id="my-drawer-3" type="checkbox" class="drawer-toggle" />
+        <div class="drawer-content flex flex-col">
+          <div class="navbar bg-base-100">
+            <div class="flex-1 px-2 mx-2">
+              <div class="dropdown lg:hidden">
+                <label tabindex="0" class="btn m-1 bg-primary text-white">
+                  Users Management
+                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="inline-block w-6 h-6 stroke-current"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path></svg>
+                </label>
+                <ul class="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-52">
+                  <li><a href="#">User Management</a></li>
+                  <li><a href="#">Payroll Process</a></li>
+                  <li><a href="#">Payroll Payment</a></li>
+                  <li><a href="#">Payment History</a></li>
+                  <li><a href="#">User Roles and Permissions</a></li>
+                  <li><a href="#">User Profiles</a></li>
+                  <li><a href="#">User Authentication and Authorization</a></li>
+                  <li><a href="#">User Access Control</a></li>
+                  <li><a href="#">User Activity Logs</a></li>
+                </ul>
+              </div>
+            </div>
+            <div class="hidden lg:flex-1 flex justify-end">
+              <ul class="menu menu-horizontal p-0">
+                <li><a href="#">User Management</a></li>
+                <li><a href="#">Payroll Process</a></li>
+                <li><a href="#">Payroll Payment</a></li>
+                <li><a href="#">Payment History</a></li>
+                <li><a href="#">User Roles and Permissions</a></li>
+                <li><a href="#">User Profiles</a></li>
+                <li><a href="#">User Authentication and Authorization</a></li>
+                <li><a href="#">User Access Control</a></li>
+                <li><a href="#">User Activity Logs</a></li>
+              </ul>
+            </div>
+          </div>
+          <div class="drawer-side">
+            </div>
+        </div>
+      </div>
 
-    <div class="flex items-center justify-between w-full">
-        <a href="#" class="text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400">Payroll</a>
-        <a href="#" class="text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400">Payroll Process</a>
-        <a href="#" class="text-gray-700 dark:text-gray-200 hover:text-blue-500 dark:hover:text-blue-400">Payment History</a>
-    </div>
+
+
 
 
     <div class="container mx-auto">
@@ -138,4 +176,81 @@
             </div>
         </div>
     </div>
+
+    <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg p-4">
+
+
+        <div class="grid grid-cols-4 gap-4 p-6">
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Dashboard
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                User Administration
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Balance Sheet
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Calendar
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Customers
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Products
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Stock
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Orders
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Carts
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Sales
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Delivery
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Projects
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Purchases
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Suppliers
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Expenses
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Invoices
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Reports
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Returns
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Payments
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Notifications
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Settings
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Analytics
+            </button>
+            <button class="bg-white text-gray-800 border border-gray-300 rounded-lg shadow-md px-2 py-1 hover:bg-gray-100 focus:ring focus:ring-gray-200">
+                Support
+            </button>
+        </div>
+    </div>
+
 </x-app-layout>
