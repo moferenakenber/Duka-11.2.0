@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\UserManagementController;
 use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\SaleController;
 use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\UserManagementController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ProductController;
+
 use Illuminate\Support\Facades\Route;
 
         Route::get('/', function () {
@@ -25,11 +27,13 @@ use Illuminate\Support\Facades\Route;
         })->middleware(['auth', 'verified'])->name('flowbite');
 
 
+        Route::resource('user_management', UserManagementController::class)
+            ->middleware(['auth', 'verified']);
+
         Route::resource('customers', CustomerController::class)
             ->middleware(['auth', 'verified']);
 
-            // Web route for user_management
-        Route::resource('user_management', UserManagementController::class)
+        Route::resource('items', ItemController::class)
             ->middleware(['auth', 'verified']);
 
         Route::resource('product', ProductController::class)
