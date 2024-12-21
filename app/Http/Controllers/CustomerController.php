@@ -24,11 +24,10 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $customers = Customer::with('user')->get();
-        return view('customers.index', [
-            'user' => $request->user(),
-            'customers' => $customers,
-        ]);
+       //$customers = Customer::with('user')->get();
+        $customers = Customer::with('user')->get(); // Fetch all customers and eager load the 'user' relationship
+        //$customers = Customer::all();
+        return view('customers.index', compact('customers'));
     }
 
     /**
@@ -44,7 +43,24 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:customers',
+            'phone' => 'nullable|string',
+            'city' => 'nullable|string',
+        ]);
+
+        // dd($request->all()); // Check if form data is being received
+
+        Customer::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'city' => $request->city,
+            'created_by' => auth()->id(), // Set the authenticated user's ID
+        ]);
+
+        return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
     }
 
     /**

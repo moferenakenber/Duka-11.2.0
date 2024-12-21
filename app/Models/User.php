@@ -44,4 +44,13 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    /**
+     * Get the customers created by the user.
+     */
+    public function customers()
+    {
+        return $this->hasMany(Customer::class, 'created_by');  // Inverse of 'belongsTo' in Customer
+    }
+
 }

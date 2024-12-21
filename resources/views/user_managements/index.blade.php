@@ -24,7 +24,7 @@
               <th>Name</th>
               <th>Email</th>
               <th>Role</th>
-              <th>created_at</th>
+              <th>Created at</th>
             </tr>
           </thead>
           <tbody>
