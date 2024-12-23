@@ -68,7 +68,7 @@ class ItemFactory extends Factory
             'status' => $this->faker->randomElement(['available', 'unavailable']),
             'stock' => $this->faker->numberBetween(0, 1000), // Random integer between 0 and 1000
             'images' => json_encode([
-                'images/items/image.jpg' // Path to the image on the VPS
+                '#' // Path to the image on the VPS
             ]),
             'piecesinapacket' => $this->faker->numberBetween(1, 36), // Random integer between 1 and 36
             'packetsinacartoon' => $this->faker->numberBetween(1, 12), // Random integer between 1 and 12
