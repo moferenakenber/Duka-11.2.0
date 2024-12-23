@@ -1094,8 +1094,71 @@
                 <button class="btn">Button</button>
             </div>
 
+
+
+
+      <form action="{{ route('items.store') }}" method="POST" class="space-y-4 p-6 bg-gray-100 rounded-md">
+        @csrf
+        <!-- Item Name -->
+        <div class="flex flex-col">
+            <label for="name" class="font-medium text-gray-700">Item Name</label>
+            <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                class="mt-1 p-2 border rounded-md"
+                placeholder="Enter item name">
+        </div>
+
+        <!-- Pieces in a box -->
+        <div class="flex flex-col">
+            <label for="pieces_per_box" class="font-medium text-gray-700">Pieces per Box</label>
+            <input
+                type="number"
+                id="pieces_per_box"
+                name="pieces_per_box"
+                min="1"
+                required
+                class="mt-1 p-2 border rounded-md"
+                placeholder="Number of pieces in a single box">
+        </div>
+
+        <!-- Boxes in a larger box -->
+        <div class="flex flex-col">
+            <label for="boxes_per_large_box" class="font-medium text-gray-700">Boxes per Larger Box</label>
+            <input
+                type="number"
+                id="boxes_per_large_box"
+                name="boxes_per_large_box"
+                min="1"
+                required
+                class="mt-1 p-2 border rounded-md"
+                placeholder="Number of boxes in a larger box">
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end">
+            <button
+                type="submit"
+                class="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+            >
+                Save Item
+            </button>
+        </div>
+    </form>
+
+
+
+
+
+
+
+
         </div>
       </div>
+
+
 
 
 

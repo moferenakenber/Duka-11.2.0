@@ -38,8 +38,14 @@
                                     <td class="px-6 py-2 text-sm text-gray-800">{{ $item->stock }}</td>
                                     <td class="px-6 py-2 text-sm text-gray-800">{{ ucfirst($item->status) }}</td>
                                     <td class="px-6 py-2 text-sm text-gray-800 flex items-center space-x-4">
+
+                                        <!-- View Button -->
+                                        <a href="{{ route('items.show', $item->id) }}" class="text-green-600 hover:text-green-800">View</a>
+
+                                        <!-- Edit Button -->
                                         <a href="{{ route('items.edit', $item->id) }}" class="text-blue-600 hover:text-blue-800">Edit</a>
 
+                                        <!-- Delete Button -->
                                         <form action="{{ route('items.destroy', $item->id) }}" method="POST" onsubmit="return confirm('Are you sure you want to delete this item?');">
                                             @csrf
                                             @method('DELETE')

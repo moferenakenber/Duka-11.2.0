@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->nullable();
+            $table->string('phone_number')->nullable();
             $table->text('city')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();; // ID of the user who created the customer
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade'); // Foreign key

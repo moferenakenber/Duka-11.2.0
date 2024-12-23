@@ -17,8 +17,11 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'name',
+        'first_name',
+        'last_name',
+        'phone_number',
         'email',
+        'role',
         'password',
     ];
 
@@ -53,4 +56,11 @@ class User extends Authenticatable
         return $this->hasMany(Customer::class, 'created_by');  // Inverse of 'belongsTo' in Customer
     }
 
+    /**
+     * Format the role for display purposes (e.g., "Stock Keeper").
+     */
+    public function getRoleAttribute($value)
+    {
+        return ucwords(str_replace('_', ' ', strtolower($value)));
+    }
 }

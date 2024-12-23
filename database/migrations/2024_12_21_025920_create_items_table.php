@@ -19,10 +19,10 @@ return new class extends Migration
             $table->json('pacoption');
             $table->decimal('price', 8, 2);
             $table->string('status')->default('available');
-            $table->decimal('stock')->default('0');
-            $table->string('image')->default('not available');
-            $table->decimal('piecesinapacket', 8,2 );
-            $table->decimal('packetsinacartoon', 8, 2);
+            $table->integer('stock')->default(0); // Changed to integer
+            $table->json('images')->nullable();
+            $table->integer('piecesinapacket')->default(0);
+            $table->integer('packetsinacartoon')->default(0);
             $table->timestamps();
         });
     }

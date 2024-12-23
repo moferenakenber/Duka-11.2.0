@@ -36,7 +36,7 @@
                         <th>{{ $customer->id }}</th>
                         <td>{{ $customer->name }}</td>
                         <td>{{ $customer->email }}</td>
-                        <td>{{ $customer->phone }}</td>
+                        <td>{{ $customer->phone_number }}</td>
                         <td>{{ $customer->city }}</td>
                         {{-- <td>{{ $customer->user->name }}</td> <!-- Assuming the 'user' relationship is defined in the Customer model --> --}}
 

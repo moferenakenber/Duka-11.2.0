@@ -13,5 +13,8 @@ class Item extends Model
         'name', 'description', 'catoption', 'pacoption', 'price',
         'status', 'stock', 'image', 'piecesinapacket', 'packetsinacartoon'
     ];
-
+    // public function images()
+    // {
+    //     return $this->hasMany(Image::class);
+    // }
 }

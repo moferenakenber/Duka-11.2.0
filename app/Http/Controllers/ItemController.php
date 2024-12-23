@@ -5,6 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Item;
 
+
+//This single line generates the following routes:
+//
+//GET /item                → index method
+//GET /item/create         → create method
+//POST /item               → store method
+//GET /item/{item}         → show method
+//GET /item/{item}/edit    → edit method
+//PUT/PATCH /item/{item}   → update method
+//DELETE /item/{item}      → destroy method
+
 class ItemController extends Controller
 {
    // Display a listing of the items
@@ -35,7 +46,7 @@ class ItemController extends Controller
         'stock' => 'required|min:1',
         'piecesinapacket' => 'required|min:1',
         'packetsinacartoon' => 'required|min:1',
-        'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048'
+        'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048' // Validation for images
 
     ]);
     /*
@@ -56,18 +67,41 @@ class ItemController extends Controller
     ]);
 
     // Handle image uploads
-    if ($request->hasFile('images')) {
-        foreach ($request->file('images') as $image) {
-            $filename = time() . '_' . $image->getClientOriginalName(); // Create a unique filename
-            $image->storeAs('uploads', $filename, 'public'); // Store in storage/app/public/uploads
-            // Optionally, you might want to save the image paths to the database associated with the item
-            // For example, you can push to an array, or save paths in a separate column if necessary
-            $item->images()->create(['path' => 'uploads/' . $filename]); // Assuming you have a relation set up for images
+    // if ($request->hasFile('images')) {
+    //     foreach ($request->file('images') as $image) {
+    //         $filename = time() . '_' . $image->getClientOriginalName(); // Create a unique filename
+    //         $image->storeAs('uploads', $filename, 'public'); // Store in storage/app/public/uploads
+    //         // Optionally, you might want to save the image paths to the database associated with the item
+    //         // For example, you can push to an array, or save paths in a separate column if necessary
+    //         $item->images()->create(['path' => 'uploads/' . $filename]); // Assuming you have a relation set up for images
+    //     }
+    // }
+
+
+        // Handle image uploads
+        $imagePaths = []; // Create an array to store image paths
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $filename = time() . '_' . $image->getClientOriginalName(); // Create a unique filename
+                // Store image in public disk (storage/app/public)
+                $image->storeAs('uploads', $filename, 'public');
+
+                // Add the image path to the array
+                $imagePaths[] = 'uploads/' . $filename;
+            }
+
+            // Store the image paths as a JSON array in the images column
+            $item->update(['images' => json_encode($imagePaths)]);
         }
-    }
 
     return redirect()->route('items.index')->with('success', 'item registered successfully!');
    }
+
+    // Show the details of a specific item
+    public function show(Item $item)
+    {
+        return view('items.show', compact('item'));
+    }
 
    // Show the form for editing the specified item
    public function edit(Item $item)

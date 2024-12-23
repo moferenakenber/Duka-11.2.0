@@ -1,14 +1,69 @@
-<!-- Show View for product -->
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            {{ __('Item Details') }}
+        </h2>
+    </x-slot>
 
-@extends('layouts.app')
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+                <div class="p-6 space-y-4">
+                    <!-- Item Name -->
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700">Name: </h3>
+                        <p class="text-gray-600">{{ $item->name }}</p>
+                    </div>
 
-@section('content')
-    <h1>Show product Details</h1>
-    <p><strong>Id:</strong> {{ $product->id }}</p><p><strong>UserId:</strong> {{ $product->userId }}</p><p><strong>Title:</strong> {{ $product->title }}</p><p><strong>MetaTitle:</strong> {{ $product->metaTitle }}</p><p><strong>Slug:</strong> {{ $product->slug }}</p><p><strong>Summary:</strong> {{ $product->summary }}</p><p><strong>Type:</strong> {{ $product->type }}</p><p><strong>Sku:</strong> {{ $product->sku }}</p><p><strong>Price:</strong> {{ $product->price }}</p><p><strong>Discount:</strong> {{ $product->discount }}</p><p><strong>Quantity:</strong> {{ $product->quantity }}</p><p><strong>Shop:</strong> {{ $product->shop }}</p><p><strong>CreatedAt:</strong> {{ $product->createdAt }}</p><p><strong>UpdatedAt:</strong> {{ $product->updatedAt }}</p><p><strong>PublishedAt:</strong> {{ $product->publishedAt }}</p><p><strong>StartsAt:</strong> {{ $product->startsAt }}</p><p><strong>EndsAt:</strong> {{ $product->endsAt }}</p><p><strong>Content:</strong> {{ $product->content }}</p>
-    <a href="{{ route('product.edit', $product->id) }}">Edit</a>
-    <form action="{{ route('product.destroy', $product->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <button type="submit">Delete</button>
-    </form>
-@endsection
+                    <!-- Item Description -->
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700">Description: </h3>
+                        <p class="text-gray-600">{{ $item->description }}</p>
+                    </div>
+
+                    <!-- Item Price -->
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700">Price: </h3>
+                        <p class="text-gray-600">${{ number_format($item->price, 2) }}</p>
+                    </div>
+
+                    <!-- Item Stock -->
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700">Stock: </h3>
+                        <p class="text-gray-600">{{ $item->stock }}</p>
+                    </div>
+
+                    <!-- Item Status -->
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700">Status: </h3>
+                        <p class="text-gray-600">{{ ucfirst($item->status) }}</p>
+                    </div>
+
+                    <!-- Item Packaging -->
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-700">Packaging: </h3>
+                        <p class="text-gray-600">{{ $item->piecesinapacket }} pieces per packet, {{ $item->packetsinacartoon }} packets per carton</p>
+                    </div>
+
+                     <!-- Item Image -->
+                     @php
+                     $images = json_decode($item->images, true); // Decode JSON to array
+                    @endphp
+
+                    @if (is_array($images) && count($images) > 0)
+                        @foreach ($images as $image)
+                            <img src="{{ $image }}" alt="Item Image" class="w-32 h-32 object-cover rounded-md">
+                        @endforeach
+                    @else
+                        <p>No images available</p>
+                    @endif
+
+                    <!-- Back Button -->
+                    <div class="mt-4">
+                        <a href="{{ route('items.index') }}" class="text-blue-600 hover:text-blue-800">Back to Items List</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

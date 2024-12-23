@@ -85,25 +85,26 @@
                 </select>
             </div>
 
-            <!-- Stock Section -->
+                        <!-- Stock Section -->
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Stock</h2>
             <div class="mb-4">
                 <label for="stock" class="block text-gray-600">Stock</label>
-                <input type="number" name="stock" min="0" class="w-full p-2 border border-gray-300 rounded-md mt-1">
+                <input type="number" name="stock" min="0" step="1" class="w-full p-2 border border-gray-300 rounded-md mt-1">
             </div>
 
             <!-- Packaging Standard Section -->
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Packaging Standard</h2>
             <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:gap-4">
                 <label for="piecesinapacket" class="sm:w-1/2 text-gray-600">1 Packet Holds</label>
-                <input type="number" name="piecesinapacket" min="0" max="1000" class="w-full sm:w-1/2 p-2 border border-gray-300 rounded-md mt-1">
+                <input type="number" name="piecesinapacket" min="0" max="1000" step="1" class="w-full sm:w-1/2 p-2 border border-gray-300 rounded-md mt-1">
                 <span class="ml-2 text-gray-600">pieces</span>
             </div>
             <div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:gap-4">
                 <label for="packetsinacartoon" class="sm:w-1/2 text-gray-600">1 Carton Holds</label>
-                <input type="number" name="packetsinacartoon" min="0" max="1000" class="w-full sm:w-1/2 p-2 border border-gray-300 rounded-md mt-1">
+                <input type="number" name="packetsinacartoon" min="0" max="1000" step="1" class="w-full sm:w-1/2 p-2 border border-gray-300 rounded-md mt-1">
                 <span class="ml-2 text-gray-600">packets</span>
             </div>
+
 
             <!-- Upload Section -->
             <h2 class="text-2xl font-semibold text-gray-700 mb-4">Upload Images</h2>

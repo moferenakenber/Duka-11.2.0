@@ -27,7 +27,7 @@ use Illuminate\Support\Facades\Route;
         })->middleware(['auth', 'verified'])->name('flowbite');
 
 
-        Route::resource('user_management', UserManagementController::class)
+        Route::resource('user_managements', UserManagementController::class)
             ->middleware(['auth', 'verified']);
 
         Route::resource('customers', CustomerController::class)
@@ -36,13 +36,13 @@ use Illuminate\Support\Facades\Route;
         Route::resource('items', ItemController::class)
             ->middleware(['auth', 'verified']);
 
-        Route::resource('product', ProductController::class)
+        Route::resource('products', ProductController::class)
              ->middleware(['auth', 'verified']);
 
-        Route::resource('sale', SaleController::class)
+        Route::resource('sales', SaleController::class)
              ->middleware(['auth', 'verified']);
 
-        Route::resource('purchase', PurchaseController::class)
+        Route::resource('purchases', PurchaseController::class)
             ->middleware(['auth', 'verified']);
 
 
