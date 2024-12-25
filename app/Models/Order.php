@@ -11,9 +11,9 @@ class Order extends Model
 
     public function customerId()
     {
-        return $this->belongsTo(App\Models\Customers::class);
+        return $this->belongsTo(\App\Models\Customer::class);
     }
     public function userId()
     {
-        return $this->belongsTo(App\Models\User::class);
+        return $this->belongsTo(\App\Models\User::class);
     }}
