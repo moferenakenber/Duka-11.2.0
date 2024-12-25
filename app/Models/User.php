@@ -63,4 +63,13 @@ class User extends Authenticatable
     {
         return ucwords(str_replace('_', ' ', strtolower($value)));
     }
+
+        /**
+     * Define the relationship to carts.
+     * A user can create multiple carts.
+     */
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
 }

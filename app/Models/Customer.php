@@ -22,4 +22,13 @@ class Customer extends Model
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    /**
+     * Define the relationship to carts.
+     * A customer can have multiple carts associated with them.
+     */
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
 }
