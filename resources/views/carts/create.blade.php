@@ -10,7 +10,7 @@
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
                 <div class="p-6">
 
-                    <form action="{{ route('carts.store') }}" method="POST">
+                    <form action="{{ route('admin.carts.store') }}" method="POST">
                         @csrf
 
                         <!-- Select Customer -->

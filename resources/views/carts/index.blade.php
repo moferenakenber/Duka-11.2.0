@@ -14,7 +14,7 @@
             <div class="bg-white shadow-md rounded-lg overflow-hidden">
                 <div class="p-6">
                     <div class="mb-4">
-                        <a href="{{ route('carts.create') }}" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md">Create New Cart</a>
+                        <a href="{{ route('admin.carts.create') }}" class="text-white bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md">Create New Cart</a>
                     </div>
                     <table class="min-w-full bg-white border border-gray-200">
                         <thead>
@@ -35,7 +35,7 @@
                                         @endif
                                     </td>
                                     <td class="px-4 py-2">
-                                        <a href="{{ route('carts.show', $cart->id) }}" class="text-blue-600 hover:text-blue-800">View Details</a>
+                                        <a href="{{ route('admin.carts.show', $cart->id) }}" class="text-blue-600 hover:text-blue-800">View Details</a>
                                     </td>
                                 </tr>
                             @endforeach

@@ -12,7 +12,7 @@ class Customer extends Model
     protected $fillable = [
         'name',
         'email',
-        'phone',
+        'phone_number',
         'city',
         'created_by',  // Add user_id if you want to associate customers with authenticated users
     ];

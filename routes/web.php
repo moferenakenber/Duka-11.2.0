@@ -12,51 +12,65 @@ use App\Http\Middleware\CheckRole;
 
 use Illuminate\Support\Facades\Route;
 
+        // Route::middleware(['auth', 'verified'])->group(function () {
+
+        //     // Admin routes (only accessible to admins)
+        //     Route::middleware(['check_role:admin'])->group(function () {
+
+                // Route::get('/', function () {
+                //     return view('welcome');
+                // });
+
+                // Route::get('/dashboard', function () {
+                //     return view('dashboard');
+                // })->name('dashboard');
+
+                // Route::get('/test', function () {
+                //     return view('test');
+                // })->name('test');
+
+                // Route::get('/flowbite', function () {
+                //     return view('flowbite');
+                // })->name('flowbite');
+
+                // // Admin resource routes
+                // Route::resource('user_managements', UserManagementController::class);
+                // Route::resource('customers', CustomerController::class);
+                // Route::resource('items', ItemController::class);
+                // Route::resource('carts', CartController::class);
+                // Route::resource('products', ProductController::class);
+                // Route::resource('sales', SaleController::class);
+                // Route::resource('purchases', PurchaseController::class);
+
+                // // Cart routes
+                // Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
+        //     });
+
+
+
+
+        //     // Seller routes (restricted to sellers)
+        //     Route::middleware(['check_role:Seller'])->group(function () {
+                // Route::get('/seller', function () {
+                //     return view('seller.index');
+                // })->name('seller');
+        //     });
+
+
+
+
+
+        //     // Stock Keeper routes (restricted to stock keepers)
+        //     Route::middleware(['check_role:stock_keeper'])->group(function () {
+                // Route::get('/stock-keeper', function () {
+                //     return view('stock_keeper.index');
+                // })->name('stock_keeper');
+        //     });
+
+        // });
         Route::get('/', function () {
-            return view('welcome');
-        });
-
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->middleware(['auth', 'verified'])->name('dashboard');
-
-        Route::get('/test', function () {
-            return view('test');
-        })->middleware(['auth', 'verified'])->name('test');
-
-        Route::get('/flowbite', function () {
-            return view('flowbite');
-        })->middleware(['auth', 'verified'])->name('flowbite');
-
-
-
-
-        Route::resource('user_managements', UserManagementController::class)
-            ->middleware(['auth', 'verified']);
-
-        Route::resource('customers', CustomerController::class)
-            ->middleware(['auth', 'verified']);
-
-        Route::resource('items', ItemController::class)
-            ->middleware(['auth', 'verified']);
-
-        Route::resource('carts', CartController::class)
-            ->middleware(['auth', 'verified']);
-
-            // Route::post('cart/{itemId}/add', [CartController::class, 'addToCart'])->name('cart.add')->middleware(['auth', 'verified']);
-
-        // Update your route to accept both GET and POST requests
-        Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
-
-
-        Route::resource('products', ProductController::class)
-             ->middleware(['auth', 'verified']);
-
-        Route::resource('sales', SaleController::class)
-             ->middleware(['auth', 'verified']);
-
-        Route::resource('purchases', PurchaseController::class)
-            ->middleware(['auth', 'verified']);
+                           return view('welcome');
+                        });
 
 
         Route::middleware('auth')->group(function () {
@@ -66,20 +80,72 @@ use Illuminate\Support\Facades\Route;
         });
 
 
-        // Route::middleware('CheckRole')->group(function () {
-        //     Route::get('/seller/dashboard', function () {
-        //         return view('seller.index');
-        //     })->name('seller.dashboard');
-        // });
 
-        // Route::get('/seller/dashboard', function () {
-        //     return view('seller.index');
-        // })->name('seller.dashboard')->middleware(EnsureTokenIsValid::class);
 
-        // Route::get('/seller/test', function () {
-        //     return view('seller.test');
-        // })->middleware(CheckRole::class);
 
+
+        Route::group(['middleware' => ['auth', 'verified']], function (){
+
+            Route::group([
+                'prefix' => 'admin',
+                'middleware' => 'check_role:Admin',
+                'as' => 'admin.',
+            ], function(){
+
+
+                // Route::get('/', function () {
+                //     return view('welcome');
+                // });
+
+                Route::get('/dashboard', function () {
+                    return view('dashboard');
+                })->name('dashboard');
+
+                Route::get('/test', function () {
+                    return view('test');
+                })->name('test');
+
+                Route::get('/flowbite', function () {
+                    return view('flowbite');
+                })->name('flowbite');
+
+                // Admin resource routes
+                Route::resource('user_managements', UserManagementController::class);
+                Route::resource('customers', CustomerController::class);
+                Route::resource('items', ItemController::class);
+                Route::resource('carts', CartController::class);
+                Route::resource('products', ProductController::class);
+                Route::resource('sales', SaleController::class);
+                Route::resource('purchases', PurchaseController::class);
+
+                // Cart routes
+                Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
+            });
+
+
+
+
+            Route::group([
+                'prefix' => 'seller',
+                'middleware' => CheckRole::class.':Seller',
+                'as' => 'seller.',
+            ], function(){
+                Route::get('/seller', function () {
+                    return view('seller/index');
+                })->name('dashboard');
+            });
+
+            Route::group([
+                'prefix' => 'stock_keeper',
+                'middleware' => 'check_role:stock_keeper',
+                'as' => 'stock_keeper.',
+            ], function(){
+                Route::get('/stock-keeper', function () {
+                    return view('stock_keeper.index');
+                })->name('dashboard');
+            });
+
+        });
 
 
 

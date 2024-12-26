@@ -57,12 +57,12 @@
 
                     <!-- Add to Cart Button -->
                     {{-- <div class="mt-4">
-                        <a href="{{ route('cart.add', $cart->id) }}" class="text-blue-600 hover:text-blue-800">Add Item to Cart</a>
+                        <a href="{{ route('admin.cartn.cart.add', $cart->id) }}" class="text-blue-600 hover:text-blue-800">Add Item to Cart</a>
                     </div> --}}
 
                     <!-- Redirect to Items Page -->
                     <div class="mt-4">
-                        <a href="{{ route('items.index', ['cart_id' => $cart->id]) }}" class="text-blue-600 hover:text-blue-800">
+                        <a href="{{ route('admin.items.index', ['cart_id' => $cart->id]) }}" class="text-blue-600 hover:text-blue-800">
                             Add Item to Cart
                         </a>
                     </div>
@@ -70,7 +70,7 @@
 
                     <!-- Back Button -->
                     <div class="mt-4">
-                        <a href="{{ route('carts.index') }}" class="text-blue-600 hover:text-blue-800">Back to Carts List</a>
+                        <a href="{{ route('admin.carts.index') }}" class="text-blue-600 hover:text-blue-800">Back to Carts List</a>
                     </div>
                 </div>
             </div>

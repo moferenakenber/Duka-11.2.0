@@ -56,6 +56,15 @@ class User extends Authenticatable
         return $this->hasMany(Customer::class, 'created_by');  // Inverse of 'belongsTo' in Customer
     }
 
+
+    /**
+     * Set the role attribute to lowercase before storing in the database.
+     */
+    public function setRoleAttribute($value)
+    {
+        $this->attributes['role'] = strtolower($value);
+    }
+
     /**
      * Format the role for display purposes (e.g., "Stock Keeper").
      */

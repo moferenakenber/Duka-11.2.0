@@ -26,4 +26,5 @@
             </div>
         </div>
     </div>
+    <p>{{ $user->email }}'s role: {{ $user->role }}</p>
 </x-app-layout>

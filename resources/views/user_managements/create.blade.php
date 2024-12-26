@@ -6,7 +6,7 @@
         </h2>
     </x-slot>
 
-    <form class="max-w-sm mx-auto" action="{{ route('user_managements.store') }}" method="POST" enctype="multipart/form-data">
+    <form class="max-w-sm mx-auto" action="{{ route('admin.user_managements.store') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
            <!-- first_name -->

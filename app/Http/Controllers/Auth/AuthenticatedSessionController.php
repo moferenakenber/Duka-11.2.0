@@ -28,7 +28,28 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        //return redirect()->intended(route('admin.dashboard', absolute: false));
+
+
+        // // Get the authenticated user
+        $user = auth()->user();
+
+        // Check user role and redirect accordingly
+        if ($user->role === 'Admim') {
+            return redirect()->route('admin.dashboard'); // Admin dashboard route
+        }
+
+        if ($user->role === 'Seller') {
+            return redirect()->route('seller.dashboard'); // Seller dashboard route
+        }
+
+        if ($user->role === 'Stock Keeper') {
+            return redirect()->route('stock_keeper.dashboard'); // Stock keeper dashboard route
+        }
+
+        // Default redirect if no role matches
+        return redirect()->intended(route('login', absolute: false));
+
     }
 
     /**
@@ -36,12 +57,14 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): RedirectResponse
     {
-        Auth::guard('web')->logout();
+        //Auth::guard('web')->logout();
+        Auth::logout();
+
 
         $request->session()->invalidate();
 
         $request->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     }
 }

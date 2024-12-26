@@ -54,7 +54,7 @@ class UserManagementController extends Controller
             'password' => bcrypt($validatedUser['password']), // Encrypted password for later use
         ]);
 
-        return redirect()->route('user_managements.index')->with('success', 'user registered successfully!');
+        return redirect()->route('admin.user_managements.index')->with('success', 'user registered successfully!');
     }
 
     public function show(UserManagement $userManagement)

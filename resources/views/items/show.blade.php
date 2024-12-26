@@ -12,7 +12,7 @@
                     <!-- Item Details (same as before) -->
 
                     <!-- Add to Cart Form -->
-                    <form method="POST" action="{{ route('cart.add', $item->id) }}">
+                    <form method="POST" action="{{ route('admin.cart.add', $item->id) }}">
                         @csrf
                         <div class="mt-4 space-y-4">
                             <!-- Select Cart -->
@@ -46,7 +46,7 @@
 
                     <!-- Back Button -->
                     <div class="mt-4">
-                        <a href="{{ route('items.index') }}" class="text-blue-600 hover:text-blue-800">Back to Items List</a>
+                        <a href="{{ route('admin.items.index') }}" class="text-blue-600 hover:text-blue-800">Back to Items List</a>
                     </div>
                 </div>
             </div>
@@ -133,7 +133,7 @@
                     @endif
 
                     <!-- Add to Cart Form -->
-                    <form method="POST" action="{{ route('cart.add', $item->id) }}">
+                    <form method="POST" action="{{ route('admin.cart.add', $item->id) }}">
                         @csrf
                         <div class="mt-4 space-y-4">
                             <!-- Select Cart -->
@@ -188,7 +188,7 @@
 
                     <!-- Back Button -->
                     <div class="mt-4">
-                        <a href="{{ route('items.index') }}" class="text-blue-600 hover:text-blue-800">Back to Items List</a>
+                        <a href="{{ route('admin.items.index') }}" class="text-blue-600 hover:text-blue-800">Back to Items List</a>
                     </div>
                 </div>
             </div>
@@ -310,7 +310,7 @@
 
 
                     <!-- Add to Cart Button -->
-                    {{-- <form method="POST" action="{{ route('cart.add', $item->id) }}">
+                    {{-- <form method="POST" action="{{ route('admin.cart.add', $item->id) }}">
                         @csrf
                         <div class="mt-4 flex items-center space-x-4">
                             <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
@@ -331,10 +331,10 @@
 
                     @if(auth()->user()->carts->isEmpty())
                         <div class="mt-4 text-red-600 font-semibold">
-                            You don't have any carts. Please <a href="{{ route('carts.create') }}" class="text-blue-600 underline">create a cart</a> first.
+                            You don't have any carts. Please <a href="{{ route('admin.carts.create') }}" class="text-blue-600 underline">create a cart</a> first.
                         </div>
                     @else
-                        <form method="POST" action="{{ route('cart.add', $item->id) }}">
+                        <form method="POST" action="{{ route('admin.cart.add', $item->id) }}">
                             @csrf
                             <div class="mt-4 flex items-center space-x-4">
                                 <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
@@ -356,7 +356,7 @@
 
                     <!-- Back Button -->
                     <div class="mt-4">
-                        <a href="{{ route('items.index') }}" class="text-blue-600 hover:text-blue-800">Back to Items List</a>
+                        <a href="{{ route('admin.items.index') }}" class="text-blue-600 hover:text-blue-800">Back to Items List</a>
                     </div>
                 </div>
             </div>

@@ -67,7 +67,7 @@ class CartController extends Controller
     //     ]);
 
     //     // Redirect to the created cart's details page with success message
-    //     return redirect()->route('carts.show', $cart->id)
+    //     return redirect()->route('admin.carts.show', $cart->id)
     //                      ->with('success', 'Cart created successfully!');
     // }
     public function store(Request $request)
@@ -84,12 +84,12 @@ class CartController extends Controller
         ]);
 
         // Redirect to the created cart's details page with success message
-        // return redirect()->route('carts.show', $cart->id)
+        // return redirect()->route('admin.carts.show', $cart->id)
         //                  ->with('success', 'Cart created successfully!');
     // Redirect or return response
-    //return redirect()->route('carts.index')->with('success', 'Cart created successfully!');
+    //return redirect()->route('admin.carts.index')->with('success', 'Cart created successfully!');
        // Redirect to the cart's detail page with a success message
-       return redirect()->route('carts.show', $cart->id)->with('success', 'Cart created successfully!');
+       return redirect()->route('admin.carts.show', $cart->id)->with('success', 'Cart created successfully!');
     }
 
 
@@ -135,7 +135,7 @@ class CartController extends Controller
     //     ]);
 
     //     // Redirect back to the cart index page with a success message
-    //     return redirect()->route('carts.index')->with('success', 'Cart updated successfully!');
+    //     return redirect()->route('admin.carts.index')->with('success', 'Cart updated successfully!');
     // }
 
     public function update(Request $request, Cart $cart)
@@ -151,7 +151,7 @@ class CartController extends Controller
         ]);
 
         // Redirect to the updated cart's details page with success message
-        return redirect()->route('carts.show', $cart->id)
+        return redirect()->route('admin.carts.show', $cart->id)
                          ->with('success', 'Cart updated successfully!');
     }
 
@@ -167,7 +167,7 @@ class CartController extends Controller
                 $cart->delete();
 
                 // Redirect back to the cart index page with a success message
-                return redirect()->route('carts.index')->with('success', 'Cart deleted successfully!');
+                return redirect()->route('admin.carts.index')->with('success', 'Cart deleted successfully!');
     }
 
 
@@ -201,7 +201,7 @@ class CartController extends Controller
         ]);
 
         // Redirect back to the cart or item list
-        return redirect()->route('carts.show', $cart->id)->with('success', 'Item added to cart!');
+        return redirect()->route('admin.carts.show', $cart->id)->with('success', 'Item added to cart!');
     }
         // Store an item in the cart
         public function storeItem(Request $request, Cart $cart)
@@ -221,6 +221,6 @@ class CartController extends Controller
             ]);
 
             // Redirect back to the cart show page with a success message
-            return redirect()->route('carts.show', $cart->id)->with('success', 'Item added to cart!');
+            return redirect()->route('admin.carts.show', $cart->id)->with('success', 'Item added to cart!');
         }
 }

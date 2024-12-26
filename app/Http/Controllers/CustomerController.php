@@ -43,24 +43,26 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $customer = new Customer();
+
+        $validatedCustomer =$request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:customers',
-            'phone' => 'nullable|string',
+            'phone_number' => 'required|string|regex:/^[0-9]{10}$/|unique:users,phone_number',
             'city' => 'nullable|string',
         ]);
 
         // dd($request->all()); // Check if form data is being received
 
-        Customer::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'city' => $request->city,
+        $customer = Customer::create([
+            'name' => $validatedCustomer['name'],
+            'email' => $validatedCustomer['email'],
+            'phone_number' => $validatedCustomer['phone_number'],
+            'city' => $validatedCustomer['city'],
             'created_by' => auth()->id(), // Set the authenticated user's ID
         ]);
 
-        return redirect()->route('customers.index')->with('success', 'Customer created successfully.');
+        return redirect()->route('admin.customers.index')->with('success', 'Customer created successfully.');
     }
 
     /**

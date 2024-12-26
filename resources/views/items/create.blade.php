@@ -8,7 +8,7 @@
 
 
     <div class="max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-md">
-        <form action="{{ route('items.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('admin.items.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <!-- Product Name Section -->

@@ -1164,7 +1164,7 @@
 
 
 
-                <form action="{{ route('items.store') }}" method="POST"
+                <form action="{{ route('admin.items.store') }}" method="POST"
                     class="space-y-4 p-6 bg-gray-100 rounded-md">
                     @csrf
                     <!-- Item Name -->

@@ -9,7 +9,7 @@
             <div class="flex-1 space-y-2 px-4 py-4">
 
                 <div class="px-4 py-4 flex items-center justify-center">
-                    <a href="{{ route('dashboard') }}">
+                    <a href="{{ route('admin.dashboard') }}">
                         <x-application-logo class="block h-16 w-auto fill-current text-gray-800 dark:text-gray-200" />
                     </a>
                 </div>
@@ -19,7 +19,7 @@
             <div class="border-t border-gray-700 my-2"></div>    {{-- <--- Optional separator --}}
             <!--Sidebar Links -->
             <nav class="flex flex-col flex-grow space-y-2 px-4 py-4">
-                    <x-sidebar-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
+                    <x-sidebar-link :href="route('admin.dashboard')" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-sidebar-link>
 
@@ -28,7 +28,7 @@
                         {{ __('User Management') }}
                     </x-sidebar-link>
 
-                    <x-sidebar-link :href="route('customers.index')" :active="request()->routeIs('customers.index')">
+                    <x-sidebar-link :href="route('admin.customers.index')" :active="request()->routeIs('customers.index')">
                         {{ __('Customers') }}
                     </x-sidebar-link>
 

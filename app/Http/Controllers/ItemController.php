@@ -94,7 +94,7 @@ class ItemController extends Controller
             $item->update(['images' => json_encode($imagePaths)]);
         }
 
-    return redirect()->route('items.index')->with('success', 'item registered successfully!');
+    return redirect()->route('admin.items.index')->with('success', 'item registered successfully!');
    }
 
     // Show the details of a specific item
@@ -145,7 +145,7 @@ class ItemController extends Controller
            'packetsinacartoon' => $request->packetsinacartoon,
        ]);
 
-       return redirect()->route('items.index')->with('success', 'Item updated successfully.');
+       return redirect()->route('admin.items.index')->with('success', 'Item updated successfully.');
    }
 
 
@@ -153,6 +153,6 @@ class ItemController extends Controller
    public function destroy(Item $item)
    {
        $item->delete();
-       return redirect()->route('items.index')->with('success', 'Item deleted successfully.');
+       return redirect()->route('admin.items.index')->with('success', 'Item deleted successfully.');
    }
 }

@@ -11,7 +11,7 @@
                 </svg>
             </button>
 
-          <a href="{{ route('dashboard') }}" class="flex ms-2 md:me-24">
+          <a href="{{ route('admin.dashboard') }}" class="flex ms-2 md:me-24">
             <img src="https://flowbite.com/docs/images/logo.svg" class="h-8 me-3" alt="FlowBite Logo" />
             <span class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Mezgebedirijit</span>
           </a>
@@ -47,6 +47,11 @@
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit" class="text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md">Logout</button>
+                    </form> --}}
+
+                    {{-- <form action="{{ route('logout') }}" method="POST" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">
+                        @csrf
+                        <button type="submit" class="w-full text-white bg-red-600 hover:bg-red-700 px-4 py-2 rounded-md">Sign out</button>
                     </form> --}}
 
                     <form action="{{ route('logout') }}" method="POST" class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-600 dark:hover:text-white" role="menuitem">
