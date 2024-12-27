@@ -19,7 +19,7 @@
     </video>
 
     <video width="720" height="480" controls>
-        <source src="http://your-server-ip-or-domain/Downloads/U2-BeautifulDay.mp4" type="video/mp4">
+        <source src="https://www.mezgebedirijit.com/Downloads/U2-BeautifulDay.mp4" type="video/mp4">
         Your browser does not support the video tag.
       </video>
 
