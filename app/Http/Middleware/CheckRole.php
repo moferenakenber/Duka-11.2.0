@@ -390,6 +390,9 @@
                 }
 
                 if ($user->role === 'Seller') {
+                    session(['theme' => 'sellerandstock_keepertheme']);
+                    Log::info('Session theme set:', ['theme' => session('theme')]);
+                    session()->save(); // Explicitly save the session if necessary
                     return redirect()->route('seller.dashboard'); // Seller dashboard
                 }
 

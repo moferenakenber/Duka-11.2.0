@@ -1,13 +1,15 @@
 <?php
 
-use App\Http\Controllers\CartController;
-use App\Http\Controllers\UserManagementController;
-use App\Http\Controllers\CustomerController;
-use App\Http\Controllers\ItemController;
-use App\Http\Controllers\SaleController;
-use App\Http\Controllers\PurchaseController;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Admin\CartController;
+use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\ItemController;
+use App\Http\Controllers\Admin\SaleController;
+use App\Http\Controllers\Admin\PurchaseController;
+use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Seller\ItemController as SellerItemController;
+use App\Http\Controllers\Stockkeeper\ItemController as StockkeeperItemController;
 use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Auth;
 
@@ -84,7 +86,7 @@ use Illuminate\Support\Facades\Route;
                 Route::resource('customers', CustomerController::class);
                 Route::resource('items', ItemController::class);
                 Route::resource('carts', CartController::class);
-                Route::resource('products', ProductController::class);
+                //Route::resource('products', ProductController::class);
                 Route::resource('sales', SaleController::class);
                 Route::resource('purchases', PurchaseController::class);
 
@@ -100,8 +102,14 @@ use Illuminate\Support\Facades\Route;
             ], function(){
 
                 Route::get('/dashboard', function () {
+                    // Set the theme for the seller role in the session
+                    session(['theme' => 'sellerandstock_keepertheme']);
+                    session()->save(); // Explicitly save the session if necessary
                     return view('seller.index');
                 })->name('dashboard');
+
+                Route::resource('items', SellerItemController::class);
+
             });
 
             // Stock Keeper routes group
@@ -112,8 +120,10 @@ use Illuminate\Support\Facades\Route;
             ], function(){
 
                 Route::get('/dashboard', function () {
-                    return view('stock_keeper.index');
+                    return view('stock_keeper.items.index');
                 })->name('dashboard');
+
+                Route::resource('items', StockkeeperItemController::class);
             });
 
             // Visitor routes group
