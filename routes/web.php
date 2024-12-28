@@ -34,11 +34,11 @@ use Illuminate\Support\Facades\Route;
                 }
 
                 if ($user->role === 'Seller') {
-                    return redirect()->route('seller.items');
+                    return redirect()->route('seller.dashboard');
                 }
 
                 if ($user->role === 'Stock Keeper') {
-                    return redirect()->route('stock_keeper.items');
+                    return redirect()->route('stock_keeper.dashboard');
                 }
                 return view('visitor.home');
                 //return redirect()->route('home'); // For users with no specific role
