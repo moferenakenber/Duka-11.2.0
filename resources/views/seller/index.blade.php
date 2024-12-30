@@ -25,48 +25,18 @@
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<div class="bg-primary text-white">
-    This should show with the primary color of the theme.
-</div>
-<div class="bg-{{ session('theme', 'sellerandstock_keepertheme') }} text-white">
-    This should show with the primary color of the theme.
-</div>
+
 <body class="bg-{{ session('theme', 'sellerandstock_keepertheme') }}-base-100 text-{{ session('theme', 'sellerandstock_keepertheme') }}-primary">
-    <div class="bg-primary text-white">
-        This should show with the primary color of the theme.
-    </div>
-    <div class="bg-{{ session('theme', 'sellerandstock_keepertheme') }} text-white">
-        This should show with the primary color of the theme.
-    </div>
+
     <main>
-        <div class="bg-primary text-white">
-            This should show with the primary color of the theme.
-        </div>
-        <div class="bg-{{ session('theme', 'sellerandstock_keepertheme') }} text-white">
-            This should show with the primary color of the theme.
-        </div>
+
         {{-- <nav class="bg-{{ $theme }} dark:bg-{{ $theme }} antialiased"> --}}
         <nav class="bg-{{ session('theme', 'sellerandstock_keepertheme') }} dark:bg-{{ session('theme', 'sellerandstock_keepertheme') }}-dark antialiased">
-            <div class="bg-primary text-white">
-                This should show with the primary color of the theme.
-            </div>
-            <div class="bg-{{ session('theme', 'sellerandstock_keepertheme') }} text-white">
-                This should show with the primary color of the theme.
-            </div>
+
             <div class="max-w-screen-xl px-4 mx-auto 2xl:px-0 py-4">
                 <div class="flex items-center justify-between">
 
                     <div class="flex items-center space-x-8">
-                        <div class="shrink-0">
-                            <a href="#" title="" class="">
-                                <img class="block w-auto h-8 dark:hidden"
-                                    src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full.svg"
-                                    alt="">
-                                <img class="hidden w-auto h-8 dark:block"
-                                    src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full-dark.svg"
-                                    alt="">
-                            </a>
-                        </div>
 
                         <ul class="hidden lg:flex items-center justify-start gap-6 md:gap-8 py-3 sm:justify-center">
                             <li>
@@ -375,21 +345,8 @@
                     </ul>
                 </div>
             </div>
-            <div class="bg-primary text-white">
-                This should show with the primary color of the theme.
-            </div>
-            <div class="bg-{{ session('theme', 'sellerandstock_keepertheme') }} text-white">
-                This should show with the primary color of the theme.
-            </div>
 
         </nav>
-        <div class="bg-primary text-white">
-            This should show with the primary color of the theme.
-        </div>
-
-        <div class="bg-{{ session('theme', 'sellerandstock_keepertheme') }} text-white">
-            This should show with the primary color of the theme.
-        </div>
 
 
     </main>

@@ -65,6 +65,18 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+            [
+                'first_name' => 'Amen',
+                'last_name' => 'Biniyam',
+                'phone_number' => '0914344267',
+                'email' => 'amen@gmail.com',
+                'email_verified_at' => now(),
+                'role' => 'user',
+                'password' => Hash::make('12345678'),
+                'remember_token' => Str::random(10),
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
             // You can add more users as needed
         ]);
 

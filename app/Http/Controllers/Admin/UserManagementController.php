@@ -34,7 +34,7 @@ class UserManagementController extends Controller
             'last_name' => 'required|string|max:255',
             'phone_number' => 'required|string|regex:/^[0-9]{10}$/|unique:users,phone_number',
             'email' => 'required|email|unique:users,email',
-            'role' => 'required|in:admin,seller,stock_keeper', // Ensures role is one of the specified values
+            'role' => 'required|in:admin,seller,stock_keeper,user', // Ensures role is one of the specified values
             'password' => 'required|string|min:8|confirmed', // Validates password with confirmation field
         ]);
 

@@ -400,6 +400,10 @@
                     return redirect()->route('stock_keeper.dashboard'); // Stock keeper dashboard
                 }
 
+                if ($user->role === 'User') {
+                    return redirect()->route('user.home'); // Stock keeper dashboard
+                }
+
                 // If no valid role is found, redirect to default Home
                 return redirect()->route('home'); // Default Home
             }

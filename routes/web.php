@@ -7,57 +7,24 @@ use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\Admin\ProfileController;
-use App\Http\Controllers\Admin\ProductController;
+//use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Seller\ItemController as SellerItemController;
+use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Stockkeeper\ItemController as StockkeeperItemController;
-use App\Http\Middleware\CheckRole;
 use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Support\Facades\Route;
 
-        Route::get('/', function () {
+
+        Route::get('/welcome', function () {
             return view('welcome');
         })->name('welcome');
+
 
         Route::middleware('auth')->group(function () {
             Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
             Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
             Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
         });
-
-        Route::get('/', function () {
-            if (Auth::check()) {
-                $user = Auth::user();
-
-                if ($user->role === 'Admin') {
-                    return redirect()->route('admin.dashboard');
-                }
-
-                if ($user->role === 'Seller') {
-                    return redirect()->route('seller.dashboard');
-                }
-
-                if ($user->role === 'Stock Keeper') {
-                    return redirect()->route('stock_keeper.dashboard');
-                }
-                return view('visitor.home');
-                //return redirect()->route('home'); // For users with no specific role
-            }
-
-            // For guests
-            return view('welcome');
-        })->name('home');
-
-
-
-        // // Visitor route (Unauthenticated users)
-        // Route::group(['middleware' => 'guest', 'as' => 'visitor.'], function () {
-        //     Route::get('/', function () {
-        //         return view('welcome');
-        //     })->name('home');
-        // });
-
-
 
 
         Route::group(['middleware' => ['auth', 'verified']], function (){
@@ -101,13 +68,14 @@ use Illuminate\Support\Facades\Route;
                 'as' => 'seller.',
             ], function(){
 
-                Route::get('/dashboard', function () {
-                    // Set the theme for the seller role in the session
-                    session(['theme' => 'sellerandstock_keepertheme']);
-                    session()->save(); // Explicitly save the session if necessary
-                    return view('seller.index');
-                })->name('dashboard');
+                // Route::get('/dashboard', function () {
+                //     // Set the theme for the seller role in the session
+                //     session(['theme' => 'sellerandstock_keepertheme']);
+                //     session()->save(); // Explicitly save the session if necessary
+                //     return view('seller.items.index');
+                // })->name('dashboard');
 
+                Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
                 Route::resource('items', SellerItemController::class);
 
             });
@@ -126,7 +94,21 @@ use Illuminate\Support\Facades\Route;
                 Route::resource('items', StockkeeperItemController::class);
             });
 
-            // Visitor routes group
+            // // User routes group
+            Route::group([
+                'prefix' => 'user',
+                'middleware' => 'check_role:User',
+                'as' => 'user.',
+            ], function(){
+
+                Route::get('/home', function () {
+                    return view('user.home.index');
+                })->name('home');
+
+                //Route::resource('items', StockkeeperItemController::class);
+            });
+
+            // User routes group
             // Route::group([
             //     'as' => 'visitor.',
             // ], function(){
@@ -146,7 +128,9 @@ use Illuminate\Support\Facades\Route;
     // });
 
 
-
-
 require __DIR__.'/auth.php';
+
+
+// Include visitor routes before authentication checks
+require __DIR__.'/visitor.php';
 

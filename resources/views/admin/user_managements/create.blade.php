@@ -49,6 +49,7 @@
             <option value="admin">Admin</option>
             <option value="seller">Seller</option>
             <option value="stock_keeper">Stock Keeper</option>
+            <option value="user">User</option>
             </select>
         </div>
 
