@@ -1207,6 +1207,30 @@
             </div>
         </div>
 
+        <div x-data="{ activeTab: 1 }">
+            <!-- Tab Buttons (if you already have them) -->
+            <div>
+                <button :class="{ 'active': activeTab === 1 }" @click="activeTab = 1">Tab 1</button>
+                <button :class="{ 'active': activeTab === 2 }" @click="activeTab = 2">Tab 2</button>
+                <button :class="{ 'active': activeTab === 3 }" @click="activeTab = 3">Tab 3</button>
+            </div>
+
+            <!-- Tab Contents -->
+            <div>
+                <div x-show="activeTab === 1" class="tab-content">
+                    <h2>Content for Tab 1</h2>
+                    <p>This is the content for Tab 1.</p>
+                </div>
+                <div x-show="activeTab === 2" class="tab-content">
+                    <h2>Content for Tab 2</h2>
+                    <p>This is the content for Tab 2.</p>
+                </div>
+                <div x-show="activeTab === 3" class="tab-content">
+                    <h2>Content for Tab 3</h2>
+                    <p>This is the content for Tab 3.</p>
+                </div>
+            </div>
+        </div>
 
 
 

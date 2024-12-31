@@ -24,29 +24,38 @@ export default {
         },
     },
 
+    // Set darkMode to 'media' so it uses system preferences for dark mode
+    darkMode: 'media', // or 'media' (based on the user's system preference)
+
+
     // daisyui: {
     //                themes: [
     //                "light", "dark", "retro",
     //              ],
     //         },
 
-    daisyui: {
-        themes: [
-          {
-            mytheme: {
-              "primary": "#a991f7",
-              "secondary": "#f6d860",
-              "accent": "#37cdbe",
-              "neutral": "#3d4451",
-              "base-100": "#ffffff",
-            },
-          },
-          "dark",
-          "retro",
-        ],
-      },
+    //daisyui: {
+    //     themes: [
+    //       {
+    //         mytheme: {
+    //           "primary": "#a991f7",
+    //           "secondary": "#f6d860",
+    //           "accent": "#37cdbe",
+    //           "neutral": "#3d4451",
+    //           "base-100": "#ffffff",
+    //         },
+    //       },
+    //       "dark",
+    //       "retro",
+    //     ],
+    //   },
 
-    plugins: [require('daisyui', 'flowbite/plugin'), forms],
+    //plugins: [require('daisyui', 'flowbite/plugin'), forms],
+    plugins: [
+        require('daisyui'),
+        require('flowbite/plugin'),
+        forms,
+      ],
 };
 
 
