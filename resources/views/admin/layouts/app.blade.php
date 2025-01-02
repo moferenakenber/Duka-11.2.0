@@ -21,8 +21,11 @@
                 @include('admin.layouts.sidebar')
 
                 <!-- Main Content -->
-                <main class="p-4 sm:ml-64">
-                    <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-16">
+                <main class="p-4 sm:ml-64 min-h-screen overflow-y-auto">
+                    <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-16 min-h-screen">
+
+
+
                         <!-- Page Heading -->
                         @isset($header)
                             <header class="bg-white dark:bg-gray-800 shadow">
