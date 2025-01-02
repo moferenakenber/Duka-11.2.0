@@ -44,6 +44,18 @@ use Illuminate\Support\Facades\Route;
                     return view('test');
                 })->name('test');
 
+
+                Route::get('/daisyui', function () {
+                    return view('daisyui');
+                })->name('daisyui');
+
+
+                Route::get('/fullhtml', function () {
+                    return view('fullhtml');
+                })->name('fullhtml');
+
+
+
                 Route::get('/flowbite', function () {
                     return view('flowbite');
                 })->name('flowbite');

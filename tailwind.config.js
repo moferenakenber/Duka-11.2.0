@@ -34,7 +34,7 @@ export default {
     //              ],
     //         },
 
-    //daisyui: {
+    // daisyui: {
     //     themes: [
     //       {
     //         mytheme: {
@@ -49,6 +49,17 @@ export default {
     //       "retro",
     //     ],
     //   },
+
+
+    daisyui: {
+        themes: ["light", "dark", "cupcake"],
+      },
+
+
+
+
+
+
 
     //plugins: [require('daisyui', 'flowbite/plugin'), forms],
     plugins: [

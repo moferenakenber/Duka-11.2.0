@@ -1,4 +1,517 @@
 <!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+{{-- <body class="font-sans antialiased">
+        <body class="bg-gray-100">
+
+
+
+
+
+
+
+{{-- <!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Step Form</title>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.js" defer>
+    </script>
+    <link
+        href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.2/dist/tailwind.min.css"
+        rel="stylesheet">
+    <link
+        href="https://cdn.jsdelivr.net/npm/flowbite@1.5.1/dist/flowbite.min.css"
+        rel="stylesheet">
+</head>
+
+<body class="bg-gray-100"> --}}
+
+
+
+{{-- <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi Step Form</title>
+  <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.12.0/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/flowbite@1.5.3/dist/flowbite.min.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head> --}}
+
+
+
+
+<body class="bg-gray-100">
+    {{--
+  <div x-data="{
+      step: 1,
+      totalSteps: 5,
+      progress() {
+          return (this.step / this.totalSteps) * 100;
+      }
+  }" class="max-w-4xl mx-auto p-8 pb-16">
+
+    <!-- Step Progress Bar -->
+    <div class="mb-6">
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-semibold text-sm">Step <span x-text="step"></span> of 5</span>
+        <span class="font-semibold text-sm" x-text="Math.round(progress()) + '%'"></span>
+      </div>
+      <div class="w-full bg-gray-200 rounded-full h-2">
+        <div class="bg-blue-500 h-2 rounded-full" :style="'width: ' + progress() + '%'" ></div>
+      </div>
+    </div>
+
+    <!-- Tabs for the Form -->
+    <div class="mb-6">
+      <ul class="flex space-x-4">
+        <li @click="step = 1" :class="{'bg-blue-500 text-white': step === 1}" class="cursor-pointer py-2 px-4 rounded-md">Vital Information</li>
+        <li @click="step = 2" :class="{'bg-blue-500 text-white': step === 2}" class="cursor-pointer py-2 px-4 rounded-md">Packaging Information</li>
+        <li @click="step = 3" :class="{'bg-blue-500 text-white': step === 3}" class="cursor-pointer py-2 px-4 rounded-md">Variation</li>
+        <li @click="step = 4" :class="{'bg-blue-500 text-white': step === 4}" class="cursor-pointer py-2 px-4 rounded-md">Price Rules</li>
+        <li @click="step = 5" :class="{'bg-blue-500 text-white': step === 5}" class="cursor-pointer py-2 px-4 rounded-md">Images</li>
+      </ul>
+    </div>
+
+    <!-- Step 1: Vital Information -->
+    <div x-show="step === 1" class="space-y-4">
+      <div>
+        <label for="product_name" class="block text-sm font-semibold">Product Name</label>
+        <input type="text" id="product_name" class="mt-2 p-2 border border-gray-300 rounded-md w-full" placeholder="Enter product name">
+      </div>
+      <div>
+        <label for="product_description" class="block text-sm font-semibold">Product Description</label>
+        <textarea id="product_description" class="mt-2 p-2 border border-gray-300 rounded-md w-full" placeholder="Write product description here..."></textarea>
+      </div>
+      <div>
+        <label for="status" class="block text-sm font-semibold">Status</label>
+        <select id="status" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+          <option value="available">Available</option>
+          <option value="unavailable">Unavailable</option>
+          <option value="in_stock">In Stock</option>
+          <option value="out_of_stock">Out of Stock</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Step 2: Packaging Information -->
+    <div x-show="step === 2" class="space-y-4">
+      <div>
+        <label for="package_a" class="block text-sm font-semibold">Package A (e.g. packet, doz.)</label>
+        <input type="number" id="package_a" class="mt-2 p-2 border border-gray-300 rounded-md w-full" placeholder="Enter amount for Package A">
+      </div>
+      <div>
+        <label for="package_b" class="block text-sm font-semibold">Package B (e.g. carton, doz.)</label>
+        <input type="number" id="package_b" class="mt-2 p-2 border border-gray-300 rounded-md w-full" placeholder="Enter amount for Package B">
+      </div>
+      <div>
+        <p class="text-sm font-semibold">Total Quantity:</p>
+        <p id="total_quantity" class="text-sm mt-2">Amount A * Amount B</p>
+      </div>
+    </div>
+
+    <!-- Step 3: Variation -->
+    <div x-show="step === 3" class="space-y-4">
+      <div class="space-y-2">
+        <p class="text-sm font-semibold">Colors</p>
+        <div class="space-x-4">
+          <label><input type="checkbox" class="mr-2"> Black</label>
+          <label><input type="checkbox" class="mr-2"> White</label>
+          <label><input type="checkbox" class="mr-2"> Red</label>
+          <label><input type="checkbox" class="mr-2"> Blue</label>
+          <label><input type="checkbox" class="mr-2"> Yellow</label>
+        </div>
+      </div>
+
+      <div class="space-y-2">
+        <p class="text-sm font-semibold">Size</p>
+        <div class="space-x-4">
+          <label><input type="checkbox" class="mr-2"> Small</label>
+          <label><input type="checkbox" class="mr-2"> Medium</label>
+          <label><input type="checkbox" class="mr-2"> Large</label>
+          <label><input type="checkbox" class="mr-2"> Extra Large</label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Price Rules -->
+    <div x-show="step === 4" class="space-y-4">
+      <div>
+        <label for="customer_price" class="block text-sm font-semibold">Price for Customer</label>
+        <input type="number" id="customer_price" class="mt-2 p-2 border border-gray-300 rounded-md w-full" placeholder="Enter price for customer">
+      </div>
+      <div>
+        <label for="seller_price" class="block text-sm font-semibold">Price for Seller</label>
+        <input type="number" id="seller_price" class="mt-2 p-2 border border-gray-300 rounded-md w-full" placeholder="Enter price for seller">
+      </div>
+      <div>
+        <label for="user_price" class="block text-sm font-semibold">Price for User</label>
+        <input type="number" id="user_price" class="mt-2 p-2 border border-gray-300 rounded-md w-full" placeholder="Enter price for user">
+      </div>
+    </div>
+
+    <!-- Step 5: Images -->
+    <div x-show="step === 5" class="space-y-4">
+      <div>
+        <label for="image_a" class="block text-sm font-semibold">Package A Image</label>
+        <input type="file" id="image_a" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+      </div>
+      <div>
+        <label for="image_b" class="block text-sm font-semibold">Package B Image</label>
+        <input type="file" id="image_b" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+      </div>
+      <div>
+        <label for="image_c" class="block text-sm font-semibold">Package C Image</label>
+        <input type="file" id="image_c" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+      </div>
+      <div>
+        <label for="front_page_images" class="block text-sm font-semibold">Front Page Images (up to 5)</label>
+        <input type="file" id="front_page_images" multiple class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Navigation Buttons -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white py-4 px-8 flex justify-between items-center shadow-lg">
+    <button @click="step > 1 ? step-- : null" class="bg-gray-300 text-black py-2 px-4 rounded-md" :disabled="step === 1">Previous</button>
+    <button @click="step < totalSteps ? step++ : null" class="bg-blue-500 text-white py-2 px-4 rounded-md" :disabled="step === totalSteps">Next</button>
+  </div> --}}
+
+
+
+  <form action="/submit-endpoint" method="POST" enctype="multipart/form-data">
+    <div x-data="{
+        step: 1,
+        totalSteps: 5,
+        progress() {
+            return (this.step / this.totalSteps) * 100;
+        }
+                  }" class="max-w-4xl mx-auto p-8">
+
+        <!-- Step Progress Bar -->
+        <div class="mb-6">
+            <div class="flex items-center justify-between mb-2">
+                <span class="font-semibold text-sm">Step <span x-text="step"></span> of 5</span>
+                <span class="font-semibold text-sm" x-text="Math.round(progress()) + '%'"></span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-2">
+                <div class="bg-blue-500 h-2 rounded-full" :style="'width: ' + progress() + '%'"></div>
+            </div>
+        </div>
+
+        <!-- Tabs for the Form -->
+        <div class="mb-6">
+            <ul class="flex space-x-4">
+                <li @click="step = 1" :class="{ 'bg-blue-500 text-white': step === 1 }"
+                    class="cursor-pointer py-2 px-4 rounded-md">Vital
+                    Information</li>
+                <li @click="step = 2" :class="{ 'bg-blue-500 text-white': step === 2 }"
+                    class="cursor-pointer py-2 px-4 rounded-md">Packaging
+                    Information</li>
+                <li @click="step = 3" :class="{ 'bg-blue-500 text-white': step === 3 }"
+                    class="cursor-pointer py-2 px-4 rounded-md">Variation</li>
+                <li @click="step = 4" :class="{ 'bg-blue-500 text-white': step === 4 }"
+                    class="cursor-pointer py-2 px-4 rounded-md">Price Rules</li>
+                <li @click="step = 5" :class="{ 'bg-blue-500 text-white': step === 5 }"
+                    class="cursor-pointer py-2 px-4 rounded-md">Images</li>
+            </ul>
+        </div>
+
+        <!-- Step 1: Vital Information -->
+        <div x-show="step === 1" class="space-y-4">
+            <div>
+                <label for="product_name" class="block text-sm font-semibold">Product Name</label>
+                <input type="text" id="product_name" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                    placeholder="Enter product name">
+            </div>
+            <div>
+                <label for="product_description" class="block text-sm font-semibold">Product
+                    Description</label>
+                <textarea id="product_description" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                    placeholder="Write product description here..."></textarea>
+            </div>
+            <div>
+                <label for="status" class="block text-sm font-semibold">Status</label>
+                <select id="status" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+                    <option value="available">Available</option>
+                    <option value="unavailable">Unavailable</option>
+                    <option value="in_stock">In Stock</option>
+                    <option value="out_of_stock">Out of Stock</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Step 2: Packaging Information -->
+        <div x-show="step === 2" class="space-y-4">
+            <div>
+                <label for="package_a" class="block text-sm font-semibold">Package A (e.g. packet,
+                    doz.)</label>
+                <input type="number" id="package_a" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                    placeholder="Enter amount for Package A">
+            </div>
+            <div>
+                <label for="package_b" class="block text-sm font-semibold">Package B (e.g. carton,
+                    doz.)</label>
+                <input type="number" id="package_b" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                    placeholder="Enter amount for Package B">
+            </div>
+            <div>
+                <p class="text-sm font-semibold">Total Quantity:</p>
+                <p id="total_quantity" class="text-sm mt-2">Amount A * Amount B
+                </p>
+            </div>
+        </div>
+
+        <!-- Step 3: Variation -->
+        <div x-show="step === 3" class="space-y-4">
+            <div class="space-y-2">
+                <p class="text-sm font-semibold">Colors</p>
+                <div class="space-x-4">
+                    <label><input type="checkbox" class="mr-2"> Black</label>
+                    <label><input type="checkbox" class="mr-2"> White</label>
+                    <label><input type="checkbox" class="mr-2"> Red</label>
+                    <label><input type="checkbox" class="mr-2"> Blue</label>
+                    <label><input type="checkbox" class="mr-2"> Yellow</label>
+                </div>
+            </div>
+
+            <div class="space-y-2">
+                <p class="text-sm font-semibold">Size</p>
+                <div class="space-x-4">
+                    <label><input type="checkbox" class="mr-2"> Small</label>
+                    <label><input type="checkbox" class="mr-2"> Medium</label>
+                    <label><input type="checkbox" class="mr-2"> Large</label>
+                    <label><input type="checkbox" class="mr-2"> Extra
+                        Large</label>
+                </div>
+            </div>
+        </div>
+
+        <!-- Step 4: Price Rules -->
+        <div x-show="step === 4" class="space-y-4">
+            <div>
+                <label for="customer_price" class="block text-sm font-semibold">Price for
+                    Customer</label>
+                <input type="number" id="customer_price" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                    placeholder="Enter price for customer">
+            </div>
+            <div>
+                <label for="seller_price" class="block text-sm font-semibold">Price for
+                    Seller</label>
+                <input type="number" id="seller_price" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                    placeholder="Enter price for seller">
+            </div>
+            <div>
+                <label for="user_price" class="block text-sm font-semibold">Price for User</label>
+                <input type="number" id="user_price" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                    placeholder="Enter price for user">
+            </div>
+        </div>
+
+        <!-- Step 5: Images -->
+        <div x-show="step === 5" class="space-y-4">
+            <div>
+                <label for="image_a" class="block text-sm font-semibold">Package A Image</label>
+                <input type="file" id="image_a" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div>
+                <label for="image_b" class="block text-sm font-semibold">Package B Image</label>
+                <input type="file" id="image_b" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div>
+                <label for="image_c" class="block text-sm font-semibold">Package C Image</label>
+                <input type="file" id="image_c" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+            <div>
+                <label for="front_page_images" class="block text-sm font-semibold">Front Page Images (up
+                    to 5)</label>
+                <input type="file" id="front_page_images" multiple
+                    class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+            </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="flex justify-between mt-6">
+            <button @click="step > 1 ? step-- : null" class="bg-gray-300 text-black py-2 px-4 rounded-md"
+                :disabled="step === 1">Previous</button>
+            <button @click="step < totalSteps ? step++ : null" class="bg-blue-500 text-white py-2 px-4 rounded-md"
+                :disabled="step === totalSteps">Next</button>
+        </div>
+
+    </div>
+  </form>
+
+
+
+</body>
+
+</html>
+
+{{-- <div class="max-w-4xl mx-auto mt-8 p-8 bg-white shadow-lg rounded-lg" x-data="formData()" x-init="init()">
+    <!-- Progress Bar -->
+    <div class="flex justify-between mb-4">
+      <div class="flex-1 bg-gray-200 rounded-full h-2">
+        <div class="bg-blue-500 h-2 rounded-full" :style="`width: ${progress}%`"></div>
+      </div>
+    </div>
+
+    <!-- Form Steps -->
+    <form @submit.prevent="submitForm">
+      <!-- Step 1: Vital Information -->
+      <div x-show="step === 1" x-transition>
+        <h3 class="text-2xl font-semibold mb-4">Step 1: Vital Information</h3>
+        <label class="block text-sm font-medium">Product Name</label>
+        <input type="text" class="input input-bordered w-full mt-2" x-model="productName" placeholder="Enter product name">
+
+        <label class="block text-sm font-medium mt-4">Product Description</label>
+        <textarea class="input input-bordered w-full mt-2" x-model="productDescription" placeholder="Write product description here..."></textarea>
+      </div>
+
+      <!-- Step 2: Packaging Information -->
+      <div x-show="step === 2" x-transition>
+        <h3 class="text-2xl font-semibold mb-4">Step 2: Packaging Information</h3>
+        <!-- Add your packaging fields here -->
+        <label class="block text-sm font-medium">Packaging Type</label>
+        <input type="text" class="input input-bordered w-full mt-2" x-model="packagingType" placeholder="Enter packaging type">
+      </div>
+
+      <!-- Step 3: Variation -->
+      <div x-show="step === 3" x-transition>
+        <h3 class="text-2xl font-semibold mb-4">Step 3: Variation</h3>
+        <!-- Add your variation fields here -->
+        <label class="block text-sm font-medium">Color</label>
+        <input type="text" class="input input-bordered w-full mt-2" x-model="color" placeholder="Enter color variation">
+      </div>
+
+      <!-- Step 4: Price Rules -->
+      <div x-show="step === 4" x-transition>
+        <h3 class="text-2xl font-semibold mb-4">Step 4: Price Rules</h3>
+        <!-- Add your price rule fields here -->
+        <label class="block text-sm font-medium">Price</label>
+        <input type="number" class="input input-bordered w-full mt-2" x-model="price" placeholder="Enter price">
+      </div>
+
+      <!-- Step 5: Images -->
+      <div x-show="step === 5" x-transition>
+        <h3 class="text-2xl font-semibold mb-4">Step 5: Images</h3>
+        <!-- Tabs for Image Selection -->
+        <div x-data="{ activeTab: 1 }">
+          <ul class="flex space-x-4">
+            <li @click="activeTab = 1" :class="{'border-b-2 border-blue-500': activeTab === 1}" class="cursor-pointer py-2">Image 1</li>
+            <li @click="activeTab = 2" :class="{'border-b-2 border-blue-500': activeTab === 2}" class="cursor-pointer py-2">Image 2</li>
+          </ul>
+
+          <!-- Image Tab Content -->
+          <div x-show="activeTab === 1" class="mt-4">
+            <input type="file" class="input input-bordered w-full">
+            <label class="text-sm mt-2">Upload Image 1</label>
+          </div>
+          <div x-show="activeTab === 2" class="mt-4">
+            <input type="file" class="input input-bordered w-full">
+            <label class="text-sm mt-2">Upload Image 2</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="flex justify-between mt-6">
+        <button type="button" x-show="step > 1" @click="prevStep" class="btn btn-secondary">Previous</button>
+        <button type="button" x-show="step < 5" @click="nextStep" class="btn btn-primary">Next</button>
+        <button type="submit" x-show="step === 5" class="btn btn-success">Submit</button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    function formData() {
+      return {
+        step: 1,
+        progress: 0,
+        productName: '',
+        productDescription: '',
+        packagingType: '',
+        color: '',
+        price: '',
+        init() {
+          this.updateProgress();
+        },
+        nextStep() {
+          if (this.step < 5) {
+            this.step++;
+            this.updateProgress();
+          }
+        },
+        prevStep() {
+          if (this.step > 1) {
+            this.step--;
+            this.updateProgress();
+          }
+        },
+        updateProgress() {
+          this.progress = (this.step - 1) * 25;
+        },
+        submitForm() {
+          alert('Form submitted!');
+        }
+      };
+    }
+  </script>
+
+</body>
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{{-- <!DOCTYPE html>
 <html lang="en" data-theme="retro">
 
 <head>
@@ -11,6 +524,157 @@
 </head>
 
 <body>
+
+
+
+    <div class="container mx-auto mt-6 max-w-sm">
+
+        <h1 class="text-5xl mb-4">Alpine JS World</h1>
+
+
+
+    </div>
+    <div class="flex gap-5">
+        <div>
+          <span class="countdown font-mono text-4xl">
+            <span style="--value:15;"></span>
+          </span>
+          days
+        </div>
+        <div>
+          <span class="countdown font-mono text-4xl">
+            <span style="--value:10;"></span>
+          </span>
+          hours
+        </div>
+        <div>
+          <span class="countdown font-mono text-4xl">
+            <span style="--value:24;"></span>
+          </span>
+          min
+        </div>
+        <div>
+          <span class="countdown font-mono text-4xl">
+            <span style="--value:${counter};"></span>
+          </span>
+          sec
+        </div>
+
+        <div class="rating">
+            <input type="radio" name="rating-1" class="mask mask-star" />
+            <input type="radio" name="rating-1" class="mask mask-star" checked="checked" />
+            <input type="radio" name="rating-1" class="mask mask-star" />
+            <input type="radio" name="rating-1" class="mask mask-star" />
+            <input type="radio" name="rating-1" class="mask mask-star" />
+          </div>
+      </div>
+
+
+      <div>
+        <ul class="steps" id="steps">
+          <li class="step step-primary">Register</li>
+          <li class="step">Choose plan</li>
+          <li class="step">Purchase</li>
+          <li class="step">Receive Product</li>
+        </ul>
+
+        <!-- Buttons -->
+        <div class="mt-4">
+          <button class="btn btn-primary" id="nextStep">Next</button>
+          <button class="btn btn-secondary" id="prevStep">Previous</button>
+        </div>
+      </div>
+
+      <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                    const steps = document.querySelectorAll(".step");
+                    let currentStep = 0;
+
+                    // Update the steps' classes
+                    function updateSteps() {
+                        steps.forEach((step, index) => {
+                        if (index <= currentStep) {
+                            step.classList.add("step-primary");
+                        } else {
+                            step.classList.remove("step-primary");
+                        }
+                        });
+                    }
+
+                    // Move to the next step
+                    document.getElementById("nextStep").addEventListener("click", () => {
+                        if (currentStep < steps.length - 1) {
+                        currentStep++;
+                        updateSteps();
+                        }
+                    });
+
+                    // Move to the previous step
+                    document.getElementById("prevStep").addEventListener("click", () => {
+                        if (currentStep > 0) {
+                        currentStep--;
+                        updateSteps();
+                        }
+                    });
+
+                    // Initialize the steps
+                    updateSteps();
+                    });
+
+      </script>
+
+
+                        <div id="inputContainer" class="space-y-4 max-w-xs mx-auto mt-4">
+                            <div id="inputContainer" class="space-y-2">
+                                <div class="flex items-center space-x-2">
+                                <input type="text" class="input input-bordered w-full" placeholder="Enter value" />
+                                <button class="btn btn-primary" id="addInput">+</button>
+                                </div>
+                            </div>
+                        </div>
+
+                            <script>
+                                document.addEventListener("DOMContentLoaded", () => {
+                const inputContainer = document.getElementById("inputContainer");
+                const addInputButton = document.getElementById("addInput");
+
+                // Add a new input field when the "+" button is clicked
+                addInputButton.addEventListener("click", () => {
+                    const newInputGroup = document.createElement("div");
+                    newInputGroup.classList.add("flex", "items-center", "space-x-2", "mt-2");
+
+                    // Create the new input field
+                    const newInput = document.createElement("input");
+                    newInput.type = "text";
+                    newInput.classList.add("input", "input-bordered", "w-full");
+                    newInput.placeholder = "Enter value";
+
+                    // Create the remove button
+                    const removeButton = document.createElement("button");
+                    removeButton.textContent = "−";
+                    removeButton.classList.add("btn", "btn-error");
+
+                    // Remove the input field when the "-" button is clicked
+                    removeButton.addEventListener("click", () => {
+                    newInputGroup.remove();
+                    });
+
+                    // Append the new input and remove button to the group
+                    newInputGroup.appendChild(newInput);
+                    newInputGroup.appendChild(removeButton);
+
+                    // Add the group to the container
+                    inputContainer.appendChild(newInputGroup);
+                });
+                });
+
+            </script>
+
+
+
+
+
+
 
     <div>
         <div class="navbar bg-base-100">
@@ -1237,4 +1901,4 @@
 
 </body>
 
-</html>
+</html> --}}
