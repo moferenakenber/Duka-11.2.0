@@ -340,8 +340,20 @@
                                 <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
                                 <select name="cart_id" id="cart_id" class="w-40 p-2 border rounded-md text-gray-700">
                                     @foreach(auth()->user()->carts as $cart)
-                                        <option value="{{ $cart->id }}">{{ $cart->name ?? 'Cart ' . $cart->id }}</option>
-                                    @endforeach
+                                    @if ($cart->customer)  <!-- Check if the cart has a related customer -->
+                                        <option value="{{ $cart->customer->id }}">
+                                            {{ $cart->customer->first_name }} {{ $cart->customer->last_name }}
+                                            (Created by: {{ $cart->seller->first_name }}) <!-- Indicate who created the cart -->
+                                        </option>
+                                    @else
+                                        <option value="{{ $cart->id }}">
+                                            Cart {{ $cart->id }}
+                                            (Created by: {{ $cart->seller->first_name }}) <!-- Indicate who created the cart -->
+                                        </option>
+                                    @endif
+                                @endforeach
+
+
                                 </select>
                                 <label for="quantity" class="text-gray-700 font-semibold">Quantity:</label>
                                 <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $item->stock }}"

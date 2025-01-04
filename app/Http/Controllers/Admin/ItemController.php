@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\User;
 
 
 //This single line generates the following routes:
@@ -100,7 +101,8 @@ class ItemController extends Controller
     // Show the details of a specific item
     public function show(Item $item)
     {
-        return view('admin.items.show', compact('item'));
+        $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
+        return view('admin.items.show', compact('item', 'sellers'));
     }
 
    // Show the form for editing the specified item

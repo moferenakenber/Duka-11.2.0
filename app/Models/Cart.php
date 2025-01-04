@@ -34,10 +34,10 @@ class Cart extends Model
      * Define the relationship to the seller who will process the cart.
      * A cart may be assigned to a seller by an admin.
      */
-    public function seller()
-    {
-        return $this->belongsTo(User::class, 'seller_id');
-    }
+    // public function seller()
+    // {
+    //     return $this->belongsTo(User::class, 'seller_id');
+    // }
 
     /**
      * Define the relationship to the customer associated with the cart.
@@ -46,6 +46,12 @@ class Cart extends Model
     public function customer()
     {
         return $this->belongsTo(Customer::class);
+    }
+
+    public function seller()
+    {
+        //return $this->belongsTo(User::class, 'seller_id'); // 'seller_id' associated with a user (seller)
+        return $this->belongsTo(User::class, 'seller_id')->where('role', 'seller');
     }
 
     /**
