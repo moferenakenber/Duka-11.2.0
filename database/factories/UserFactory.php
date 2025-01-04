@@ -39,6 +39,8 @@ class UserFactory extends Factory
             'role' => $this->faker->randomElement(['admin', 'seller', 'stock_keeper']),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
+            'created_by' => 1, // Assuming a user with ID 1 is creating the user
+
         ];
     }
 

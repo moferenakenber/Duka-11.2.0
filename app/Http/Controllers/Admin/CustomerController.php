@@ -25,7 +25,10 @@ class CustomerController extends Controller
     public function index(Request $request)
     {
         //$customers = Customer::with('user')->get();
-        $customers = Customer::with('user')->get(); // Fetch all customers and eager load the 'user' relationship
+        //$customers = Customer::with('user')->get(); // Fetch all customers and eager load the 'user' relationship
+
+        // Eager load the 'user' relationship
+        $customers = Customer::with('creator')->get();
         //$customers = Customer::all();
         return view('admin.customers.index', compact('customers'));
     }
@@ -43,24 +46,36 @@ class CustomerController extends Controller
      */
     public function store(Request $request)
     {
-        $customer = new Customer();
-
-        $validatedCustomer =$request->validate([
-            'name' => 'required|string|max:255',
+        $validatedCustomer = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
             'email' => 'required|email|unique:customers',
             'phone_number' => 'required|string|regex:/^[0-9]{10}$/|unique:users,phone_number',
             'city' => 'nullable|string',
         ]);
 
-        // dd($request->all()); // Check if form data is being received
+        // Check if the current authenticated user ID is set
+        //dd(auth()->id());  // This should show the ID of the logged-in user
 
-        $customer = Customer::create([
-            'name' => $validatedCustomer['name'],
-            'email' => $validatedCustomer['email'],
-            'phone_number' => $validatedCustomer['phone_number'],
-            'city' => $validatedCustomer['city'],
-            'created_by' => auth()->id(), // Set the authenticated user's ID
-        ]);
+        // Manually add the created_by field with the authenticated user's ID
+        $validatedCustomer['created_by'] = auth()->id();
+
+        // Capitalize the first letter of each word in the city (if provided)
+        if (!empty($validatedCustomer['city'])) {
+            $validatedCustomer['city'] = \Illuminate\Support\Str::title($validatedCustomer['city']);
+        }
+
+
+        // Create the customer record using the validated data
+        Customer::create($validatedCustomer);
+
+        // Customer::create([
+        //     'name' => $validatedCustomer['name'],
+        //     'email' => $validatedCustomer['email'],
+        //     'phone_number' => $validatedCustomer['phone_number'],
+        //     'city' => $validatedCustomer['city'],
+        //     'created_by' => auth()->id(),
+        // ]);
 
         return redirect()->route('admin.customers.index')->with('success', 'Customer created successfully.');
     }
@@ -68,9 +83,13 @@ class CustomerController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Customer $customer)
     {
-        //
+        //$customers = Customer::with('user')->get(); // Retrieve all customers with the 'user' relationship
+        //$customer = Customer::with('user')->findOrFail($id); // Load a single customer with the 'user' relationship
+        $customers = Customer::with('creator')->get();
+
+        return view('admin.customers.show', compact('customer'));
     }
 
     /**
@@ -78,7 +97,8 @@ class CustomerController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $customer = Customer::findOrFail($id);
+        return view('admin.customers.edit', compact('customer'));
     }
 
     /**
@@ -86,7 +106,18 @@ class CustomerController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'nullable|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone_number' => 'required|string|max:20',
+            'city' => 'required|string|max:255',
+        ]);
+
+        $customer = Customer::findOrFail($id);
+        $customer->update($validated);
+
+        return redirect()->route('admin.customers.index')->with('success', 'Customer updated successfully.');
     }
 
     /**
@@ -94,6 +125,16 @@ class CustomerController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $customer = Customer::findOrFail($id);
+
+        // Optional: Check if the customer has associated data that needs cleanup
+        // For example:
+        // if ($customer->orders()->exists()) {
+        //     return redirect()->back()->with('error', 'Cannot delete a customer with existing orders.');
+        // }
+
+        $customer->delete();
+
+        return redirect()->route('admin.customers.index')->with('success', 'Customer deleted successfully.');
     }
 }

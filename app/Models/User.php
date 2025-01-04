@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'role',
         'password',
+        'created_by',  // If you want to allow mass assignment of this field
     ];
 
     /**
@@ -56,6 +57,10 @@ class User extends Authenticatable
         return $this->hasMany(Customer::class, 'created_by');  // Inverse of 'belongsTo' in Customer
     }
 
+        public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
 
     /**
      * Set the role attribute to lowercase before storing in the database.

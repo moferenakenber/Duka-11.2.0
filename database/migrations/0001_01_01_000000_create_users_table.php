@@ -22,6 +22,8 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            // Add the 'created_by' field as a foreign key
+            $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null'); // Add foreign key reference to 'users' table
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {

@@ -26,6 +26,7 @@ class UserSeeder extends Seeder
                 'role' => 'admin',
                 'password' => Hash::make('12345678'), // Using Hash to encrypt the password
                 'remember_token' => Str::random(10),
+                'created_by' => 1, // Assuming user with ID 1 is creating the record
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -39,6 +40,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'remember_token' => Str::random(10),
                 'created_at' => now(),
+                'created_by' => 1, // Assuming user with ID 1 is creating the record
                 'updated_at' => now(),
             ],
             [
@@ -51,6 +53,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'remember_token' => Str::random(10),
                 'created_at' => now(),
+                'created_by' => 1, // Assuming user with ID 1 is creating the record
                 'updated_at' => now(),
             ],
             [
@@ -63,6 +66,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'remember_token' => Str::random(10),
                 'created_at' => now(),
+                'created_by' => 1, // Assuming user with ID 1 is creating the record
                 'updated_at' => now(),
             ],
             [
@@ -75,6 +79,7 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('12345678'),
                 'remember_token' => Str::random(10),
                 'created_at' => now(),
+                'created_by' => 1, // Assuming user with ID 1 is creating the record
                 'updated_at' => now(),
             ],
             // You can add more users as needed
@@ -85,6 +90,7 @@ class UserSeeder extends Seeder
 
     }
 }
+
 
 
 // DB::table('users')->insert([

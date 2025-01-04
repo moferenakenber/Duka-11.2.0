@@ -10,18 +10,45 @@ class Customer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name',
-        'email',
+        'first_name',
+        'last_name',
         'phone_number',
+        'email',
         'city',
-        'created_by',  // Add user_id if you want to associate customers with authenticated users
+        'created_by'
     ];
 
-        public function user()
+    //     public function user()
+    // {
+    //     return $this->belongsTo(User::class, 'created_by');
+    // }
+
+
+    /**
+     * Get the user that created the customer.
+      */
+    // public function createdBy()
+    // {
+    //     return $this->belongsTo(User::class, 'created_by');
+    // }
+
+
+        /**
+     * Get the creator (user) who created this customer.
+     */
+    public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
 
+    /**
+     * Define the relationship to the user.
+     * A customer is created by a user.
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
     /**
      * Define the relationship to carts.
      * A customer can have multiple carts associated with them.

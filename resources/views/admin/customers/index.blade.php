@@ -9,7 +9,7 @@
 
             <!-- Right side: Add Product Button -->
             <a href="{{ route('admin.customers.create') }}"
-               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
                 {{ __('Add Customer') }}
             </a>
         </div>
@@ -17,42 +17,57 @@
 
     <div class="overflow-x-auto">
         <table class="table">
-          <!-- head -->
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Phone Number</th>
-              <th>City</th>
-              <th>Created by</th>
-              <th>Created at</th>
-            </tr>
-          </thead>
-          <tbody>
-            <!-- row 1 -->
-                @foreach($customers as $customer)
+            <!-- head -->
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone no</th>
+                    <th>Email</th>
+                    <th>City</th>
+                    <th>Created by</th>
+                    <th>Created at</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- row 1 -->
+                @foreach ($customers as $customer)
                     <tr>
                         <th>{{ $customer->id }}</th>
-                        <td>{{ $customer->name }}</td>
-                        <td>{{ $customer->email }}</td>
+                        <td>{{ $customer->first_name }}</td>
+                        <td>{{ $customer->last_name }}</td>
                         <td>{{ $customer->phone_number }}</td>
+                        <td>{{ $customer->email }}</td>
                         <td>{{ $customer->city }}</td>
-                        {{-- <td>{{ $customer->user->name }}</td> <!-- Assuming the 'user' relationship is defined in the Customer model --> --}}
+
+
 
                         <td>
-                            @if($customer->user)
-                                {{ $customer->user->name }}  <!-- Display the user's name -->
+                            @if ($customer->creator)
+                                {{ $customer->creator->first_name }} {{ $customer->creator->last_name }}
+                                <!-- Display the user's name -->
                             @else
-                                N/A  <!-- If no associated user, display N/A -->
+                                N/A <!-- If no associated user, display N/A -->
                             @endif
                         </td>
 
+
                         <td>{{ $customer->created_at }}</td>
+
+                        <td class="px-6 py-2 text-sm text-gray-800 flex items-center space-x-4">
+
+                            <!-- View Button -->
+                            <a href="{{ route('admin.customers.show', $customer->id) }}"
+                                class="text-green-600 hover:text-green-800">View</a>
+
+                        </td>
+
                     </tr>
                 @endforeach
-          </tbody>
+            </tbody>
         </table>
-      </div>
+    </div>
 
 </x-app-layout>

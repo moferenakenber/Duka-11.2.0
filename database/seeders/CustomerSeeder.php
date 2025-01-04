@@ -18,7 +18,8 @@ class CustomerSeeder extends Seeder
         // You can insert sample customers here, using a factory or manually
         DB::table('customers')->insert([
             [
-                'name' => 'Abebe Damtew',
+                'first_name' => 'Abebe',
+                'last_name' => 'Damtew',
                 'email' => 'abebe.damtew@mail.com',
                 'phone_number' => '0912345679',
                 'city' => 'Addis Ababa',
@@ -27,7 +28,8 @@ class CustomerSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'name' => 'Chala Mulatu',
+                'first_name' => 'Chala',
+                'last_name' => 'Mulatu',
                 'email' => 'chala.mulatu@mail.com',
                 'phone_number' => '0912345678',
                 'city' => 'Awassa',

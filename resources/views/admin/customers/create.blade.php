@@ -5,14 +5,35 @@
         </h2>
     </x-slot>
 
-    <form action="{{ route('admin.customers.store') }}" method="POST">
+    <form class="max-w-sm mx-auto" action="{{ route('admin.customers.store') }}" method="POST">
         @csrf
 
-        <!-- Name Input -->
+        <!-- first_name -->
+        <div class="mt-6 mb-6">
+            <label for="first_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First
+                name</label>
+            <input type="text" id="first_name" name="first_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="John" required />
+        </div>
+
+        <!-- last_name -->
         <div class="mb-6">
-            <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
-            <input type="text" id="name" name="name" value="{{ old('name') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Abebe Damtew">
-            @error('name')
+            <label for="last_name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
+                name</label>
+            <input type="text" id="last_name" name="last_name"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="Doe" required />
+        </div>
+
+        <!-- Phone Input -->
+        <div class="mb-6">
+            <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone
+                Number</label>
+            <input type="text" id="phone" name="phone_number" value="{{ old('phone') }}"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="0911203040">
+            @error('phone')
                 <div class="text-red-500 text-sm">{{ $message }}</div>
             @enderror
         </div>
@@ -20,17 +41,10 @@
         <!-- Email Input -->
         <div class="mb-6">
             <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-            <input type="email" id="email" name="email" value="{{ old('email') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="abebedamtew@gmail.com">
+            <input type="email" id="email" name="email" value="{{ old('email') }}"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                placeholder="abebedamtew@gmail.com">
             @error('email')
-                <div class="text-red-500 text-sm">{{ $message }}</div>
-            @enderror
-        </div>
-
-        <!-- Phone Input -->
-        <div class="mb-6">
-            <label for="phone" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Phone Number</label>
-            <input type="text" id="phone" name="phone_number" value="{{ old('phone') }}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="0911203040">
-            @error('phone')
                 <div class="text-red-500 text-sm">{{ $message }}</div>
             @enderror
         </div>
@@ -38,7 +52,8 @@
         <!-- City Input -->
         <div class="mb-6">
             <label for="city" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">City</label>
-            <select id="city" name="city" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            <select id="city" name="city"
+                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                 <option value="addisababa" {{ old('city') == 'addisababa' ? 'selected' : '' }}>Addis Ababa</option>
                 <option value="adama" {{ old('city') == 'adama' ? 'selected' : '' }}>Adama</option>
                 <option value="direDawa" {{ old('city') == 'direDawa' ? 'selected' : '' }}>Dire Dawa</option>
@@ -58,7 +73,8 @@
 
         <!-- Submit Button -->
         <div class="mb-4">
-            <button type="submit" class="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-500">Submit</button>
+            <button type="submit"
+                class="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-500">Submit</button>
         </div>
     </form>
 

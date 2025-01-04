@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CartController;
-use App\Http\Controllers\Admin\UserManagementController;
+use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\SaleController;
@@ -61,7 +61,7 @@ use Illuminate\Support\Facades\Route;
                 })->name('flowbite');
 
                 // Admin resource routes
-                Route::resource('user_managements', UserManagementController::class);
+                Route::resource('users', UserController::class);
                 Route::resource('customers', CustomerController::class);
                 Route::resource('items', ItemController::class);
                 Route::resource('carts', CartController::class);

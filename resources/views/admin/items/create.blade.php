@@ -276,83 +276,40 @@ function packagingManager() {
 
 
 
-<!-- Step 4: Price Rules -->
-<div x-show="step === 4" class="space-y-4">
-    <!-- Packaging Types Checkboxes -->
-    <div>
-        <p class="text-sm font-semibold">Select Packaging Types and Add Price</p>
-        <template x-for="(layer, index) in layers" :key="index">
-            <div class="flex items-center space-x-2">
-                <input type="checkbox" :id="'package_price_' + index" name="packaging_prices[]" :value="layer.type" class="mr-2">
-                <label :for="'package_price_' + index" class="text-sm font-semibold">
-                    <span x-text="layer.type"></span>
-                </label>
-                <input type="number" x-show="document.getElementById('package_price_' + index).checked" :name="'price_' + layer.type" placeholder="Enter price" class="mt-2 p-2 border border-gray-300 rounded-md w-1/4" />
-            </div>
-        </template>
-    </div>
+                <!-- Step 4: Price Rules -->
+                <div x-show="step === 4" class="space-y-4">
+                    <div>
+                        <label for="customer_price" class="block text-sm font-semibold">Price for Customer</label>
+                        <input type="number" id="customer_price" name="customer_price" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            placeholder="Enter price for customer" required>
+                    </div>
+                    <div>
+                        <label for="seller_price" class="block text-sm font-semibold">Price for Seller</label>
+                        <input type="number" id="seller_price" name="seller_price" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            placeholder="Enter price for seller" required>
+                    </div>
+                    <div>
+                        <label for="user_price" class="block text-sm font-semibold">Price for User</label>
+                        <input type="number" id="user_price" name="user_price" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
+                            placeholder="Enter price for user" required>
+                    </div>
+                </div>
 
-    <!-- Colors Checkboxes -->
-    <div>
-        <p class="text-sm font-semibold">Select Colors and Add Price</p>
-        <template x-for="(color, index) in ['Black', 'White', 'Red', 'Blue', 'Yellow']" :key="index">
-            <div class="flex items-center space-x-2">
-                <input type="checkbox" :id="'color_price_' + index" name="color_prices[]" :value="color" class="mr-2">
-                <label :for="'color_price_' + index" class="text-sm font-semibold">
-                    <span x-text="color"></span>
-                </label>
-                <input type="number" x-show="document.getElementById('color_price_' + index).checked" :name="'price_' + color" placeholder="Enter price" class="mt-2 p-2 border border-gray-300 rounded-md w-1/4" />
-            </div>
-        </template>
-    </div>
-
-    <!-- Sizes Checkboxes -->
-    <div>
-        <p class="text-sm font-semibold">Select Sizes and Add Price</p>
-        <template x-for="(size, index) in ['Small', 'Medium', 'Large', 'Extra Large']" :key="index">
-            <div class="flex items-center space-x-2">
-                <input type="checkbox" :id="'size_price_' + index" name="size_prices[]" :value="size" class="mr-2">
-                <label :for="'size_price_' + index" class="text-sm font-semibold">
-                    <span x-text="size"></span>
-                </label>
-                <input type="number" x-show="document.getElementById('size_price_' + index).checked" :name="'price_' + size" placeholder="Enter price" class="mt-2 p-2 border border-gray-300 rounded-md w-1/4" />
-            </div>
-        </template>
-    </div>
-</div>
-
-<!-- Step 5: Images -->
-<div x-show="step === 5" class="space-y-4">
-    <template x-for="(layer, index) in layers" :key="index">
-        <div>
-            <label :for="'image_' + layer.type" class="block text-sm font-semibold">
-                <span x-text="layer.type"></span> Image
-            </label>
-            <input type="file" :id="'image_' + layer.type" :name="'image_' + layer.type" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
-        </div>
-    </template>
-
-    <!-- Colors Images -->
-    <template x-for="(color, index) in ['Black', 'White', 'Red', 'Blue', 'Yellow']" :key="index">
-        <div>
-            <label :for="'image_' + color" class="block text-sm font-semibold">
-                <span x-text="color"></span> Image
-            </label>
-            <input type="file" :id="'image_' + color" :name="'image_' + color" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
-        </div>
-    </template>
-
-    <!-- Sizes Images -->
-    <template x-for="(size, index) in ['Small', 'Medium', 'Large', 'Extra Large']" :key="index">
-        <div>
-            <label :for="'image_' + size" class="block text-sm font-semibold">
-                <span x-text="size"></span> Image
-            </label>
-            <input type="file" :id="'image_' + size" :name="'image_' + size" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
-        </div>
-    </template>
-</div>
-
+                <!-- Step 5: Images -->
+                <div x-show="step === 5" class="space-y-4">
+                    <div>
+                        <label for="image_a" class="block text-sm font-semibold">Package A Image</label>
+                        <input type="file" id="image_a" name="image_a" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+                    </div>
+                    <div>
+                        <label for="image_b" class="block text-sm font-semibold">Package B Image</label>
+                        <input type="file" id="image_b" name="image_b" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+                    </div>
+                    <div>
+                        <label for="image_c" class="block text-sm font-semibold">Package C Image</label>
+                        <input type="file" id="image_c" name="image_c" class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+                    </div>
+                </div>
 
 
 
