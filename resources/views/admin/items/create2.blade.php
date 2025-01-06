@@ -11,39 +11,45 @@
 
     <div class="container mx-auto mt-10" x-data="{ step: 1 }">
         <!-- Tabs Navigation -->
-        <div class="mt-6  text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+        <div
+            class="mt-6  text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
             <ul class="flex flex-wrap -mb-px">
                 <!-- Step 1 Tab -->
                 <li class="me-2">
-                    <a href="#" @click.prevent="step = 1" :class="step === 1 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
-                       class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
+                    <a href="#" @click.prevent="step = 1"
+                        :class="step === 1 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
+                        class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
                         Step 1: Vital Information
                     </a>
                 </li>
                 <!-- Step 2 Tab -->
                 <li class="me-2">
-                    <a href="#" @click.prevent="step = 2" :class="step === 2 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
-                       class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
+                    <a href="#" @click.prevent="step = 2"
+                        :class="step === 2 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
+                        class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
                         Step 2: Packaging Information
                     </a>
                 </li>
                 <!-- Step 3 Tab -->
                 <li class="me-2">
-                    <a href="#" @click.prevent="step = 3" :class="step === 3 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
-                       class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
+                    <a href="#" @click.prevent="step = 3"
+                        :class="step === 3 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
+                        class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
                         Step 3: Variation
                     </a>
                 </li>
                 <!-- Step 4 Tab -->
                 <li class="me-2">
-                    <a href="#" @click.prevent="step = 4" :class="step === 4 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
-                       class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
+                    <a href="#" @click.prevent="step = 4"
+                        :class="step === 4 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
+                        class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
                         Step 4: Price Rules
                     </a>
                 </li>
                 <!-- Step 5 Tab -->
                 <li class="me-2">
-                    <a href="#" @click.prevent="step = 5" :class="step === 5 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
+                    <a href="#" @click.prevent="step = 5"
+                        :class="step === 5 ? 'text-blue-600 border-blue-600' : 'text-gray-500 border-transparent'"
                         class="inline-block p-4 border-b-2 rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300">
                         Step 5: Images
                     </a>
@@ -66,8 +72,11 @@
                 </div> --}}
 
                 <div class="mb-6 mt-4">
-                    <label for="default-input" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Name</label>
-                    <input type="text" name="name" id="default-input" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Name">
+                    <label for="default-input"
+                        class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Product Name</label>
+                    <input type="text" name="name" id="default-input"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Name">
                 </div>
 
 
@@ -76,8 +85,11 @@
                     <input type="email" id="email" name="email" class="input input-bordered w-full" required> --}}
 
 
-                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your product description</label>
-                    <textarea id="message" name="description" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Write product description here..."></textarea>
+                    <label for="message" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                        product description</label>
+                    <textarea id="message" name="description" rows="4"
+                        class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                        placeholder="Write product description here..."></textarea>
 
 
                 </div>
@@ -90,28 +102,38 @@
 
                 <div class="flex flex-wrap space-x-4 mb-4">
                     <div class="flex items-center">
-                        <input id="office-checkbox" type="checkbox" value="office" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="office-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Office</label>
+                        <input id="office-checkbox" type="checkbox" value="office"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="office-checkbox"
+                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Office</label>
                     </div>
 
                     <div class="flex items-center">
-                        <input id="school-checkbox" type="checkbox" value="school" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="school-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">School</label>
+                        <input id="school-checkbox" type="checkbox" value="school"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="school-checkbox"
+                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">School</label>
                     </div>
 
                     <div class="flex items-center">
-                        <input id="kids-checkbox" type="checkbox" value="kids" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="kids-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Kids</label>
+                        <input id="kids-checkbox" type="checkbox" value="kids"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="kids-checkbox"
+                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Kids</label>
                     </div>
 
                     <div class="flex items-center">
-                        <input id="gift-checkbox" type="checkbox" value="gift" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="gift-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Gift</label>
+                        <input id="gift-checkbox" type="checkbox" value="gift"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="gift-checkbox"
+                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Gift</label>
                     </div>
 
                     <div class="flex items-center">
-                        <input id="government-checkbox" type="checkbox" value="government" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                        <label for="government-checkbox" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Government</label>
+                        <input id="government-checkbox" type="checkbox" value="government"
+                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
+                        <label for="government-checkbox"
+                            class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Government</label>
                     </div>
                 </div>
 
@@ -127,8 +149,10 @@
                     <!-- First Packaging Input -->
                     <div class="flex items-center space-x-4">
                         <div class="flex-1">
-                            <label for="package-name-1" class="block text-sm font-medium text-gray-900 dark:text-white">Packaging Name</label>
-                            <input x-model="firstPackagingName" type="text" id="package-name-1" placeholder="Packet" class="mt-1 block w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <label for="package-name-1"
+                                class="block text-sm font-medium text-gray-900 dark:text-white">Packaging Name</label>
+                            <input x-model="firstPackagingName" type="text" id="package-name-1" placeholder="Packet"
+                                class="mt-1 block w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </div>
 
                         <!-- Holds Label Above Arrow -->
@@ -138,7 +162,8 @@
 
                         <!-- Holds Input (Smaller) -->
                         <div class="w-20">
-                            <input x-model.number="firstHolds" type="number" id="holds-number" placeholder="Number" class="mt-1 block w-full p-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <input x-model.number="firstHolds" type="number" id="holds-number" placeholder="Number"
+                                class="mt-1 block w-full p-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </div>
 
                         <!-- Arrow Between the Inputs -->
@@ -148,8 +173,11 @@
 
                         <!-- Packaging Name After Holds -->
                         <div class="flex-1">
-                            <label for="package-name-2" class="block text-sm font-medium text-gray-900 dark:text-white">Packaging Name</label>
-                            <input x-model="secondPackagingName" type="text" id="package-name-2" placeholder="Pieces" class="mt-1 block w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                            <label for="package-name-2"
+                                class="block text-sm font-medium text-gray-900 dark:text-white">Packaging Name</label>
+                            <input x-model="secondPackagingName" type="text" id="package-name-2"
+                                placeholder="Pieces"
+                                class="mt-1 block w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                         </div>
                     </div>
 
@@ -157,8 +185,11 @@
                     <template x-for="(item, index) in packagingList" :key="index">
                         <div class="flex items-center space-x-4">
                             <div class="flex-1">
-                                <label :for="'package-name-' + (index + 3)" class="block text-sm font-medium text-gray-900 dark:text-white">Packaging Name</label>
-                                <input :id="'package-name-' + (index + 3)" type="text" :placeholder="'Cartoon'" class="mt-1 block w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <label :for="'package-name-' + (index + 3)"
+                                    class="block text-sm font-medium text-gray-900 dark:text-white">Packaging
+                                    Name</label>
+                                <input :id="'package-name-' + (index + 3)" type="text" :placeholder="'Cartoon'"
+                                    class="mt-1 block w-full p-2.5 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             </div>
 
                             <!-- Holds Label Above Arrow -->
@@ -168,7 +199,9 @@
 
                             <!-- Holds Input (Smaller) -->
                             <div class="w-20">
-                                <input x-model.number="item.holds" type="number" :id="'holds-number-' + (index + 3)" placeholder="Number" class="mt-1 block w-full p-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                                <input x-model.number="item.holds" type="number" :id="'holds-number-' + (index + 3)"
+                                    placeholder="Number"
+                                    class="mt-1 block w-full p-2 text-sm text-gray-900 bg-gray-50 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                             </div>
 
                             <!-- Arrow Between the Inputs -->
@@ -178,7 +211,8 @@
 
                             <!-- Display the first packaging name in the third field -->
                             <div class="flex-1">
-                                <span class="mt-1 block text-sm text-gray-900 dark:text-white" x-text="firstPackagingName"></span>
+                                <span class="mt-1 block text-sm text-gray-900 dark:text-white"
+                                    x-text="firstPackagingName"></span>
                             </div>
 
                             <!-- Cancel (X) Button to remove packaging -->
@@ -198,7 +232,9 @@
 
                     <!-- Add Packaging Button (Placed at the Bottom) -->
                     <div class="mt-6 text-center">
-                        <button @click="addPackaging" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Add Packaging</button>
+                        <button @click="addPackaging"
+                            class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">Add
+                            Packaging</button>
                     </div>
                 </div>
 
@@ -295,11 +331,13 @@
 
                 <div class="mb-4 mt-4">
                     <label for="cardNumber" class="block mb-2">Card Number</label>
-                    <input type="text" id="cardNumber" name="cardNumber" class="input input-bordered w-full" required>
+                    <input type="text" id="cardNumber" name="cardNumber" class="input input-bordered w-full"
+                        required>
                 </div>
                 <div class="mb-4">
                     <label for="expiry" class="block mb-2">Expiry Date</label>
-                    <input type="text" id="expiry" name="expiry" class="input input-bordered w-full" required>
+                    <input type="text" id="expiry" name="expiry" class="input input-bordered w-full"
+                        required>
                 </div>
                 <div class="flex justify-between">
                     {{-- <button type="button" @click="step = 1" class="btn btn-secondary">Previous</button> --}}
@@ -307,16 +345,18 @@
                 </div>
             </div>
 
-             <!-- Step 4 Content -->
+            <!-- Step 4 Content -->
             <div x-show="step === 4">
 
                 <div class="mb-4 mt-4">
                     <label for="cardNumber" class="block mb-2">Card Number</label>
-                    <input type="text" id="cardNumber" name="cardNumber" class="input input-bordered w-full" required>
+                    <input type="text" id="cardNumber" name="cardNumber" class="input input-bordered w-full"
+                        required>
                 </div>
                 <div class="mb-4">
                     <label for="expiry" class="block mb-2">Expiry Date</label>
-                    <input type="text" id="expiry" name="expiry" class="input input-bordered w-full" required>
+                    <input type="text" id="expiry" name="expiry" class="input input-bordered w-full"
+                        required>
                 </div>
                 <div class="flex justify-between">
                     {{-- <button type="button" @click="step = 1" class="btn btn-secondary">Previous</button> --}}
@@ -324,16 +364,18 @@
                 </div>
             </div>
 
-             <!-- Step 5 Content -->
+            <!-- Step 5 Content -->
             <div x-show="step === 5">
 
                 <div class="mb-4 mt-4">
                     <label for="cardNumber" class="block mb-2">Card Number</label>
-                    <input type="text" id="cardNumber" name="cardNumber" class="input input-bordered w-full" required>
+                    <input type="text" id="cardNumber" name="cardNumber" class="input input-bordered w-full"
+                        required>
                 </div>
                 <div class="mb-4">
                     <label for="expiry" class="block mb-2">Expiry Date</label>
-                    <input type="text" id="expiry" name="expiry" class="input input-bordered w-full" required>
+                    <input type="text" id="expiry" name="expiry" class="input input-bordered w-full"
+                        required>
                 </div>
                 <div class="flex justify-between">
                     {{-- <button type="button" @click="step = 2" class="btn btn-secondary">Previous</button> --}}
@@ -345,7 +387,7 @@
     </div>
 
 
-{{--
+    {{--
 
 
 
@@ -1025,6 +1067,14 @@
 
 
 
-
+    @if ($errors->any())
+        <div class="mt-4">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
 </x-app-layout>

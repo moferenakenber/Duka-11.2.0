@@ -57,7 +57,7 @@ class User extends Authenticatable
         return $this->hasMany(Customer::class, 'created_by');  // Inverse of 'belongsTo' in Customer
     }
 
-        public function creator()
+    public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
     }
@@ -67,7 +67,9 @@ class User extends Authenticatable
      */
     public function setRoleAttribute($value)
     {
-        $this->attributes['role'] = strtolower($value);
+        //$this->attributes['role'] = strtolower($value);
+        // Store role as lowercase and underscore-separated format
+        $this->attributes['role'] = strtolower(str_replace(' ', '_', $value));
     }
 
     /**
@@ -75,10 +77,13 @@ class User extends Authenticatable
      */
     public function getRoleAttribute($value)
     {
+        //return ucwords(str_replace('_', ' ', strtolower($value)));
+
+        // Format role for display purposes by replacing underscores with spaces and capitalizing the first letter
         return ucwords(str_replace('_', ' ', strtolower($value)));
     }
 
-        /**
+    /**
      * Define the relationship to carts.
      * A user can create multiple carts.
      */

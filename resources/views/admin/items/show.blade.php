@@ -19,7 +19,7 @@
                             <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
                             <select name="cart_id" id="cart_id" class="w-40 p-2 border rounded-md text-gray-700" onchange="toggleCartOptions()">
                                 <option value="" selected>Create a New Cart</option>
-                                @foreach(auth()->user()->carts as $cart)
+                                @foreach (auth()->user()->carts as $cart)
                                     <option value="{{ $cart->id }}">{{ $cart->name ?? 'Cart ' . $cart->id }}</option>
                                 @endforeach
                             </select>
@@ -29,7 +29,7 @@
                                 <label for="customer_id" class="text-gray-700 font-semibold">Select Customer:</label>
                                 <select name="customer_id" id="customer_id" class="w-40 p-2 border rounded-md text-gray-700">
                                     <option value="" selected disabled>Select a Customer</option>
-                                    @foreach($customers as $customer)
+                                    @foreach ($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
                                     @endforeach
                                 </select>
@@ -140,7 +140,7 @@
                             <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
                             <select name="cart_id" id="cart_id" class="w-40 p-2 border rounded-md text-gray-700">
                                 <option value="" selected>Create a New Cart</option>
-                                @foreach(auth()->user()->carts as $cart)
+                                @foreach (auth()->user()->carts as $cart)
                                     <option value="{{ $cart->id }}">{{ $cart->name ?? 'Cart ' . $cart->id }}</option>
                                 @endforeach
                             </select>
@@ -292,12 +292,13 @@
                     <!-- Item Packaging -->
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-semibold text-gray-700">Packaging: </h3>
-                        <p class="text-gray-600">{{ $item->piecesinapacket }} pieces per packet, {{ $item->packetsinacartoon }} packets per carton</p>
+                        <p class="text-gray-600">{{ $item->piecesinapacket }} pieces per packet,
+                            {{ $item->packetsinacartoon }} packets per carton</p>
                     </div>
 
-                     <!-- Item Image -->
-                     @php
-                     $images = json_decode($item->images, true); // Decode JSON to array
+                    <!-- Item Image -->
+                    @php
+                        $images = json_decode($item->images, true); // Decode JSON to array
                     @endphp
 
                     @if (is_array($images) && count($images) > 0)
@@ -315,7 +316,7 @@
                         <div class="mt-4 flex items-center space-x-4">
                             <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
                             <select name="cart_id" id="cart_id" class="w-40 p-2 border rounded-md text-gray-700">
-                                @foreach(auth()->user()->carts as $cart)
+                                @foreach (auth()->user()->carts as $cart)
                                     <option value="{{ $cart->id }}">{{ $cart->name ?? 'Cart ' . $cart->id }}</option>
                                 @endforeach
                             </select>
@@ -329,9 +330,10 @@
                     </form> --}}
 
 
-                    @if(auth()->user()->carts->isEmpty())
+                    @if (auth()->user()->carts->isEmpty())
                         <div class="mt-4 text-red-600 font-semibold">
-                            You don't have any carts. Please <a href="{{ route('admin.carts.create') }}" class="text-blue-600 underline">create a cart</a> first.
+                            You don't have any carts. Please <a href="{{ route('admin.carts.create') }}"
+                                class="text-blue-600 underline">create a cart</a> first.
                         </div>
                     @else
                         <form method="POST" action="{{ route('admin.cart.add', $item->id) }}">
@@ -339,26 +341,30 @@
                             <div class="mt-4 flex items-center space-x-4">
                                 <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
                                 <select name="cart_id" id="cart_id" class="w-40 p-2 border rounded-md text-gray-700">
-                                    @foreach(auth()->user()->carts as $cart)
-                                    @if ($cart->customer)  <!-- Check if the cart has a related customer -->
-                                        <option value="{{ $cart->customer->id }}">
-                                            {{ $cart->customer->first_name }} {{ $cart->customer->last_name }}
-                                            (Created by: {{ $cart->seller->first_name }}) <!-- Indicate who created the cart -->
-                                        </option>
-                                    @else
-                                        <option value="{{ $cart->id }}">
-                                            Cart {{ $cart->id }}
-                                            (Created by: {{ $cart->seller->first_name }}) <!-- Indicate who created the cart -->
-                                        </option>
-                                    @endif
-                                @endforeach
+                                    @foreach (auth()->user()->carts as $cart)
+                                        @if ($cart->customer)
+                                            <!-- Check if the cart has a related customer -->
+                                            <option value="{{ $cart->customer->id }}">
+                                                {{ $cart->customer->first_name }} {{ $cart->customer->last_name }}
+                                                (Created by: {{ $cart->seller->first_name }})
+                                                <!-- Indicate who created the cart -->
+                                            </option>
+                                        @else
+                                            <option value="{{ $cart->id }}">
+                                                Cart {{ $cart->id }}
+                                                (Created by: {{ $cart->seller->first_name }})
+                                                <!-- Indicate who created the cart -->
+                                            </option>
+                                        @endif
+                                    @endforeach
 
 
                                 </select>
                                 <label for="quantity" class="text-gray-700 font-semibold">Quantity:</label>
-                                <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $item->stock }}"
-                                    class="w-20 p-2 border rounded-md text-gray-700">
-                                <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                <input type="number" name="quantity" id="quantity" value="1" min="1"
+                                    max="{{ $item->stock }}" class="w-20 p-2 border rounded-md text-gray-700">
+                                <button type="submit"
+                                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
                                     Add to Cart
                                 </button>
                             </div>
@@ -368,10 +374,20 @@
 
                     <!-- Back Button -->
                     <div class="mt-4">
-                        <a href="{{ route('admin.items.index') }}" class="text-blue-600 hover:text-blue-800">Back to Items List</a>
+                        <a href="{{ route('admin.items.index') }}" class="text-blue-600 hover:text-blue-800">Back to
+                            Items List</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+    @if ($errors->any())
+        <div class="mt-4">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 </x-app-layout>

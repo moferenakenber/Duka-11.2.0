@@ -15,6 +15,11 @@
             <input type="text" id="first_name" name="first_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="John" required />
+            @error('first_name')
+                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                    {{ $message }}
+                </p>
+            @enderror
         </div>
 
         <!-- last_name -->
@@ -24,6 +29,11 @@
             <input type="text" id="last_name" name="last_name"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="Doe" required />
+            @error('last_name')
+                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                    {{ $message }}
+                </p>
+            @enderror
         </div>
 
         <!-- Phone Input -->
@@ -33,7 +43,7 @@
             <input type="text" id="phone" name="phone_number" value="{{ old('phone') }}"
                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 placeholder="0911203040">
-            @error('phone')
+            @error('phone_number')
                 <div class="text-red-500 text-sm">{{ $message }}</div>
             @enderror
         </div>
@@ -77,6 +87,15 @@
                 class="w-full bg-indigo-600 text-white p-3 rounded-lg hover:bg-indigo-700 focus:ring-4 focus:ring-indigo-500">Submit</button>
         </div>
     </form>
+    @if ($errors->any())
+        <div class="mt-4">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
 
 </x-app-layout>
