@@ -14,6 +14,19 @@
             </a>
         </div>
     </x-slot>
+
+    <!-- Errors -->
+    @if ($errors->any())
+        <div class="mt-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+            <h3 class="font-semibold">There were some problems with your input:</h3>
+            <ul class="list-disc pl-5 mt-2">
+                @foreach ($errors->all() as $error)
+                    <li class="text-sm">{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="overflow-x-auto">
         <div class="relative overflow-x-auto shadow-md sm:rounded-lg pt-6">
             <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">

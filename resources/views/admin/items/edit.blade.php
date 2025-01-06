@@ -4,7 +4,16 @@
             {{ __('Add New Customer') }}
         </h2>
     </x-slot>
-
+    @if ($errors->any())
+        <div class="mt-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+            <h3 class="font-semibold">There were some problems with your input:</h3>
+            <ul class="list-disc pl-5 mt-2">
+                @foreach ($errors->all() as $error)
+                    <li class="text-sm">{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <div class="max-w-4xl mx-auto p-4 bg-white rounded-lg shadow-md">
         <form action="{{ route('admin.items.update', $item->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
