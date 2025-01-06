@@ -54,8 +54,26 @@ class ItemController extends Controller
         // product_name: hfd
         // product_description: fgh
         // status: in_stock
+
+        // catagory
+
+        // owner
+
+        // stock - warehouse a, warehouse b, warehouse c, store
+
         // colors[]: Black
         // sizes[]: Small
+
+        // price for colores
+        // price for sizes
+        // price for per piece
+        // price for packets
+        // price for cartons
+        // price for more than 20 cartons
+        // price for customers
+        // price for sellers
+        // price for user
+
         // customer_price: 45
         // seller_price: 454
         // user_price: 54545
