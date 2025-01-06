@@ -1,5 +1,29 @@
 <x-app-layout>
 
+        <div x-data="{
+            showSuccess: {{ session('success') ? 'true' : 'false' }},
+            showInfo: {{ session('info') ? 'true' : 'false' }}
+        }">
+            <!-- Success Message -->
+            <div
+                x-show="showSuccess"
+                x-init="setTimeout(() => showSuccess = false, 3000)"
+                class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400"
+                role="alert">
+                <span class="font-medium">Success</span> {{ session('success') }}
+            </div>
+
+            <!-- Info Message -->
+            <div
+                x-show="showInfo"
+                x-init="setTimeout(() => showInfo = false, 3000)"
+                class="p-4 mb-4 text-sm text-yellow-800 rounded-lg bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400"
+                role="alert">
+                <span class="font-medium">Info</span> {{ session('info') }}
+            </div>
+        </div>
+
+
     <x-slot name="header">
         <div class="flex justify-between items-center">
             <!-- Left side: Title -->
@@ -70,5 +94,4 @@
             </tbody>
         </table>
     </div>
-
 </x-app-layout>
