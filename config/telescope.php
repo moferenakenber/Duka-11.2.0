@@ -94,6 +94,7 @@ return [
     'middleware' => [
         'web',
         Authorize::class,
+        'can:viewTelescope', // Gate check for Telescope access
     ],
 
     /*
