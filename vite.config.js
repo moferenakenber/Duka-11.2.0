@@ -7,7 +7,7 @@ export default defineConfig({
             input: [
                 'resources/css/app.css',
                 'resources/js/app.js',
-                'resources/css/bootstrap-custom.css', // Scoped Bootstrap styles
+                //'resources/css/bootstrap-custom.css', // Scoped Bootstrap styles
             ],
             refresh: true,
         }),

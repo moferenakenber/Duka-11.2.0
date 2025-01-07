@@ -1,5 +1,4 @@
 import defaultTheme from 'tailwindcss/defaultTheme';
-import forms from '@tailwindcss/forms';
 
 /** @type {import('tailwindcss').Config} */
 export default {
@@ -24,9 +23,15 @@ export default {
         },
     },
 
+
+
     // Set darkMode to 'media' so it uses system preferences for dark mode
     darkMode: 'media', // or 'media' (based on the user's system preference)
 
+
+    safelist: [
+        '[x-cloak]', // Ensures [x-cloak] is included even if not used directly in templates
+      ],
 
     // daisyui: {
     //                themes: [
@@ -65,7 +70,7 @@ export default {
     plugins: [
         require('daisyui'),
         require('flowbite/plugin'),
-        forms,
+        require('@tailwindcss/forms'),
       ],
 };
 

@@ -44,6 +44,9 @@ use Illuminate\Support\Facades\Route;
                     return view('test');
                 })->name('test');
 
+                Route::get('/alpine', function () {
+                    return view('alpine');
+                });
 
                 Route::get('/daisyui', function () {
                     return view('daisyui');
