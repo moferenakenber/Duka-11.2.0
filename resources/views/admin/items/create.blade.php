@@ -295,19 +295,17 @@
                                             <div x-data="{ openDropdown: false }">
 
                                                 <div class="w-1/2">
-                                                    <button @click="openDropdown = !openDropdown"
-                                                        id="dropdownBgHoverButton"
-                                                        data-dropdown-toggle="dropdownBgHover"
-                                                        class="justify-center items-center mt-4 text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                                                        type="button"
-                                                        x-text="selectedOption[selectedOption.length - 1] || 'Packaging options'">
-                                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
-                                                            xmlns="http://www.w3.org/2000/svg" fill="none"
-                                                            viewBox="0 0 10 6">
-                                                            <path stroke="currentColor" stroke-linecap="round"
-                                                                stroke-linejoin="round" stroke-width="2"
-                                                                d="m1 1 4 4 4-4" />
-                                                        </svg>
+
+                                                    <button @click="openDropdown = !openDropdown" id="dropdownBgHoverButton"
+                                                    id="dropdownRadioButton" data-dropdown-toggle="dropdownDefaultRadio"
+                                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                                    type="button"
+                                                    x-text="selectedOption[selectedOption.length - 1] || 'Packaging options'">
+                                                    <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
+                                                        xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                            stroke-width="2" d="m1 1 4 4 4-4" />
+                                                    </svg>
                                                     </button>
 
 
@@ -315,258 +313,291 @@
 
                                                     <div x-show="openDropdown" x-transition>
 
-                                                        <div id="dropdownBgHover"
-                                                            class="z-10 hidden w-48 bg-white rounded-lg shadow dark:bg-gray-700">
-                                                            <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
-                                                                aria-labelledby="dropdownBgHoverButton">
-                                                                <li>
-                                                                    <div
-                                                                        class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                        <input checked disabled id="checkbox-item-4"
-                                                                            type="checkbox" name="packaging[]"
-                                                                            value="piece"
-                                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                        <label for="checkbox-item-4"
-                                                                            class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Piece</label>
-                                                                    </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('doz');
-                                                    selectedPackaging = 'doz';
-                                                    openDropdown = false;
-                                                    $nextTick(() => console.log('selectedOption:', selectedOption, 'selectedPackaging:', selectedPackaging))">
+                                                        <div id="dropdownDefaultRadio"
+                                                        class="z-10 hidden w-48 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
+                                                            <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownRadioButton">
+                                                            <li>
+                                                                <!-- piece -->
+                                                                <div class="flex items-center">
+                                                                    <input checked disabled id="default-radio-1" type="radio" name="packaging[]" value="piece"
+                                                                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                    <label for="default-radio-1" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Piece</label>
+                                                                </div>
+                                                            </li>
+                                                            <li>
+                                                                <!-- doz -->
 
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-5"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="doz"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-5"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Doz</label>
-                                                                        </div>
+                                                                <div
+                                                                @click="selectedOption.push('doz');
+                                                                selectedPackaging = 'doz';
+                                                                openDropdown = false;
+                                                                $nextTick(() => console.log('selectedOption:', selectedOption, 'selectedPackaging:', selectedPackaging))">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-2" type="radio" name="packaging[]" value="doz"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-2" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Doz</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('bundle'); selectedPackaging = 'bundle'; openDropdown = false;
-                                                    $nextTick(() => console.log('selectedOption:', selectedOption, 'selectedPackaging:', selectedPackaging))">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="bundle"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Bundle</label>
-                                                                        </div>
+
+                                                                </div>
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- bundle -->
+
+                                                                <div
+                                                                @click="selectedOption.push('bundle');
+                                                                selectedPackaging = 'bundle'; openDropdown = false;
+                                                                $nextTick(() => console.log('selectedOption:', selectedOption, 'selectedPackaging:', selectedPackaging))">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="bundle"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bundle</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('packet'); selectedPackaging = 'packet'; openDropdown = false;
-                                                    $nextTick(() => console.log('selectedOption:', selectedOption, 'selectedPackaging:', selectedPackaging))">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="packet"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Packet</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- packet -->
+
+                                                                <div
+                                                                @click="selectedOption.push('packet');
+                                                                selectedPackaging = 'packet'; openDropdown = false;
+                                                                $nextTick(() => console.log('selectedOption:', selectedOption, 'selectedPackaging:', selectedPackaging))">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="packet"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Packet</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('bag'); selectedPackaging = 'bag'; openDropdown = false;
-                                                    $nextTick(() => console.log('selectedOption:', selectedOption, 'selectedPackaging:', selectedPackaging))">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="bag"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Bag</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- bag -->
+
+                                                                <div
+                                                                @click="selectedOption.push('bag');
+                                                                selectedPackaging = 'bag';
+                                                                openDropdown = false;
+                                                                $nextTick(() => console.log('selectedOption:', selectedOption, 'selectedPackaging:', selectedPackaging))">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="bag"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bag</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('wrapper'); selectedPackaging = 'wrapper'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="wrapper"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Wrapper</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- wrapper -->
+
+                                                                <div
+                                                                @click="selectedOption.push('wrapper');
+                                                                selectedPackaging = 'wrapper';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="wrapper"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Wrapper</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('bottle'); selectedPackaging = 'bottle'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="bottle"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Bottle</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- bottle -->
+
+                                                                <div
+                                                                @click="selectedOption.push('bottle');
+                                                                selectedPackaging = 'bottle';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="bottle"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bottle</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('case'); selectedPackaging = 'case'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="case"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Case</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- case -->
+
+                                                                <div
+                                                                @click="selectedOption.push('case');
+                                                                selectedPackaging = 'case';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="case"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Case</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('crate'); selectedPackaging = 'crate'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="crate"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Crate</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- crate -->
+
+                                                                <div
+                                                                @click="selectedOption.push('crate');
+                                                                selectedPackaging = 'crate';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="crate"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Crate</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('container'); selectedPackaging = 'container'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="container"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Container</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- container -->
+
+                                                                <div
+                                                                @click="selectedOption.push('container');
+                                                                selectedPackaging = 'container';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="container"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Container</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('1/12carton'); selectedPackaging = '1/12carton'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="1/12carton"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">1/12
-                                                                                Carton</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- 1/12carton -->
+
+                                                                <div
+                                                                @click="selectedOption.push('1/12carton');
+                                                                selectedPackaging = '1/12carton';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="1/12carton"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/12 Carton</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('1/10carton'); selectedPackaging = '1/10carton'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="1/10carton"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">1/10
-                                                                                Carton</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- wrapper -->
+
+                                                                <div
+                                                                @click="selectedOption.push('1/10carton');
+                                                                selectedPackaging = '1/10carton';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="1/10carton"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/10 Carton</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('1/8carton'); selectedPackaging = '1/8carton'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="1/8carton"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">1/8
-                                                                                Carton</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- wrapper -->
+
+                                                                <div
+                                                                @click="selectedOption.push('1/8carton');
+                                                                selectedPackaging = '1/8carton';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="1/8carton"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/8 Carton</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('1/6carton'); selectedPackaging = '1/6carton'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="1/6carton"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">1/6
-                                                                                Carton</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- 1/6carton -->
+
+                                                                <div
+                                                                @click="selectedOption.push('1/6carton');
+                                                                selectedPackaging = '1/6carton';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="1/6carton"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/6 Carton</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('1/4carton'); selectedPackaging = '1/4carton'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="1/4carton"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">1/4
-                                                                                Carton</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- wrapper -->
+
+                                                                <div
+                                                                @click="selectedOption.push('1/4carton');
+                                                                selectedPackaging = '1/4carton';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="1/4carton"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/4 Carton</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('1/2carton'); selectedPackaging = '1/2carton'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="1/2carton"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">1/2
-                                                                                Carton</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- 1/2carton -->
+
+                                                                <div
+                                                                @click="selectedOption.push('1/2carton');
+                                                                selectedPackaging = '1/2carton';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="1/2carton"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/2 Carton</label>
                                                                     </div>
-                                                                </li>
-                                                                <li>
-                                                                    <div
-                                                                        @click="selectedOption.push('carton'); selectedPackaging = 'carton'; openDropdown = false">
-                                                                        <div
-                                                                            class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                                            <input id="checkbox-item-6"
-                                                                                type="checkbox" name="packaging[]"
-                                                                                value="carton"
-                                                                                class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                                            <label for="checkbox-item-6"
-                                                                                class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300">Carton</label>
-                                                                        </div>
+                                                                </div>
+
+
+                                                            </li>
+                                                            <li>
+                                                                <!-- carton -->
+
+                                                                <div
+                                                                @click="selectedOption.push('carton');
+                                                                selectedPackaging = 'carton';
+                                                                openDropdown = false">
+
+                                                                    <div class="flex items-center">
+                                                                        <input id="default-radio-3" type="radio" name="packaging[]" value="carton"
+                                                                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                                        <label for="default-radio-3" class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Carton</label>
                                                                     </div>
-                                                                </li>
+                                                                </div>
+
+
+                                                            </li>
                                                             </ul>
                                                         </div>
 
