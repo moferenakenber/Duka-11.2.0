@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}"
+    class="{{ request()->routeIs(['seller.dashboard', 'user.profile']) ? '' : 'dark' }}">
 
 <head>
     <meta charset="utf-8">
@@ -59,10 +60,9 @@
             <div class="flex items-center space-x-8">
                 <div class="shrink-0">
                     <a href="#" title="" class="">
-                        <img class="block w-auto h-8 dark:hidden"
-                            src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full.svg" alt="">
+                        <img class="block w-auto h-8 dark:hidden" {{-- src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full.svg" alt="" --}}>
                         <span
-                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Mezgebedirijit</span>
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Mezgebe Dirijit</span>
                     </a>
                 </div>
 
@@ -123,16 +123,19 @@
 
                 <div id="myCartDropdown1"
                     class="hidden z-10 mx-auto max-w-sm space-y-4 overflow-hidden rounded-lg bg-white p-4 antialiased shadow-lg dark:bg-gray-800">
+
+
                     <div class="grid grid-cols-2">
                         <div>
                             <a href="#"
-                                class="truncate text-sm font-semibold leading-none text-gray-900 dark:text-white hover:underline">Apple
-                                iPhone 15</a>
-                            <p class="mt-0.5 truncate text-sm font-normal text-gray-500 dark:text-gray-400">$599</p>
+                                class="truncate text-sm font-semibold leading-none text-gray-900 dark:text-white hover:underline">
+                                Explore</a>
+                            <p class="mt-0.5 truncate text-sm font-normal text-gray-500 dark:text-gray-400">Cart
+                                empty</p>
                         </div>
 
                         <div class="flex items-center justify-end gap-6">
-                            <p class="text-sm font-normal leading-none text-gray-500 dark:text-gray-400">Qty: 1</p>
+                            {{-- <p class="text-sm font-normal leading-none text-gray-500 dark:text-gray-400">Qty: 1</p>
 
                             <button data-tooltip-target="tooltipRemoveItem1a" type="button"
                                 class="text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600">
@@ -148,9 +151,12 @@
                                 class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700">
                                 Remove item
                                 <div class="tooltip-arrow" data-popper-arrow></div>
-                            </div>
+                            </div> --}}
                         </div>
                     </div>
+
+
+                    {{--
 
                     <div class="grid grid-cols-2">
                         <div>
@@ -268,10 +274,15 @@
                         </div>
                     </div>
 
+                    --}}
+
                     <a href="#" title=""
                         class="mb-2 me-2 inline-flex w-full items-center justify-center rounded-lg bg-primary-700 px-5 py-2.5 text-sm font-medium text-white hover:bg-primary-800 focus:outline-none focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                        role="button"> Proceed to Checkout </a>
+                        role="button"> Proceed to Checkout
+                    </a>
                 </div>
+
+
 
                 <button id="userDropdownButton1" data-dropdown-toggle="userDropdown1" type="button"
                     class="inline-flex items-center rounded-lg justify-center p-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium leading-none text-gray-900 dark:text-white">
@@ -387,12 +398,10 @@
 
                 </div>
                 <div class="grid grid-cols-2 gap-4 mt-8">
-                    <img class="w-full rounded-lg"
-                        src="{{ asset('images/homepage/office-long-1.png') }}"
+                    <img class="w-full rounded-lg" src="{{ asset('images/homepage/office-long-1.png') }}"
                         alt="office content 1">
                     <img class="mt-4 w-full lg:mt-10 rounded-lg"
-                        src="{{ asset('images/homepage/office-long-2.png') }}"
-                        alt="office content 2">
+                        src="{{ asset('images/homepage/office-long-2.png') }}" alt="office content 2">
                 </div>
             </div>
         </section>
@@ -528,8 +537,7 @@
                     <p class="mb-2 text-gray-500 dark:text-gray-400">Mezgebe Dirijit is a comprehensive solution for
                         businesses, offering tools to streamline inventory management, track sales, and enhance POS
                         functionality with ease.</p>
-                    <p class="text-gray-500 dark:text-gray-400">Discover how to <a
-                            href="/docs/getting-started/introduction/"
+                    <p class="text-gray-500 dark:text-gray-400">Discover how to <a href="{{-- /docs/getting-started/introduction/ --}}#"
                             class="text-blue-600 dark:text-blue-500 hover:underline">get started</a> and simplify your
                         business operations with our intuitive and powerful tools.</p>
                 </div>
@@ -553,7 +561,7 @@
                         simplicity and efficiency, ensuring businesses can easily manage inventory, sales, and POS
                         operations from a single platform.</p>
                     <p class="text-gray-500 dark:text-gray-400">Learn more about our intuitive tools and how they can
-                        help streamline your business by exploring the <a href="/design-system"
+                        help streamline your business by exploring the <a href="{{-- /design-system --}}"
                             class="text-blue-600 dark:text-blue-500 hover:underline">design system</a> powered by
                         Tailwind CSS and our advanced components.</p>
                 </div>
@@ -585,9 +593,11 @@
                     <p class="mb-2 text-gray-500 dark:text-gray-400">Discover how Mezgebe Dirijit can transform your
                         business:</p>
                     <ul class="ps-5 text-gray-500 list-disc dark:text-gray-400">
-                        <li><a href="/features" class="text-blue-600 dark:text-blue-500 hover:underline">Explore Our
+                        <li><a href="{{-- /features --}}#"
+                                class="text-blue-600 dark:text-blue-500 hover:underline">Explore Our
                                 Features</a></li>
-                        <li><a href="/case-studies" class="text-blue-600 dark:text-blue-500 hover:underline">Success
+                        <li><a href="{{-- /case-studies --}}#"
+                                class="text-blue-600 dark:text-blue-500 hover:underline">Success
                                 Stories</a></li>
                     </ul>
                 </div>
