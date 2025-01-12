@@ -312,11 +312,18 @@
                                 <li><a href="{{ url('/dashboard') }}" title=""
                                         class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
                                         Dashboard </a></li>
-                                <div class="p-2 text-sm font-medium text-gray-900 dark:text-white">
-                                    <a href="#" title=""
-                                        class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
-                                        Sign Out </a>
-                                </div>
+
+
+
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">Sign out</button>
+                                </form>
+
+
+
+
+
                             @else
                                 <li><a href="{{ route('login') }}" title=""
                                         class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
