@@ -30,7 +30,11 @@ class SendTelegramNotification
 
         $user = $event->user;
 
-        $message = "🎉 New User Signup!\n\nName: {$user->first_name}\nEmail: {$user->email}";
+            // Check for null values and set a default if necessary
+        $first_name = $user->first_name ?? 'N/A';  // Default to 'N/A' if first_name is null
+        $email = $user->email ?? 'N/A';  // Default to 'N/A' if email is null
+
+        $message = "🎉 New User Signup!\n\nName: {$first_name}\nEmail: {$email}";
         $chatId = env('TELEGRAM_CHAT_ID');
 
          // Log the message being sent
