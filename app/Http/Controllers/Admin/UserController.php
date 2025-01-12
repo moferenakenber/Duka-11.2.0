@@ -58,9 +58,9 @@ class UserController extends Controller
 
         // Fire the event
         //UserCreated::dispatch($user);
-
-        $telegramService = new TelegramService();
-        $telegramService->sendMessage("Test message");
+        // Testing purpuses
+       //$telegramService = new TelegramService();
+        //$telegramService->sendMessage("Test message");
 
 
         Log::info('Firing UserCreated event...');
