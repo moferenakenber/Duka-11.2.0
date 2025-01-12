@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Admin;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Services\TelegramService;
+
+use App\Events\UserCreated;
 
 
 
@@ -49,6 +52,19 @@ class UserController extends Controller
         $validatedData['created_by'] = auth()->id(); // Set the current user as the creator
 
         $user = User::create($validatedData);
+
+        // Dispatch the custom event after the user is created
+        event(new UserCreated($user));
+
+        // Fire the event
+        //UserCreated::dispatch($user);
+
+        $telegramService = new TelegramService();
+        $telegramService->sendMessage("Test message");
+
+
+        Log::info('Firing UserCreated event...');
+
         return redirect()->route('admin.users.index')->with('success', 'User created successfully.');
     }
 
