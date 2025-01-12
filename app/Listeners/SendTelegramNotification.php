@@ -30,7 +30,7 @@ class SendTelegramNotification
 
         $user = $event->user;
 
-        $message = "🎉 New User Signup!\n\nName: {$user->first_name}{$user->last_name}\nEmail: {$user->email}";
+        $message = "🎉 New User Signup!\n\nName: {$user->first_name}\nEmail: {$user->email}";
         $chatId = env('TELEGRAM_CHAT_ID');
 
          // Log the message being sent

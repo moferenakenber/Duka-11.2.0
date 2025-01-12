@@ -43,8 +43,8 @@ class UserController extends Controller
             'first_name' => 'required|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'email' => 'required|email|unique:users',
-            'phone_number' => 'required|string|max:20',
-            'role' => 'required|string|in:admin,seller,stock_keeper,user',
+            'phone_number' => 'nullable|string|max:20',
+            'role' => 'nullable|string|in:admin,seller,stock_keeper,user',
             'password' => 'required|string|min:8|confirmed',
         ]);
 
