@@ -33,7 +33,7 @@
                     progress() {
                         return (this.step / this.totalSteps) * 100;
                     }
-                }" class="max-w-4xl mx-auto p-4 relative min-h-screen overflow-y-auto">
+                 }" class="max-w-4xl mx-auto p-4 relative min-h-screen overflow-y-auto">
 
                     <!--------- Step Progress Bar --------->
                     <div class="mb-6">
@@ -123,10 +123,10 @@
 
                             <!-------- Checked disabled piece -------->
                             <div class="flex items-center pt-4 px-8">
-                                <input disabled checked id="disabled-checked-checkbox" type="checkbox"
-                                    name="packaging[]" value="piece"
+                                <input checked id="readonly-checked-checkbox" type="checkbox"
+                                    value="piece" name="packaging[]"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                <label for="disabled-checked-checkbox"
+                                <label for="readonly-checked-checkbox"
                                     class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Piece</label>
                             </div>
 
@@ -135,10 +135,10 @@
                             <!-- Alpine (3) x-show (2)  -->
                             <div x-show="packagingOptions[selectedOption[0]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input disabled checked id="disabled-checked-checkbox" type="checkbox"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox"
                                         value="packet"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="disabled-checked-checkbox"
+                                    <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
 
                                         <!-- Alpine (3) x-text (1)  -->
@@ -147,7 +147,9 @@
 
                                     <!-- Alpine (3) x-text (2)  -->
                                     <p class="ms-4"> - Holds <span
-                                            x-text="packagingOptions[selectedOption[0]]"></span>Pieces.</p>
+                                            x-text="packagingOptions[selectedOption[0]]">
+                                        </span>
+                                        Pieces.</p>
                                 </div>
                             </div>
 
@@ -157,11 +159,11 @@
                             <!-- Alpine (3) x-show (3)  -->
                             <div x-show="packagingOptions[selectedOption[1]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input disabled checked id="disabled-checked-checkbox" type="checkbox"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox"
                                         value="1/4carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 
-                                    <label for="disabled-checked-checkbox"
+                                    <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
 
                                         <!-- Alpine (3) x-text (3)  -->
@@ -186,10 +188,10 @@
                             <!-- Alpine (3) x-show (4)  -->
                             <div x-show="packagingOptions[selectedOption[2]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input disabled checked id="disabled-checked-checkbox" type="checkbox"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox"
                                         value="1/2 carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="disabled-checked-checkbox"
+                                    <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
 
                                         <!-- Alpine (3) x-text (7)  -->
@@ -214,10 +216,10 @@
                             <!-- Alpine (3) x-show (5)  -->
                             <div x-show="packagingOptions[selectedOption[3]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input disabled checked id="disabled-checked-checkbox" type="checkbox"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox"
                                         value="carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="disabled-checked-checkbox"
+                                    <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
 
                                         <!-- Alpine (3) x-text (11)  -->
@@ -241,10 +243,10 @@
                             <!-- Alpine (3) x-show (6)  -->
                             <div x-show="packagingOptions[selectedOption[4]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input disabled checked id="disabled-checked-checkbox" type="checkbox"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox"
                                         value="carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
-                                    <label for="disabled-checked-checkbox"
+                                    <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
 
                                         <!-- Alpine (3) x-text (16)  -->
@@ -270,11 +272,11 @@
                             <!-- Alpine (3) x-show (7)  -->
                             <div x-show="packagingOptions[selectedOption[5]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input disabled checked id="disabled-checked-checkbox" type="checkbox"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox"
                                         value="carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 
-                                    <label for="disabled-checked-checkbox"
+                                    <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
 
                                         <!-- Alpine (3) x-text (22)  -->
@@ -316,7 +318,7 @@
 
                             <!-- Alpine (3) x-on (1)  -->
                             <button
-                                x-on:click="open = !open; dropdownVisible = !dropdownVisible; console.log(open); console.log(dropdownVisible)"
+                                x-on:click="open = !open; dropdownVisible = !dropdownVisible; console.log(open); console.log(dropdownVisible)" type="button"
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm mt-5 px-2
                                 py-4 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 Add
@@ -372,7 +374,7 @@
                                                                     <!-- piece -->
                                                                     <div class="flex items-center">
                                                                         <input checked disabled id="default-radio-1"
-                                                                            type="radio" name="packaging[]"
+                                                                            type="radio"
                                                                             value="piece"
                                                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                         <label for="default-radio-1"
@@ -391,7 +393,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-2" type="radio"
-                                                                                name="packaging[]" value="doz"
+                                                                                value="doz"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-2"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Doz</label>
@@ -411,7 +413,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="bundle"
+                                                                                value="bundle"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bundle</label>
@@ -431,7 +433,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="packet"
+                                                                                value="packet"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Packet</label>
@@ -452,7 +454,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="bag"
+                                                                                value="bag"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bag</label>
@@ -472,7 +474,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="wrapper"
+                                                                                value="wrapper"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Wrapper</label>
@@ -491,7 +493,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="bottle"
+                                                                                value="bottle"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Bottle</label>
@@ -510,7 +512,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="case"
+                                                                                value="case"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Case</label>
@@ -529,7 +531,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="crate"
+                                                                                value="crate"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Crate</label>
@@ -548,7 +550,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="container"
+                                                                                value="container"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Container</label>
@@ -567,7 +569,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="1/12carton"
+                                                                                value="1/12carton"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/12
@@ -587,7 +589,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="1/10carton"
+                                                                                value="1/10carton"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/10
@@ -607,7 +609,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="1/8carton"
+                                                                                value="1/8carton"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/8
@@ -627,7 +629,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="1/6carton"
+                                                                                value="1/6carton"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/6
@@ -647,7 +649,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="1/4carton"
+                                                                                value="1/4carton"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/4
@@ -667,7 +669,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="1/2carton"
+                                                                                value="1/2carton"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">1/2
@@ -687,7 +689,7 @@
 
                                                                         <div class="flex items-center">
                                                                             <input id="default-radio-3" type="radio"
-                                                                                name="packaging[]" value="carton"
+                                                                                value="carton"
                                                                                 class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                             <label for="default-radio-3"
                                                                                 class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Carton</label>
@@ -901,24 +903,24 @@
                     <div x-show="step === 4" class="space-y-4">
                         <!-- Price for piece -->
                         <!-- Price per Piece Input (Always Displayed) -->
-                        <div class="flex w-1/3">
+                        {{-- <div class="flex w-1/3">
                             <label :for="'customer_price_' + index" class="block text-sm font-semibold pr-2">Price per
                                 Piece</label>
                             <input type="number" :id="'customer_price_' + index" x-model="layer.price"
                                 class="mt-2 p-2 border border-gray-300 rounded-md w-full"
                                 placeholder="Enter price for customer" required>
                             <p class="text-xs text-gray-900 dark:text-white">Price for people who buy pieces</p>
-                        </div>
+                        </div> --}}
 
                         <!-- Holds Input (Only for layers after the first one) -->
-                        <template x-if="layer.type !== 'Piece'">
+                        {{-- <template x-if="layer.type !== 'Piece'">
                             <div class="flex w-1/4">
                                 <label :for="'holds_' + index" class="block text-sm font-semibold pr-2">Holds</label>
                                 <input type="number" :id="'holds_' + index" x-model="layer.holds"
                                     class="mt-2 p-2 border border-gray-300 rounded-md w-full"
                                     placeholder="Enter amount" required>
                             </div>
-                        </template>
+                        </template> --}}
                     </div>
 
                     <!-- Step 5: Images -->

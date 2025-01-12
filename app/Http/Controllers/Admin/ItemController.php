@@ -49,6 +49,22 @@ class ItemController extends Controller
             'packetsinacartoon' => 'required|min:1',
             'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048' // Validation for images
 
+            // 'product_name' => 'required|string',
+            // 'product_description' => 'required|string',
+            // 'status' => 'required|string',
+            // 'packaging' => 'required|array',
+            // 'colors' => 'required|array',
+            // 'sizes' => 'required|array',
+            // 'image_a' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+            // 'image_b' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+            // 'image_c' => 'nullable|image|mimes:jpg,jpeg,png,gif',
+
+            // owner
+            // properties
+            // price
+            // stock
+            // catagory
+
         ]);
 
         // product_name: hfd
