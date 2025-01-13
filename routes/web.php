@@ -15,137 +15,140 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
-        Route::get('/welcome', function () {
-            return view('welcome');
-        })->name('welcome');
+Route::get('/welcome', function () {
+    return view('welcome');
+})->name('welcome');
 
 
-        Route::middleware('auth')->group(function () {
-            Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-            Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-            Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+Route::middleware('auth')->group(function () {
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+
+Route::group(['middleware' => ['auth', 'verified']], function () {
+
+    // Admin routes group
+    Route::group([
+        'prefix' => 'admin',
+        'middleware' => 'check_role:Admin',
+        'as' => 'admin.',
+    ], function () {
+
+        Route::get('/dashboard', function () {
+            return view('dashboard');
+        })->name('dashboard');
+
+        Route::get('/test', function () {
+            return view('test');
+        })->name('test');
+
+        Route::get('/alpine', function () {
+            return view('alpine');
         });
 
-
-        Route::group(['middleware' => ['auth', 'verified']], function (){
-
-            // Admin routes group
-            Route::group([
-                'prefix' => 'admin',
-                'middleware' => 'check_role:Admin',
-                'as' => 'admin.',
-            ], function(){
-
-                Route::get('/dashboard', function () {
-                    return view('dashboard');
-                })->name('dashboard');
-
-                Route::get('/test', function () {
-                    return view('test');
-                })->name('test');
-
-                Route::get('/alpine', function () {
-                    return view('alpine');
-                });
-
-                Route::get('/daisyui', function () {
-                    return view('daisyui');
-                })->name('daisyui');
+        Route::get('/daisyui', function () {
+            return view('daisyui');
+        })->name('daisyui');
 
 
-                Route::get('/fullhtml', function () {
-                    return view('fullhtml');
-                })->name('fullhtml');
+        Route::get('/fullhtml', function () {
+            return view('fullhtml');
+        })->name('fullhtml');
 
 
 
-                Route::get('/flowbite', function () {
-                    return view('flowbite');
-                })->name('flowbite');
+        Route::get('/flowbite', function () {
+            return view('flowbite');
+        })->name('flowbite');
 
-                // Admin resource routes
-                Route::resource('users', UserController::class);
-                Route::resource('customers', CustomerController::class);
-                Route::resource('items', ItemController::class);
-                Route::resource('carts', CartController::class);
-                //Route::resource('products', ProductController::class);
-                Route::resource('sales', SaleController::class);
-                Route::resource('purchases', PurchaseController::class);
+        // Admin resource routes
+        Route::resource('users', UserController::class);
+        Route::resource('customers', CustomerController::class);
+        Route::resource('items', ItemController::class);
+        // Custom route for saving as draft
+        Route::post('save-draft', [ItemController::class, 'saveDraft'])->name('saveDraft');
 
-                // Cart routes
-                Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
-            });
+        Route::resource('carts', CartController::class);
+        //Route::resource('products', ProductController::class);
+        Route::resource('sales', SaleController::class);
+        Route::resource('purchases', PurchaseController::class);
 
-            // Seller routes group
-            Route::group([
-                'prefix' => 'seller',
-                'middleware' => 'check_role:Seller',
-                'as' => 'seller.',
-            ], function(){
+        // Cart routes
+        Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
+    });
 
-                // Route::get('/dashboard', function () {
-                //     // Set the theme for the seller role in the session
-                //     session(['theme' => 'sellerandstock_keepertheme']);
-                //     session()->save(); // Explicitly save the session if necessary
-                //     return view('seller.items.index');
-                // })->name('dashboard');
+    // Seller routes group
+    Route::group([
+        'prefix' => 'seller',
+        'middleware' => 'check_role:Seller',
+        'as' => 'seller.',
+    ], function () {
 
-                Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
-                Route::resource('items', SellerItemController::class);
+        // Route::get('/dashboard', function () {
+        //     // Set the theme for the seller role in the session
+        //     session(['theme' => 'sellerandstock_keepertheme']);
+        //     session()->save(); // Explicitly save the session if necessary
+        //     return view('seller.items.index');
+        // })->name('dashboard');
 
-            });
+        Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
+        Route::resource('items', SellerItemController::class);
 
-            // Stock Keeper routes group
-            Route::group([
-                'prefix' => 'stock_keeper',
-                'middleware' => 'check_role:Stock Keeper',
-                'as' => 'stock_keeper.',
-            ], function(){
+    });
 
-                Route::get('/dashboard', function () {
-                    return view('stock_keeper.items.index');
-                })->name('dashboard');
+    // Stock Keeper routes group
+    Route::group([
+        'prefix' => 'stock_keeper',
+        'middleware' => 'check_role:Stock Keeper',
+        'as' => 'stock_keeper.',
+    ], function () {
 
-                Route::resource('items', StockkeeperItemController::class);
-            });
+        Route::get('/dashboard', function () {
+            return view('stock_keeper.items.index');
+        })->name('dashboard');
 
-            // // User routes group
-            Route::group([
-                'prefix' => 'user',
-                'middleware' => 'check_role:User',
-                'as' => 'user.',
-            ], function(){
+        Route::resource('items', StockkeeperItemController::class);
+    });
 
-                Route::get('/home', function () {
-                    return view('user.home.index');
-                })->name('home');
+    // // User routes group
+    Route::group([
+        'prefix' => 'user',
+        'middleware' => 'check_role:User',
+        'as' => 'user.',
+    ], function () {
 
-                //Route::resource('items', StockkeeperItemController::class);
-            });
+        Route::get('/home', function () {
+            return view('user.home.index');
+        })->name('home');
 
-            // User routes group
-            // Route::group([
-            //     'as' => 'visitor.',
-            // ], function(){
+        //Route::resource('items', StockkeeperItemController::class);
+    });
 
-            //     Route::get('/', function () {
-            //         return view('welcome');
-            //     })->name('home');
-            // });
+    // User routes group
+    // Route::group([
+    //     'as' => 'visitor.',
+    // ], function(){
 
-        });
-
-
-    //      // Home
-    //     Route::middleware('auth')->group(function () {
-    //         Route::get('/', function () {return view('welcome');})->name('Home');
-
+    //     Route::get('/', function () {
+    //         return view('welcome');
+    //     })->name('home');
     // });
 
+});
 
-require __DIR__.'/auth.php';
+
+//      // Home
+//     Route::middleware('auth')->group(function () {
+//         Route::get('/', function () {return view('welcome');})->name('Home');
+
+// });
+
+
+require __DIR__ . '/auth.php';
 
 
 // Include visitor routes before authentication checks
-require __DIR__.'/visitor.php';
+require __DIR__ . '/visitor.php';
 

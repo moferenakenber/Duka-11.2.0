@@ -8,7 +8,64 @@
     <div class="py-12">
 
         <!-- Alpine x-data (1) -->
-        <div x-data="packagingManager()" class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto">
+        <div x-data="{
+            step: 1,
+            totalSteps: 5,
+            productName: '',
+            newCategoryName: '',
+            showNewCategory: false,
+            formIsValid: false,
+
+            progress() {
+                return (this.step / this.totalSteps) * 100;
+            },
+
+            checkFormValidity() {
+                // Form is valid if productName is filled and if category is selected or new category is provided
+                this.formIsValid = this.productName.trim() !== '' &&
+                    (this.showNewCategory ? this.newCategoryName.trim() !== '' : true);
+            },
+
+            saveAsDraft() {
+                const formData = new FormData(document.querySelector('form'));
+
+                // Manually add product_name if not automatically added
+                formData.append('product_name', this.productName);
+
+                // Manually add new_category_name if creating a new category
+                if (this.showNewCategory) {
+                    formData.append('new_category_name', this.newCategoryName);
+                }
+
+                // Manually add the selected category_id
+                formData.append('item_category_id', document.getElementById('item_category_id').value);
+
+                // Log the data being sent
+                console.log('Sending data: ', formData);
+
+
+
+                fetch('{{ route('admin.saveDraft') }}', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': this.csrfToken,
+                        },
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert('Your form has been saved as a draft!');
+                        } else {
+                            alert('Error saving draft.');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error saving draft:', error);
+                        alert('Error saving draft.');
+                    });
+            }
+        }" class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto">
 
             @if ($errors->any())
                 <div class="mt-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
@@ -27,13 +84,7 @@
                 <!--------- Multistep form for items--------->
 
                 <!-- Alpine x-data (2) -->
-                <div x-data="{
-                    step: 1,
-                    totalSteps: 5,
-                    progress() {
-                        return (this.step / this.totalSteps) * 100;
-                    }
-                 }" class="max-w-4xl mx-auto p-4 relative min-h-screen overflow-y-auto">
+                <div class="max-w-4xl mx-auto p-4 relative min-h-screen overflow-y-auto">
 
                     <!--------- Step Progress Bar --------->
                     <div class="mb-6">
@@ -70,7 +121,7 @@
 
 
                     <!--------- Step 1: Vital Information------- -->
-                    <div x-show="step === 1" class="space-y-4">
+                    {{-- <div x-show="step === 1" class="space-y-4">
                         <div>
                             <label for="product_name" class="block text-sm font-semibold">Product Name</label>
                             <input type="text" id="product_name" name="product_name"
@@ -98,7 +149,152 @@
                                     of Stock</option>
                             </select>
                         </div>
+                    </div> --}}
+
+                    <div x-show="step === 1" class="space-y-4">
+
+                        <!-- Product Name Input -->
+                        <div class="mb-6">
+                            <label for="product_name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Product Name
+                            </label>
+                            <input type="text" id="product_name" name="product_name" x-model="productName"
+                                value="{{ old('product_name') }}"
+                                class="bg-white border border-gray-300 text-gray-900 placeholder-gray-500 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:text-gray-300 dark:placeholder-gray-400 dark:border-gray-600"
+                                placeholder="Enter product name" required aria-label="Product Name">
+                            @if ($errors->has('product_name'))
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                                    <span class="font-medium">Oh, snap!</span> {{ $errors->first('product_name') }}
+                                </p>
+                            @else
+                                <p x-show="productName.length > 0"
+                                    class="mt-2 text-sm text-green-600 dark:text-green-500">
+                                    <span class="font-medium">Well done!</span> Product name looks good.
+                                </p>
+                            @endif
+                        </div>
+
+
+
+                        <!-- Product Description -->
+                        <div class="mb-6">
+                            <label for="product_description"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                                Product Description
+                            </label>
+                            <textarea id="product_description" name="product_description" rows="4" maxlength="200"
+                                class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Write product description here..." required aria-label="Product Description"
+                                oninput="updateWordCount()">{{ old('product_description') }}</textarea>
+                            <p id="word-count" class="mt-2 text-sm text-gray-600 dark:text-gray-400">
+                                <span id="remaining-words">200</span> words remaining
+                            </p>
+                            @error('product_description')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                                    <span class="font-medium">Oh, snap!</span> {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <script>
+                            const maxWords = 200;
+
+                            function updateWordCount() {
+                                const textarea = document.getElementById('product_description');
+                                const wordCountElement = document.getElementById('remaining-words');
+                                const words = textarea.value.trim().split(/\s+/).filter(word => word.length > 0);
+                                const remaining = maxWords - words.length;
+
+                                wordCountElement.textContent = remaining;
+
+                                if (remaining < 0) {
+                                    wordCountElement.classList.remove('text-gray-600', 'dark:text-gray-400');
+                                    wordCountElement.classList.add('text-red-600', 'dark:text-red-500');
+                                } else {
+                                    wordCountElement.classList.remove('text-red-600', 'dark:text-red-500');
+                                    wordCountElement.classList.add('text-gray-600', 'dark:text-gray-400');
+                                }
+                            }
+                        </script>
+
+
+
+                        <!-- item_category_id -->
+                        <!-- Category Selection -->
+                        <div class="mb-6">
+                            <label for="item_category_id"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a
+                                Category</label>
+                            <select id="item_category_id" name="item_category_id"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                @change="showNewCategory = $event.target.value === 'new'; checkFormValidity()">
+                                <option value="" disabled selected>Select a category</option>
+                                @foreach ($categories as $category)
+                                    <option value="{{ $category->id }}"
+                                        {{ old('item_category_id') == $category->id ? 'selected' : '' }}>
+                                        {{ $category->category_name }}
+                                    </option>
+                                @endforeach
+                                <option value="new">Create a new category</option>
+                            </select>
+                            @error('item_category_id')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                                    <span class="font-medium">Error:</span> {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+                        <!-- New Category Input -->
+                        <div x-show="showNewCategory" class="mt-2" x-transition>
+                            <label for="new_category_name"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New Category
+                                Name</label>
+                            <input type="text" id="new_category_name" name="new_category_name"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                placeholder="Enter new category name" x-model="newCategoryName"
+                                @input="checkFormValidity()">
+                            @error('new_category_name')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                                    <span class="font-medium">Error:</span> {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+
+
+                        <!-- Status Selection -->
+                        <div class="mb-6">
+                            <label for="status"
+                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                            <select id="status" name="status"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                required aria-label="Product Status">
+                                <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
+                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active
+                                </option>
+                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive
+                                </option>
+                                <option value="unavailable" {{ old('status') == 'unavailable' ? 'selected' : '' }}>
+                                    Unavailable</option>
+                            </select>
+                            @error('status')
+                                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
+                                    <span class="font-medium">Error:</span> {{ $message }}
+                                </p>
+                            @enderror
+                        </div>
+
+
+                        <!-- incomplete -->
+                        <div>
+                            <label for="incomplete" class="block text-sm font-semibold">Incomplete</label>
+                            <input type="checkbox" id="incomplete" name="incomplete" value="1"
+                                {{ old('incomplete', true) ? 'checked' : '' }} class="mt-2">
+                            <span class="text-sm text-gray-500">Mark as incomplete if the product is not ready.</span>
+                        </div>
                     </div>
+
 
 
                     <!--------- Step 2: Packaging types and how much they hold --------->
@@ -123,8 +319,8 @@
 
                             <!-------- Checked disabled piece -------->
                             <div class="flex items-center pt-4 px-8">
-                                <input checked id="readonly-checked-checkbox" type="checkbox"
-                                    value="piece" name="packaging[]"
+                                <input checked id="readonly-checked-checkbox" type="checkbox" value="piece"
+                                    name="packaging[]"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="readonly-checked-checkbox"
                                     class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Piece</label>
@@ -135,8 +331,7 @@
                             <!-- Alpine (3) x-show (2)  -->
                             <div x-show="packagingOptions[selectedOption[0]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input checked id="readonly-checked-checkbox" type="checkbox"
-                                        value="packet"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox" value="packet"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
@@ -146,8 +341,7 @@
                                     </label>
 
                                     <!-- Alpine (3) x-text (2)  -->
-                                    <p class="ms-4"> - Holds <span
-                                            x-text="packagingOptions[selectedOption[0]]">
+                                    <p class="ms-4"> - Holds <span x-text="packagingOptions[selectedOption[0]]">
                                         </span>
                                         Pieces.</p>
                                 </div>
@@ -159,8 +353,7 @@
                             <!-- Alpine (3) x-show (3)  -->
                             <div x-show="packagingOptions[selectedOption[1]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input checked id="readonly-checked-checkbox" type="checkbox"
-                                        value="1/4carton"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox" value="1/4carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 
                                     <label for="readonly-checked-checkbox"
@@ -188,8 +381,7 @@
                             <!-- Alpine (3) x-show (4)  -->
                             <div x-show="packagingOptions[selectedOption[2]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input checked id="readonly-checked-checkbox" type="checkbox"
-                                        value="1/2 carton"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox" value="1/2 carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
@@ -216,8 +408,7 @@
                             <!-- Alpine (3) x-show (5)  -->
                             <div x-show="packagingOptions[selectedOption[3]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input checked id="readonly-checked-checkbox" type="checkbox"
-                                        value="carton"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox" value="carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
@@ -243,8 +434,7 @@
                             <!-- Alpine (3) x-show (6)  -->
                             <div x-show="packagingOptions[selectedOption[4]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input checked id="readonly-checked-checkbox" type="checkbox"
-                                        value="carton"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox" value="carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
@@ -272,8 +462,7 @@
                             <!-- Alpine (3) x-show (7)  -->
                             <div x-show="packagingOptions[selectedOption[5]]">
                                 <div class="flex items-center pt-2 px-8">
-                                    <input checked id="readonly-checked-checkbox" type="checkbox"
-                                        value="carton"
+                                    <input checked id="readonly-checked-checkbox" type="checkbox" value="carton"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 
                                     <label for="readonly-checked-checkbox"
@@ -318,7 +507,8 @@
 
                             <!-- Alpine (3) x-on (1)  -->
                             <button
-                                x-on:click="open = !open; dropdownVisible = !dropdownVisible; console.log(open); console.log(dropdownVisible)" type="button"
+                                x-on:click="open = !open; dropdownVisible = !dropdownVisible; console.log(open); console.log(dropdownVisible)"
+                                type="button"
                                 class="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm mt-5 px-2
                                 py-4 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
                                 Add
@@ -374,8 +564,7 @@
                                                                     <!-- piece -->
                                                                     <div class="flex items-center">
                                                                         <input checked disabled id="default-radio-1"
-                                                                            type="radio"
-                                                                            value="piece"
+                                                                            type="radio" value="piece"
                                                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                         <label for="default-radio-1"
                                                                             class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Piece</label>
@@ -944,7 +1133,7 @@
 
 
                     <!-- Add scrolling behavior to Step switch -->
-                    <div class="absolute bottom-0 left-0 right-0 p-4 flex justify-between">
+                    {{-- <div class="absolute bottom-0 left-0 right-0 p-4 flex justify-between">
                         <!-- Previous Button -->
                         <button x-show="step > 1"
                             @click.prevent="step--; $nextTick(() => $refs.tabs.children[step-1].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }))"
@@ -964,7 +1153,56 @@
                             class="bg-green-500 text-white py-2 px-4 rounded-md">
                             Submit
                         </button>
+                    </div> --}}
+
+
+
+
+                    <!-- Step Buttons -->
+                    <div class="absolute bottom-0 left-0 right-0 p-4 flex justify-between">
+                        <!-- Previous Button (only visible when step > 1) -->
+                        <button x-show="step > 1"
+                            @click.prevent="step--; $nextTick(() => $refs.tabs.children[step-1].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }))"
+                            class="bg-blue-500 text-white py-2 px-4 rounded-md">
+                            Previous
+                        </button>
+
+                        <!-- Save as Draft and Next Buttons for steps 1-4 -->
+                        <div x-show="step >= 1 && step < totalSteps" class="flex space-x-4 ml-auto">
+                            <!-- Save as Draft Button (before Next) -->
+                            <button x-show="step < totalSteps" @click.prevent="saveAsDraft()"
+                                class="bg-gray-500 text-white py-2 px-4 rounded-md">
+                                Save as Draft
+                            </button>
+
+                            <!-- Next Button -->
+                            <button x-show="step < totalSteps"
+                                @click.prevent="step++; $nextTick(() => $refs.tabs.children[step-1].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }))"
+                                class="bg-blue-500 text-white py-2 px-4 rounded-md">
+                                Next
+                            </button>
+                        </div>
+
+                        <button x-show="step === totalSteps" @click.prevent="saveAsDraft()" :disabled="!formIsValid"
+                            class="bg-gray-500 text-white py-2 px-4 rounded-md mr-4">
+                            Save as Draft
+                        </button>
+
+
+                        <!-- Submit Button (only on the last step) -->
+                        <button x-show="step === totalSteps" type="submit"
+                            class="bg-green-500 text-white py-2 px-4 rounded-md ml-4">
+                            Submit
+                        </button>
                     </div>
+
+
+
+
+
+
+
+
                 </div>
             </form>
         </div>

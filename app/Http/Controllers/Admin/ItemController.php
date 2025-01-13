@@ -5,6 +5,13 @@ namespace App\Http\Controllers\Admin;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\User;
+use App\Models\ItemCategory;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+
+
+
+
 
 
 //This single line generates the following routes:
@@ -29,8 +36,97 @@ class ItemController extends Controller
     // Show the form for creating a new item
     public function create()
     {
-        return view('admin.items.create');
+        // Fetch categories to display in the form
+        $categories = ItemCategory::all();
+
+        // Pass the categories to the view
+        return view('admin.items.create', compact('categories'));
     }
+
+    // Save Draft method
+    public function saveDraft(Request $request)
+    {
+        Log::info('Draft save request received.');
+        Log::info('Request Data:', $request->all());
+
+        // Start a database transaction
+        DB::beginTransaction();
+        try {
+            // Validate form data
+            $validatedData = $request->validate([
+                'product_name' => 'required|string|max:255',
+                'product_description' => 'nullable|string',
+                'packaging_details' => 'nullable|string',
+                'variation' => 'nullable|string',
+                'price' => 'nullable|numeric',
+                'product_images' => 'nullable|image|max:2048',
+                //'item_category_id' => 'nullable|exists:categories,id', // Ensure category exists or create a new one
+                'item_category_id' => 'nullable|in:new,' . implode(',', ItemCategory::pluck('id')->toArray()),
+
+                'new_category_name' => 'required_if:item_category_id,new|string', // Handle new category name
+
+            ]);
+
+            Log::info('Validation passed for save draft.', $validatedData);
+
+            // Check if a new category is provided and handle accordingly
+            // $categoryId = $request->item_category_id;
+            // if ($request->filled('new_category_name')) {
+            //     // Create a new category if the new_category_name is provided
+            //     $newCategory = ItemCategory::create([
+            //         'category_name' => $request->new_category_name,
+            //     ]);
+
+            //     $categoryId = $newCategory->id;  // Update categoryId to the newly created category
+            //     Log::info('New category created with ID: ' . $categoryId);
+            // }
+
+            // If 'item_category_id' is 'new', create a new category
+            // If the category is new, create it and get the ID
+            $categoryId = $request->item_category_id;
+            if ($categoryId === 'new') {
+                $category = ItemCategory::create([
+                    'category_name' => $request->new_category_name
+                ]);
+                $categoryId = $category->id;
+            } else {
+                $categoryId = (int) $categoryId;
+            }
+
+            // Create a new item and set additional fields
+            $draft = new Item($validatedData);
+            $draft->category_id = $categoryId; // Associate the category with the item
+            $draft->incomplete = true; // Ensure drafts are always incomplete
+            $draft->status = 'draft';  // Set the status to 'draft'
+
+            // Handle image upload if exists
+            if ($request->hasFile('product_images')) {
+                $path = $request->file('product_images')->store('images', 'public');
+                $draft->product_images = $path;
+            }
+
+            $draft->save();
+
+            // Commit the transaction
+            DB::commit();
+
+            Log::info('Draft saved successfully.');
+
+
+
+            // Return a success response
+            return response()->json(['success' => true, 'message' => 'Draft saved successfully'], 200);
+        } catch (\Exception $e) {
+            // Rollback the transaction on error
+            DB::rollBack();
+
+            Log::error('Error saving draft:', ['exception' => $e]);
+
+            // Return an error response
+            return response()->json(['success' => false, 'message' => 'Error saving draft. Please try again.'], 500);
+        }
+    }
+
 
     // Store a newly created item
     public function store(Request $request)
@@ -38,20 +134,29 @@ class ItemController extends Controller
         $item = new Item();
 
         $validatedItem = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'catoption' => 'required|array|min:1',
-            'pacoption' => 'required|array|min:1',
-            'price' => 'required|min:1',
-            'status' => 'required',
-            'stock' => 'required|min:1',
-            'piecesinapacket' => 'required|min:1',
-            'packetsinacartoon' => 'required|min:1',
-            'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048' // Validation for images
+            // 'name' => 'required|string|max:255',
+            // 'description' => 'required|string|max:255',
+            // 'catoption' => 'required|array|min:1',
+            // 'pacoption' => 'required|array|min:1',
+            // 'price' => 'required|min:1',
+            // 'status' => 'required',
+            // 'stock' => 'required|min:1',
+            // 'piecesinapacket' => 'required|min:1',
+            // 'packetsinacartoon' => 'required|min:1',
+            // 'images.*' => 'image|mimes:jpeg,png,jpg,gif|max:2048' // Validation for images
+
+            'item_category_id' => 'required|exists:item_categories,id',
+
+
 
             // 'product_name' => 'required|string',
             // 'product_description' => 'required|string',
-            // 'status' => 'required|string',
+            // 'category' => 'required|integer',
+            // 'status' => 'required|in:draft,active,inactive',
+            // 'variants' => 'required|array',
+            // 'images' => 'required|array',
+
+
             // 'packaging' => 'required|array',
             // 'colors' => 'required|array',
             // 'sizes' => 'required|array',
@@ -102,15 +207,16 @@ class ItemController extends Controller
         */
 
         $item = Item::create([
-            'name' => $validatedItem['name'],
-            'description' => $validatedItem['description'],
-            'catoption' => json_encode($validatedItem['catoption']),
-            'pacoption' => json_encode($validatedItem['pacoption']),
-            'price' => $validatedItem['price'],
-            'status' => $validatedItem['status'],
-            'stock' => $validatedItem['stock'],
-            'piecesinapacket' => $validatedItem['piecesinapacket'],
-            'packetsinacartoon' => $validatedItem['packetsinacartoon'],
+            // 'name' => $validatedItem['name'],
+            // 'description' => $validatedItem['description'],
+            // 'catoption' => json_encode($validatedItem['catoption']),
+            // 'pacoption' => json_encode($validatedItem['pacoption']),
+            // 'price' => $validatedItem['price'],
+            // 'status' => $validatedItem['status'],
+            // 'stock' => $validatedItem['stock'],
+            // 'piecesinapacket' => $validatedItem['piecesinapacket'],
+            // 'packetsinacartoon' => $validatedItem['packetsinacartoon'],
+            'category_id' => $validatedItem['item_category_id'], // Assuming you're passing the category ID
         ]);
 
         // Handle image uploads
@@ -124,6 +230,11 @@ class ItemController extends Controller
         //     }
         // }
 
+        // Create a new Item and assign validated data
+        $item = new Item();
+        $item->category_id = $validatedItem['item_category_id']; // Assuming you're passing the category ID
+        // Assign other fields (if any)
+        $item->save(); // Save the item
 
         // Handle image uploads
         $imagePaths = []; // Create an array to store image paths
@@ -140,6 +251,8 @@ class ItemController extends Controller
             // Store the image paths as a JSON array in the images column
             $item->update(['images' => json_encode($imagePaths)]);
         }
+
+
 
         return redirect()->route('admin.items.index')->with('success', 'item registered successfully!');
     }

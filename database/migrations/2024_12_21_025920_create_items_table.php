@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,17 +12,42 @@ return new class extends Migration
     {
         Schema::create('items', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->text('description')->nullable();
-            $table->json('catoption');
-            $table->json('pacoption');
-            $table->decimal('price', 8, 2);
-            $table->string('status')->default('available');
-            $table->integer('stock')->default(0); // Changed to integer
-            $table->json('images')->nullable();
-            $table->integer('piecesinapacket')->default(0);
-            $table->integer('packetsinacartoon')->default(0);
+            $table->string('product_name')->nullable();
+            $table->text('product_description')->nullable();
+            $table->foreignId('item_category_id')->nullable()->constrained()->onDelete('cascade');
+            $table->enum('status', ['draft', 'active', 'inactive', 'unavailable'])->default('draft'); // Set by the user when the item is ready
+            $table->boolean('incomplete')->default(true);
             $table->timestamps();
+
+            $table->unsignedBigInteger('category_id');  // Add the foreign key column
+            // Foreign key constraint
+            $table->foreign('category_id')->references('id')->on('item_categories')->onDelete('cascade');
+
+            // $table->decimal('price', 8, 2);
+            // $table->string('status')->default('available');
+            // $table->integer('stock')->default(0); // Changed to integer
+            // $table->json('images')->nullable();
+            // $table->integer('piecesinapacket')->default(0);
+            // $table->integer('packetsinacartoon')->default(0);
+            // $table->timestamps();
+
+
+            // _token: 78dsKLbM6Hx1bAz67kJUdjWIdYX1pirhZbI3bxKy
+            // product_name: dfgdfgdsdf
+            // product_description: fgdfgsdfsdf
+            // item_category_id: 1
+            // new_category_name:
+            // status: draft
+            // incomplete: 1
+            // packaging[]: piece
+            // colors[]: green
+            // colors[]: purple
+            // sizes[]: large
+            // image_a: (binary)
+            // image_b: (binary)
+            // image_c: (binary)
+
+
         });
     }
 
@@ -32,6 +56,11 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Schema::table('item_variants', function (Blueprint $table) {
+        //     $table->dropForeign(['item_id']); // Drop foreign key constraint on item_id
+        // });
+
         Schema::dropIfExists('items');
+
     }
 };
