@@ -23,7 +23,7 @@
                 @include('layouts.sidebar') --}}
 
     <!-- Main Content -->
-    <main class="p-4 sm:ml-64">
+    <main class="p-4">
         <!-- Page Content -->
         @yield('content')
         @include('seller.layouts.navigation')

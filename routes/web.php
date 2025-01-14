@@ -8,11 +8,16 @@ use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\Admin\ProfileController;
 //use App\Http\Controllers\Admin\ProductController;
-use App\Http\Controllers\Seller\ItemController as SellerItemController;
+
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
+use App\Http\Controllers\Seller\CustomerController as SellerCustomerController;
+use App\Http\Controllers\Seller\ItemController as SellerItemController;
+use App\Http\Controllers\Seller\CartController as SellerCartController;
+
 use App\Http\Controllers\Stockkeeper\ItemController as StockkeeperItemController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 
 
 Route::get('/welcome', function () {
@@ -94,7 +99,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         // })->name('dashboard');
 
         Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
+        Route::resource('customers', SellerCustomerController::class);
         Route::resource('items', SellerItemController::class);
+        Route::resource('carts', SellerCartController::class);
 
     });
 
