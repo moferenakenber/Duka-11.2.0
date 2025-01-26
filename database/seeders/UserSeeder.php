@@ -85,7 +85,7 @@ class UserSeeder extends Seeder
             [
                 'first_name' => 'Admin',
                 'last_name' => 'User',
-                'phone_number' => '0912344867',
+                'phone_number' => '0943754832',
                 'email' => 'admin@admin.com',
                 'email_verified_at' => now(),
                 'role' => 'admin',
@@ -98,7 +98,7 @@ class UserSeeder extends Seeder
             [
                 'first_name' => 'Seller',
                 'last_name' => 'User',
-                'phone_number' => '0912344567',
+                'phone_number' => '0947278489',
                 'email' => 'seller@seller.com',
                 'email_verified_at' => now(),
                 'role' => 'seller',
@@ -111,7 +111,7 @@ class UserSeeder extends Seeder
             [
                 'first_name' => 'Stoke_keeper',
                 'last_name' => 'User',
-                'phone_number' => '0914344567',
+                'phone_number' => '0911239154',
                 'email' => 'stockkeeper@stockkeeper.com',
                 'email_verified_at' => now(),
                 'role' => 'stock_keeper',
@@ -124,7 +124,7 @@ class UserSeeder extends Seeder
             [
                 'first_name' => 'User',
                 'last_name' => 'User',
-                'phone_number' => '0914344267',
+                'phone_number' => '0953827843',
                 'email' => 'user@user.com',
                 'email_verified_at' => now(),
                 'role' => 'user',
