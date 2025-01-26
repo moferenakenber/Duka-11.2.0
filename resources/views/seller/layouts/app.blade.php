@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 
 <head>
     <meta charset="utf-8">
@@ -22,8 +22,9 @@
     {{-- <!-- Sidebar -->
                 @include('layouts.sidebar') --}}
 
-    <!-- Main Content -->
-    <main class="p-4">
+    <!-- Main Content - p-4 exept the top - -->
+
+    <main>
         <!-- Page Content -->
         @yield('content')
         @include('seller.layouts.navigation')

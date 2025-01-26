@@ -5,6 +5,10 @@
         </h2>
     </x-slot>
 
+    <script>
+        const categories = @json($categories);
+    </script>
+
     <div class="py-12">
 
         <!-- Alpine x-data (1) -->
@@ -12,9 +16,40 @@
             step: 1,
             totalSteps: 5,
             productName: '',
-            newCategoryName: '',
             showNewCategory: false,
+            newCategoryName: '',
             formIsValid: false,
+
+            categories: categories, // Categories passed from Laravel
+            selectedCategories: [], // Array to store selected category IDs and names for new categories
+            newCategoryNames: [], // Array to store the names of new categories
+
+
+
+
+
+            // Function to toggle category selection
+            toggleCategorySelection(category) {
+                if (this.selectedCategories.some(c => c.id === category.id)) {
+                    // Remove the category if it's already selected
+                    this.selectedCategories = this.selectedCategories.filter(c => c.id !== category.id);
+                } else {
+                    // Add the category if it's not already selected
+                    this.selectedCategories.push(category);
+                }
+            },
+
+
+
+
+            // Function to check if a category is selected
+            isChecked(category) {
+                return this.selectedCategories.some(c => c.id === category.id);
+            },
+
+
+
+
 
             progress() {
                 return (this.step / this.totalSteps) * 100;
@@ -40,6 +75,12 @@
                 // Manually add the selected category_id
                 formData.append('item_category_id', document.getElementById('item_category_id').value);
 
+                // Manually add the selected category_id (array of selected categories, including newly created ones)
+                //formData.append('item_category_id', JSON.stringify(this.selectedCategories));
+
+                // Manually add the selected category_id (array of selected categories, including newly created ones)
+                formData.append('newCategoryNames', JSON.stringify(this.selectedCategories));
+
                 // Log the data being sent
                 console.log('Sending data: ', formData);
 
@@ -64,6 +105,27 @@
                         console.error('Error saving draft:', error);
                         alert('Error saving draft.');
                     });
+            },
+
+
+            createCategory() {
+                if (this.newCategoryName.trim() !== '') {
+                    // Temporarily add the new category name to the selected categories list (no ID yet)
+                    this.selectedCategories.push(this.newCategoryName);
+                    this.newCategoryNames.push(this.newCategoryName); // Store the new category name to send to the backend
+                    this.categories.push({ id: `new-${Date.now()}`, category_name: this.newCategoryName }); // Add the new category to the categories list
+                    this.newCategoryName = '';
+                    this.showNewCategory = false;
+                } else {
+                    alert('Please enter a valid category name.');
+                }
+            },
+
+
+
+            cancelCreation() {
+                this.newCategoryName = ''; // Reset input
+                this.showNewCategory = false; // Hide the input box
             }
         }" class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto">
 
@@ -117,8 +179,6 @@
                                 class="cursor-pointer py-2 px-4 rounded-md flex-shrink-0">Images</li>
                         </ul>
                     </div>
-
-
 
                     <!--------- Step 1: Vital Information------- -->
                     {{-- <div x-show="step === 1" class="space-y-4">
@@ -175,8 +235,6 @@
                             @endif
                         </div>
 
-
-
                         <!-- Product Description -->
                         <div class="mb-6">
                             <label for="product_description"
@@ -222,7 +280,7 @@
 
                         <!-- item_category_id -->
                         <!-- Category Selection -->
-                        <div class="mb-6">
+                        {{-- <div class="mb-6">
                             <label for="item_category_id"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a
                                 Category</label>
@@ -243,10 +301,10 @@
                                     <span class="font-medium">Error:</span> {{ $message }}
                                 </p>
                             @enderror
-                        </div>
+                        </div> --}}
 
                         <!-- New Category Input -->
-                        <div x-show="showNewCategory" class="mt-2" x-transition>
+                        {{-- <div x-show="showNewCategory" class="mt-2" x-transition>
                             <label for="new_category_name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New Category
                                 Name</label>
@@ -259,12 +317,187 @@
                                     <span class="font-medium">Error:</span> {{ $message }}
                                 </p>
                             @enderror
+                        </div> --}}
+
+
+                        <!-- New catagory with multi select -->
+                        {{-- <div class="mb-6" x-data="categoriesApp"> --}}
+
+                        <div class="mb-6">
+                            <!-- Debug Button to check categories -->
+                            {{-- <button @click="console.log(categories)" class="bg-gray-200 p-2 rounded">Debug Categories</button> --}}
+
+                            <!-- Display Categories in a Preformatted Text Block -->
+                            {{-- <pre>{{ $categories }}</pre> --}}
+
+                            <!-- Label for Categories -->
+                            <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select
+                                Categories</label>
+
+                            <!-- Dropdown + Create Button -->
+                            <div class="flex items-center gap-4">
+                                <!-- Dropdown Button "Select Categories" -->
+                                <div>
+                                    <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownBgHover"
+                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                        type="button">
+                                        Select Categories
+                                        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                                            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
+                                                stroke-width="2" d="m1 1 4 4 4-4" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Dropdown Menu -->
+                                    <div id="dropdownBgHover"
+                                        class="z-10 hidden w-48 bg-white rounded-lg shadow dark:bg-gray-700">
+                                        <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
+                                            aria-labelledby="dropdownBgHoverButton">
+                                            <!-- Dynamically render categories -->
+                                            {{-- <template x-for="category in categories" :key="category.id">
+                                                <li>
+                                                    <div
+                                                        class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                        <input type="checkbox" :value="category.id"
+                                                            @click="selectedCategories.includes(category.id) ? selectedCategories = selectedCategories.filter(id => id !== category.id) : selectedCategories.push(category.id)"
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+                                                        <label
+                                                            class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
+                                                            x-text="category.category_name"></label>
+                                                    </div>
+                                                </li>
+                                            </template> --}}
+                                            <!-- Dynamically render categories -->
+                                            <template x-for="category in categories" :key="category.id">
+                                                <li>
+                                                    <div
+                                                        class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
+                                                        <!-- Checkbox -->
+                                                        <input type="checkbox" :value="category.id"
+                                                            @click="toggleCategorySelection(category)"
+                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500"
+                                                            :checked="isChecked(category)" />
+                                                        <label
+                                                            class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
+                                                            x-text="category.category_name"></label>
+                                                    </div>
+                                                </li>
+                                            </template>
+
+
+
+
+                                        </ul>
+
+
+
+                                    </div>
+                                </div>
+
+                                <!-- Create New Category Button -->
+                                <button type="button" @click="showNewCategory = !showNewCategory"
+                                    class="text-white bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800">
+                                    Create New Category
+                                </button>
+                            </div>
+
+                            <!-- New Category Input -->
+                            <div x-show="showNewCategory" class="mt-4" x-transition>
+                                <label for="new_category_name"
+                                    class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New Category
+                                    Name</label>
+                                <div class="flex items-center gap-4">
+                                    <!-- x-model="newCategoryName" -->
+                                    <input type="text" id="new_category_name" x-model="newCategoryName"
+                                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                        placeholder="Enter new category name">
+
+                                    <!-- Create Button -->
+                                    <button type="button" @click="createCategory()"
+                                        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                        Create
+                                    </button>
+
+                                    <!-- Cancel Button -->
+                                    <button type="button" @click="cancelCreation()"
+                                        class="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">
+                                        Cancel
+                                    </button>
+                                </div>
+                                <!-- Hidden select field for new category names -->
+                                <select id="new_category_names" name="new_category_names[]"
+                                    x-model="newCategoryNames" class="hidden">
+                                    <template x-for="name in newCategoryNames" :key="name">
+                                        <option :value="name"></option>
+                                    </template>
+                                </select>
+                            </div>
                         </div>
 
 
 
+                        <!-- Display Selected Categories -->
+                        <!-- Display Selected Categories as Plain Text -->
+                        <div class="flex flex-wrap items-start">
+                            <h3 class="mr-4 inline">Selected Categories:</h3>
+                            <template x-for="(category, index) in selectedCategories" :key="category.id + '-' + index">
+                                <div class="block ml-4">
+                                    <span x-text="category.category_name"></span>
+                                </div>
+                            </template>
+                        </div>
+
+
+
+
+
+
+
+
+
+
+
+
+                        {{-- <script>
+                            document.addEventListener('alpine:init', () => {
+                                Alpine.data('categoriesApp', () => ({
+                                    categories: @json($categories), // Categories passed from Laravel
+                                    showNewCategory: false,
+                                    newCategoryName: '',
+                                    createCategory() {
+                                        if (this.newCategoryName.trim() !== '') {
+                                            // Push the new category to the array
+                                            this.categories.push({
+                                                id: this.categories.length + 1, // Simulated ID, use backend logic for actual ID
+                                                category_name: this.newCategoryName,
+                                            });
+                                            this.newCategoryName = '';  // Reset input
+                                            this.showNewCategory = false; // Close the input box
+                                        } else {
+                                            alert('Please enter a valid category name.');
+                                        }
+                                    },
+                                    cancelCreation() {
+                                        this.newCategoryName = '';  // Reset input
+                                        this.showNewCategory = false; // Hide the input box
+                                    }
+                                }));
+                            });
+                        </script> --}}
+
+
+
+
+
+
+
+
+
+
+
                         <!-- Status Selection -->
-                        <div class="mb-6">
+                        {{-- <div class="mb-6">
                             <label for="status"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
                             <select id="status" name="status"
@@ -283,16 +516,16 @@
                                     <span class="font-medium">Error:</span> {{ $message }}
                                 </p>
                             @enderror
-                        </div>
+                        </div> --}}
 
 
                         <!-- incomplete -->
-                        <div>
+                        {{-- <div>
                             <label for="incomplete" class="block text-sm font-semibold">Incomplete</label>
                             <input type="checkbox" id="incomplete" name="incomplete" value="1"
                                 {{ old('incomplete', true) ? 'checked' : '' }} class="mt-2">
                             <span class="text-sm text-gray-500">Mark as incomplete if the product is not ready.</span>
-                        </div>
+                        </div> --}}
                     </div>
 
 
@@ -1170,7 +1403,7 @@
                         <!-- Save as Draft and Next Buttons for steps 1-4 -->
                         <div x-show="step >= 1 && step < totalSteps" class="flex space-x-4 ml-auto">
                             <!-- Save as Draft Button (before Next) -->
-                            <button x-show="step < totalSteps" @click.prevent="saveAsDraft()"
+                            <button type="button" x-show="step < totalSteps" @click.prevent="saveAsDraft()"
                                 class="bg-gray-500 text-white py-2 px-4 rounded-md">
                                 Save as Draft
                             </button>
@@ -1183,14 +1416,14 @@
                             </button>
                         </div>
 
-                        <button x-show="step === totalSteps" @click.prevent="saveAsDraft()" :disabled="!formIsValid"
-                            class="bg-gray-500 text-white py-2 px-4 rounded-md mr-4">
+                        <button type="button" x-show="step === totalSteps" @click.prevent="saveAsDraft()"
+                            :disabled="!formIsValid" class="bg-gray-500 text-white py-2 px-4 rounded-md mr-4">
                             Save as Draft
                         </button>
 
 
                         <!-- Submit Button (only on the last step) -->
-                        <button x-show="step === totalSteps" type="submit"
+                        <button x-show="step === totalSteps" @click.prevent="submitForm()"
                             class="bg-green-500 text-white py-2 px-4 rounded-md ml-4">
                             Submit
                         </button>

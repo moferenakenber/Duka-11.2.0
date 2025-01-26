@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="light">
 
 <head>
     <meta charset="utf-8">
@@ -23,7 +23,7 @@
                 @include('layouts.sidebar') --}}
 
     <!-- Main Content -->
-    <main class="p-4 sm:ml-64">
+    <main>
         <!-- Page Content -->
         @yield('content')
         @include('stock_keeper.layouts.navigation')

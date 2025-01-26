@@ -19,9 +19,9 @@ return new class extends Migration {
             $table->boolean('incomplete')->default(true);
             $table->timestamps();
 
-            $table->unsignedBigInteger('category_id');  // Add the foreign key column
+            $table->unsignedBigInteger('category_id')->nullable();  // Add the foreign key column
             // Foreign key constraint
-            $table->foreign('category_id')->references('id')->on('item_categories')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('item_categories')->onDelete('cascade')->nullable();
 
             // $table->decimal('price', 8, 2);
             // $table->string('status')->default('available');

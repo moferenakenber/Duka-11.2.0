@@ -13,8 +13,12 @@ use App\Http\Controllers\Seller\DashboardController as SellerDashboardController
 use App\Http\Controllers\Seller\CustomerController as SellerCustomerController;
 use App\Http\Controllers\Seller\ItemController as SellerItemController;
 use App\Http\Controllers\Seller\CartController as SellerCartController;
+use App\Http\Controllers\Seller\MenuController as SellerMenuController;
 
-use App\Http\Controllers\Stockkeeper\ItemController as StockkeeperItemController;
+use App\Http\Controllers\Stockkeeper\OrderController as StockkeeperOrderController;
+use App\Http\Controllers\Stockkeeper\InventoryController as StockkeeperInventoryController;
+use App\Http\Controllers\Stockkeeper\MenuController as StockkeeperMenuController;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -102,6 +106,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('customers', SellerCustomerController::class);
         Route::resource('items', SellerItemController::class);
         Route::resource('carts', SellerCartController::class);
+        Route::resource('menu', SellerMenuController::class);
 
     });
 
@@ -113,10 +118,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
     ], function () {
 
         Route::get('/dashboard', function () {
-            return view('stock_keeper.items.index');
+            return view('stock_keeper.orders.index');
         })->name('dashboard');
 
-        Route::resource('items', StockkeeperItemController::class);
+        Route::resource('orders', StockkeeperOrderController::class);
+        Route::resource('inventory', StockkeeperInventoryController::class);
+        Route::resource('menu', StockkeeperMenuController::class);
     });
 
     // // User routes group
@@ -129,6 +136,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/home', function () {
             return view('user.home.index');
         })->name('home');
+
 
         //Route::resource('items', StockkeeperItemController::class);
     });

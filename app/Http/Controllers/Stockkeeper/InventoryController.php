@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
 
-class ItemController extends Controller
+class InventoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,7 +16,7 @@ class ItemController extends Controller
         // $items = Item::all();
         // return view('stock_keeper.items.index', compact('items'));
         $items = Item::all(); // Fetch all items
-        return view('stock_keeper.items.index', compact('items')); // Pass $items to the view
+        return view('stock_keeper.inventorys.index', compact('items')); // Pass $items to the view
     }
 
     /**

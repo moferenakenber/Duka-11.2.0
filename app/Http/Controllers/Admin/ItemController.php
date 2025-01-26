@@ -38,6 +38,10 @@ class ItemController extends Controller
     {
         // Fetch categories to display in the form
         $categories = ItemCategory::all();
+        $categories = $categories->toArray();
+
+        // Log the categories being passed to the view
+        Log::info('Categories sent to admin.items.create:', $categories);
 
         // Pass the categories to the view
         return view('admin.items.create', compact('categories'));
@@ -46,8 +50,8 @@ class ItemController extends Controller
     // Save Draft method
     public function saveDraft(Request $request)
     {
-        Log::info('Draft save request received.');
-        Log::info('Request Data:', $request->all());
+        Log::info('First Log -> Draft save request received. ItemController -> saveDraft');
+        Log::info('Second Log -> Request Data:', $request->all());
 
         // Start a database transaction
         DB::beginTransaction();
@@ -60,42 +64,19 @@ class ItemController extends Controller
                 'variation' => 'nullable|string',
                 'price' => 'nullable|numeric',
                 'product_images' => 'nullable|image|max:2048',
-                //'item_category_id' => 'nullable|exists:categories,id', // Ensure category exists or create a new one
-                'item_category_id' => 'nullable|in:new,' . implode(',', ItemCategory::pluck('id')->toArray()),
 
-                'new_category_name' => 'required_if:item_category_id,new|string', // Handle new category name
-
+                'item_category_id' => 'nullable|array', // Array of existing category IDs
+                'item_category_id.*' => 'exists:categories,id', // Ensure each selected category exists
+                'new_category_names' => 'nullable|array', // Array of new category names
+                'new_category_names.*' => 'string|max:255', // Each new category name must be a string
             ]);
 
             Log::info('Validation passed for save draft.', $validatedData);
 
-            // Check if a new category is provided and handle accordingly
-            // $categoryId = $request->item_category_id;
-            // if ($request->filled('new_category_name')) {
-            //     // Create a new category if the new_category_name is provided
-            //     $newCategory = ItemCategory::create([
-            //         'category_name' => $request->new_category_name,
-            //     ]);
-
-            //     $categoryId = $newCategory->id;  // Update categoryId to the newly created category
-            //     Log::info('New category created with ID: ' . $categoryId);
-            // }
-
-            // If 'item_category_id' is 'new', create a new category
-            // If the category is new, create it and get the ID
-            $categoryId = $request->item_category_id;
-            if ($categoryId === 'new') {
-                $category = ItemCategory::create([
-                    'category_name' => $request->new_category_name
-                ]);
-                $categoryId = $category->id;
-            } else {
-                $categoryId = (int) $categoryId;
-            }
 
             // Create a new item and set additional fields
             $draft = new Item($validatedData);
-            $draft->category_id = $categoryId; // Associate the category with the item
+
             $draft->incomplete = true; // Ensure drafts are always incomplete
             $draft->status = 'draft';  // Set the status to 'draft'
 
@@ -107,12 +88,33 @@ class ItemController extends Controller
 
             $draft->save();
 
+            // Handle existing and new categories
+            $categoryIds = [];
+
+            // Handle existing categories (from item_category_id)
+            if ($request->has('item_category_id') && !empty($request->item_category_id)) {
+                $categoryIds = array_merge($categoryIds, $request->item_category_id);
+            }
+
+            // Handle new categories (from new_category_names)
+            if ($request->has('new_category_names') && !empty($request->new_category_names)) {
+                foreach ($request->new_category_names as $categoryName) {
+                    // Create new category if it doesn't already exist
+                    $category = ItemCategory::firstOrCreate(['category_name' => $categoryName]);
+                    Log::info('New category processed:', ['category' => $category]);
+                    $categoryIds[] = $category->id;
+                }
+            }
+
+            // Attach categories (both existing and newly created) to the draft item
+            if (!empty($categoryIds)) {
+                $draft->categories()->attach($categoryIds);
+            }
+
             // Commit the transaction
             DB::commit();
 
             Log::info('Draft saved successfully.');
-
-
 
             // Return a success response
             return response()->json(['success' => true, 'message' => 'Draft saved successfully'], 200);
@@ -171,6 +173,7 @@ class ItemController extends Controller
             // catagory
 
         ]);
+
 
         // product_name: hfd
         // product_description: fgh
@@ -232,7 +235,7 @@ class ItemController extends Controller
 
         // Create a new Item and assign validated data
         $item = new Item();
-        $item->category_id = $validatedItem['item_category_id']; // Assuming you're passing the category ID
+        //$item->category_id = $validatedItem['item_category_id']; // Assuming you're passing the category ID
         // Assign other fields (if any)
         $item->save(); // Save the item
 
