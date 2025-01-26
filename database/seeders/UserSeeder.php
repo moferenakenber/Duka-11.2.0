@@ -82,6 +82,58 @@ class UserSeeder extends Seeder
                 'created_by' => 1, // Assuming user with ID 1 is creating the record
                 'updated_at' => now(),
             ],
+            [
+                'first_name' => 'Admin',
+                'last_name' => 'User',
+                'phone_number' => '0912344867',
+                'email' => 'admin@admin.com',
+                'email_verified_at' => now(),
+                'role' => 'admin',
+                'password' => Hash::make('12345678'),
+                'remember_token' => Str::random(10),
+                'created_at' => now(),
+                'created_by' => 1, // Assuming user with ID 1 is creating the record
+                'updated_at' => now(),
+            ],
+            [
+                'first_name' => 'Seller',
+                'last_name' => 'User',
+                'phone_number' => '0912344567',
+                'email' => 'seller@seller.com',
+                'email_verified_at' => now(),
+                'role' => 'seller',
+                'password' => Hash::make('12345678'),
+                'remember_token' => Str::random(10),
+                'created_at' => now(),
+                'created_by' => 1, // Assuming user with ID 1 is creating the record
+                'updated_at' => now(),
+            ],
+            [
+                'first_name' => 'Stoke_keeper',
+                'last_name' => 'User',
+                'phone_number' => '0914344567',
+                'email' => 'stockkeeper@stockkeeper.com',
+                'email_verified_at' => now(),
+                'role' => 'stock_keeper',
+                'password' => Hash::make('12345678'),
+                'remember_token' => Str::random(10),
+                'created_at' => now(),
+                'created_by' => 1, // Assuming user with ID 1 is creating the record
+                'updated_at' => now(),
+            ],
+            [
+                'first_name' => 'User',
+                'last_name' => 'User',
+                'phone_number' => '0914344267',
+                'email' => 'user@user.com',
+                'email_verified_at' => now(),
+                'role' => 'user',
+                'password' => Hash::make('12345678'),
+                'remember_token' => Str::random(10),
+                'created_at' => now(),
+                'created_by' => 1, // Assuming user with ID 1 is creating the record
+                'updated_at' => now(),
+            ],
             // You can add more users as needed
         ]);
 
