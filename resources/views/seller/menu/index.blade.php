@@ -3,14 +3,14 @@
 @section('content')
     <div class="bg-gray-100 min-h-screen">
         <div class="container mx-auto p-4">
-            <div class="relative flex items-center justify-between mb-4">
-                <button class="text-gray-500 hover:text-gray-700">
+            <div class="relative flex items-center justify-between mb-4 pt-1">
+                {{-- <button class="text-gray-500 hover:text-gray-700">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-6 h-6 mr-2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                     </svg>
-                </button>
-                <h1 class="absolute left-1/2 transform -translate-x-1/2 text-xl font-semibold">Menu</h1>
+                </button> --}}
+                <h1 class="absolute left-1/2 transform -translate-x-1/2 text-xl font-semibold w-6 h-6">More</h1>
                 {{-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-6 h-6 mr-2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0" />

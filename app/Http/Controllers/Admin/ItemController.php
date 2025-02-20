@@ -53,6 +53,9 @@ class ItemController extends Controller
         Log::info('First Log -> Draft save request received. ItemController -> saveDraft');
         Log::info('Second Log -> Request Data:', $request->all());
 
+
+
+
         // Start a database transaction
         DB::beginTransaction();
         try {
@@ -60,25 +63,33 @@ class ItemController extends Controller
             $validatedData = $request->validate([
                 'product_name' => 'required|string|max:255',
                 'product_description' => 'nullable|string',
+
                 'packaging_details' => 'nullable|string',
                 'variation' => 'nullable|string',
                 'price' => 'nullable|numeric',
                 'product_images' => 'nullable|image|max:2048',
 
-                'item_category_id' => 'nullable|array', // Array of existing category IDs
-                'item_category_id.*' => 'exists:categories,id', // Ensure each selected category exists
-                'new_category_names' => 'nullable|array', // Array of new category names
-                'new_category_names.*' => 'string|max:255', // Each new category name must be a string
+                'selectedCategories' => 'nullable|string', // Will be JSON encoded array of category IDs
+                'newCategoryNames' => 'nullable|string', // Will be JSON encoded array of new category names
+
             ]);
 
             Log::info('Validation passed for save draft.', $validatedData);
 
+            Log::info('Request Data:', $request->all());
 
-            // Create a new item and set additional fields
-            $draft = new Item($validatedData);
 
-            $draft->incomplete = true; // Ensure drafts are always incomplete
-            $draft->status = 'draft';  // Set the status to 'draft'
+            // Decode JSON inputs
+            $selectedCategories = json_decode($request->input('selectedCategories', '[]'), true);
+            $newCategoryNames = json_decode($request->input('newCategoryNames', '[]'), true);
+
+
+            // Create a new draft item
+            $draft = new Item();
+            $draft->product_name = $validatedData['product_name'];
+            $draft->product_description = $validatedData['product_description'] ?? null;
+            $draft->incomplete = true; // Drafts are always incomplete
+            $draft->status = 'draft';
 
             // Handle image upload if exists
             if ($request->hasFile('product_images')) {
@@ -91,25 +102,24 @@ class ItemController extends Controller
             // Handle existing and new categories
             $categoryIds = [];
 
-            // Handle existing categories (from item_category_id)
-            if ($request->has('item_category_id') && !empty($request->item_category_id)) {
-                $categoryIds = array_merge($categoryIds, $request->item_category_id);
+            // Process existing categories
+            if (!empty($selectedCategories)) {
+                $categoryIds = array_merge($categoryIds, array_filter($selectedCategories, 'is_numeric'));
             }
 
-            // Handle new categories (from new_category_names)
-            if ($request->has('new_category_names') && !empty($request->new_category_names)) {
-                foreach ($request->new_category_names as $categoryName) {
-                    // Create new category if it doesn't already exist
+            // Process new categories
+            if (!empty($newCategoryNames)) {
+                foreach ($newCategoryNames as $categoryName) {
                     $category = ItemCategory::firstOrCreate(['category_name' => $categoryName]);
-                    Log::info('New category processed:', ['category' => $category]);
                     $categoryIds[] = $category->id;
                 }
             }
 
-            // Attach categories (both existing and newly created) to the draft item
+            // Attach categories to the draft item
             if (!empty($categoryIds)) {
                 $draft->categories()->attach($categoryIds);
             }
+
 
             // Commit the transaction
             DB::commit();
@@ -119,13 +129,15 @@ class ItemController extends Controller
             // Return a success response
             return response()->json(['success' => true, 'message' => 'Draft saved successfully'], 200);
         } catch (\Exception $e) {
-            // Rollback the transaction on error
             DB::rollBack();
 
-            Log::error('Error saving draft:', ['exception' => $e]);
+            Log::error('Error saving draft:', ['exception' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
 
-            // Return an error response
-            return response()->json(['success' => false, 'message' => 'Error saving draft. Please try again.'], 500);
+            return response()->json([
+                'success' => false,
+                'message' => 'Error saving draft.',
+                'error' => $e->getMessage(), // Show actual error
+            ], 500);
         }
     }
 

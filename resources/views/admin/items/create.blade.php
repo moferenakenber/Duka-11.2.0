@@ -9,111 +9,97 @@
         const categories = @json($categories);
     </script>
 
-    <div class="py-12">
+    {{-- List of expected data
 
+            items -> product_name
+                     product_description
+                     item_category_id -> foreignId
+                     status ['draft', 'active', 'inactive', 'unavailable'] -> default (draft)
+                     incomplete -> boolean
+                     category_id -> foreignId
+                     category_id
+
+            item_packaging_types -> name
+
+            item_colors -> name
+
+            item_sizes -> name
+
+            item_variants -> item_id
+                             item_color_id
+                             item_size_id
+                             item_packaging_type_id
+                             item_packaging_types
+                             is_active
+
+            item_images -> item_variant_id -> foreignId
+                           image_path
+
+            item_variant_packaging_quantity -> item_variant_id -> foreignId
+                                               item_packaging_type_id -> foreignId
+                                               item_color_id -> foreignId
+                                               item_size_id -> foreignId
+                                               quantity
+
+            item_owners -> user_id -> foreignId
+                           item_id -> foreignId
+
+            item_inventory_locations -> location_name
+                                        address
+            item_stocks -> item_variant_id -> foreignId
+                           item_inventory_location_id -> foreignId
+                           quantity
+
+            item_prices -> item_variant_id
+                           user_type ['customer', 'seller', 'user', 'visitor']
+                           price
+
+            --}}
+    <div class="py-12">
         <!-- Alpine x-data (1) -->
+
+
         <div x-data="{
             step: 1,
             totalSteps: 5,
-            productName: '',
             showNewCategory: false,
-            newCategoryName: '',
+            productName: '',
+            productDescribtion: '',
+            newCategoryName: '', // will be reset in createCategory()
             formIsValid: false,
 
             categories: categories, // Categories passed from Laravel
             selectedCategories: [], // Array to store selected category IDs and names for new categories
             newCategoryNames: [], // Array to store the names of new categories
 
+            packagingOptions: {},
+            selectedPackaging: '', // Store the value from the child
 
 
 
+            // Variables for item variants on step 2
+            //itemVariants: [],
+            //selectedVariant: {},
+            //selectedPackaging: '',
 
-            // Function to toggle category selection
-            toggleCategorySelection(category) {
-                if (this.selectedCategories.some(c => c.id === category.id)) {
-                    // Remove the category if it's already selected
-                    this.selectedCategories = this.selectedCategories.filter(c => c.id !== category.id);
-                } else {
-                    // Add the category if it's not already selected
-                    this.selectedCategories.push(category);
-                }
-            },
+            quantity: 50,
 
-
-
-
-            // Function to check if a category is selected
-            isChecked(category) {
-                return this.selectedCategories.some(c => c.id === category.id);
-            },
-
-
-
-
-
-            progress() {
-                return (this.step / this.totalSteps) * 100;
-            },
-
-            checkFormValidity() {
-                // Form is valid if productName is filled and if category is selected or new category is provided
-                this.formIsValid = this.productName.trim() !== '' &&
-                    (this.showNewCategory ? this.newCategoryName.trim() !== '' : true);
-            },
-
-            saveAsDraft() {
-                const formData = new FormData(document.querySelector('form'));
-
-                // Manually add product_name if not automatically added
-                formData.append('product_name', this.productName);
-
-                // Manually add new_category_name if creating a new category
-                if (this.showNewCategory) {
-                    formData.append('new_category_name', this.newCategoryName);
-                }
-
-                // Manually add the selected category_id
-                formData.append('item_category_id', document.getElementById('item_category_id').value);
-
-                // Manually add the selected category_id (array of selected categories, including newly created ones)
-                //formData.append('item_category_id', JSON.stringify(this.selectedCategories));
-
-                // Manually add the selected category_id (array of selected categories, including newly created ones)
-                formData.append('newCategoryNames', JSON.stringify(this.selectedCategories));
-
-                // Log the data being sent
-                console.log('Sending data: ', formData);
-
-
-
-                fetch('{{ route('admin.saveDraft') }}', {
-                        method: 'POST',
-                        headers: {
-                            'X-CSRF-TOKEN': this.csrfToken,
-                        },
-                        body: formData
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert('Your form has been saved as a draft!');
-                        } else {
-                            alert('Error saving draft.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error saving draft:', error);
-                        alert('Error saving draft.');
-                    });
-            },
+            //packagingOptions: [],
+            //packagingOptions: {},
 
 
             createCategory() {
                 if (this.newCategoryName.trim() !== '') {
-                    // Temporarily add the new category name to the selected categories list (no ID yet)
-                    this.selectedCategories.push(this.newCategoryName);
-                    this.newCategoryNames.push(this.newCategoryName); // Store the new category name to send to the backend
-                    this.categories.push({ id: `new-${Date.now()}`, category_name: this.newCategoryName }); // Add the new category to the categories list
+                    const newCategory = { id: `new-${Date.now()}`, category_name: this.newCategoryName };
+
+                    // Add to categories and selected categories
+                    this.categories.push(newCategory);
+                    this.selectedCategories.push(newCategory);
+
+                    // Store new category name for backend
+                    this.newCategoryNames.push(this.newCategoryName);
+
+                    // Reset input and hide
                     this.newCategoryName = '';
                     this.showNewCategory = false;
                 } else {
@@ -123,11 +109,174 @@
 
 
 
+
             cancelCreation() {
                 this.newCategoryName = ''; // Reset input
                 this.showNewCategory = false; // Hide the input box
+            },
+
+            // Function to toggle category selection
+            toggleCategorySelection(category) {
+                const index = this.selectedCategories.findIndex(c => c.id === category.id);
+
+                if (index !== -1) {
+                    this.selectedCategories.splice(index, 1);
+                } else {
+                    this.selectedCategories.push(category);
+                }
+            },
+
+
+            // Function to check if a category is selected
+            isChecked(category) {
+                return this.selectedCategories.some(c => c.id === category.id);
+            },
+
+
+            progress() {
+                return (this.step / this.totalSteps) * 100;
+            },
+
+
+            checkFormValidity() {
+                this.formIsValid =
+                    this.productName.trim() !== '' &&
+                    (this.selectedCategories.length > 0 || this.newCategoryNames.length > 0);
+            },
+
+
+            saveAsDraft() {
+                try {
+
+                    console.log('Starting saveAsDraft method...');
+
+                    const formData = new FormData();
+
+                    console.log('Initial FormData:', Array.from(formData.entries()));
+
+                    formData.append('product_name', this.productName);
+                    console.log('Added product_name:', this.productName);
+
+                    formData.append('product_description', this.productDescribtion);
+                    console.log('Added product_description:', this.productDescribtion);
+
+
+                    // Extract new category names from selected categories
+                    const newCategoryNames = this.selectedCategories
+                        .filter(category => typeof category.id === 'string' && category.id.startsWith('new-')) // Only include new categories
+                        .map(category => category.category_name);
+
+                    formData.append('newCategoryNames', JSON.stringify(newCategoryNames));
+                    console.log('Added newCategoryNames:', newCategoryNames);
+
+                    // Add all selected categories (existing and new)
+                    const selectedCategoryIds = this.selectedCategories.map(category => category.id);
+                    formData.append('selectedCategories', JSON.stringify(selectedCategoryIds));
+                    console.log('Added selectedCategoryIds:', selectedCategoryIds);
+
+
+                    // Add the packaging options (as an object)
+                    formData.append('packagingOptions', JSON.stringify(this.packagingOptions));
+                    console.log('Added packagingOptions:', this.packagingOptions);
+
+                     // Include selectedPackaging from child
+                    formData.append('selectedPackaging', this.selectedPackaging);
+                    console.log('Added selectedPackaging:', this.selectedPackaging);
+
+                    // Trying to include the packaging quantity
+                    formData.append('quantity', this.quantity);
+                    console.log('Added quantity:', this.quantity);
+
+                    // Final debug before sending
+                    console.log('Final FormData to send:', Array.from(formData.entries()));
+
+
+                    // Send the FormData using fetch
+                    fetch('{{ route('admin.saveDraft') }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': csrfToken,
+                                //'Content-Type': 'application/json', // Optional, based on your server setup
+                            },
+                            body: formData
+                        })
+                        .then(response => {
+                            console.log('Fetch response received:', response);
+                            return response.json();
+                        })
+                        .then(data => {
+                            console.log('Parsed JSON response:', data);
+                            if (data.success) {
+                                alert('Your form has been saved as a draft!');
+                            } else {
+                                console.warn('Error saving draft:', data.error || 'Unknown error');
+                                alert('Error saving draft.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Fetch error:', error);
+                            alert('Error saving draft.');
+                        });
+                } catch (error) {
+                    console.error('Unexpected error in saveAsDraft:', error);
+                    alert('An unexpected error occurred.');
+                }
+
+            },
+
+        }" @update-packaging-options.window="selectedPackaging = $event.detail.selectedPackaging"
+        class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto">
+
+        {{-- <div x-data="{
+            step: 1,
+            totalSteps: 5,
+            showNewCategory: false,
+            productName: '',
+            productDescribtion: '',
+            newCategoryName: '',
+            formIsValid: false,
+
+            categories: categories,
+            selectedCategories: [],
+            newCategoryNames: [],
+            packagingOptions: {},
+            selectedPackaging: '', // Store the value from the child
+
+            createCategory() { /* same code */ },
+
+            checkFormValidity() { /* same code */ },
+
+            saveAsDraft() {
+                try {
+                    const formData = new FormData();
+                    formData.append('product_name', this.productName);
+                    formData.append('product_description', this.productDescribtion);
+                    formData.append('packagingOptions', JSON.stringify(this.packagingOptions));
+
+                    // Include selectedPackaging from child
+                    formData.append('selectedPackaging', this.selectedPackaging);
+
+                    fetch('{{ route('admin.saveDraft') }}', {
+                            method: 'POST',
+                            headers: { 'X-CSRF-TOKEN': csrfToken },
+                            body: formData
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) alert('Draft saved!');
+                            else alert('Error saving draft.');
+                        })
+                        .catch(error => console.error('Fetch error:', error));
+                } catch (error) {
+                    console.error('Unexpected error:', error);
+                    alert('An unexpected error occurred.');
+                }
             }
-        }" class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto">
+
+        }"
+            @update-packaging-options.window="selectedPackaging = $event.detail.selectedPackaging"
+            class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto"> --}}
+
 
             @if ($errors->any())
                 <div class="mt-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
@@ -139,6 +288,12 @@
                     </ul>
                 </div>
             @endif
+
+            <script>
+                console.log('CSRF Token:', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+                let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+                console.log('CSRF Token:', csrfToken); // Verify the token is correct
+            </script>
 
             <form action="{{ route('admin.items.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
@@ -173,47 +328,16 @@
                                 class="cursor-pointer py-2 px-4 rounded-md flex-shrink-0">Variation</li>
                             <li @click="step = 4; $nextTick(() => $refs.tabs.children[3].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }))"
                                 :class="{ 'bg-blue-500 text-white': step === 4 }"
-                                class="cursor-pointer py-2 px-4 rounded-md flex-shrink-0">Price Rules</li>
+                                class="cursor-pointer py-2 px-4 rounded-md flex-shrink-0">Barcode</li>
                             <li @click="step = 5; $nextTick(() => $refs.tabs.children[4].scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' }))"
                                 :class="{ 'bg-blue-500 text-white': step === 5 }"
                                 class="cursor-pointer py-2 px-4 rounded-md flex-shrink-0">Images</li>
                         </ul>
                     </div>
 
-                    <!--------- Step 1: Vital Information------- -->
-                    {{-- <div x-show="step === 1" class="space-y-4">
-                        <div>
-                            <label for="product_name" class="block text-sm font-semibold">Product Name</label>
-                            <input type="text" id="product_name" name="product_name"
-                                value="{{ old('product_name') }}"
-                                class="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                                placeholder="Enter product name" required>
-                        </div>
-                        <div>
-                            <label for="product_description" class="block text-sm font-semibold">Product
-                                Description</label>
-                            <textarea id="product_description" name="product_description" class="mt-2 p-2 border border-gray-300 rounded-md w-full"
-                                placeholder="Write product description here..." required>{{ old('product_description') }}</textarea>
-                        </div>
-                        <div>
-                            <label for="status" class="block text-sm font-semibold">Status</label>
-                            <select id="status" name="status"
-                                class="mt-2 p-2 border border-gray-300 rounded-md w-full" required>
-                                <option value="available" {{ old('status') == 'available' ? 'selected' : '' }}>Available
-                                </option>
-                                <option value="unavailable" {{ old('status') == 'unavailable' ? 'selected' : '' }}>
-                                    Unavailable</option>
-                                <option value="in_stock" {{ old('status') == 'in_stock' ? 'selected' : '' }}>In Stock
-                                </option>
-                                <option value="out_of_stock" {{ old('status') == 'out_of_stock' ? 'selected' : '' }}>Out
-                                    of Stock</option>
-                            </select>
-                        </div>
-                    </div> --}}
-
                     <div x-show="step === 1" class="space-y-4">
 
-                        <!-- Product Name Input -->
+                        <!-- Product Name Input x-model="productName"  -->
                         <div class="mb-6">
                             <label for="product_name"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
@@ -235,13 +359,14 @@
                             @endif
                         </div>
 
-                        <!-- Product Description -->
+                        <!-- Product Description x-model="productDescribtion" -->
                         <div class="mb-6">
                             <label for="product_description"
                                 class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Product Description
                             </label>
-                            <textarea id="product_description" name="product_description" rows="4" maxlength="200"
+                            <textarea id="product_description" name="product_description" x-model="productDescribtion" rows="4"
+                                maxlength="200"
                                 class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                                 placeholder="Write product description here..." required aria-label="Product Description"
                                 oninput="updateWordCount()">{{ old('product_description') }}</textarea>
@@ -275,49 +400,6 @@
                                 }
                             }
                         </script>
-
-
-
-                        <!-- item_category_id -->
-                        <!-- Category Selection -->
-                        {{-- <div class="mb-6">
-                            <label for="item_category_id"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Select a
-                                Category</label>
-                            <select id="item_category_id" name="item_category_id"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                @change="showNewCategory = $event.target.value === 'new'; checkFormValidity()">
-                                <option value="" disabled selected>Select a category</option>
-                                @foreach ($categories as $category)
-                                    <option value="{{ $category->id }}"
-                                        {{ old('item_category_id') == $category->id ? 'selected' : '' }}>
-                                        {{ $category->category_name }}
-                                    </option>
-                                @endforeach
-                                <option value="new">Create a new category</option>
-                            </select>
-                            @error('item_category_id')
-                                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
-                                    <span class="font-medium">Error:</span> {{ $message }}
-                                </p>
-                            @enderror
-                        </div> --}}
-
-                        <!-- New Category Input -->
-                        {{-- <div x-show="showNewCategory" class="mt-2" x-transition>
-                            <label for="new_category_name"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">New Category
-                                Name</label>
-                            <input type="text" id="new_category_name" name="new_category_name"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                placeholder="Enter new category name" x-model="newCategoryName"
-                                @input="checkFormValidity()">
-                            @error('new_category_name')
-                                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
-                                    <span class="font-medium">Error:</span> {{ $message }}
-                                </p>
-                            @enderror
-                        </div> --}}
 
 
                         <!-- New catagory with multi select -->
@@ -354,20 +436,7 @@
                                         class="z-10 hidden w-48 bg-white rounded-lg shadow dark:bg-gray-700">
                                         <ul class="p-3 space-y-1 text-sm text-gray-700 dark:text-gray-200"
                                             aria-labelledby="dropdownBgHoverButton">
-                                            <!-- Dynamically render categories -->
-                                            {{-- <template x-for="category in categories" :key="category.id">
-                                                <li>
-                                                    <div
-                                                        class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-                                                        <input type="checkbox" :value="category.id"
-                                                            @click="selectedCategories.includes(category.id) ? selectedCategories = selectedCategories.filter(id => id !== category.id) : selectedCategories.push(category.id)"
-                                                            class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-                                                        <label
-                                                            class="w-full ms-2 text-sm font-medium text-gray-900 rounded dark:text-gray-300"
-                                                            x-text="category.category_name"></label>
-                                                    </div>
-                                                </li>
-                                            </template> --}}
+
                                             <!-- Dynamically render categories -->
                                             <template x-for="category in categories" :key="category.id">
                                                 <li>
@@ -384,9 +453,6 @@
                                                     </div>
                                                 </li>
                                             </template>
-
-
-
 
                                         </ul>
 
@@ -435,125 +501,88 @@
                             </div>
                         </div>
 
-
-
                         <!-- Display Selected Categories -->
                         <!-- Display Selected Categories as Plain Text -->
                         <div class="flex flex-wrap items-start">
                             <h3 class="mr-4 inline">Selected Categories:</h3>
-                            <template x-for="(category, index) in selectedCategories" :key="category.id + '-' + index">
+                            <template x-for="(category, index) in selectedCategories"
+                                :key="category.id + '-' + index">
                                 <div class="block ml-4">
                                     <span x-text="category.category_name"></span>
                                 </div>
                             </template>
                         </div>
 
-
-
-
-
-
-
-
-
-
-
-
-                        {{-- <script>
-                            document.addEventListener('alpine:init', () => {
-                                Alpine.data('categoriesApp', () => ({
-                                    categories: @json($categories), // Categories passed from Laravel
-                                    showNewCategory: false,
-                                    newCategoryName: '',
-                                    createCategory() {
-                                        if (this.newCategoryName.trim() !== '') {
-                                            // Push the new category to the array
-                                            this.categories.push({
-                                                id: this.categories.length + 1, // Simulated ID, use backend logic for actual ID
-                                                category_name: this.newCategoryName,
-                                            });
-                                            this.newCategoryName = '';  // Reset input
-                                            this.showNewCategory = false; // Close the input box
-                                        } else {
-                                            alert('Please enter a valid category name.');
-                                        }
-                                    },
-                                    cancelCreation() {
-                                        this.newCategoryName = '';  // Reset input
-                                        this.showNewCategory = false; // Hide the input box
-                                    }
-                                }));
-                            });
-                        </script> --}}
-
-
-
-
-
-
-
-
-
-
-
-                        <!-- Status Selection -->
-                        {{-- <div class="mb-6">
-                            <label for="status"
-                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
-                            <select id="status" name="status"
-                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                                required aria-label="Product Status">
-                                <option value="draft" {{ old('status') == 'draft' ? 'selected' : '' }}>Draft</option>
-                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Active
-                                </option>
-                                <option value="inactive" {{ old('status') == 'inactive' ? 'selected' : '' }}>Inactive
-                                </option>
-                                <option value="unavailable" {{ old('status') == 'unavailable' ? 'selected' : '' }}>
-                                    Unavailable</option>
-                            </select>
-                            @error('status')
-                                <p class="mt-2 text-sm text-red-600 dark:text-red-500">
-                                    <span class="font-medium">Error:</span> {{ $message }}
-                                </p>
-                            @enderror
-                        </div> --}}
-
-
-                        <!-- incomplete -->
-                        {{-- <div>
-                            <label for="incomplete" class="block text-sm font-semibold">Incomplete</label>
-                            <input type="checkbox" id="incomplete" name="incomplete" value="1"
-                                {{ old('incomplete', true) ? 'checked' : '' }} class="mt-2">
-                            <span class="text-sm text-gray-500">Mark as incomplete if the product is not ready.</span>
-                        </div> --}}
                     </div>
-
 
 
                     <!--------- Step 2: Packaging types and how much they hold --------->
                     <div x-show="step === 2" class="space-y-4">
 
                         <!-- Alpine x-data (3) -->
+                        {{-- <template x-if="step === 2"> --}}
+
                         <div x-data="{
                             open: false,
                             selectedOption: [],
                             quantity: 50,
                             packagingOptions: {},
                             selectedPackaging: '',
-                            dropdownVisible: false
+                            dropdownVisible: false,
 
-                        }" x-init="console.log('Initial state:', { selectedOption, selectedPackaging, quantity })" class="flex flex-col space-y-4">
+                            sendPackagingData() {
+                                {{-- $dispatch('update-packaging-options', this.packagingOptions); --}}
+                                $dispatch('update-packaging-options', { selectedPackaging: this.selectedPackaging });
+                            },
+
+                            // Add sendQuantityData() function here
+
+
+                            init() {
+                                console.log('Child component initialized');
+                            }
+
+
+                        }" @change="sendPackagingData()"
+                           x-init="init();
+                           console.log('Initial state:', { selectedOption, selectedPackaging, quantity })" x-ref="childComponent"
+                           class="flex flex-col space-y-4">
+
+
+                        {{-- <div x-data="{
+                            open: false,
+                            selectedOption: [],
+                            quantity: 50,
+                            packagingOptions: {},
+                            selectedPackaging: '',
+                            dropdownVisible: false,
+
+                            sendPackagingData() {
+                                $dispatch('update-packaging-options', { selectedPackaging: this.selectedPackaging });
+                            },
+
+                            init() {
+                                console.log('Child component initialized');
+                            }
+
+                        }" @change="sendPackagingData()"
+                            x-init="init();
+                            console.log('Initial state:', { selectedOption, selectedPackaging, quantity })"
+                            x-ref="childComponent"
+                            class="flex flex-col space-y-4"> --}}
+
 
                             <!-- Alpine (3) x-show (1)  -->
                             <h3 x-cloak x-show="open"
-                                class="flex justify-center items-center text-lg font-semibold pt-6">Packaging types and
+                                class="flex justify-center items-center text-lg font-semibold pt-6">Packaging types
+                                and
                                 how much they hold
                             </h3>
 
                             <!-------- Checked disabled piece -------->
                             <div class="flex items-center pt-4 px-8">
                                 <input checked id="readonly-checked-checkbox" type="checkbox" value="piece"
-                                    name="packaging[]"
+                                    name="packaging[]" x-model="selectedPackaging"
                                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                 <label for="readonly-checked-checkbox"
                                     class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">Piece</label>
@@ -1173,7 +1202,8 @@
                                             </div>
                                             <!-- Packet -->
                                             <div class="flex-1 py-4">
-                                                <p class="py-4"> <!-- Show 'Pieces' for the first selected option -->
+                                                <p class="py-4">
+                                                    <!-- Show 'Pieces' for the first selected option -->
                                                     <span
                                                         x-text="selectedOption.length > 0 ? (selectedOption[0] === selectedOption[selectedOption.length - 1] ? 'Piece' : selectedOption[selectedOption.length - 1]) : ''"></span>
                                                     <span
@@ -1208,6 +1238,7 @@
 
 
                         </div>
+                        {{-- </template> --}}
                     </div>
 
 
@@ -1389,8 +1420,6 @@
                     </div> --}}
 
 
-
-
                     <!-- Step Buttons -->
                     <div class="absolute bottom-0 left-0 right-0 p-4 flex justify-between">
                         <!-- Previous Button (only visible when step > 1) -->
@@ -1403,10 +1432,25 @@
                         <!-- Save as Draft and Next Buttons for steps 1-4 -->
                         <div x-show="step >= 1 && step < totalSteps" class="flex space-x-4 ml-auto">
                             <!-- Save as Draft Button (before Next) -->
-                            <button type="button" x-show="step < totalSteps" @click.prevent="saveAsDraft()"
+
+                            <button type="button" x-show="step < totalSteps"
+                                @click.prevent="
+                                Alpine.nextTick(() => {
+                                    console.log('Checking child component... Current step:', step);
+                                    if ($refs.childComponent) {
+                                        console.log('Child component available');
+                                        $refs.childComponent.sendPackagingData();
+                                    } else {
+                                        console.error('Child component not available');
+                                    }
+                                    saveAsDraft();
+                                })"
                                 class="bg-gray-500 text-white py-2 px-4 rounded-md">
                                 Save as Draft
                             </button>
+
+
+
 
                             <!-- Next Button -->
                             <button x-show="step < totalSteps"
@@ -1428,12 +1472,6 @@
                             Submit
                         </button>
                     </div>
-
-
-
-
-
-
 
 
                 </div>

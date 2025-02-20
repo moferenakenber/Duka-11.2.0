@@ -31,6 +31,11 @@ class Item extends Model
         return $this->belongsTo(ItemCategory::class); // Update this to match your table name
     }
 
+     // Many-to-Many Relationship with ItemCategory
+     public function categories()
+     {
+         return $this->belongsToMany(ItemCategory::class, 'item_category_item', 'item_id', 'category_id');
+     }
 
     public function carts()
     {
@@ -38,5 +43,10 @@ class Item extends Model
             ->withPivot('quantity', 'price')
             ->withTimestamps();
     }
+
+    public function images() {
+        return $this->hasMany(ItemImage::class); // One-to-many relationship with images
+    }
+
 
 }

@@ -44,7 +44,7 @@
                         <tbody class="divide-y divide-gray-200">
                             @foreach ($items as $item)
                                 <tr>
-                                    <td class="px-6 py-2 text-sm text-gray-800">{{ $item->name }}</td>
+                                    <td class="px-6 py-2 text-sm text-gray-800">{{ $item->product_name }}</td>
                                     <td class="px-6 py-2 text-sm text-gray-800">{{ $item->price }}</td>
                                     <td class="px-6 py-2 text-sm text-gray-800">{{ $item->stock }}</td>
                                     <td class="px-6 py-2 text-sm text-gray-800">{{ ucfirst($item->status) }}</td>

@@ -273,7 +273,7 @@
                     <!-- Item Name -->
                     <div class="flex items-center justify-between">
                         <h3 class="text-lg font-semibold text-gray-700">Name: </h3>
-                        <p class="text-gray-600">{{ $item->name }}</p>
+                        <p class="text-gray-600">{{ $item->product_name }}</p>
                     </div>
 
                     <!-- Item Description -->

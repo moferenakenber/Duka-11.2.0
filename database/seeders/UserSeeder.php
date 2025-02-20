@@ -134,6 +134,7 @@ class UserSeeder extends Seeder
                 'created_by' => 1, // Assuming user with ID 1 is creating the record
                 'updated_at' => now(),
             ],
+            // There is also a visitor which i different from a user (a user is someone that had signed up).
             // You can add more users as needed
         ]);
 
