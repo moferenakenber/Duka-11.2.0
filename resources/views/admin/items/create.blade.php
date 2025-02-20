@@ -82,6 +82,7 @@
             //selectedVariant: {},
             //selectedPackaging: '',
 
+            // checking the color of github box
             quantity: 50,
 
             //packagingOptions: [],
