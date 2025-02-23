@@ -165,12 +165,12 @@
 
     <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
         <div class="flex-1 overflow-y-auto mx-auto w-full max-w-7xl">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
+             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
                 @foreach ($items as $item)  <div class="card glass w-full max-w-sm">
                         <figure>
                             {{-- @if ($item->images->isNotEmpty())  <img src="{{ asset('storage/' . $item->images->first()->path) }}" alt="{{ $item->product_name }}" class="rounded-lg" />
                             @else --}}
-                                <img src="https://via.placeholder.com/300" alt="No Image" class="rounded-lg" />  {{-- @endif --}}
+                                <img src="https://picsum.photos/200/300" alt="No Image" class="rounded-lg" />  {{-- @endif --}}
                         </figure>
                         <div class="card-body">
                             <h2 class="card-title text-xl font-semibold">{{ $item->product_name }}</h2>
