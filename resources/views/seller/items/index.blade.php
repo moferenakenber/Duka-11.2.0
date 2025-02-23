@@ -191,4 +191,46 @@
 
 
 
+
+
+<div class="container py-5">
+    <div class="row g-4">
+        @foreach ($items as $item)
+            <div class="col-6 col-lg-3">  {{-- 2 columns on small screens, 4 on large --}}
+                <div class="card glass w-full max-w-sm shadow-sm">
+                    <figure class="p-3 text-center">
+
+                            <img src="https://picsum.photos/200/300?random={{ $loop->index }}"
+                                 alt="No Image"
+                                 class="rounded-lg fixed-image">
+
+                    </figure>
+                    <div class="card-body">
+                        <h5 class="card-title fw-bold text-xl">{{ $item->product_name }}</h5>
+                        <p class="card-text text-muted">{{ $item->product_description }}</p>
+
+                        <div class="d-flex flex-wrap">
+                            @foreach ($item->categories as $category)
+                                <span class="badge text-bg-{{ $category->color ?? 'secondary' }} me-1 mb-1">
+                                    {{ $category->category_name }}
+                                </span>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+
+<style>
+    .fixed-image {
+        width: 100%; /* Ensures image fills the card width */
+        height: 300px; /* Set fixed height */
+        object-fit: cover; /* Prevents distortion */
+    }
+</style>
+
+
+
 @endsection
