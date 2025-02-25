@@ -540,14 +540,17 @@
                             dropdownVisible: false,
 
                             sendPackagingData() {
-                                {{-- $dispatch('update-packaging-options', this.packagingOptions);
-                                $dispatch('update-packaging-options', { selectedPackaging: this.selectedPackaging, quantity: quantity }); --}}
+                                $dispatch('update-packaging-options', this.packagingOptions);
+                                $dispatch('update-packaging-options', { selectedPackaging: this.selectedPackaging, quantity: quantity });
 
+                                {{--
                                 // Build the final object with selected packaging & their quantities
                                 let selectedData = this.selectedPackaging.map(pack => ({
                                     packaging: pack,
                                     quantity: this.packagingOptions[pack] || 1
                                 }));
+
+                                --}}
                             },
 
                             // Add sendQuantityData() function here
