@@ -60,34 +60,25 @@
 
 
         <div x-data="{
+
+            // Variables and methods for the multistep form
+
             step: 1,
             totalSteps: 5,
-            showNewCategory: false,
+            progress() {
+                return (this.step / this.totalSteps) * 100;
+            },
+
+            // Step 1: Vital Information -> Product Name, Description, and Categories
+
             productName: '',
             productDescribtion: '',
             newCategoryName: '', // will be reset in createCategory()
-            formIsValid: false,
+            showNewCategory: false,
 
             categories: categories, // Categories passed from Laravel
             selectedCategories: [], // Array to store selected category IDs and names for new categories
-            newCategoryNames: [], // Array to store the names of new categories
-
-            packagingOptions: {},
-            selectedPackaging: '', // Store the value from the child
-
-
-
-            // Variables for item variants on step 2
-            //itemVariants: [],
-            //selectedVariant: {},
-            //selectedPackaging: '',
-
-            // checking the color of github box
-            quantity: 50,
-
-            //packagingOptions: [],
-            //packagingOptions: {},
-
+            newCategoryNames: [], // Array to store the names of new Categories
 
             createCategory() {
                 if (this.newCategoryName.trim() !== '') {
@@ -107,9 +98,6 @@
                     alert('Please enter a valid category name.');
                 }
             },
-
-
-
 
             cancelCreation() {
                 this.newCategoryName = ''; // Reset input
@@ -134,10 +122,27 @@
             },
 
 
-            progress() {
-                return (this.step / this.totalSteps) * 100;
-            },
+            formIsValid: false,
 
+            // Step 2: Packaging Information -> Packaging Options and Quantity
+
+            packagingOptions: {},
+            selectedPackaging: '', // Store the value from the child
+            quantity: 50, // Default quantity
+
+
+            // Variables for item variants on step 2
+            //itemVariants: [],
+            //selectedVariant: {},
+            //selectedPackaging: '',
+
+            // checking the color of github box
+
+            //packagingOptions: [],
+            //packagingOptions: {},
+
+
+            // Fuction to cheack input validity before submitting with saveAsDraft()
 
             checkFormValidity() {
                 this.formIsValid =
@@ -180,7 +185,7 @@
                     formData.append('packagingOptions', JSON.stringify(this.packagingOptions));
                     console.log('Added packagingOptions:', this.packagingOptions);
 
-                     // Include selectedPackaging from child
+                    // Include selectedPackaging from child
                     formData.append('selectedPackaging', this.selectedPackaging);
                     console.log('Added selectedPackaging:', this.selectedPackaging);
 
@@ -225,10 +230,11 @@
 
             },
 
-        }" @update-packaging-options.window="selectedPackaging = $event.detail.selectedPackaging"
-        class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto">
+        }"
+            @update-packaging-options.window="selectedPackaging = $event.detail.selectedPackaging"
+            class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto">
 
-        {{-- <div x-data="{
+            {{-- <div x-data="{
             step: 1,
             totalSteps: 5,
             showNewCategory: false,
@@ -293,7 +299,7 @@
             <script>
                 console.log('CSRF Token:', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
                 let csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-                console.log('CSRF Token:', csrfToken); // Verify the token is correct
+                // console.log('CSRF Token:', csrfToken); // Verify the token is correct
             </script>
 
             <form action="{{ route('admin.items.store') }}" method="POST" enctype="multipart/form-data">
@@ -525,15 +531,23 @@
 
                         <div x-data="{
                             open: false,
+                            selectedPackaging: [], // Array to store selected packaging options
+
                             selectedOption: [],
                             quantity: 50,
                             packagingOptions: {},
-                            selectedPackaging: '',
+                            selectedPackaging: [],
                             dropdownVisible: false,
 
                             sendPackagingData() {
-                                {{-- $dispatch('update-packaging-options', this.packagingOptions); --}}
-                                $dispatch('update-packaging-options', { selectedPackaging: this.selectedPackaging });
+                                {{-- $dispatch('update-packaging-options', this.packagingOptions);
+                                $dispatch('update-packaging-options', { selectedPackaging: this.selectedPackaging, quantity: quantity }); --}}
+
+                                // Build the final object with selected packaging & their quantities
+                                let selectedData = this.selectedPackaging.map(pack => ({
+                                    packaging: pack,
+                                    quantity: this.packagingOptions[pack] || 1
+                                }));
                             },
 
                             // Add sendQuantityData() function here
@@ -544,13 +558,12 @@
                             }
 
 
-                        }" @change="sendPackagingData()"
-                           x-init="init();
-                           console.log('Initial state:', { selectedOption, selectedPackaging, quantity })" x-ref="childComponent"
-                           class="flex flex-col space-y-4">
+                        }" @change="sendPackagingData()" x-init="init();
+                        console.log('Initial state:', { selectedOption, selectedPackaging, quantity })"
+                            x-ref="childComponent" class="flex flex-col space-y-4">
 
 
-                        {{-- <div x-data="{
+                            {{-- <div x-data="{
                             open: false,
                             selectedOption: [],
                             quantity: 50,
@@ -1241,6 +1254,8 @@
                         </div>
                         {{-- </template> --}}
                     </div>
+
+
 
 
                     <!-- Step 3: Variation -->
