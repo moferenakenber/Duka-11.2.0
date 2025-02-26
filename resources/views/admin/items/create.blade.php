@@ -562,6 +562,12 @@
                                 this.sendPackagingData(); // Update packaging data after selection
                             },
 
+                            // Watch for changes in selectedOption and update selectedPackaging accordingly
+                            updateSelectedOptions() {
+                                this.selectedPackaging = [...this.selectedOption]; // Sync selectedOptions with selectedPackaging
+                                this.sendPackagingData(); // Send updated data
+                            },
+
                             init() {
                                 console.log('Child component initialized');
                             }
