@@ -72,6 +72,10 @@ class ItemController extends Controller
                 'selectedCategories' => 'nullable|string', // Will be JSON encoded array of category IDs
                 'newCategoryNames' => 'nullable|string', // Will be JSON encoded array of new category names
 
+                //'variants' => 'required|array',
+                //'barcode' => 'required|string',
+                //'images' => 'required|array',
+
             ]);
 
             Log::info('Validation passed for save draft.', $validatedData);

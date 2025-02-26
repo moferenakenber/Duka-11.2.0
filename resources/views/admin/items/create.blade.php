@@ -536,11 +536,10 @@
                             selectedOption: [],
                             quantity: 50,
                             packagingOptions: {},
-                            selectedPackaging: [],
                             dropdownVisible: false,
 
                             sendPackagingData() {
-                                $dispatch('update-packaging-options', this.packagingOptions);
+                                $dispatch('update-packaging-options', { packagingOptions: this.packagingOptions });
                                 $dispatch('update-packaging-options', { selectedPackaging: this.selectedPackaging, quantity: quantity });
 
                                 {{--
@@ -555,6 +554,13 @@
 
                             // Add sendQuantityData() function here
 
+                            addPackaging(packaging) {
+                                // Only add packaging if it doesn't already exist in the array
+                                if (!this.selectedPackaging.includes(packaging)) {
+                                    this.selectedPackaging.push(packaging);
+                                }
+                                this.sendPackagingData(); // Update packaging data after selection
+                            },
 
                             init() {
                                 console.log('Child component initialized');
@@ -611,6 +617,7 @@
                             <div x-show="packagingOptions[selectedOption[0]]">
                                 <div class="flex items-center pt-2 px-8">
                                     <input checked id="readonly-checked-checkbox" type="checkbox" value="packet"
+                                        x-model="selectedPackaging"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
@@ -633,6 +640,7 @@
                             <div x-show="packagingOptions[selectedOption[1]]">
                                 <div class="flex items-center pt-2 px-8">
                                     <input checked id="readonly-checked-checkbox" type="checkbox" value="1/4carton"
+                                        x-model="selectedPackaging"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 
                                     <label for="readonly-checked-checkbox"
@@ -661,6 +669,7 @@
                             <div x-show="packagingOptions[selectedOption[2]]">
                                 <div class="flex items-center pt-2 px-8">
                                     <input checked id="readonly-checked-checkbox" type="checkbox" value="1/2 carton"
+                                        x-model="selectedPackaging"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
@@ -688,6 +697,7 @@
                             <div x-show="packagingOptions[selectedOption[3]]">
                                 <div class="flex items-center pt-2 px-8">
                                     <input checked id="readonly-checked-checkbox" type="checkbox" value="carton"
+                                        x-model="selectedPackaging"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
@@ -714,6 +724,7 @@
                             <div x-show="packagingOptions[selectedOption[4]]">
                                 <div class="flex items-center pt-2 px-8">
                                     <input checked id="readonly-checked-checkbox" type="checkbox" value="carton"
+                                        x-model="selectedPackaging"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                                     <label for="readonly-checked-checkbox"
                                         class="ms-2 text-sm font-medium text-gray-400 dark:text-gray-500">
@@ -742,6 +753,7 @@
                             <div x-show="packagingOptions[selectedOption[5]]">
                                 <div class="flex items-center pt-2 px-8">
                                     <input checked id="readonly-checked-checkbox" type="checkbox" value="carton"
+                                        x-model="selectedPackaging"
                                         class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
 
                                     <label for="readonly-checked-checkbox"
@@ -844,6 +856,7 @@
                                                                     <div class="flex items-center">
                                                                         <input checked disabled id="default-radio-1"
                                                                             type="radio" value="piece"
+                                                                            x-model="selectedPackaging"
                                                                             class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
                                                                         <label for="default-radio-1"
                                                                             class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Piece</label>
