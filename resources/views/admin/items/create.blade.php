@@ -73,8 +73,9 @@
 
             productName: '',
             productDescribtion: '',
-            newCategoryName: '', // will be reset in createCategory()
             showNewCategory: false,
+            newCategoryName: '', // will be reset in createCategory()
+
 
             categories: categories, // Categories passed from Laravel
             selectedCategories: [], // Array to store selected category IDs and names for new categories
