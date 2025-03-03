@@ -128,7 +128,7 @@
             // Step 2: Packaging Information -> Packaging Options and Quantity
 
             packagingOptions: {},
-            selectedPackaging: '', // Store the value from the child
+            selectedPackaging: [], // Store the value from the child
             quantity: 50, // Default quantity
 
 
@@ -150,6 +150,37 @@
                     this.productName.trim() !== '' &&
                     (this.selectedCategories.length > 0 || this.newCategoryNames.length > 0);
             },
+
+
+
+            handlePackagingUpdate(event) {
+                console.log('Received packaging update:', event.detail);
+
+                // Ensure selectedPackaging is stored as an array
+                if (event.detail.selectedPackaging) {
+                    event.detail.selectedPackaging.forEach(packaging => {
+                        if (!this.selectedPackaging.includes(packaging)) {
+                            this.selectedPackaging.push(packaging);
+                        }
+                    });
+                }
+
+                // Update packagingOptions
+                if (event.detail.packagingOptions) {
+                    this.packagingOptions = event.detail.packagingOptions;
+                }
+
+                // Update quantity
+                if (event.detail.quantity) {
+                    this.quantity = event.detail.quantity;
+                }
+
+                console.log('Updated selectedPackaging:', this.selectedPackaging);
+                console.log('Updated packagingOptions:', this.packagingOptions);
+                console.log('Updated quantity:', this.quantity);
+            },
+
+
 
 
             saveAsDraft() {
@@ -187,7 +218,7 @@
                     console.log('Added packagingOptions:', this.packagingOptions);
 
                     // Include selectedPackaging from child
-                    formData.append('selectedPackaging', this.selectedPackaging);
+                    formData.append('selectedPackaging', JSON.stringify(this.selectedPackaging));
                     console.log('Added selectedPackaging:', this.selectedPackaging);
 
                     // Trying to include the packaging quantity
@@ -231,8 +262,7 @@
 
             },
 
-        }"
-            @update-packaging-options.window="selectedPackaging = $event.detail.selectedPackaging"
+        }" @update-packaging-options.window="handlePackagingUpdate($event)"
             class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto">
 
             {{-- <div x-data="{
@@ -539,7 +569,7 @@
                             packagingOptions: {},
                             dropdownVisible: false,
 
-                            sendPackagingData() {
+                            {{-- sendPackagingData() {
                                 $dispatch('update-packaging-options', { packagingOptions: this.packagingOptions });
                                 $dispatch('update-packaging-options', { selectedPackaging: this.selectedPackaging, quantity: quantity });
 
@@ -550,18 +580,35 @@
                                     quantity: this.packagingOptions[pack] || 1
                                 }));
 
-                                --}}
+
+                            }, --}}
+
+                            sendPackagingData() {
+                                $dispatch('update-packaging-options', {
+                                    selectedPackaging: this.selectedPackaging,
+                                    quantity: this.quantity,
+                                    packagingOptions: this.packagingOptions
+                                });
                             },
+
 
                             // Add sendQuantityData() function here
 
-                            addPackaging(packaging) {
+                            {{-- addPackaging(packaging) {
                                 // Only add packaging if it doesn't already exist in the array
                                 if (!this.selectedPackaging.includes(packaging)) {
                                     this.selectedPackaging.push(packaging);
                                 }
                                 this.sendPackagingData(); // Update packaging data after selection
                             },
+                         --}}
+                            addPackaging(packaging) {
+                                if (!this.selectedPackaging.includes(packaging)) {
+                                    this.selectedPackaging.push(packaging);
+                                }
+                                this.sendPackagingData(); // Dispatch after updating
+                            },
+
 
                             // Watch for changes in selectedOption and update selectedPackaging accordingly
                             updateSelectedOptions() {
@@ -571,7 +618,7 @@
 
                             init() {
                                 console.log('Child component initialized');
-                            }
+                            },
 
 
                         }" @change="sendPackagingData()" x-init="init();
