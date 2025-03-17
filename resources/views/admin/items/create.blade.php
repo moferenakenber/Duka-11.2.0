@@ -181,6 +181,28 @@
             },
 
 
+            // Step 5: Image Handling
+            productImages: [],
+
+            {{-- handleImageUpdate(event) {
+                console.log('Received image update:', event.detail.images);
+                this.productImages = event.detail.images;
+            }, --}}
+
+            handleImageUpdate(event) {
+                console.log('Received image update:', event.detail.images);
+
+                // Ensure only valid image files are stored
+                // this.productImages = event.detail.images.filter(file => file instanceof File);
+                // Extract only the File objects
+                this.productImages = event.detail.images
+                    .map(img => img.file || img) // Extract File objects
+                    .filter(file => file instanceof File); // Extra check for safety
+
+                console.log('Updated productImages:', this.productImages);
+            },
+
+
 
 
             saveAsDraft() {
@@ -225,6 +247,17 @@
                     formData.append('quantity', this.quantity);
                     console.log('Added quantity:', this.quantity);
 
+                    if (this.productImages.length > 0) {
+                        this.productImages.forEach((image, index) => {
+                            formData.append('product_images[]', image);
+                        });
+                        console.log('Final product_images:', this.productImages);
+                    } else {
+                        console.warn('No images to append!');
+                    }
+
+
+
                     // Final debug before sending
                     console.log('Final FormData to send:', Array.from(formData.entries()));
 
@@ -263,6 +296,7 @@
             },
 
         }" @update-packaging-options.window="handlePackagingUpdate($event)"
+            @update-images.window="handleImageUpdate($event)"
             class="max-w-7xl mx-auto sm:px-6 lg:px-8 min-h-screen overflow-y-auto">
 
             {{-- <div x-data="{
@@ -1464,7 +1498,7 @@
 
                     <!-- Step 5: Images -->
                     <div x-show="step === 5" class="space-y-4">
-                        <div>
+                        {{-- <div>
                             <label for="image_a" class="block text-sm font-semibold">Package A Image</label>
                             <input type="file" id="image_a" name="image_a"
                                 class="mt-2 p-2 border border-gray-300 rounded-md w-full">
@@ -1478,7 +1512,45 @@
                             <label for="image_c" class="block text-sm font-semibold">Package C Image</label>
                             <input type="file" id="image_c" name="image_c"
                                 class="mt-2 p-2 border border-gray-300 rounded-md w-full">
+                        </div> --}}
+
+                        <div x-data="{
+                            images: [],
+                            handleImageUpload(event) {
+                                const files = Array.from(event.target.files);
+                                files.forEach(file => this.images.push(file)); // Store as File objects
+                                this.$dispatch('update-images', { images: this.images });
+                            },
+                            removeImage(index) {
+                                this.images.splice(index, 1);
+                                this.$dispatch('update-images', { images: this.images });
+                            }
+                        }">
+                            <!-- Hidden file input -->
+                            <input type="file" multiple @change="handleImageUpload" class="hidden"
+                                id="imageInput" accept="image/*">
+
+                            {{-- <input type="file" multiple accept="image/*" @change="handleImageUpload"
+                                class="hidden" id="imageInput"> --}}
+
+                            <!-- Upload Button -->
+                            <label for="imageInput" class="cursor-pointer text-blue-600">Upload Images</label>
+
+                            <!-- Preview Section -->
+                            <div class="flex gap-2 mt-3">
+                                <template x-for="(image, index) in images" :key="index">
+                                    <div class="relative">
+                                        <img :src="URL.createObjectURL(image)"
+                                            class="w-24 h-24 object-cover rounded-md">
+                                        <button @click="removeImage(index)"
+                                            class="absolute top-1 right-1 bg-red-500 text-white text-xs px-2 rounded-full">X</button>
+                                    </div>
+                                </template>
+                            </div>
                         </div>
+
+
+
                     </div>
 
 

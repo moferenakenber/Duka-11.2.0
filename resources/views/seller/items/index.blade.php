@@ -192,11 +192,11 @@
 
 
 
-
+{{--
 <div class="container py-5">
     <div class="row g-4">
         @foreach ($items as $item)
-            <div class="col-6 col-lg-3">  {{-- 2 columns on small screens, 4 on large --}}
+            <div class="col-6 col-lg-3">  {{-- 2 columns on small screens, 4 on large
                 <div class="card glass w-full max-w-sm shadow-sm">
                     <figure class="p-3 text-center">
 
@@ -221,7 +221,7 @@
             </div>
         @endforeach
     </div>
-</div>
+</div> --}}
 
 <style>
     .fixed-image {

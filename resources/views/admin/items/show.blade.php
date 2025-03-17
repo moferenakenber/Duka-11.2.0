@@ -314,7 +314,7 @@
 
                     @if (is_array($images) && count($images) > 0)
                         @foreach ($images as $image)
-                            <img src="{{ $image }}" alt="Item Image" class="w-32 h-32 object-cover rounded-md">
+                            <img src="{{ asset('storage/' . $image) }}" alt="Item Image" class="w-32 h-32 object-cover rounded-md">
                         @endforeach
                     @else
                         <p>No images available</p>

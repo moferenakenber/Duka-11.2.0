@@ -72,6 +72,7 @@ class ItemController extends Controller
                 'selectedCategories' => 'nullable|string', // Will be JSON encoded array of category IDs
                 'newCategoryNames' => 'nullable|string', // Will be JSON encoded array of new category names
 
+                'product_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
                 //'variants' => 'required|array',
                 //'barcode' => 'required|string',
                 //'images' => 'required|array',
@@ -97,8 +98,13 @@ class ItemController extends Controller
 
             // Handle image upload if exists
             if ($request->hasFile('product_images')) {
+                $images = [];
+                foreach ($request->file('product_images') as $image) {
+                    $path = $image->store('images', 'public');
+                    $images[] = $path;
+                }
                 $path = $request->file('product_images')->store('images', 'public');
-                $draft->product_images = $path;
+                $draft->images = json_encode($images); // Store as JSON
             }
 
             $draft->save();
