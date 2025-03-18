@@ -3,6 +3,8 @@
 namespace Database\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\ItemCategory;
+use App\Models\Item;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Item>
@@ -505,7 +507,7 @@ class ItemFactory extends Factory
             'price' => $this->faker->randomFloat(2, 10, 500), // Price between 10 and 500
             'status' => $this->faker->randomElement(['draft', 'active', 'inactive', 'unavailable']),
             'incomplete' => $this->faker->boolean(),
-            //'category_id' => rand(1, 10), // Assuming categories exist
+            'category_id' => rand(1, 10), // Assuming categories exist
             // 'item_category_id' => rand(1, 10),
             'product_images' => json_encode([
                 'https://via.placeholder.com/150',
@@ -516,6 +518,14 @@ class ItemFactory extends Factory
             'created_at' => now(),
             'updated_at' => now(),
         ];
+    }
+
+    public function configure()
+    {
+        return $this->afterCreating(function (Item $item) {
+            $categories = ItemCategory::inRandomOrder()->limit(rand(1, 6))->pluck('id');
+            $item->categories()->attach($categories);
+        });
     }
 }
 

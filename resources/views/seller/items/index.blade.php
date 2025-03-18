@@ -162,6 +162,66 @@
         </div>
     </div> --}}
 
+    <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
+        <div class="flex-1 overflow-y-auto mx-auto w-full max-w-7xl">
+            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
+                @foreach ($items as $item)
+                    <a href="{{ route('seller.items.show', $item->id) }}" class="relative bg-white border rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 duration-300">
+
+                        {{-- Discount Badge --}}
+                        @if ($item->discount_percentage)
+                            <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                                -{{ $item->discount_percentage }}%
+                            </div>
+                        @endif
+
+                        {{-- Product Image --}}
+                        {{-- <figure>
+                            @if ($item->product_images->isNotEmpty())
+                                <img src="{{ asset('storage/' . $item->product_images->first()->path) }}" alt="{{ $item->product_name }}" class="w-full h-48 object-cover">
+                            @else
+                                <img src="https://picsum.photos/200/300" alt="No Image" class="w-full h-48 object-cover">
+                            @endif
+                        </figure> --}}
+
+
+                        <img src="https://picsum.photos/200/300" alt="No Image" class="w-full h-48 object-cover">
+
+                        {{-- Product Details --}}
+                        <div class="p-3">
+                            <h2 class="text-sm font-semibold text-gray-800 line-clamp-2">
+                                {{ $item->product_name }}
+                            </h2>
+
+                            {{-- Price & Sold Count --}}
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="text-red-500 font-bold text-lg">฿{{ number_format($item->price, 0) }}</span>
+                                <span class="text-gray-500 text-xs">{{ number_format($item->sold_count) }} sold</span>
+                            </div>
+
+                            {{-- Free Shipping & Discount Labels --}}
+                            <div class="mt-2 flex space-x-1">
+                                <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">FREE Shipping</span>
+                                @if ($item->has_discount)
+                                    <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded">Discount</span>
+                                @endif
+                            </div>
+                        </div>
+
+                    </a>
+                @endforeach
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
 
     <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
         <div class="flex-1 overflow-y-auto mx-auto w-full max-w-7xl">
@@ -188,6 +248,8 @@
                 </div>
         </div>
     </div>
+
+
 
 
 
