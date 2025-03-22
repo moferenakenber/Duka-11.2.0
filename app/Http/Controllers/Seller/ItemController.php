@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Seller;
 use App\Http\Controllers\Admin\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\User;
 
 class ItemController extends Controller
 {
@@ -36,8 +37,9 @@ class ItemController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Item $item)
     {
+        $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
         return view('seller.items.show', compact('item', 'sellers'));
     }
 
