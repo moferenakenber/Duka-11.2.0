@@ -57,7 +57,7 @@
             </div>
 
             <div class="mt-6 flex space-x-4">
-                <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded text-lg flex-1">Chat Now</button>
+
                 <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded text-lg flex-1">Add to Cart</button>
                 <button class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded text-lg flex-1">Buy Now</button>
             </div>
