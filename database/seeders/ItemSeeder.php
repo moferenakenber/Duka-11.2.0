@@ -272,21 +272,53 @@ class ItemSeeder extends Seeder
 
         ];
 
+        $imageUrls = []; // Initialize an empty array for image URLs
+
         foreach ($productNames as $productName) {
+
+
+
+            // Generate image URLs for each product (from local storage)
+            $image1Path = 'images/product_images/' . str_replace(' ', '_', $productName) . '_1.jpg'; //Example: product_images/Product_A_1.jpg
+            $image2Path = 'images/product_images/' . str_replace(' ', '_', $productName) . '_2.jpg'; //Example: product_images/Product_A_2.jpg
+
+            $image1Url = asset($image1Path);
+            $image2Url = asset($image2Path);
+
+            $images = [
+                $image1Url,
+                $image2Url,
+            ];
+
+
+
+
+
+
+            // // Generate image URLs for each product
+            // $images = [
+            //     'https://via.placeholder.com/' . rand(150, 250), // Example: Random size
+            //     'https://via.placeholder.com/' . rand(250, 400),
+            // ];
+
+
+
+
+
+            // // Add the image URLs to the $imageUrls array
+            // $imageUrls[] = $images;
+
             Item::create([
                 'product_name' => $productName,
                 'product_description' => fake()->sentence(),
                 'packaging_details' => fake()->sentence(),
                 'variation' => fake()->word(),
                 'price' => fake()->randomFloat(2, 10, 500), // Price between 10 and 500
-                'status' =>  fake()->randomElement(['draft', 'active', 'inactive', 'unavailable']),
-                'incomplete' =>  fake()->boolean(),
+                'status' => fake()->randomElement(['draft', 'active', 'inactive', 'unavailable']),
+                'incomplete' => fake()->boolean(),
                 //'category_id' => rand(1, 10), // Assuming categories exist
                 // 'item_category_id' => rand(1, 10),
-                'product_images' => json_encode([
-                    'https://via.placeholder.com/150',
-                    'https://via.placeholder.com/200'
-                ]), // Example image URLs
+                'product_images' => json_encode($images), // Example image URLs
                 // 'selectedCategories' => json_encode(array_rand(range(1, 10), 3)),
                 // 'newCategoryNames' => json_encode([$this->faker->word(), $this->faker->word()]),
                 'created_at' => now(),
