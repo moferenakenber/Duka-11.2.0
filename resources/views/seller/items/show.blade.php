@@ -1,7 +1,7 @@
 @extends('seller.layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto p-6">
+<div class="max-w-4xl mx-auto p-6 pb-16">
     <div class="bg-white shadow-lg rounded-lg overflow-hidden">
 
         {{-- Swiper Image Slider (Horizontal Swiping) --}}
@@ -10,34 +10,19 @@
                 <div class="swiper-wrapper">
                     {{-- 10 Static Images for Horizontal Swipe --}}
                     <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
-                    </div>
-                    <div class="swiper-slide">
-                        <img src="https://picsum.photos/400/300" alt="No Image" class="w-full h-96 object-cover">
+                        @if ($item && $item->product_images)
+                        @php
+                            $decodedImages = json_decode($item->product_images, true);
+                        @endphp
+
+                        @if (is_array($decodedImages) && !empty($decodedImages))
+                            <img src="{{ $decodedImages[0] }}" alt="First Product Image">
+                        @else
+                            <p>No images available.</p>
+                        @endif
+                    @else
+                        <p>Product images not found.</p>
+                    @endif
                     </div>
                 </div>
 
@@ -71,7 +56,7 @@
             </div>
 
             <div class="mt-6 flex space-x-4">
-                <button class="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded text-lg flex-1">Chat Now</button>
+
                 <button class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded text-lg flex-1">Add to Cart</button>
                 <button class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded text-lg flex-1">Buy Now</button>
             </div>
