@@ -99,7 +99,7 @@
                 @endforeach
             </div>
         </div>
-    </div> --}}
+    </div>--}}
 
 
     {{-- <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
@@ -166,8 +166,7 @@
         <div class="flex-1 overflow-y-auto mx-auto w-full max-w-7xl">
             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
                 @foreach ($items as $item)
-                    <a href="{{ route('seller.items.show', $item->id) }}"
-                        class="relative bg-white border rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 duration-300">
+                    <a href="{{ route('seller.items.show', $item->id) }}" class="relative bg-white border rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 duration-300">
 
                         {{-- Discount Badge --}}
                         @if ($item->discount_percentage)
@@ -184,39 +183,9 @@
                                 <img src="https://picsum.photos/200/300" alt="No Image" class="w-full h-48 object-cover">
                             @endif
                         </figure> --}}
-{{--
-                        @if ($item && $item->product_images)
-                            @php
-                                $imagesArray = json_decode($item->product_images, true); // Decode JSON into an associative array
-                            @endphp
 
-                            @if (is_array($imagesArray) && !empty($imagesArray))
-                                @foreach ($imagesArray as $image)
-                                    <img src="{{ $image }}" alt="Product Image">
-                                @endforeach
-                            @else
-                                <p>No images available.</p>
-                            @endif
-                        @else
-                            <p>Product images not found.</p>
-                        @endif --}}
 
-                        @if ($item && $item->product_images)
-                            @php
-                                $decodedImages = json_decode($item->product_images, true);
-                            @endphp
-
-                            @if (is_array($decodedImages) && !empty($decodedImages))
-                                <img src="{{ $decodedImages[0] }}" alt="First Product Image">
-                            @else
-                                <p>No images available.</p>
-                            @endif
-                        @else
-                            <p>Product images not found.</p>
-                        @endif
-
-                        {{-- <img src="https://picsum.photos/200/300" alt="No Image" class="w-full h-48 object-cover"> --}}
-
+                        <img src="https://picsum.photos/200/300" alt="No Image" class="w-full h-48 object-cover">
 
                         {{-- Product Details --}}
                         <div class="p-3">
@@ -256,23 +225,18 @@
 
     <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
         <div class="flex-1 overflow-y-auto mx-auto w-full max-w-7xl">
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
-                @foreach ($items as $item)
-                    <div class="card glass w-full max-w-sm">
+             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
+                @foreach ($items as $item)  <div class="card glass w-full max-w-sm">
                         <figure>
                             {{-- @if ($item->images->isNotEmpty())  <img src="{{ asset('storage/' . $item->images->first()->path) }}" alt="{{ $item->product_name }}" class="rounded-lg" />
                             @else --}}
-                            <img src="https://picsum.photos/200/300" alt="No Image" class="rounded-lg" />
-                            {{-- @endif --}}
+                                <img src="https://picsum.photos/200/300" alt="No Image" class="rounded-lg" />  {{-- @endif --}}
                         </figure>
                         <div class="card-body">
                             <h2 class="card-title text-xl font-semibold">{{ $item->product_name }}</h2>
                             <p class="text-gray-600">{{ $item->product_description }}</p>
 
-                            <div class="flex flex-wrap">
-                                @foreach ($item->categories as $category)
-                                    <div class="badge bg-{{ $category->color ?? 'gray' }}-500 text-white mr-1 mb-1">
-                                        {{ $category->category_name }}
+                            <div class="flex flex-wrap">  @foreach ($item->categories as $category) <div class="badge bg-{{ $category->color ?? 'gray' }}-500 text-white mr-1 mb-1">  {{ $category->category_name }}
                                     </div>
                                 @endforeach
                             </div>
@@ -281,7 +245,7 @@
                     </div>
                 @endforeach
 
-            </div>
+                </div>
         </div>
     </div>
 
@@ -290,7 +254,7 @@
 
 
 
-    {{--
+{{--
 <div class="container py-5">
     <div class="row g-4">
         @foreach ($items as $item)
@@ -321,16 +285,13 @@
     </div>
 </div> --}}
 
-    <style>
-        .fixed-image {
-            width: 100%;
-            /* Ensures image fills the card width */
-            height: 300px;
-            /* Set fixed height */
-            object-fit: cover;
-            /* Prevents distortion */
-        }
-    </style>
+<style>
+    .fixed-image {
+        width: 100%; /* Ensures image fills the card width */
+        height: 300px; /* Set fixed height */
+        object-fit: cover; /* Prevents distortion */
+    }
+</style>
 
 
 
