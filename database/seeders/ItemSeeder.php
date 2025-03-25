@@ -290,6 +290,39 @@ class ItemSeeder extends Seeder
                 $image2Url,
             ];
 
+            $colors = [
+                'Red',
+                'Blue',
+                'Green',
+                'Yellow',
+                'Black',
+                'White',
+                'Purple',
+                'Orange',
+                'Pink',
+                'Brown',
+                'Gray',
+            ];
+
+            $sizes = [
+                'Small',
+                'Medium',
+                'Large',
+                'Extra Large',
+            ];
+
+            $packagingTypes = [
+                ['name' => 'Piece', 'quantity' => 1],
+                ['name' => 'Doz', 'quantity' => 12],
+                ['name' => 'Bundle', 'quantity' => 10],
+                ['name' => 'Packet', 'quantity' => 50],
+                ['name' => 'Bag', 'quantity' => 100],
+                ['name' => 'Wrapper', 'quantity' => 1],
+                ['name' => 'Bottle', 'quantity' => 1],
+                ['name' => 'Case', 'quantity' => 24],
+                ['name' => 'Crate', 'quantity' => 1000],
+                ['name' => 'Container', 'quantity' => 5000],
+            ];
 
 
 
@@ -309,18 +342,18 @@ class ItemSeeder extends Seeder
             // $imageUrls[] = $images;
 
             Item::create([
-                'product_name' => $productName,
-                'product_description' => fake()->sentence(),
-                'packaging_details' => fake()->sentence(),
-                'variation' => fake()->word(),
-                'price' => fake()->randomFloat(2, 10, 500), // Price between 10 and 500
-                'status' => fake()->randomElement(['draft', 'active', 'inactive', 'unavailable']),
-                'incomplete' => fake()->boolean(),
-                //'category_id' => rand(1, 10), // Assuming categories exist
-                // 'item_category_id' => rand(1, 10),
-                'product_images' => json_encode($images), // Example image URLs
-                // 'selectedCategories' => json_encode(array_rand(range(1, 10), 3)),
-                // 'newCategoryNames' => json_encode([$this->faker->word(), $this->faker->word()]),
+                'product_images' => json_encode($images), // 1 Example image URLs
+                'variation' => fake()->word(),// 2
+                'price' => fake()->randomFloat(2, 10, 500), // 3 Price between 10 and 500
+                'product_name' => $productName,// 4
+                'product_description' => fake()->sentence(),// 5
+                'packaging_details' => json_encode($packagingTypes),// 6 $packagingTypes
+                'status' => fake()->randomElement(['draft', 'active', 'inactive', 'unavailable']),// 7
+                'incomplete' => fake()->boolean(),// 8
+                'category_id' => rand(1, 10), // 9 Assuming categories exist
+                'item_category_id' => rand(1, 10),// 10
+                'selectedCategories' => json_encode(array_rand(range(1, 10), 3)), // 11
+                'newCategoryNames' => json_encode([fake()->word(), fake()->word()]), // 12
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);

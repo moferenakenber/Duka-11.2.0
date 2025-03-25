@@ -19,7 +19,6 @@ class Item extends Model
         'price',
         'product_images',
         'status',
-
         'category_id',
     ];
     // public function images()
@@ -47,6 +46,7 @@ class Item extends Model
     public function images() {
         return $this->hasMany(ItemImage::class); // One-to-many relationship with images
     }
+
 
 
 }

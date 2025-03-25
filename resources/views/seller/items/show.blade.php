@@ -50,11 +50,31 @@
             </div>
 
             <div class="mt-4 flex items-center space-x-2">
-                <span class="bg-green-500 text-white text-xs px-3 py-1 rounded">FREE Shipping</span>
+                {{-- <span class="bg-green-500 text-white text-xs px-3 py-1 rounded">FREE Shipping</span> --}}
                 @if ($item->has_discount)
                     <span class="bg-yellow-500 text-white text-xs px-3 py-1 rounded">Discount Available</span>
                 @endif
             </div>
+
+            <div class="mt-4">
+                <h3 class="text-lg font-semibold text-gray-800">Product Details</h3>
+                <ul class="mt-2">
+                    {{-- <li class="text-gray-600">Brand: {{ $item->brand }}</li>
+                    <li class="text-gray-600">Category: {{ $item->category }}</li>
+                    <li class="text-gray-600">Subcategory: {{ $item->subcategory }}</li> --}}
+                    <li class="text-gray-600">1 - product_images: {{ $item->product_images }}</li>
+                    <li class="text-gray-600">2 - variation: {{ $item->variation }}</li>
+                    <li class="text-gray-600">3 - price: {{ $item->price }}</li>
+                    <li class="text-gray-600">4 - product_name: {{ $item->product_name }}</li>
+                    <li class="text-gray-600">5 - product_description: {{ $item->product_description }}</li>
+                    <li class="text-gray-600">6 - packaging_details: {{ $item->packaging_details }}</li>
+                    <li class="text-gray-600">7 - status: {{ $item->status }}</li>
+                    <li class="text-gray-600">8 - incomplete: {{ $item->incomplete }}</li>
+                    <li class="text-gray-600">9 - category_id: {{ $item->category_id }}</li>
+                    <li class="text-gray-600">10 - item_category_id: {{ $item->item_category_id }}</li>
+                    <li class="text-gray-600">11 - selectedCategories: {{ $item->selectedCategories }}</li>
+                    <li class="text-gray-600">12 - newCategoryNames: {{ $item->newCategoryNames }}</li>
+                </ul>
 
             <div class="mt-6 flex space-x-4">
 

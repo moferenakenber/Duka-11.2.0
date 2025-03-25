@@ -232,7 +232,7 @@
 
                             {{-- Free Shipping & Discount Labels --}}
                             <div class="mt-2 flex space-x-1">
-                                <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">FREE Shipping</span>
+                                {{-- <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">FREE Shipping</span> --}}
                                 @if ($item->has_discount)
                                     <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded">Discount</span>
                                 @endif
