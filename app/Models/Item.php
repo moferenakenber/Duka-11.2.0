@@ -20,6 +20,7 @@ class Item extends Model
         'product_images',
         'status',
         'category_id',
+        'sold_count',
     ];
     // public function images()
     // {

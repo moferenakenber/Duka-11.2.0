@@ -354,6 +354,7 @@ class ItemSeeder extends Seeder
                 'item_category_id' => rand(1, 10),// 10
                 'selectedCategories' => json_encode(array_rand(range(1, 10), 3)), // 11
                 'newCategoryNames' => json_encode([fake()->word(), fake()->word()]), // 12
+                'sold_count' => rand(0, 500), // 13 Random sold count
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
