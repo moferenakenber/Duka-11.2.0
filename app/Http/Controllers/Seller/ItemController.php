@@ -12,10 +12,37 @@ class ItemController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $items = Item::all();
+        $query = Item::query();
+
+        if ($request->has('sort')) {
+            switch ($request->sort) {
+                case 'price_asc':
+                    $query->orderBy('price', 'asc');
+                    break;
+                case 'price_desc':
+                    $query->orderBy('price', 'desc');
+                    break;
+                case 'sold_asc':
+                    $query->orderBy('sold_count', 'asc');
+                    break;
+                case 'sold_desc':
+                    $query->orderBy('sold_count', 'desc');
+                    break;
+                case 'name_asc':
+                    $query->orderBy('product_name', 'asc');
+                    break;
+                case 'name_desc':
+                    $query->orderBy('product_name', 'desc');
+                    break;
+            }
+        }
+
+        $items = $query->paginate(300); // Add pagination if needed
+
         return view('seller.items.index', compact('items'));
+
     }
 
     /**

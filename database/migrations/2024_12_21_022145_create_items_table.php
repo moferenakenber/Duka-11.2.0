@@ -28,7 +28,9 @@ return new class extends Migration {
             $table->json('product_images')->nullable();
             $table->json('selectedCategories')->nullable();
             $table->json('newCategoryNames')->nullable();
+            $table->bigInteger('sold_count')->default(0)->nullable(false); // Assuming this is the sold count
             $table->timestamps();
+
 
             // Foreign Key Constraints
             //$table->foreign('category_id')->references('id')->on('item_categories')->onDelete('cascade');

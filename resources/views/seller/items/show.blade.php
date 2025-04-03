@@ -1,7 +1,7 @@
 @extends('seller.layouts.app')
 
 @section('content')
-<div class="max-w-4xl mx-auto p-6 pb-6">
+<div class="max-w-4xl mx-auto p-6 pb-16">
     <div class="bg-white shadow-lg rounded-lg overflow-hidden">
 
         {{-- Swiper Image Slider (Horizontal Swiping) --}}

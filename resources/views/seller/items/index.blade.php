@@ -164,7 +164,36 @@
 
     <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
         <div class="flex-1 overflow-y-auto mx-auto w-full max-w-7xl">
+
+
+            <div class="flex justify-end p-4">
+                <form method="GET" action="{{ route('seller.items.index') }}">
+                    <label for="sort" class="text-sm font-medium text-gray-700">Sort by:</label>
+                    <select name="sort" id="sort" class="ml-2 border rounded px-2 py-1" onchange="this.form.submit()">
+                        <option value="">Default</option>
+                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+                        <option value="sold_asc" {{ request('sort') == 'sold_asc' ? 'selected' : '' }}>Sold: Low to High</option>
+                        <option value="sold_desc" {{ request('sort') == 'sold_desc' ? 'selected' : '' }}>Sold: High to Low</option>
+                        <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name: A-Z</option>
+                        <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name: Z-A</option>
+                    </select>
+                </form>
+            </div>
+
+
+
             <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
+
+
+
+
+
+
+
+
+
+
                 @foreach ($items as $item)
                     <a href="{{ route('seller.items.show', $item->id) }}"
                         class="relative bg-white border rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 duration-300">
