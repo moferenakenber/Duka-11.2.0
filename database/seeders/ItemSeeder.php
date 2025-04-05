@@ -29,26 +29,31 @@ class ItemSeeder extends Seeder
             'Office pin',
             'Stapler gold',
             'Elastic band',
-
             'Triangular ruler 30 cm 288',
             'Triangular ruler 30 cm 144',
             'T square 60cm',
-            'Set Square ቢጫ ሴትስኬር ማርከር ያለዉ እና የሌለዉ',
             'Ruler 30 cm normal',
-
-            'Flexible 20cm',
             'Crayon normal',
-            'Crayon ምሳቃ ከለር በእቃ',
             'Bic Pen Blue ቢክ እስኪብርቶ ሰማያዊ',
             'Bic Pen Black ቢክ እስኪብርቶ ጥቁር',
+            '3 subject',
+            '4 subject',
+            '5 subject',
+            '3*3 noteit',
+            '3*4 noteit',
+            '3*5 noteit',
+
+
+
+            'Set Square ቢጫ ሴትስኬር ማርከር ያለዉ እና የሌለዉ',
+            'Flexible 20cm',
+            'Crayon ምሳቃ ከለር በእቃ',
             'A4 laola',
             'A3 road map',
             'A3 laola',
             'A5 subjact new',
 
-            '3 subjact',
-            '4 subject',
-            '5 subject',
+
 
             'A4 gold on',
             'A5 post',
@@ -65,9 +70,7 @@ class ItemSeeder extends Seeder
             'Fluid normal',
             'Laminating 65*95',
 
-            '3*4 noteit',
-            '3*5 noteit',
-            '3*3 noteit',
+
             'Stapler ርካሹ',
 
             'Fastener',
