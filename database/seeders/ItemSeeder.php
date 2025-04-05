@@ -45,6 +45,7 @@ class ItemSeeder extends Seeder
 
 
 
+
             'Set Square ቢጫ ሴትስኬር ማርከር ያለዉ እና የሌለዉ',
             'Flexible 20cm',
             'Crayon ምሳቃ ከለር በእቃ',
