@@ -234,4 +234,29 @@ class CartController extends Controller
         // Redirect back to the cart show page with a success message
         return redirect()->route('seller.carts.show', $cart->id)->with('success', 'Item added to cart!');
     }
+
+    public function add(Request $request)
+    {
+
+
+        $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'quantity' => 'required|integer|min:1',
+            'size' => 'nullable|string',
+        ]);
+
+        $cart = auth()->user()->currentCart(); // however you get the current cart
+
+        $cart->items()->create([
+            'item_id' => $request->item_id,
+            'quantity' => $request->quantity,
+            'price' => Item::find($request->item_id)->price,
+            'options' => json_encode([
+                'size' => $request->size,
+            ]),
+        ]);
+
+        return redirect()->back()->with('success', 'Item added to cart!');
+    }
+
 }

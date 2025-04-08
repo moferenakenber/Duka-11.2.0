@@ -56,6 +56,7 @@ class ItemSeeder extends Seeder
 
 
 
+
             'A4 gold on',
             'A5 post',
             'B5-2 ባለማግኔት ጌጥ',

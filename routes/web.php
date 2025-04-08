@@ -107,6 +107,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('items', SellerItemController::class);
         Route::resource('carts', SellerCartController::class);
         Route::resource('menu', SellerMenuController::class);
+        Route::post('/cart/add', [SellerCartController::class, 'add'])->name('cart.add');
 
     });
 
