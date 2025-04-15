@@ -29,6 +29,8 @@ return new class extends Migration {
             $table->json('selectedCategories')->nullable();
             $table->json('newCategoryNames')->nullable();
             $table->bigInteger('sold_count')->default(0)->nullable(false); // Assuming this is the sold count
+
+
             $table->timestamps();
 
 
@@ -94,7 +96,9 @@ return new class extends Migration {
         //     $table->dropForeign(['item_id']); // Drop foreign key constraint on item_id
         // });
 
+
         Schema::dropIfExists('items');
+        Schema::dropIfExists('item_colors');
 
     }
 };

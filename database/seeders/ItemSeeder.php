@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use \App\Models\Item;
 use \App\Models\ItemCategory;
+use \App\Models\ItemColor;
 
 class ItemSeeder extends Seeder
 {
@@ -57,223 +58,223 @@ class ItemSeeder extends Seeder
 
 
 
-            'A4 gold on',
-            'A5 post',
-            'B5-2 ባለማግኔት ጌጥ',
-            'A6 ብልጭልጭ',
-            'Acleric',
+            // 'A4 gold on',
+            // 'A5 post',
+            // 'B5-2 ባለማግኔት ጌጥ',
+            // 'A6 ብልጭልጭ',
+            // 'Acleric',
 
-            'Magazin Rack ማጋዚን ራክ የሚገጠም',
+            // 'Magazin Rack ማጋዚን ራክ የሚገጠም',
 
-            'Price Tag ዋጋ መለጠፊያ',
-            'Laminating 76* 106',
-            'Cilp file',
-            'Diyer small',
-            'Fluid normal',
-            'Laminating 65*95',
-
-
-            'Stapler ርካሹ',
-
-            'Fastener',
-            'White Board Marker',
-            'ክሊፕቦርድ ርካሹ',
-            'የውብዳር ከለር',
-            'ምሳቃ ከለር piko',
-            'Remover',
-            'Marker 2 side',
-            'ከተር ትንሹ',
-            'ቆርቆሮ ኮምፓስ',
-            'Agenda አጀንዳ',
-            'A4 post',
-            'Ruler 50 cm ማስመሪያ 50 cm',
-            'ፓንቸር ትንሹ 520',
-            'ፓንቸር ትንቁ 520',
-            'Transparency Color ትራንስፓረንሲ ከለር',
-            'Transparency White ትራንስፓረንሲ ነጭ',
-            'Atlas Film አትላስ ፌልም',
-
-            'B5-5 ቀጭን ሳንቲም',
-            '2025 -1',
-            '2025 ብልጭልጭ.',
-            'Diamond pen ዳይመንድ እስኪብርቶ',
-            'B5 ባለ ሳንቲም ኖርማል',
-            'B5-3 ባለማግኔት ብረት',
-            'B5-1 ባለማግኔት ጫፉ ነጭ',
-            'A5-5 ባለ ማብኔት ነጭ',
-            'A6 ባለ ገመድ',
-            'ጥቁር ኮምፓስ',
-
-            'Set Square Yellow ሲትስኬር ቢጫ',
-            'Set Square 35 cm ሴትእስኩዊር 35 cm',
-            'NoteBook 32k color',
-            'A5 - 10 ባለቀለበት',
-            'A5 - 12 ባለ ፓኬት',
-            '25k- 5 ጨርቅ ማስታወሻ',
-            'A5 - 9 ባለ ማግኔት ጌጥ',
-            '25k - 1 ፓሪስ',
-            'A6- 2 ባለ ገመድ',
-            'A6- 1 ባለቁልፍ',
-            'A5- 8 ባለሳንቲም ባለእስክርቢቶ',
-            'A6- 1 ባለ ገመድ',
-            'A5 - ሳንቲም',
-            'B5 - ሳንቲም',
-            'A6- ቁልፍ የድሮ',
-            'Box file Color',
-            'Box file Black',
-            'Ticket ትኬት',
-            'A6- 2 ባለ ገመድ ብልጭልጭ ያለዉ',
-            'A6- 3 ባለገመድ',
-            'Ruler 30 cm ማስመሪያ 30 cm ጠንካራዉ',
-            'A5 ብልጭልጭ 25k - 9',
-
-            'Marshale compass',
-
-            'Fixer 0.7 ፊክሰር 7 ቁጥር',
-            'Fixer 0.5 ፊክሰር 5 ቁጥር',
-            'እርኬል ማስመሪያ',
-            'ጥቁር የስዕል እርሳስ',
-            'Lead 0.7 ሊድ 0.7 ቁጥር',
-            'Lead 0.5 ሊድ 0.5 ቁጥር',
-            'Paint Brush የስዕል ብሩሽ',
-            'Pencil Color 2 sided',
-            'Yuanyuan Marker',
-            'Laminating a3',
-            'Rotring Eraser ሮተሪንግ ላጲስ',
-            'Coloring Book',
-            'Document Case',
-            'Erasor Shaped ላጲስ ባለቅርፅ',
-            'Coloring book ባለ-ብሪሽ',
-            'B5 - 1 ሳንቲም',
-            'B5- ባለ ሳንቲም እስክርቢቶ ማስገቢያ ያለዉ',
-
-            'Sharpner መቅረጫ',
-            'Poprt',
-            'ጥጥ ማስታወሻ',
-            'Bj ባለ 300 ብር',
-            '6 columns',
-            'የስጦታ ማስታወሻ የተሰራ',
-
-            'Ring 6 ሪንግ 6',
-            'Ring 8 ሪንግ 8',
-            'Ring 10 ረንግ 10',
-            'Ring 12 ሪንግ 12',
-            'Ring 14 ሪንግ 14',
-            'Ring 16 ሪንግ 16',
-            'Ring 18 ሪንግ 18',
-            'Ring 20 ሪንግ 20',
-
-            'Diary Small ዲያሪ ትንሹ',
-            'Diary Code ዲያሪ ኮድ',
-            'Diary ዲያሪ ፍሩት',
-            'Diary ዲያሪ የተለያየ',
-
-            'Display book 40',
-            'Display book 60',
-            'Display book 80',
-            'Display book 100',
-
-            'Color Bag ክሊር ባግ ርካሹ',
-            'NoteBook 32k ጥቁር',
-            'Folder with rough texture ሸካራ ፎልደር',
-            'A5 -2 ባለ እስክርቢቶ',
-
-            'Pencil Bag ፔንስል ባግ ማይካ ባለ መቅተጫ',
-            'Pencil Bag ሸራ ፔንስል ባግ',
-            'Pencil Bag ፔንስል ባግ ሻራ ጠንካራዉ',
-
-            'Pencil እርሳስ የስዕል ቁጥሩ የተለያየ',
-            'Pencil Vneeds እርሳስ',
-            'Pencil Nann እርሳስ',
-            'Pencil እርሳስ ባለ እቃ',
-            'Pencil Color እርሳስ ከለር አጭሩ',
-
-            'ሽት ትፖቴክተር',
-            'Business Card ቢዝነስ ካርድ',
-            '335-',
-            'A5-11-1 ጠንካራ ከቨር ያለዉ',
-            'Puncher Small ፓንቸር ትንሹ',
-
-            '435-',
-            'Water Color ዉሃ ከለር ዉዱ ፍጭጭ የሚለዉ',
-
-            'Scissors መካከለኝ መቀስ',
-            'Scissor Small ትንሹ መቀስ',
-            'Scissor Kids የህፃናት መቀስ',
-            'Scissor Big መቀስ ትልቁ ባለክዳን',
-
-            'Folder 7 Pockets ባለ 7 ኪስ ፎልደር',
-
-            'NoteBook B5-2 with pen ማስታወሻ B5-2 ባለ እስክርቢቶ',
-            'NoteBook A6 Ribbon ማስታወሻ A6 ገመድ የድሮ',
-            'NoteBook A5-11 ማስታወሻ A5- 11 ሄሎ subjact',
-            'NoteBook A5-7 Magnet Metal ማስታወሻ A5-7 ብረት ማግኔት',
-            'NoteBook A5-6 Magnet Metal ማስታወሻ A5- 6 ጫፉ ነጭ ብረት ማግኔት',
-            'NoteBook B5-4 Magnet Metal ማስታወሻ B5-4 ማግኔት ብረት',
-            'NoteBook A6 ማስታወሻ A6 ባለ 1 ለእስክርቢቶ',
-            'NoteBook A5 ማስታወሻ A5 ባለ new ማግኔት',
-            'NoteBook A5 ማስታወሻ A5 ባለ new ገመድ',
-            'NoteBook B5 Old ማስታወሻ የድሮ',
-            'Notebook A5 ማስታወሻ ባለ ዉሃ',
-            'NoteBook A5 Magnet New ማስታወሻ A5 ማግኔት new',
-            'NoteBook A5 Paris ማስታወሻ A5 ፓሪስ',
-            'NoteBook 25k Leather Expensive ማስታወሻ 25k ሌዘር ዉዱ',
-            'NoteBook A5 Metal Magnet ማስታወሻ A5 ብረት ማግኔት',
-            'NoteBook A6 Magnet New ማስታወሻ A6 ማግኔት new',
-            'NoteBook 60k ማስታወሻ 60k',
-            'NoteBook 32k normal ማስታወሻ 32k normal',
-            'NoteBook 18k Black ማስታወሻ 18k ጥቁር',
-            'NoteBook A6 100 ማስታወሻ A6 100',
-            'NoteBook A5-1 ማስታወሻ A5-1 ባለ ማግኔት',
-            'NoteBook A4 ማስታወሻ A4 መዝገብ 200',
-            'NoteBook ማስታወሻ እንጨት',
-
-            'Sharpner with a Brush ባለ ቡሩሽ መቅረጫ',
-            'ሰፈነግ ( የብር መቁጠሪያ)',
-            'Magazine Rack መጋዘን ራክ የተበተነ',
-
-            'Paper tray 2 ማይካ',
-            'Paper tray 3 ማይካ',
-            'Paper tray 3 ብረት 2001',
+            // 'Price Tag ዋጋ መለጠፊያ',
+            // 'Laminating 76* 106',
+            // 'Cilp file',
+            // 'Diyer small',
+            // 'Fluid normal',
+            // 'Laminating 65*95',
 
 
-            'Globe ግሎብ',
-            'Marker 1 side',
-            'Marker 2 side',
-            'Compass 3009 ማይካ',
+            // 'Stapler ርካሹ',
 
-            'Color Bad 2 pockets ክሊር ባግ ባለ 2 ኪስ',
+            // 'Fastener',
+            // 'White Board Marker',
+            // 'ክሊፕቦርድ ርካሹ',
+            // 'የውብዳር ከለር',
+            // 'ምሳቃ ከለር piko',
+            // 'Remover',
+            // 'Marker 2 side',
+            // 'ከተር ትንሹ',
+            // 'ቆርቆሮ ኮምፓስ',
+            // 'Agenda አጀንዳ',
+            // 'A4 post',
+            // 'Ruler 50 cm ማስመሪያ 50 cm',
+            // 'ፓንቸር ትንሹ 520',
+            // 'ፓንቸር ትንቁ 520',
+            // 'Transparency Color ትራንስፓረንሲ ከለር',
+            // 'Transparency White ትራንስፓረንሲ ነጭ',
+            // 'Atlas Film አትላስ ፌልም',
 
-            'Folder 12 pockets ፎልበር 12 ኪስ',
+            // 'B5-5 ቀጭን ሳንቲም',
+            // '2025 -1',
+            // '2025 ብልጭልጭ.',
+            // 'Diamond pen ዳይመንድ እስኪብርቶ',
+            // 'B5 ባለ ሳንቲም ኖርማል',
+            // 'B5-3 ባለማግኔት ብረት',
+            // 'B5-1 ባለማግኔት ጫፉ ነጭ',
+            // 'A5-5 ባለ ማብኔት ነጭ',
+            // 'A6 ባለ ገመድ',
+            // 'ጥቁር ኮምፓስ',
 
-            'Cutter Small ከተር ትልቁ',
-            'Compass ፕላስቲክ 5007',
-            'Compass 8010',
-            'Compass color b',
-            'Compass 8005 ማይካ',
-            'Plaster Cutter የእጅ ፕላስተር መቁረጫ ውዱ',
-            'A4 posta',
+            // 'Set Square Yellow ሲትስኬር ቢጫ',
+            // 'Set Square 35 cm ሴትእስኩዊር 35 cm',
+            // 'NoteBook 32k color',
+            // 'A5 - 10 ባለቀለበት',
+            // 'A5 - 12 ባለ ፓኬት',
+            // '25k- 5 ጨርቅ ማስታወሻ',
+            // 'A5 - 9 ባለ ማግኔት ጌጥ',
+            // '25k - 1 ፓሪስ',
+            // 'A6- 2 ባለ ገመድ',
+            // 'A6- 1 ባለቁልፍ',
+            // 'A5- 8 ባለሳንቲም ባለእስክርቢቶ',
+            // 'A6- 1 ባለ ገመድ',
+            // 'A5 - ሳንቲም',
+            // 'B5 - ሳንቲም',
+            // 'A6- ቁልፍ የድሮ',
+            // 'Box file Color',
+            // 'Box file Black',
+            // 'Ticket ትኬት',
+            // 'A6- 2 ባለ ገመድ ብልጭልጭ ያለዉ',
+            // 'A6- 3 ባለገመድ',
+            // 'Ruler 30 cm ማስመሪያ 30 cm ጠንካራዉ',
+            // 'A5 ብልጭልጭ 25k - 9',
 
-            'ዉሃ ከለር ውዱትልቁ ፕንስል ባግ ሸራ',
+            // 'Marshale compass',
 
-            'Eyeye pan',
-            'A5 ገመድ new',
-            'Dispencer Medium ዲስፔስር መካከለኛ',
-            '2 side colore ዉዱ',
-            '3*4',
+            // 'Fixer 0.7 ፊክሰር 7 ቁጥር',
+            // 'Fixer 0.5 ፊክሰር 5 ቁጥር',
+            // 'እርኬል ማስመሪያ',
+            // 'ጥቁር የስዕል እርሳስ',
+            // 'Lead 0.7 ሊድ 0.7 ቁጥር',
+            // 'Lead 0.5 ሊድ 0.5 ቁጥር',
+            // 'Paint Brush የስዕል ብሩሽ',
+            // 'Pencil Color 2 sided',
+            // 'Yuanyuan Marker',
+            // 'Laminating a3',
+            // 'Rotring Eraser ሮተሪንግ ላጲስ',
+            // 'Coloring Book',
+            // 'Document Case',
+            // 'Erasor Shaped ላጲስ ባለቅርፅ',
+            // 'Coloring book ባለ-ብሪሽ',
+            // 'B5 - 1 ሳንቲም',
+            // 'B5- ባለ ሳንቲም እስክርቢቶ ማስገቢያ ያለዉ',
 
-            'Popit',
-            'ምሳቃ color ተንጠልጣይ',
-            'Clipboard Cheap ርካሹ ክሊፕ ቦርድ',
+            // 'Sharpner መቅረጫ',
+            // 'Poprt',
+            // 'ጥጥ ማስታወሻ',
+            // 'Bj ባለ 300 ብር',
+            // '6 columns',
+            // 'የስጦታ ማስታወሻ የተሰራ',
 
-            'Pan box hello',
-            'A4 binding file ዉዱ',
-            'Piko ምሳቃ color',
+            // 'Ring 6 ሪንግ 6',
+            // 'Ring 8 ሪንግ 8',
+            // 'Ring 10 ረንግ 10',
+            // 'Ring 12 ሪንግ 12',
+            // 'Ring 14 ሪንግ 14',
+            // 'Ring 16 ሪንግ 16',
+            // 'Ring 18 ሪንግ 18',
+            // 'Ring 20 ሪንግ 20',
 
-            'Ticket ትኬት',
-            'Drawing Book Short የስዕል ደብተር አጭሩ',
-            'Drawing Book Long የስዕል ደብተር ረጅሙ',
-            'Hand Writing'
+            // 'Diary Small ዲያሪ ትንሹ',
+            // 'Diary Code ዲያሪ ኮድ',
+            // 'Diary ዲያሪ ፍሩት',
+            // 'Diary ዲያሪ የተለያየ',
+
+            // 'Display book 40',
+            // 'Display book 60',
+            // 'Display book 80',
+            // 'Display book 100',
+
+            // 'Color Bag ክሊር ባግ ርካሹ',
+            // 'NoteBook 32k ጥቁር',
+            // 'Folder with rough texture ሸካራ ፎልደር',
+            // 'A5 -2 ባለ እስክርቢቶ',
+
+            // 'Pencil Bag ፔንስል ባግ ማይካ ባለ መቅተጫ',
+            // 'Pencil Bag ሸራ ፔንስል ባግ',
+            // 'Pencil Bag ፔንስል ባግ ሻራ ጠንካራዉ',
+
+            // 'Pencil እርሳስ የስዕል ቁጥሩ የተለያየ',
+            // 'Pencil Vneeds እርሳስ',
+            // 'Pencil Nann እርሳስ',
+            // 'Pencil እርሳስ ባለ እቃ',
+            // 'Pencil Color እርሳስ ከለር አጭሩ',
+
+            // 'ሽት ትፖቴክተር',
+            // 'Business Card ቢዝነስ ካርድ',
+            // '335-',
+            // 'A5-11-1 ጠንካራ ከቨር ያለዉ',
+            // 'Puncher Small ፓንቸር ትንሹ',
+
+            // '435-',
+            // 'Water Color ዉሃ ከለር ዉዱ ፍጭጭ የሚለዉ',
+
+            // 'Scissors መካከለኝ መቀስ',
+            // 'Scissor Small ትንሹ መቀስ',
+            // 'Scissor Kids የህፃናት መቀስ',
+            // 'Scissor Big መቀስ ትልቁ ባለክዳን',
+
+            // 'Folder 7 Pockets ባለ 7 ኪስ ፎልደር',
+
+            // 'NoteBook B5-2 with pen ማስታወሻ B5-2 ባለ እስክርቢቶ',
+            // 'NoteBook A6 Ribbon ማስታወሻ A6 ገመድ የድሮ',
+            // 'NoteBook A5-11 ማስታወሻ A5- 11 ሄሎ subjact',
+            // 'NoteBook A5-7 Magnet Metal ማስታወሻ A5-7 ብረት ማግኔት',
+            // 'NoteBook A5-6 Magnet Metal ማስታወሻ A5- 6 ጫፉ ነጭ ብረት ማግኔት',
+            // 'NoteBook B5-4 Magnet Metal ማስታወሻ B5-4 ማግኔት ብረት',
+            // 'NoteBook A6 ማስታወሻ A6 ባለ 1 ለእስክርቢቶ',
+            // 'NoteBook A5 ማስታወሻ A5 ባለ new ማግኔት',
+            // 'NoteBook A5 ማስታወሻ A5 ባለ new ገመድ',
+            // 'NoteBook B5 Old ማስታወሻ የድሮ',
+            // 'Notebook A5 ማስታወሻ ባለ ዉሃ',
+            // 'NoteBook A5 Magnet New ማስታወሻ A5 ማግኔት new',
+            // 'NoteBook A5 Paris ማስታወሻ A5 ፓሪስ',
+            // 'NoteBook 25k Leather Expensive ማስታወሻ 25k ሌዘር ዉዱ',
+            // 'NoteBook A5 Metal Magnet ማስታወሻ A5 ብረት ማግኔት',
+            // 'NoteBook A6 Magnet New ማስታወሻ A6 ማግኔት new',
+            // 'NoteBook 60k ማስታወሻ 60k',
+            // 'NoteBook 32k normal ማስታወሻ 32k normal',
+            // 'NoteBook 18k Black ማስታወሻ 18k ጥቁር',
+            // 'NoteBook A6 100 ማስታወሻ A6 100',
+            // 'NoteBook A5-1 ማስታወሻ A5-1 ባለ ማግኔት',
+            // 'NoteBook A4 ማስታወሻ A4 መዝገብ 200',
+            // 'NoteBook ማስታወሻ እንጨት',
+
+            // 'Sharpner with a Brush ባለ ቡሩሽ መቅረጫ',
+            // 'ሰፈነግ ( የብር መቁጠሪያ)',
+            // 'Magazine Rack መጋዘን ራክ የተበተነ',
+
+            // 'Paper tray 2 ማይካ',
+            // 'Paper tray 3 ማይካ',
+            // 'Paper tray 3 ብረት 2001',
+
+
+            // 'Globe ግሎብ',
+            // 'Marker 1 side',
+            // 'Marker 2 side',
+            // 'Compass 3009 ማይካ',
+
+            // 'Color Bad 2 pockets ክሊር ባግ ባለ 2 ኪስ',
+
+            // 'Folder 12 pockets ፎልበር 12 ኪስ',
+
+            // 'Cutter Small ከተር ትልቁ',
+            // 'Compass ፕላስቲክ 5007',
+            // 'Compass 8010',
+            // 'Compass color b',
+            // 'Compass 8005 ማይካ',
+            // 'Plaster Cutter የእጅ ፕላስተር መቁረጫ ውዱ',
+            // 'A4 posta',
+
+            // 'ዉሃ ከለር ውዱትልቁ ፕንስል ባግ ሸራ',
+
+            // 'Eyeye pan',
+            // 'A5 ገመድ new',
+            // 'Dispencer Medium ዲስፔስር መካከለኛ',
+            // '2 side colore ዉዱ',
+            // '3*4',
+
+            // 'Popit',
+            // 'ምሳቃ color ተንጠልጣይ',
+            // 'Clipboard Cheap ርካሹ ክሊፕ ቦርድ',
+
+            // 'Pan box hello',
+            // 'A4 binding file ዉዱ',
+            // 'Piko ምሳቃ color',
+
+            // 'Ticket ትኬት',
+            // 'Drawing Book Short የስዕል ደብተር አጭሩ',
+            // 'Drawing Book Long የስዕል ደብተር ረጅሙ',
+            // 'Hand Writing'
 
         ];
 
@@ -283,6 +284,7 @@ class ItemSeeder extends Seeder
 
 
 
+            //$itemId = 1;
             // Generate image URLs for each product (from local storage)
             $image1Path = 'images/product_images/' . str_replace(' ', '_', $productName) . '_1.jpg'; //Example: product_images/Product_A_1.jpg
             $image2Path = 'images/product_images/' . str_replace(' ', '_', $productName) . '_2.jpg'; //Example: product_images/Product_A_2.jpg
@@ -295,19 +297,35 @@ class ItemSeeder extends Seeder
                 $image2Url,
             ];
 
-            $colors = [
-                'Red',
-                'Blue',
-                'Green',
-                'Yellow',
-                'Black',
-                'White',
-                'Purple',
-                'Orange',
-                'Pink',
-                'Brown',
-                'Gray',
+            $colorImage1Url = asset('images/product_images/' . str_replace(' ', '_', $productName) . '_color_1.jpg'); //Example: product_images/Product_A_color_1.jpg
+            $colorImage2Url = asset('images/product_images/' . str_replace(' ', '_', $productName) . '_color_2.jpg'); //Example: product_images/Product_A_color_2.jpg
+            $colorImages = [
+                $colorImage1Url,
+                $colorImage2Url,
             ];
+
+            $colors = [
+                ['name' => 'BONE', 'image_path' => '$colorImages', 'disabled' => false],
+                ['name' => 'WHITE', 'image_path' => '$colorImages', 'disabled' => false],
+                ['name' => 'BLACK', 'image_path' => '$colorImages', 'disabled' => false],
+                ['name' => 'PURPLE', 'image_path' => '$colorImages', 'disabled' => false],
+                ['name' => 'BUTTER CORN', 'image_path' => '$colorImages', 'disabled' => true],
+                ['name' => 'QUARTZ', 'image_path' => '$colorImages', 'disabled' => false],
+            ];
+
+            // $colors = [
+            //     'Red',
+            //     'Blue',
+            //     'Green',
+            //     'Yellow',
+            //     'Black',
+            //     'White',
+            //     'Purple',
+            //     'Orange',
+            //     'Pink',
+            //     'Brown',
+            //     'Gray',
+            // ];
 
             $sizes = [
                 'Small',
@@ -315,6 +333,8 @@ class ItemSeeder extends Seeder
                 'Large',
                 'Extra Large',
             ];
+
+
 
             $packagingTypes = [
                 ['name' => 'Piece', 'quantity' => 1],
@@ -346,7 +366,7 @@ class ItemSeeder extends Seeder
             // // Add the image URLs to the $imageUrls array
             // $imageUrls[] = $images;
 
-            Item::create([
+            $item = Item::create([
                 'product_images' => json_encode($images), // 1 Example image URLs
                 'variation' => fake()->word(),// 2
                 'price' => fake()->randomFloat(2, 10, 500), // 3 Price between 10 and 500
@@ -360,9 +380,32 @@ class ItemSeeder extends Seeder
                 'selectedCategories' => json_encode(array_rand(range(1, 10), 3)), // 11
                 'newCategoryNames' => json_encode([fake()->word(), fake()->word()]), // 12
                 'sold_count' => rand(0, 500), // 13 Random sold count
+
                 'created_at' => now(),
                 'updated_at' => now(),
+
             ]);
+
+            //  // Now, assign different colors for this item
+            // //foreach ($colors as $color) {
+            //     ItemColor::create([
+            //         'item_id' => $itemId, // Assuming the item ID is 1 for this example
+            //         'name' => $colors[0]['name'], // Example color name
+            //         'image_path' => $colors[0]['image_path'], // Example image path
+            //         'disabled' => $colors[0]['disabled'], // Example disabled status
+            //     ]);
+            // // }
+            // $itemId++;
+
+            // Assign all colors to each item
+            foreach ($colors as $color) {
+                ItemColor::create([
+                    'item_id' => $item->id,
+                    'name' => $color['name'],
+                    'image_path' => $colorImages[0], // Example image path
+                    'disabled' => $color['disabled'],
+                ]);
+            }
         }
 
     }

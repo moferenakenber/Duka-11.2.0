@@ -43,5 +43,10 @@ class ItemColor extends Model
         // If you need to cast any columns to a specific type, put them here.
     ];
 
+
     // Relationships (if any)
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
 }

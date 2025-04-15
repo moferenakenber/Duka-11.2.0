@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -13,7 +12,11 @@ return new class extends Migration
     {
         Schema::create('item_colors', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // e.g., "red", "blue", "green"
+            $table->string('name');
+            $table->string('image_path');
+            $table->boolean('disabled')->default(false);
+            $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            $table->foreignId('itemid')->nullable()->constrained('items')->onDelete('cascade');
             $table->timestamps();
         });
     }

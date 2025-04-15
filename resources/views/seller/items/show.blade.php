@@ -69,13 +69,13 @@
                     <li class="text-gray-600">12 - newCategoryNames: {{ $item->newCategoryNames }}</li>
                 </ul>
 
-                <div class="mt-6 flex space-x-4">
+                {{-- <div class="mt-6 flex space-x-4">
                     <button @click="showModal = true"
                         class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded text-lg flex-1">
                         Add to Cart
                     </button>
                     <button class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded text-lg flex-1">Buy Now</button>
-                </div>
+                </div> --}}
             </div>
 
 
@@ -88,14 +88,27 @@
                 item: {
                     price: {{ $item->price }},
                     stock: 200,
+
                     colors: [
+                        @foreach($item->colors as $color)
+                            {
+                                name: '{{ $color->name }}',
+                                img: '{{ asset($color->image_path) }}',
+                                disabled: {{ $color->disabled ? 'true' : 'false' }}
+                            }@if(!$loop->last),@endif
+                        @endforeach
+                    ],
+
+
+                    {{-- colors: [
                         { name: 'BONE', img: '/img/colors/bone.png', disabled: false },
                         { name: 'WHITE', img: '/img/colors/white.png', disabled: false },
                         { name: 'BLACK', img: '/img/colors/black.png', disabled: false },
                         { name: 'PURPLE', img: '/img/colors/purple.png', disabled: false },
                         { name: 'BUTTER CORN', img: '/img/colors/butter-corn.png', disabled: true },
                         { name: 'QUARTZ', img: '/img/colors/quartz.png', disabled: false }
-                    ],
+                    ], --}}
+
                     sizes: [
                         { value: 'W5', label: 'W5 21cm 34–35eu', disabled: false },
                         { value: 'W6', label: 'W6 22cm 36–37eu', disabled: false },
