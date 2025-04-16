@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             CustomerSeeder::class,
             ItemSeeder::class,
+            ItemColorSeeder::class,
 
         ]);
     }

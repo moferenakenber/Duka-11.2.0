@@ -53,7 +53,7 @@ class ItemSeeder extends Seeder
             'A4 laola',
             'A3 road map',
             'A3 laola',
-            'A5 subjact new',
+            'A5 subject new',
 
 
 
@@ -87,6 +87,8 @@ class ItemSeeder extends Seeder
             // 'ቆርቆሮ ኮምፓስ',
             // 'Agenda አጀንዳ',
             // 'A4 post',
+
+
             // 'Ruler 50 cm ማስመሪያ 50 cm',
             // 'ፓንቸር ትንሹ 520',
             // 'ፓንቸር ትንቁ 520',
@@ -94,15 +96,21 @@ class ItemSeeder extends Seeder
             // 'Transparency White ትራንስፓረንሲ ነጭ',
             // 'Atlas Film አትላስ ፌልም',
 
+
+
+
+
             // 'B5-5 ቀጭን ሳንቲም',
             // '2025 -1',
-            // '2025 ብልጭልጭ.',
+            // '2025 ብልጭልጭ',
             // 'Diamond pen ዳይመንድ እስኪብርቶ',
             // 'B5 ባለ ሳንቲም ኖርማል',
             // 'B5-3 ባለማግኔት ብረት',
             // 'B5-1 ባለማግኔት ጫፉ ነጭ',
             // 'A5-5 ባለ ማብኔት ነጭ',
             // 'A6 ባለ ገመድ',
+
+
             // 'ጥቁር ኮምፓስ',
 
             // 'Set Square Yellow ሲትስኬር ቢጫ',
@@ -149,10 +157,19 @@ class ItemSeeder extends Seeder
             // 'B5- ባለ ሳንቲም እስክርቢቶ ማስገቢያ ያለዉ',
 
             // 'Sharpner መቅረጫ',
-            // 'Poprt',
+            // 'Popit',
             // 'ጥጥ ማስታወሻ',
             // 'Bj ባለ 300 ብር',
             // '6 columns',
+
+
+
+
+
+
+
+
+
             // 'የስጦታ ማስታወሻ የተሰራ',
 
             // 'Ring 6 ሪንግ 6',
@@ -163,6 +180,9 @@ class ItemSeeder extends Seeder
             // 'Ring 16 ሪንግ 16',
             // 'Ring 18 ሪንግ 18',
             // 'Ring 20 ሪንግ 20',
+
+
+
 
             // 'Diary Small ዲያሪ ትንሹ',
             // 'Diary Code ዲያሪ ኮድ',
@@ -207,7 +227,7 @@ class ItemSeeder extends Seeder
 
             // 'NoteBook B5-2 with pen ማስታወሻ B5-2 ባለ እስክርቢቶ',
             // 'NoteBook A6 Ribbon ማስታወሻ A6 ገመድ የድሮ',
-            // 'NoteBook A5-11 ማስታወሻ A5- 11 ሄሎ subjact',
+            // 'NoteBook A5-11 ማስታወሻ A5- 11 ሄሎ subject',
             // 'NoteBook A5-7 Magnet Metal ማስታወሻ A5-7 ብረት ማግኔት',
             // 'NoteBook A5-6 Magnet Metal ማስታወሻ A5- 6 ጫፉ ነጭ ብረት ማግኔት',
             // 'NoteBook B5-4 Magnet Metal ማስታወሻ B5-4 ማግኔት ብረት',
@@ -230,7 +250,7 @@ class ItemSeeder extends Seeder
             // 'NoteBook ማስታወሻ እንጨት',
 
             // 'Sharpner with a Brush ባለ ቡሩሽ መቅረጫ',
-            // 'ሰፈነግ ( የብር መቁጠሪያ)',
+            // 'ሰፈነግ (የብር መቁጠሪያ)',
             // 'Magazine Rack መጋዘን ራክ የተበተነ',
 
             // 'Paper tray 2 ማይካ',
@@ -398,14 +418,15 @@ class ItemSeeder extends Seeder
             // $itemId++;
 
             // Assign all colors to each item
-            foreach ($colors as $color) {
-                ItemColor::create([
-                    'item_id' => $item->id,
-                    'name' => $color['name'],
-                    'image_path' => $colorImages[0], // Example image path
-                    'disabled' => $color['disabled'],
-                ]);
-            }
+
+            // foreach ($colors as $color) {
+            //     ItemColor::create([
+            //         'item_id' => $item->id,
+            //         'name' => $color['name'],
+            //         'image_path' => $colorImages[0], // Example image path
+            //         'disabled' => $color['disabled'],
+            //     ]);
+            // }
         }
 
     }

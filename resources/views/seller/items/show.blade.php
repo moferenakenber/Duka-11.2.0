@@ -67,6 +67,15 @@
                     <li class="text-gray-600">10 - item_category_id: {{ $item->item_category_id }}</li>
                     <li class="text-gray-600">11 - selectedCategories: {{ $item->selectedCategories }}</li>
                     <li class="text-gray-600">12 - newCategoryNames: {{ $item->newCategoryNames }}</li>
+                    <li class="text-gray-600">
+                        13 - colors:
+                        @foreach (json_decode($item->colors, true) as $color)
+                            <span class="inline-block px-2 py-1 bg-gray-200 rounded mr-2">
+                                {{ $color['name'] }}
+                            </span>
+                        @endforeach
+                    </li>
+
                 </ul>
 
                 {{-- <div class="mt-6 flex space-x-4">
@@ -90,13 +99,12 @@
                     stock: 200,
 
                     colors: [
-                        @foreach($item->colors as $color)
+                        @foreach ($item->colors as $color)
                             {
                                 name: '{{ $color->name }}',
                                 img: '{{ asset($color->image_path) }}',
                                 disabled: {{ $color->disabled ? 'true' : 'false' }}
-                            }@if(!$loop->last),@endif
-                        @endforeach
+                            }@if (!$loop->last),@endif @endforeach
                     ],
 
 
@@ -127,7 +135,9 @@
                     // Handle adding to cart logic here (e.g., store cart item in session or make an AJAX request)
                     this.showModal = false;
                     window.location.href = '/cart'; // Redirect to the cart page
-                }
+                },
+
+                selectedColor: null
                 {{-- ,
 
                 packagingOptions: @json($item->packaging_details),
@@ -167,7 +177,10 @@
 
                     <!-- Product Preview -->
                     <div class="flex items-center gap-4 mb-4">
-                        <img src="/img/product.jpg" alt="Product" class="w-20 h-20 rounded border object-cover">
+                        {{-- <img src="/img/product.jpg" alt="Product" class="w-20 h-20 rounded border object-cover"> --}}
+                        <img :src="selectedColor ? selectedColor.img : '/img/product.jpg'" alt="Product"
+                            class="w-20 h-20 rounded border object-cover">
+
                         <div>
                             <div class="text-lg font-semibold text-red-500">฿<span x-text="item.price"></span></div>
                             <div class="text-sm text-gray-500">Stock: <span x-text="item.stock"></span></div>
@@ -179,13 +192,14 @@
                         <div class="font-semibold text-sm mb-2">COLOR</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(color, index) in item.colors" :key="index">
-                                <button type="button" @click="!color.disabled && (selectedColor = color.name)"
+                                <button type="button" @click="!color.disabled && (selectedColor = color)"
+
                                     class="flex flex-col items-center border rounded-md px-2 py-1 w-20 text-xs"
                                     :class="{
                                         'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
-                                        'border-black bg-black text-white': selectedColor === color.name && !color
-                                            .disabled
-                                    }">
+                                        'border-black bg-black text-white': selectedColor?.name === color.name && !color.disabled
+                                    }"
+                                    >
                                     <img :src="color.img" class="w-10 h-10 object-cover rounded mb-1" alt="">
                                     <span x-text="color.name"></span>
                                 </button>
@@ -220,27 +234,28 @@
                     </div>
 
 
-                <!-- Quantity Control -->
-                <div class="mb-6">
-                    <div class="font-semibold text-sm mb-2">Quantity</div>
-                    <div class="flex items-center border w-max px-2 rounded">
-                        <button type="button" class="text-lg px-2" @click="quantity = Math.max(1, quantity - 1)">–</button>
-                        <input type="number" x-model="quantity" min="1"
-                            class="w-12 text-center border-x outline-none" />
-                        <button type="button" class="text-lg px-2" @click="quantity++">+</button>
+                    <!-- Quantity Control -->
+                    <div class="mb-6">
+                        <div class="font-semibold text-sm mb-2">Quantity</div>
+                        <div class="flex items-center border w-max px-2 rounded">
+                            <button type="button" class="text-lg px-2"
+                                @click="quantity = Math.max(1, quantity - 1)">–</button>
+                            <input type="number" x-model="quantity" min="1"
+                                class="w-12 text-center border-x outline-none" />
+                            <button type="button" class="text-lg px-2" @click="quantity++">+</button>
+                        </div>
                     </div>
+
+                    <!-- Add to Cart Button -->
+                    <button :disabled="!selectedColor || !selectedSize" @click="addToCart()"
+                        class="w-full py-3 font-bold rounded text-white"
+                        :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
+                        ADD TO CART
+                    </button>
                 </div>
-
-                <!-- Add to Cart Button -->
-                <button :disabled="!selectedColor || !selectedSize" @click="addToCart()"
-                    class="w-full py-3 font-bold rounded text-white"
-                    :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
-                    ADD TO CART
-                </button>
             </div>
-        </div>
 
-    </div>
+        </div>
     </div>
 
 @endsection
