@@ -3,8 +3,11 @@
 @section('content')
     {{-- <div class="max-w-4xl mx-auto p-6 pb-16">
         <div class="bg-white shadow-lg rounded-lg overflow-hidden"> --}}
-    <div class="max-w-4xl mx-auto p-6 pb-16">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden overflow-y-auto max-h-[100vh]">
+    {{-- <div class="max-w-4xl mx-auto p-6 pb-16">
+        <div class="bg-white shadow-lg rounded-lg overflow-hidden overflow-y-auto max-h-[100vh]"> --}}
+
+            <div class="max-w-4xl mx-auto p-6 pb-16 overflow-y-auto max-h-[100vh]">
+                <div class="bg-white shadow-lg rounded-lg overflow-hidden">
 
             {{-- Swiper Image Slider --}}
             <div class="relative">
@@ -260,8 +263,8 @@
 
 @endsection
 
-@section('scripts')
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+{{-- @section('scripts')
+    {{-- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         new Swiper(".mySwiper", {
             loop: true,
@@ -277,4 +280,26 @@
             },
         });
     </script>
+@endsection --}}
+
+
+@section('scripts')
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const swiper = new Swiper(".mySwiper", {
+                loop: true,
+                slidesPerView: 1,
+                spaceBetween: 10,
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                },
+            });
+        });
+    </script>
 @endsection
+

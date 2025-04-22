@@ -250,7 +250,7 @@ class ItemSeeder extends Seeder
             // 'NoteBook ማስታወሻ እንጨት',
 
             // 'Sharpner with a Brush ባለ ቡሩሽ መቅረጫ',
-            // 'ሰፈነግ (የብር መቁጠሪያ)',
+            // 'ሰፈነግ ( የብር መቁጠሪያ)',
             // 'Magazine Rack መጋዘን ራክ የተበተነ',
 
             // 'Paper tray 2 ማይካ',
@@ -312,14 +312,18 @@ class ItemSeeder extends Seeder
             $image1Url = asset($image1Path);
             $image2Url = asset($image2Path);
 
-            $images = [
-                $image1Url,
-                $image2Url,
-            ];
+
 
             $colorImage1Url = asset('images/product_images/' . str_replace(' ', '_', $productName) . '_color_1.jpg'); //Example: product_images/Product_A_color_1.jpg
             $colorImage2Url = asset('images/product_images/' . str_replace(' ', '_', $productName) . '_color_2.jpg'); //Example: product_images/Product_A_color_2.jpg
             $colorImages = [
+                $colorImage1Url,
+                $colorImage2Url,
+            ];
+
+            $images = [
+                $image1Url,
+                $image2Url,
                 $colorImage1Url,
                 $colorImage2Url,
             ];

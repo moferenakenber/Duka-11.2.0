@@ -30,7 +30,8 @@
         @include('seller.layouts.navigation')
     </main>
 
-
+{{-- Scripts go at the bottom of body --}}
+@yield('scripts')
 </body>
 
 </html>
