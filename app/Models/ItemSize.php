@@ -23,6 +23,7 @@ class ItemSize extends Model
      */
     protected $fillable = [
         'name',
+        'image_path',
     ];
 
     /**
@@ -44,4 +45,18 @@ class ItemSize extends Model
     ];
 
     // Relationships (if any)
+    public function item()
+    {
+        return $this->belongsTo(Item::class);
+    }
+    public function itemVariant ()
+    {
+        return $this->hasMany(ItemVariant::class);
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(ItemVariant::class);
+    }
+
 }

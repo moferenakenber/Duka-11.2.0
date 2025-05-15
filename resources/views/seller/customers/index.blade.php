@@ -31,10 +31,10 @@
                 <!-- Full screen container for vertical space -->
                 <!-- Scrollable and Alphabetically Sorted Customer List -->
                 <ul
-                    class="divide-y {{--divide-gray-400/50 dark:divide-gray-400/50--}} bg-white flex-1 overflow-y-auto mx-auto w-full max-w-2xl m rounded-lg shadow-lg">
+                    class="divide-y {{-- divide-gray-400/50 dark:divide-gray-400/50 --}} bg-white flex-1 overflow-y-auto mx-auto w-full max-w-2xl m rounded-lg shadow-lg">
                     @foreach ($customers->sortBy('first_name') as $customer)
                         {{-- <li class="py-3 sm:py-4 hover:bg-gray-100"> --}}
-                            <li class="py-3 sm:py-4 hover:bg-gray-100 focus:outline-none active:bg-gray-100">
+                        <li class="py-3 sm:py-4 hover:bg-gray-100 focus:outline-none active:bg-gray-100">
 
                             <!-- Wrap each customer in an anchor tag for clickability -->
                             <a href="{{ route('seller.customers.show', $customer->id) }}"
@@ -69,6 +69,16 @@
 
                     </p>
                 </div>
+
+                @foreach ($types as $typeName => $items)
+                    <h2>{{ $typeName }}</h2>
+                    <ul>
+                        @foreach ($items as $item)
+                            <li>{{ $item['name'] }}</li>
+                        @endforeach
+                    </ul>
+                @endforeach
+
 
 
 

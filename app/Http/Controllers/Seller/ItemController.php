@@ -66,6 +66,19 @@ class ItemController extends Controller
      */
     public function show(Item $item)
     {
+        // $item->load([
+        //     'variants.itemColor',
+        //     'variants.itemSize',
+        //     'variants.itemPackagingType',
+        //     'variants.owner',
+        // ]);
+
+        // Ensure item has variants
+        $item->load(['variants']);
+
+        // Add dd() to inspect the data
+        //dd($item->variants); // This will dump the variants and stop the execution
+
         $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
         return view('seller.items.show', compact('item', 'sellers'));
     }

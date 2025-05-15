@@ -23,6 +23,7 @@ class ItemColor extends Model
      */
     protected $fillable = [
         'name',
+        'image_path',
     ];
 
     /**
@@ -48,5 +49,10 @@ class ItemColor extends Model
     public function item()
     {
         return $this->belongsTo(Item::class);
+    }
+
+    public function variants()
+    {
+        return $this->hasMany(ItemVariant::class);
     }
 }

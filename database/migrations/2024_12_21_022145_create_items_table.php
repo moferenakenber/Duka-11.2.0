@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('items', function (Blueprint $table) {
 
 
-
+            // All properties should have images, price, stock
 
             $table->id();
             $table->string('product_name')->nullable();
@@ -29,6 +29,8 @@ return new class extends Migration {
             $table->json('selectedCategories')->nullable();
             $table->json('newCategoryNames')->nullable();
             $table->bigInteger('sold_count')->default(0)->nullable(false); // Assuming this is the sold count
+            $table->decimal('discount_price', 10, 2)->nullable();
+            $table->decimal('discount_percentage')->nullable();
 
 
             $table->timestamps();

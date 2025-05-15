@@ -17,6 +17,7 @@ class ItemPackagingType extends Model
     protected $fillable = [
         'name',
         'quantity',
+        'image_path',
     ];
 
     /**
@@ -29,4 +30,9 @@ class ItemPackagingType extends Model
     ];
 
     // Relationships (if any)
+
+    public function variants()
+    {
+        return $this->hasMany(ItemVariant::class);
+    }
 }

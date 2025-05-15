@@ -53,6 +53,11 @@ class Item extends Model
         return $this->hasMany(ItemColor::class); // One-to-many relationship with colors
     }
 
+    public function variants()
+    {
+        return $this->hasMany(ItemVariant::class);
+    }
+
 
 
 

@@ -28,7 +28,11 @@ class ItemVariant extends Model
         'item_size_id',
         'item_packaging_type_id',
         'is_active',
+        'price',
+        'stock',
+        'owner_id',
     ];
+
 
     /**
      * The attributes that should be cast.
@@ -70,4 +74,25 @@ class ItemVariant extends Model
     {
         return $this->belongsTo(ItemPackagingType::class, 'item_packaging_type_id');
     }
+
+    public function itemColor()
+    {
+        return $this->belongsTo(ItemColor::class);
+    }
+
+    public function itemSize()
+    {
+        return $this->belongsTo(ItemSize::class);
+    }
+
+    public function itemPackagingType()
+    {
+        return $this->belongsTo(ItemPackagingType::class);
+    }
+
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'owner_id');
+    }
+
 }

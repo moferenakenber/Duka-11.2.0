@@ -26,6 +26,10 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
             ItemSeeder::class,
             ItemColorSeeder::class,
+            ItemSizeSeeder::class,
+            ItemPackagingTypeSeeder::class,
+            ItemVariantSeeder::class,
+
 
         ]);
     }

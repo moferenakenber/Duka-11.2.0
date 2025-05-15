@@ -18,6 +18,9 @@ return new class extends Migration
             $table->foreignId('item_size_id')->nullable()->constrained('item_sizes')->onDelete('set null');
             $table->foreignId('item_packaging_type_id')->nullable()->constrained('item_packaging_types')->onDelete('set null');
             $table->boolean('is_active')->default(true);
+            $table->integer('price');
+            $table->integer('stock');
+            $table->foreignId('owner_id')->constrained('users');
             $table->timestamps();
         });
     }
