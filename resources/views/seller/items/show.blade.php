@@ -15,13 +15,13 @@
 @endphp
 
 @section('content')
-    {{-- <div class="max-w-4xl mx-auto p-6 pb-16">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden"> --}}
-    {{-- <div class="max-w-4xl mx-auto p-6 pb-16">
+    {{-- <div class="max-w-4xl p-6 pb-16 mx-auto">
+        <div class="overflow-hidden bg-white rounded-lg shadow-lg"> --}}
+    {{-- <div class="max-w-4xl p-6 pb-16 mx-auto">
         <div class="bg-white shadow-lg rounded-lg overflow-hidden overflow-y-auto max-h-[100vh]"> --}}
 
     <div class="max-w-4xl mx-auto p-6 pb-16 overflow-y-auto max-h-[100vh]">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden">
+        <div class="overflow-hidden bg-white rounded-lg shadow-lg">
 
             {{-- Swiper Image Slider --}}
             <div class="relative">
@@ -37,7 +37,7 @@
                                 @endforeach
                             @endif
                         @else
-                            <div class="swiper-slide p-4">No images available.</div>
+                            <div class="p-4 swiper-slide">No images available.</div>
                         @endif
                     </div>
 
@@ -48,23 +48,120 @@
                 </div>
             </div>
 
+            {{-- ------------------------------------------------------------------------ --}}
+            {{-- Table of $variantData --}}
+
+            <script>
+                const variantData = @json($variantData);
+                console.log(variantData);
+            </script>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm border border-gray-300 table-auto">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="px-4 py-2 border whitespace-nowrap">Variant ID</th>
+
+                            {{-- Item Color --}}
+                            <th class="px-4 py-2 border whitespace-nowrap">Color ID</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Color Name</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Color Image</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Disabled</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Color Created</th>
+
+                            {{-- Item Size --}}
+                            <th class="px-4 py-2 border whitespace-nowrap">Size ID</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Size Name</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Size Description</th>
+
+                            {{-- Packaging --}}
+                            <th class="px-4 py-2 border whitespace-nowrap">Packaging ID</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Packaging Name</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Packaging Details</th>
+
+                            {{-- Variant --}}
+                            <th class="px-4 py-2 border whitespace-nowrap">Price</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Stock</th>
+
+                            {{-- Owner --}}
+                            <th class="px-4 py-2 border whitespace-nowrap">Owner ID</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Owner Name</th>
+                            <th class="px-4 py-2 border whitespace-nowrap">Owner Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($item->variants as $variant)
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->id }}</td>
+
+                                {{-- Color --}}
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->itemColor->id ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->itemColor->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">
+                                    @if (!empty($variant->itemColor->image_path))
+                                        <img src="{{ asset($variant->itemColor->image_path) }}"
+                                            alt="{{ $variant->itemColor->name }}" class="object-cover w-8 h-8 rounded" />
+                                    @else
+                                        N/A
+                                    @endif
+                                </td>
+                                <td class="px-4 py-2 border whitespace-nowrap">
+                                    {{ $variant->itemColor->disabled ? 'Yes' : 'No' }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">
+                                    {{ optional($variant->itemColor->created_at)->format('Y-m-d') ?? 'N/A' }}</td>
+
+                                {{-- Size --}}
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->itemSize->id ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->itemSize->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">
+                                    {{ $variant->itemSize->description ?? 'N/A' }}</td>
+
+                                {{-- Packaging --}}
+                                <td class="px-4 py-2 border whitespace-nowrap">
+                                    {{ $variant->itemPackagingType->id ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">
+                                    {{ $variant->itemPackagingType->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">
+                                    {{ $variant->itemPackagingType->details ?? 'N/A' }}</td>
+
+                                {{-- Variant --}}
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->price }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->stock }}</td>
+
+                                {{-- Owner --}}
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->owner->id ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->owner->name ?? 'N/A' }}</td>
+                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->owner->email ?? 'N/A' }}</td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+
+
+
+
+
+            {{-- _______________________________________________________________ --}}
+
+
             {{-- Product Info --}}
             <div class="p-6">
                 <h2 class="text-2xl font-semibold text-gray-800">{{ $item->product_name }}</h2>
-                <p class="text-gray-600 mt-2">{{ $item->product_description }}</p>
+                <p class="mt-2 text-gray-600">{{ $item->product_description }}</p>
 
                 <div class="mt-4">
-                    <span class="text-red-500 text-3xl font-bold">฿{{ number_format($item->price, 0) }}</span>
+                    <span class="text-3xl font-bold text-red-500">฿{{ number_format($item->price, 0) }}</span>
                     @if ($item->discount_price)
-                        <span class="line-through text-gray-400 ml-2">฿{{ number_format($item->original_price, 0) }}</span>
+                        <span class="ml-2 text-gray-400 line-through">฿{{ number_format($item->original_price, 0) }}</span>
                         <span
-                            class="bg-yellow-500 text-white text-xs px-3 py-1 rounded">-{{ $item->discount_percentage }}%</span>
+                            class="px-3 py-1 text-xs text-white bg-yellow-500 rounded">-{{ $item->discount_percentage }}%</span>
                     @endif
                 </div>
 
                 @if ($item->has_discount)
                     <div class="mt-4">
-                        <span class="bg-yellow-500 text-white text-xs px-3 py-1 rounded">Discount Available</span>
+                        <span class="px-3 py-1 text-xs text-white bg-yellow-500 rounded">Discount Available</span>
                     </div>
                 @endif
 
@@ -87,14 +184,14 @@
                     <li class="text-gray-600">
                         13 - colors:
                         @foreach (json_decode($item->colors, true) as $color)
-                            <span class="inline-block px-2 py-1 bg-gray-200 rounded mr-2">
+                            <span class="inline-block px-2 py-1 mr-2 bg-gray-200 rounded">
                                 {{ $color['name'] }}
                             </span>
                         @endforeach
                     <li class="text-gray-600">
                         14 - variations->colors:
                         @foreach ($item->variants as $variant)
-                            <span class="inline-block px-2 py-1 bg-gray-200 rounded mr-2">
+                            <span class="inline-block px-2 py-1 mr-2 bg-gray-200 rounded">
                                 {{ $variant->itemColor->name }}
                             </span>
                         @endforeach
@@ -103,16 +200,16 @@
 
                 </ul>
 
-                {{-- <div class="mt-6 flex space-x-4">
+                {{-- <div class="flex mt-6 space-x-4">
                     <button @click="showModal = true"
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded text-lg flex-1">
+                        class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
                         Add to Cart
                     </button>
-                    <button class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded text-lg flex-1">Buy Now</button>
+                    <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy Now</button>
                 </div> --}}
 
                 <table class="min-w-full text-sm text-left">
-                    <thead class="bg-gray-100 text-xs font-semibold text-gray-700">
+                    <thead class="text-xs font-semibold text-gray-700 bg-gray-100">
                         <tr>
                             <th class="px-4 py-2">Color</th>
                             <th class="px-4 py-2">Size</th>
@@ -149,7 +246,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Choose Color:</label>
                         <select x-model="selectedColor" @change="updatePrice()"
-                            class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                             <option value="">-- Select Color --</option>
                             <template x-for="color in colors" :key="color">
                                 <option x-text="color" :value="color"></option>
@@ -364,17 +461,18 @@
             }" x-cloak>
                 {{-- Trigger Button --}}
 
-                <div class="mt-6 flex space-x-4">
+                <div class="flex mt-6 space-x-4">
 
                     <button @click="showModal = true"
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded text-lg flex-1">
+                        class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
                         Add to Cart
                     </button>
-                    <button class="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded text-lg flex-1">Buy Now</button>
+                    <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy
+                        Now</button>
                 </div>
 
                 {{-- Overlay --}}
-                <div x-show="showModal" class="fixed inset-0 bg-black/40 z-40" @click="showModal = false"
+                <div x-show="showModal" class="fixed inset-0 z-40 bg-black/40" @click="showModal = false"
                     x-transition.opacity>
                 </div>
 
@@ -384,14 +482,14 @@
                     <!-- Close Button -->
                     <div class="flex justify-end">
                         <button @click="showModal = false"
-                            class="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+                            class="text-2xl text-gray-400 hover:text-gray-600">&times;</button>
                     </div>
 
                     <!-- Product Preview -->
                     <div class="flex items-center gap-4 mb-4">
-                        {{-- <img src="/img/product.jpg" alt="Product" class="w-20 h-20 rounded border object-cover"> --}}
+                        {{-- <img src="/img/product.jpg" alt="Product" class="object-cover w-20 h-20 border rounded"> --}}
                         <img :src="selectedColor ? selectedColor.img : '/img/product.jpg'" alt="Product"
-                            class="w-20 h-20 rounded border object-cover">
+                            class="object-cover w-20 h-20 border rounded">
 
                         {{-- <div>
                             <div class="text-lg font-semibold text-red-500">฿<span x-text="item.price"></span></div>
@@ -439,18 +537,18 @@
 
                     <!-- Color Selector -->
                     {{-- <div class="mb-4">
-                        <div class="font-semibold text-sm mb-2">COLOR</div>
+                        <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(color, index) in item.colors" :key="index">
                                 <button type="button" @click="!color.disabled && (selectedColor = color)"
                                     {{-- <button type="button" @click="if (!color.disabled) { selectedColor = color.name; updatePrice(); }"
-                                    class="flex flex-col items-center border rounded-md px-2 py-1 w-20 text-xs"
+                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
                                     :class="{
                                         'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
                                         'border-black bg-black text-white': selectedColor?.name === color.name && !color
                                             .disabled
                                     }">
-                                    <img :src="color.img" class="w-10 h-10 object-cover rounded mb-1" alt="">
+                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded" alt="">
                                     <span x-text="color.name"></span>
                                 </button>
                             </template>
@@ -462,16 +560,17 @@
 
                     <!-- Color Selector -->
                     <div class="mb-4">
-                        <div class="font-semibold text-sm mb-2">COLOR</div>
+                        <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(color, index) in colors" :key="index">
                                 <button type="button" @click="!color.disabled && (selectedColor = color, updatePrice())"
-                                    class="flex flex-col items-center border rounded-md px-2 py-1 w-20 text-xs"
+                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
                                     :class="{
                                         'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
                                         'border-black bg-black text-white': selectedColor === color && !color.disabled
                                     }">
-                                    <img :src="color.img" class="w-10 h-10 object-cover rounded mb-1" alt="">
+                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded"
+                                        alt="">
                                     <span x-text="color"></span>
                                 </button>
                             </template>
@@ -484,18 +583,18 @@
 
                     <!-- Color Selector -->
                     {{-- <div class="mb-4">
-                        <div class="font-semibold text-sm mb-2">COLOR</div>
+                        <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(variant, index) in item.variants" :key="index">
                                 <button type="button" @click="!variant.disabled && (selectedColor = variant.color)"
-                                    class="flex flex-col items-center border rounded-md px-2 py-1 w-20 text-xs"
+                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
                                     :class="{
                                         'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': variant
                                             .disabled,
                                         'border-black bg-black text-white': selectedColor === variant.color && !variant
                                             .disabled
                                     }">
-                                    <img :src="variant.img" class="w-10 h-10 object-cover rounded mb-1" alt="">
+                                    <img :src="variant.img" class="object-cover w-10 h-10 mb-1 rounded" alt="">
                                     <span x-text="variant.color"></span>
                                 </button>
                             </template>
@@ -504,17 +603,17 @@
 
                     <!-- Color Selector (2) -->
                     {{-- <div class="mb-4">
-                        <div class="font-semibold text-sm mb-2">COLOR</div>
+                        <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(color, index) in item.colors" :key="index">
                                 <button type="button" @click="!color.disabled && (selectedColor = color.name)"
-                                    class="flex flex-col items-center border rounded-md px-2 py-1 w-20 text-xs"
+                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
                                     :class="{
                                         'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
                                         'border-black bg-black text-white': selectedColor === color.name && !color
                                             .disabled
                                     }">
-                                    <img :src="color.img" class="w-10 h-10 object-cover rounded mb-1"
+                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded"
                                         alt="">
                                     <span x-text="color.name"></span>
                                 </button>
@@ -539,11 +638,11 @@
 
                     <!-- Size Selector -->
                     <div class="mb-4">
-                        <div class="font-semibold text-sm mb-2">SIZE</div>
+                        <div class="mb-2 text-sm font-semibold">SIZE</div>
                         <div class="grid grid-cols-2 gap-2">
                             <template x-for="(size, index) in item.sizes" :key="index">
                                 <button type="button" @click="!size.disabled && (selectedSize = size.value)"
-                                    class="border rounded-md px-3 py-2 text-xs text-left"
+                                    class="px-3 py-2 text-xs text-left border rounded-md"
                                     :class="{
                                         'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
                                         'bg-black text-white': selectedSize === size.value && !size.disabled
@@ -558,7 +657,7 @@
 
                     <!-- Packaging Option Selector -->
                     {{-- <div class="mb-6">
-                        <div class="font-semibold text-sm mb-2">Packaging</div>
+                        <div class="mb-2 text-sm font-semibold">Packaging</div>
                         <select name="packaging_details" class="form-select">
                             <template x-for="option in item.packaging_details" :key="option.name">
                                 <option :value="option.name" x-text="`${option.name} (${option.quantity})`"></option>
@@ -569,12 +668,12 @@
 
                     <!-- ---------------------------------------------------------- -->
                     <div class="mb-6">
-                        <div class="font-semibold text-sm mb-2">Packaging</div>
+                        <div class="mb-2 text-sm font-semibold">Packaging</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(option, index) in item.packaging_details" :key="option.name">
                                 <button type="button"
                                     @click="!option.disabled && (selectedPackaging = option, updatePrice())"
-                                    class="border rounded-md px-4 py-2 text-sm"
+                                    class="px-4 py-2 text-sm border rounded-md"
                                     :class="{
                                         'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': option.disabled,
                                         'border-black bg-black text-white': selectedPackaging?.name === option.name && !
@@ -593,7 +692,7 @@
                             <template x-for="(packaging_detail, index) in item.packaging_details" :key="index">
                                 <button type="button"
                                     @click="!packaging_detail.disabled && (selectedSizePackaging_detail = packaging_details.value)"
-                                    class="border rounded-md px-3 py-2 text-xs text-left"
+                                    class="px-3 py-2 text-xs text-left border rounded-md"
                                     :class="{
                                         'bg-gray-100 text-gray-400 cursor-not-allowed': packaging_detail.disabled,
                                         'bg-black text-white': selectedSizePackaging_detail === packaging_detail
@@ -610,7 +709,7 @@
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Choose Color:</label>
                                 <select x-model="selectedColor" @change="updatePrice()"
-                                    class="mt-1 block w-full border-gray-300 rounded-md shadow-sm">
+                                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                                     <option value="">-- Select Color --</option>
                                     <template x-for="color in colors" :key="color">
                                         <option x-text="color" :value="color"></option>
@@ -640,13 +739,13 @@
 
                     <!-- Quantity Control -->
                     <div class="mb-6">
-                        <div class="font-semibold text-sm mb-2">Quantity</div>
-                        <div class="flex items-center border w-max px-2 rounded">
-                            <button type="button" class="text-lg px-2"
+                        <div class="mb-2 text-sm font-semibold">Quantity</div>
+                        <div class="flex items-center px-2 border rounded w-max">
+                            <button type="button" class="px-2 text-lg"
                                 @click="quantity = Math.max(1, quantity - 1)">–</button>
                             <input type="number" x-model="quantity" min="1"
-                                class="w-12 text-center border-x outline-none" />
-                            <button type="button" class="text-lg px-2" @click="quantity++">+</button>
+                                class="w-12 text-center outline-none border-x" />
+                            <button type="button" class="px-2 text-lg" @click="quantity++">+</button>
                         </div>
                     </div>
 
@@ -700,7 +799,7 @@
 
                     <!-- Add to Cart Button -->
                     <button :disabled="!selectedColor || !selectedSize" @click="addToCart()"
-                        class="w-full py-3 font-bold rounded text-white"
+                        class="w-full py-3 font-bold text-white rounded"
                         :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
                         ADD TO CART
                     </button>
