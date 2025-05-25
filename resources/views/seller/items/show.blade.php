@@ -2,10 +2,57 @@
 
 
 @php
+    // Item-level images
+    $itemImages = collect();
+    if ($item->product_images) {
+        $decodedImages = json_decode($item->product_images, true);
+        if (is_array($decodedImages)) {
+            $itemImages = collect($decodedImages);
+        }
+    }
+
+    // Variant color images
+    $variantColorImages = $item->variants
+        ->map(function ($variant) {
+            return asset($variant->itemColor->image_path);
+        })
+        ->unique();
+
+    // Size-related images (assuming you have image_path in itemSize)
+    $sizeImages = $item->variants
+        ->map(function ($variant) {
+            return optional($variant->itemSize)->image_path ? asset($variant->itemSize->image_path) : null;
+        })
+        ->filter()
+        ->unique();
+
+    // Packaging images (assuming you have image_path in itemPackagingType)
+    $packagingImages = $item->variants
+        ->map(function ($variant) {
+            return optional($variant->itemPackagingType)->image_path
+                ? asset($variant->itemPackagingType->image_path)
+                : null;
+        })
+        ->filter()
+        ->unique();
+
+    // Merge them into one image collection
+    $allImages = $itemImages
+        ->merge($variantColorImages)
+        ->merge($sizeImages)
+        ->merge($packagingImages)
+        ->unique()
+        ->values();
+@endphp
+
+
+
+@php
     $variantData = $item->variants->map(function ($variant) {
         return [
             'id' => $variant->id,
             'color' => $variant->itemColor->name,
+            'img' => asset($variant->itemColor->image_path),
             'size' => $variant->itemSize->name,
             'packaging' => $variant->itemPackagingType->name,
             'price' => $variant->price,
@@ -24,7 +71,7 @@
         <div class="overflow-hidden bg-white rounded-lg shadow-lg">
 
             {{-- Swiper Image Slider --}}
-            <div class="relative">
+            {{-- <div class="relative">
                 <div class="swiper mySwiper">
                     <div class="swiper-wrapper">
                         @if ($item && $item->product_images)
@@ -41,19 +88,38 @@
                         @endif
                     </div>
 
-                    {{-- Arrows + Dots --}}
+                    {{-- Arrows + Dots
                     <div class="swiper-button-next"></div>
                     <div class="swiper-button-prev"></div>
                     <div class="swiper-pagination"></div>
                 </div>
+            </div> --}}
+
+            <div class="swiper mySwiper">
+                <div class="swiper-wrapper">
+                    @forelse ($allImages as $image)
+                        <div class="swiper-slide">
+                            <img src="{{ $image }}" alt="Product Image" class="object-cover w-full rounded">
+                        </div>
+                    @empty
+                        <div class="p-4 swiper-slide">No images available.</div>
+                    @endforelse
+                </div>
+
+                {{-- Arrows + Dots --}}
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+                <div class="swiper-pagination"></div>
             </div>
+
 
             {{-- ------------------------------------------------------------------------ --}}
             {{-- Table of $variantData --}}
 
             <script>
                 const variantData = @json($variantData);
-                console.log(variantData);
+                console.log('$variantData', @json($variantData));
+                console.log('$allImages', @json($allImages));
             </script>
 
             <div class="overflow-x-auto">
@@ -272,19 +338,56 @@
 
                             init() {
                                 this.selectedPrice = null;
+                                this.selectedStock = null;
                             },
 
                             get colors() {
                                 return [...new Set(this.variants.map(v => v.color))];
                             },
 
+                            // get colors() {
+                            //     // Get unique colors
+                            //     const seen = new Set();
+                            //     return this.variants.filter(v => {
+                            //         if (seen.has(v.color)) return false;
+                            //         seen.add(v.color);
+                            //         return true;
+                            //     });
+                            // },
+
+                            get colors() {
+                                const uniqueColors = [];
+                                const seen = new Set();
+
+                                this.variants.forEach(v => {
+                                    if (!seen.has(v.color)) {
+                                        seen.add(v.color);
+                                        uniqueColors.push({
+                                            name: v.color,
+                                            img: v.img,
+                                            disabled: v.disabled
+                                        });
+                                    }
+                                });
+
+                                return uniqueColors;
+                            },
+
+
+
                             get formattedPrice() {
                                 return this.selectedPrice !== null ? this.selectedPrice.toFixed(2) : '';
                             },
 
                             updatePrice() {
-                                const match = this.variants.find(v => v.color === this.selectedColor);
+                                // const match = this.variants.find(v => v.color === this.selectedColor);
+                                // this.selectedPrice = match ? match.price : null;
+                                // this.selectedImg = match ? match.img : '';
+                                // this.selectedDisabled = match ? match.disabled : false;
+
+                                const match = this.variants.find(v => v.color === this.selectedColor.name);
                                 this.selectedPrice = match ? match.price : null;
+                                this.selectedStock = match ? match.stock : null;
                             }
                         };
                     }
@@ -307,20 +410,13 @@
             {{-- Alpine.js Variant Modal --}}
             <div x-data="{
                 showModal: false,
+                quantity: 1,
                 selectedColor: null,
                 selectedSize: null,
-                selectedPrice: null,
                 selectedPackaging: null,
-                formattedPrice: '',
-
-
-                quantity: 1,
-
-                {{-- selectedColor: null,
-                selectedSize: null,
                 selectedPrice: null,
+                selectedStock: null,
                 formattedPrice: '',
-                quantity: 1, --}}
 
 
                 {{-- variantSelector: {{ $variantData->toJson() }}, --}}
@@ -342,28 +438,6 @@
                             {{ $variant->stock }}@if (!$loop->last),@endif @endforeach
                     ],
 
-
-
-                    {{-- stock: {{ $item->stock }}, --}}
-
-                    {{-- colors: [
-                        { name: 'BONE', img: '/img/colors/bone.png', disabled: false },
-                        { name: 'WHITE', img: '/img/colors/white.png', disabled: false },
-                        { name: 'BLACK', img: '/img/colors/black.png', disabled: false },
-                        { name: 'PURPLE', img: '/img/colors/purple.png', disabled: false },
-                        { name: 'BUTTER CORN', img: '/img/colors/butter-corn.png', disabled: true },
-                        { name: 'QUARTZ', img: '/img/colors/quartz.png', disabled: false }
-                    ],
-
-                    {{-- colors: [
-                        @foreach ($item->colors as $color)
-                            {
-                                name: '{{ $color->name }}',
-                                img: '{{ asset($color->image_path) }}',
-                                disabled: {{ $color->disabled ? 'true' : 'false' }}
-                            }@if (!$loop->last),@endif @endforeach
-                    ], --}}
-
                     colors: [
                         @foreach ($item->variants as $variant)
                             {
@@ -372,16 +446,6 @@
                                 disabled: {{ $variant->itemColor->disabled ? 'true' : 'false' }}
                             }@if (!$loop->last),@endif @endforeach
                     ],
-
-                    {{-- packaging_detail: [
-                        @foreach ($item->variants as $variant)
-                            {
-                                name: '{{ $variant->itemPackagingType->name }}',
-                                quantity: {{ $variant->packaging_quantity }}
-                            }@if (!$loop->last),@endif @endforeach
-                    ], --}}
-
-
 
                     {{-- variants: [
                         @foreach ($item->variants as $variant)
@@ -438,8 +502,6 @@
                     this.showModal = false;
                     window.location.href = '/cart'; // Redirect to the cart page
                 },
-
-                selectedColor: null,
 
                 get selectedVariant() {
                     if (!this.selectedColor || !this.selectedSize) return null;
@@ -521,7 +583,7 @@
 
                         <!------------------------------>
                         <div class="text-sm text-gray-500">
-                            Stock: <span x-text="selectedVariant ? selectedVariant.stock : item.stock"></span>
+                            Stock:<span x-text="selectedStock"></span>
                         </div>
 
 
@@ -558,7 +620,7 @@
 
 
 
-                    <!-- Color Selector -->
+                    {{-- <!-- Color Selector -->
                     <div class="mb-4">
                         <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
@@ -569,13 +631,34 @@
                                         'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
                                         'border-black bg-black text-white': selectedColor === color && !color.disabled
                                     }">
-                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded"
+                                    {{-- <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded"
+                                    <img :src="selectedColor?.img" alt="" class="w-full h-auto rounded"
                                         alt="">
                                     <span x-text="color"></span>
                                 </button>
                             </template>
                         </div>
+                    </div> --}}
+
+                    <!-- Color Selector -->
+                    <div class="mb-4">
+                        <div class="mb-2 text-sm font-semibold">COLOR</div>
+                        <div class="flex flex-wrap gap-2">
+                            <template x-for="(color, index) in colors" :key="index">
+                                <button type="button" @click="!color.disabled && (selectedColor = color, updatePrice())"
+                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
+                                    :class="{
+                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
+                                        'border-black bg-black text-white': selectedColor?.name === color.name && !color
+                                            .disabled
+                                    }">
+                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded" />
+                                    <span x-text="color.name"></span>
+                                </button>
+                            </template>
+                        </div>
                     </div>
+
 
 
 
@@ -808,7 +891,6 @@
 
         </div>
     </div>
-
 @endsection
 
 {{-- @section('scripts')

@@ -53,20 +53,21 @@
 </head>
 
 
-<nav class="bg-white dark:bg-gray-800 antialiased">
-    <div class="max-w-screen-xl px-4 mx-auto 2xl:px-0 py-4">
+<nav class="antialiased bg-white dark:bg-gray-800">
+    <div class="max-w-screen-xl px-4 py-4 mx-auto 2xl:px-0">
         <div class="flex items-center justify-between">
 
             <div class="flex items-center space-x-8">
                 <div class="shrink-0">
-                    <a href="#" title="" class="">
-                        <img class="block w-auto h-8 dark:hidden" {{-- src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full.svg" alt="" --}}>
+                    <a href="#" title="" class="flex items-center">
+                        <img class="block w-auto h-8 dark:hidden" src="..." alt=""> {{-- src="https://flowbite.s3.amazonaws.com/blocks/e-commerce/logo-full.svg" --}}
                         <span
-                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Mezgebe Dirijit</span>
+                            class="self-center text-xl font-semibold sm:text-2xl whitespace-nowrap dark:text-white">Mezgebe
+                            Dirijit</span>
                     </a>
                 </div>
 
-                <ul class="hidden lg:flex items-center justify-start gap-6 md:gap-8 py-3 sm:justify-center">
+                <ul class="items-center justify-start hidden gap-6 py-3 ml-auto lg:flex md:gap-8 sm:justify-center">
                     <li>
                         <a href="#" title=""
                             class="flex text-sm font-medium text-gray-900 hover:text-primary-700 dark:text-white dark:hover:text-primary-500">
@@ -103,7 +104,7 @@
             <div class="flex items-center lg:space-x-2">
 
                 <button id="myCartDropdownButton1" data-dropdown-toggle="myCartDropdown1" type="button"
-                    class="inline-flex items-center rounded-lg justify-center p-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium leading-none text-gray-900 dark:text-white">
+                    class="inline-flex items-center justify-center p-2 text-sm font-medium leading-none text-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
                     <span class="sr-only">
                         Cart
                     </span>
@@ -113,7 +114,7 @@
                             d="M5 4h1.5L9 16m0 0h8m-8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm8 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4Zm-8.5-3h9.25L19 7H7.312" />
                     </svg>
                     <span class="hidden sm:flex">My Cart</span>
-                    <svg class="hidden sm:flex w-4 h-4 text-gray-900 dark:text-white ms-1" aria-hidden="true"
+                    <svg class="hidden w-4 h-4 text-gray-900 sm:flex dark:text-white ms-1" aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
                         viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -122,13 +123,13 @@
                 </button>
 
                 <div id="myCartDropdown1"
-                    class="hidden z-10 mx-auto max-w-sm space-y-4 overflow-hidden rounded-lg bg-white p-4 antialiased shadow-lg dark:bg-gray-800">
+                    class="z-10 hidden max-w-sm p-4 mx-auto space-y-4 overflow-hidden antialiased bg-white rounded-lg shadow-lg dark:bg-gray-800">
 
 
                     <div class="grid grid-cols-2">
                         <div>
                             <a href="#"
-                                class="truncate text-sm font-semibold leading-none text-gray-900 dark:text-white hover:underline">
+                                class="text-sm font-semibold leading-none text-gray-900 truncate dark:text-white hover:underline">
                                 Explore</a>
                             <p class="mt-0.5 truncate text-sm font-normal text-gray-500 dark:text-gray-400">Cart
                                 empty</p>
@@ -140,7 +141,7 @@
                             <button data-tooltip-target="tooltipRemoveItem1a" type="button"
                                 class="text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600">
                                 <span class="sr-only"> Remove </span>
-                                <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                     fill="currentColor" viewBox="0 0 24 24">
                                     <path fill-rule="evenodd"
                                         d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
@@ -148,7 +149,7 @@
                                 </svg>
                             </button>
                             <div id="tooltipRemoveItem1a" role="tooltip"
-                                class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700">
+                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                 Remove item
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div> --}}
@@ -161,7 +162,7 @@
                     <div class="grid grid-cols-2">
                         <div>
                             <a href="#"
-                                class="truncate text-sm font-semibold leading-none text-gray-900 dark:text-white hover:underline">Apple
+                                class="text-sm font-semibold leading-none text-gray-900 truncate dark:text-white hover:underline">Apple
                                 iPad Air</a>
                             <p class="mt-0.5 truncate text-sm font-normal text-gray-500 dark:text-gray-400">$499</p>
                         </div>
@@ -172,7 +173,7 @@
                             <button data-tooltip-target="tooltipRemoveItem2a" type="button"
                                 class="text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600">
                                 <span class="sr-only"> Remove </span>
-                                <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                     fill="currentColor" viewBox="0 0 24 24">
                                     <path fill-rule="evenodd"
                                         d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
@@ -180,7 +181,7 @@
                                 </svg>
                             </button>
                             <div id="tooltipRemoveItem2a" role="tooltip"
-                                class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700">
+                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                 Remove item
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
@@ -190,7 +191,7 @@
                     <div class="grid grid-cols-2">
                         <div>
                             <a href="#"
-                                class="truncate text-sm font-semibold leading-none text-gray-900 dark:text-white hover:underline">Apple
+                                class="text-sm font-semibold leading-none text-gray-900 truncate dark:text-white hover:underline">Apple
                                 Watch SE</a>
                             <p class="mt-0.5 truncate text-sm font-normal text-gray-500 dark:text-gray-400">$598</p>
                         </div>
@@ -201,7 +202,7 @@
                             <button data-tooltip-target="tooltipRemoveItem3b" type="button"
                                 class="text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600">
                                 <span class="sr-only"> Remove </span>
-                                <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                     fill="currentColor" viewBox="0 0 24 24">
                                     <path fill-rule="evenodd"
                                         d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
@@ -209,7 +210,7 @@
                                 </svg>
                             </button>
                             <div id="tooltipRemoveItem3b" role="tooltip"
-                                class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700">
+                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                 Remove item
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
@@ -219,7 +220,7 @@
                     <div class="grid grid-cols-2">
                         <div>
                             <a href="#"
-                                class="truncate text-sm font-semibold leading-none text-gray-900 dark:text-white hover:underline">Sony
+                                class="text-sm font-semibold leading-none text-gray-900 truncate dark:text-white hover:underline">Sony
                                 Playstation 5</a>
                             <p class="mt-0.5 truncate text-sm font-normal text-gray-500 dark:text-gray-400">$799</p>
                         </div>
@@ -230,7 +231,7 @@
                             <button data-tooltip-target="tooltipRemoveItem4b" type="button"
                                 class="text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600">
                                 <span class="sr-only"> Remove </span>
-                                <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                     fill="currentColor" viewBox="0 0 24 24">
                                     <path fill-rule="evenodd"
                                         d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
@@ -238,7 +239,7 @@
                                 </svg>
                             </button>
                             <div id="tooltipRemoveItem4b" role="tooltip"
-                                class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700">
+                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                 Remove item
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
@@ -248,7 +249,7 @@
                     <div class="grid grid-cols-2">
                         <div>
                             <a href="#"
-                                class="truncate text-sm font-semibold leading-none text-gray-900 dark:text-white hover:underline">Apple
+                                class="text-sm font-semibold leading-none text-gray-900 truncate dark:text-white hover:underline">Apple
                                 iMac 20"</a>
                             <p class="mt-0.5 truncate text-sm font-normal text-gray-500 dark:text-gray-400">$8,997</p>
                         </div>
@@ -259,7 +260,7 @@
                             <button data-tooltip-target="tooltipRemoveItem5b" type="button"
                                 class="text-red-600 hover:text-red-700 dark:text-red-500 dark:hover:text-red-600">
                                 <span class="sr-only"> Remove </span>
-                                <svg class="h-4 w-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+                                <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
                                     fill="currentColor" viewBox="0 0 24 24">
                                     <path fill-rule="evenodd"
                                         d="M2 12a10 10 0 1 1 20 0 10 10 0 0 1-20 0Zm7.7-3.7a1 1 0 0 0-1.4 1.4l2.3 2.3-2.3 2.3a1 1 0 1 0 1.4 1.4l2.3-2.3 2.3 2.3a1 1 0 0 0 1.4-1.4L13.4 12l2.3-2.3a1 1 0 0 0-1.4-1.4L12 10.6 9.7 8.3Z"
@@ -267,7 +268,7 @@
                                 </svg>
                             </button>
                             <div id="tooltipRemoveItem5b" role="tooltip"
-                                class="tooltip invisible absolute z-10 inline-block rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white opacity-0 shadow-sm transition-opacity duration-300 dark:bg-gray-700">
+                                class="absolute z-10 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
                                 Remove item
                                 <div class="tooltip-arrow" data-popper-arrow></div>
                             </div>
@@ -285,7 +286,7 @@
 
 
                 <button id="userDropdownButton1" data-dropdown-toggle="userDropdown1" type="button"
-                    class="inline-flex items-center rounded-lg justify-center p-2 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium leading-none text-gray-900 dark:text-white">
+                    class="inline-flex items-center justify-center p-2 text-sm font-medium leading-none text-gray-900 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
                     <svg class="w-5 h-5 me-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24"
                         height="24" fill="none" viewBox="0 0 24 24">
                         <path stroke="currentColor" stroke-width="2"
@@ -301,36 +302,33 @@
                 </button>
 
                 <div id="userDropdown1"
-                    class="hidden z-10 w-56 divide-y divide-gray-100 overflow-hidden overflow-y-auto rounded-lg bg-white antialiased shadow dark:divide-gray-600 dark:bg-gray-700">
-                    <ul class="p-2 text-start text-sm font-medium text-gray-900 dark:text-white">
+                    class="z-10 hidden w-56 overflow-hidden overflow-y-auto antialiased bg-white divide-y divide-gray-100 rounded-lg shadow dark:divide-gray-600 dark:bg-gray-700">
+                    <ul class="p-2 text-sm font-medium text-gray-900 text-start dark:text-white">
                         <li><a href="#" title=""
-                                class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
+                                class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-600">
                                 Favourites </a></li>
 
                         @if (Route::has('login'))
                             @auth
                                 <li><a href="{{ url('/dashboard') }}" title=""
-                                        class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
+                                        class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-600">
                                         Dashboard </a></li>
 
 
 
                                 <form action="{{ route('logout') }}" method="POST">
                                     @csrf
-                                    <button type="submit" class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">Sign out</button>
+                                    <button type="submit"
+                                        class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-600">Sign
+                                        out</button>
                                 </form>
-
-
-
-
-
                             @else
                                 <li><a href="{{ route('login') }}" title=""
-                                        class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
+                                        class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-600">
                                         Log in </a></li>
                                 @if (Route::has('register'))
                                     <li><a href="{{ route('register') }}" title=""
-                                            class="inline-flex w-full items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-gray-100 dark:hover:bg-gray-600">
+                                            class="inline-flex items-center w-full gap-2 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-600">
                                             Register </a></li>
                                 @endif
                             @endauth
@@ -343,7 +341,7 @@
 
                 <button type="button" data-collapse-toggle="ecommerce-navbar-menu-1"
                     aria-controls="ecommerce-navbar-menu-1" aria-expanded="false"
-                    class="inline-flex lg:hidden items-center justify-center hover:bg-gray-100 rounded-md dark:hover:bg-gray-700 p-2 text-gray-900 dark:text-white">
+                    class="inline-flex items-center justify-center p-2 text-gray-900 rounded-md lg:hidden hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-white">
                     <span class="sr-only">
                         Open Menu
                     </span>
@@ -357,8 +355,8 @@
         </div>
 
         <div id="ecommerce-navbar-menu-1"
-            class="bg-gray-50 dark:bg-gray-700 dark:border-gray-600 border border-gray-200 rounded-lg py-3 hidden px-4 mt-4">
-            <ul class="text-gray-900 dark:text-white text-sm font-medium space-y-3">
+            class="hidden px-4 py-3 mt-4 border border-gray-200 rounded-lg bg-gray-50 dark:bg-gray-700 dark:border-gray-600">
+            <ul class="space-y-3 text-sm font-medium text-gray-900 dark:text-white">
                 <li>
                     <a href="#" class="hover:text-primary-700 dark:hover:text-primary-500">Home</a>
                 </li>
@@ -384,18 +382,19 @@
 
 
 
-<body class="font-figtree bg-gray-50 dark:bg-black text-gray-900 dark:text-white">
+
+<body class="text-gray-900 font-figtree bg-gray-50 dark:bg-black dark:text-white">
 
     <!-- Header Section -->
 
     <!-- Main Section -->
 
-    <main class="pt-24 pb-12 px-4 sm:px-6 lg:px-8">
+    <main class="px-4 pt-24 pb-12 sm:px-6 lg:px-8">
 
         <section class="bg-white dark:bg-gray-900">
-            <div class="gap-16 items-center py-8 px-4 mx-auto max-w-screen-xl lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
+            <div class="items-center max-w-screen-xl gap-16 px-4 py-8 mx-auto lg:grid lg:grid-cols-2 lg:py-16 lg:px-6">
                 <div class="font-light text-gray-500 sm:text-lg dark:text-gray-400">
-                    <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">We Didn't
+                    <h2 class="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">We Didn't
                         Just Create a System</h2>
                     <p class="mb-4">We are experts in inventory management, sales tracking, and seamless POS
                         solutions. Problem solvers driven by innovation. Agile enough to adapt to your business needs
@@ -407,7 +406,7 @@
                 <div class="grid grid-cols-2 gap-4 mt-8">
                     <img class="w-full rounded-lg" src="{{ asset('images/homepage/office-long-1.png') }}"
                         alt="office content 1">
-                    <img class="mt-4 w-full lg:mt-10 rounded-lg"
+                    <img class="w-full mt-4 rounded-lg lg:mt-10"
                         src="{{ asset('images/homepage/office-long-2.png') }}" alt="office content 2">
                 </div>
             </div>
@@ -416,9 +415,9 @@
 
 
         <section class="bg-white dark:bg-gray-900">
-            <div class="py-8 px-4 mx-auto max-w-screen-xl sm:py-16 lg:px-6">
+            <div class="max-w-screen-xl px-4 py-8 mx-auto sm:py-16 lg:px-6">
                 <div class="max-w-screen-md mb-8 lg:mb-16">
-                    <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Designed for
+                    <h2 class="mb-4 text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white">Designed for
                         business teams like yours, Mezgebe Dirijit focuses on empowering companies with innovative
                         technology and POS solutions to manage their inventory, sales, and staff more efficiently. By
                         leveraging cutting-edge tools, we help businesses unlock long-term value, drive operational
@@ -427,7 +426,7 @@
                 <div class="space-y-8 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-12 md:space-y-0">
                     <div>
                         <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                            class="flex items-center justify-center w-10 h-10 mb-4 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
                             <svg class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -443,7 +442,7 @@
                     </div>
                     <div>
                         <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                            class="flex items-center justify-center w-10 h-10 mb-4 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
                             <svg class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -459,7 +458,7 @@
                     </div>
                     <div>
                         <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                            class="flex items-center justify-center w-10 h-10 mb-4 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
                             <svg class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -477,7 +476,7 @@
                     </div>
                     <div>
                         <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                            class="flex items-center justify-center w-10 h-10 mb-4 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
                             <svg class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -494,7 +493,7 @@
                     </div>
                     <div>
                         <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                            class="flex items-center justify-center w-10 h-10 mb-4 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
                             <svg class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -508,7 +507,7 @@
                     </div>
                     <div>
                         <div
-                            class="flex justify-center items-center mb-4 w-10 h-10 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
+                            class="flex items-center justify-center w-10 h-10 mb-4 rounded-full bg-primary-100 lg:h-12 lg:w-12 dark:bg-primary-900">
                             <svg class="w-5 h-5 text-primary-600 lg:w-6 lg:h-6 dark:text-primary-300"
                                 fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                 <path fill-rule="evenodd"
@@ -528,7 +527,7 @@
         <div id="accordion-collapse" data-accordion="collapse">
             <h2 id="accordion-collapse-heading-1">
                 <button type="button"
-                    class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                    class="flex items-center justify-between w-full gap-3 p-5 font-medium text-gray-500 border border-b-0 border-gray-200 rtl:text-right rounded-t-xl focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
                     data-accordion-target="#accordion-collapse-body-1" aria-expanded="true"
                     aria-controls="accordion-collapse-body-1">
                     <span>What is Mezgebe Dirijit?</span>
@@ -551,7 +550,7 @@
             </div>
             <h2 id="accordion-collapse-heading-2">
                 <button type="button"
-                    class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-b-0 border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                    class="flex items-center justify-between w-full gap-3 p-5 font-medium text-gray-500 border border-b-0 border-gray-200 rtl:text-right focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
                     data-accordion-target="#accordion-collapse-body-2" aria-expanded="false"
                     aria-controls="accordion-collapse-body-2">
                     <span>Is Mezgebe Dirijit available now?</span>
@@ -575,7 +574,7 @@
             </div>
             <h2 id="accordion-collapse-heading-3">
                 <button type="button"
-                    class="flex items-center justify-between w-full p-5 font-medium rtl:text-right text-gray-500 border border-gray-200 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 gap-3"
+                    class="flex items-center justify-between w-full gap-3 p-5 font-medium text-gray-500 border border-gray-200 rtl:text-right focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-800 dark:border-gray-700 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
                     data-accordion-target="#accordion-collapse-body-3" aria-expanded="false"
                     aria-controls="accordion-collapse-body-3">
                     <span>What are the differences between a regularly managed company and a company that uses Mezgebe
@@ -599,7 +598,7 @@
                         tailored for modern business needs.</p>
                     <p class="mb-2 text-gray-500 dark:text-gray-400">Discover how Mezgebe Dirijit can transform your
                         business:</p>
-                    <ul class="ps-5 text-gray-500 list-disc dark:text-gray-400">
+                    <ul class="text-gray-500 list-disc ps-5 dark:text-gray-400">
                         <li><a href="{{-- /features --}}#"
                                 class="text-blue-600 dark:text-blue-500 hover:underline">Explore Our
                                 Features</a></li>
@@ -614,13 +613,13 @@
 
         <!-- Company Info Section -->
         <section class="bg-white dark:bg-gray-900">
-            <div class="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 lg:px-12">
+            <div class="max-w-screen-xl px-4 py-8 mx-auto text-center lg:py-16 lg:px-12">
                 <a href="#"
-                    class="inline-flex justify-between items-center py-1 px-1 pr-4 mb-7 text-sm text-gray-700 bg-gray-100 rounded-full dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
+                    class="inline-flex items-center justify-between px-1 py-1 pr-4 text-sm text-gray-700 bg-gray-100 rounded-full mb-7 dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700"
                     role="alert">
                     <span class="text-xs bg-primary-600 rounded-full text-white px-4 py-1.5 mr-3">New</span> <span
                         class="text-sm font-medium">Mezgebe Dirijit is out! See what's new</span>
-                    <svg class="ml-2 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                    <svg class="w-5 h-5 ml-2" fill="currentColor" viewBox="0 0 20 20"
                         xmlns="http://www.w3.org/2000/svg">
                         <path fill-rule="evenodd"
                             d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
@@ -628,7 +627,7 @@
                     </svg>
                 </a>
                 <h1
-                    class="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+                    class="mb-4 text-4xl font-extrabold leading-none tracking-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
                     We help keep your campany run smoothly</h1>
                 <p class="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 xl:px-48 dark:text-gray-400">Here
                     at Mezgebe Dirijit, we focus on helping businesses streamline their inventory, sales, and staff
@@ -636,11 +635,11 @@
                     empower companies to efficiently manage their operations, optimize their processes, and unlock
                     long-term growth and success.</p>
                 <div
-                    class="flex flex-col mb-8 lg:mb-16 space-y-4 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
+                    class="flex flex-col mb-8 space-y-4 lg:mb-16 sm:flex-row sm:justify-center sm:space-y-0 sm:space-x-4">
                     <a href="#"
-                        class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
+                        class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-900">
                         Learn more
-                        <svg class="ml-2 -mr-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                        <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
                                 d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
@@ -648,8 +647,8 @@
                         </svg>
                     </a>
                     <a href="#"
-                        class="inline-flex justify-center items-center py-3 px-5 text-base font-medium text-center text-gray-900 rounded-lg border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                        <svg class="mr-2 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20"
+                        class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
+                        <svg class="w-5 h-5 mr-2 -ml-1" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
                             <path
                                 d="M2 6a2 2 0 012-2h6a2 2 0 012 2v8a2 2 0 01-2 2H4a2 2 0 01-2-2V6zM14.553 7.106A1 1 0 0014 8v4a1 1 0 00.553.894l2 1A1 1 0 0018 13V7a1 1 0 00-1.447-.894l-2 1z">
@@ -660,8 +659,8 @@
                 </div>
                 <div class="px-4 mx-auto text-center md:max-w-screen-md lg:max-w-screen-lg lg:px-36">
                     <span class="font-semibold text-gray-400 uppercase">Explore</span>
-                    <div class="flex flex-wrap justify-center items-center mt-8 text-gray-500 sm:justify-between">
-                        <a href="#" class="mr-5 mb-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400">
+                    <div class="flex flex-wrap items-center justify-center mt-8 text-gray-500 sm:justify-between">
+                        <a href="#" class="mb-5 mr-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400">
                             <svg class="h-8" viewBox="0 0 132 29" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -691,7 +690,7 @@
                                     fill="currentColor" />
                             </svg>
                         </a>
-                        <a href="#" class="mr-5 mb-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400">
+                        <a href="#" class="mb-5 mr-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400">
                             <svg class="h-11" viewBox="0 0 208 42" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -705,7 +704,7 @@
                                     fill="currentColor" />
                             </svg>
                         </a>
-                        <a href="#" class="mr-5 mb-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400">
+                        <a href="#" class="mb-5 mr-5 lg:mb-0 hover:text-gray-800 dark:hover:text-gray-400">
                             <svg class="h-11" viewBox="0 0 120 41" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
                                 <path
@@ -730,107 +729,116 @@
     </main>
 
     <!-- Footer Section -->
-    <footer class="bg-white dark:bg-gray-900">
-        <div class="mx-auto w-full max-w-screen-xl">
-            <div class="grid grid-cols-2 gap-8 px-4 py-6 lg:py-8 md:grid-cols-4">
-                <div>
-                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Company</h2>
-                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">About Us</a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Our Story</a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Careers</a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Blog</a>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Customer Service
-                    </h2>
-                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Contact Us</a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Shipping & Delivery</a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Returns & Exchanges</a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">FAQ</a>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal</h2>
-                    <ul class="text-gray-500 dark:text-gray-400 font-medium">
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Privacy Policy</a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Terms & Conditions</a>
-                        </li>
-                        <li class="mb-4">
-                            <a href="#" class="hover:underline">Cookie Policy</a>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Follow Us</h2>
-                    <ul class="text-gray-500 dark:text-gray-400 font-medium flex space-x-4 rtl:space-x-reverse">
-                        <li>
-                            <a href="#" class="hover:underline">
-                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                    viewBox="0 0 24 24" aria-hidden="true">
-                                    <path
-                                        d="M12 2.043c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10-4.48-10-10-10zm-1.6 14h-2.4v-6h2.4v6zm-1.2-7.2c-.8 0-1.2-.8-1.2-1.2s.4-1.2 1.2-1.2 1.2.4 1.2 1.2-.4 1.2-1.2 1.2zM12 4.5c-3.8 0-6.9 3.1-6.9 6.9h1.9c0-2.7 2.2-4.9 4.9-4.9 2.7 0 4.9 2.2 4.9 4.9h1.9c0-3.8-3.1-6.9-6.9-6.9z" />
-                                </svg>
-                                <span class="sr-only">Facebook</span>
-                            </a>
-                        </li>
-                        <li>
-                            <a href="#" class="hover:underline">
-                                <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="currentColor"
-                                    viewBox="0 0 24 24" aria-hidden="true">
-                                    <path
-                                        d="M19 3h-2c-1.1 0-2 .9-2 2v2h-2v3h2v7h3v-7h2.9l.1-3h-3v-2c0-.6.5-1 1-1h2v-3h-2c-2.2 0-4 1.8-4 4v2h-2v3h2v7h3v-7h2v-3h-2v-2c0-2.2 1.8-4 4-4h2v3h-2c-.6 0-1 .4-1 1v2h3.1l.1 3h-3v7h3v-7h2v-3h-2v-2c0-3.3-2.7-6-6-6z" />
-                                </svg>
-                                <span class="sr-only">Instagram</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-            <div class="px-4 py-6 bg-gray-100 dark:bg-gray-700 md:flex md:items-center md:justify-between">
-                <span class="text-sm text-gray-500 dark:text-gray-300 sm:text-center">
-                    © 2023 Mezgebedirijit.com - All Rights Reserved.
-                </span>
-                <span class="text-sm text-gray-500 dark:text-gray-300 sm:text-center ml-4 rtl:ml-0"
-                    id="timestamp"></span>
-            </div>
-        </div>
-    </footer>
+    {{-- <footer class="bg-white dark:bg-gray-900">
+        <div class="w-full max-w-screen-xl mx-auto">
+            <div class="grid grid-cols-2 gap-8 px-4 py-6 lg:py-8 md:grid-cols-4"> --}}
 
-    <script>
-        function updateTimestamp() {
-            const timestampElement = document.getElementById('timestamp');
-            const now = new Date().toLocaleString('en-US', {
-                timeZone: 'Africa/Addis_Ababa',
-                hour12: false,
-            });
-            timestampElement.textContent = now;
-        }
+                <footer class="bg-white dark:bg-gray-900">
+                    <div class="w-full max-w-screen-xl px-4 mx-auto sm:px-6 lg:px-8">
+                        <div class="grid grid-cols-2 gap-8 py-6 lg:py-8 md:grid-cols-4">
+                            <div class="flex flex-col items-center text-center">
+                                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Company
+                                </h2>
+                                <ul class="font-medium text-gray-500 dark:text-gray-400">
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">About Us</a>
+                                    </li>
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">Our Story</a>
+                                    </li>
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">Careers</a>
+                                    </li>
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">Blog</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="flex flex-col items-center text-center">
+                                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Customer
+                                    Service
+                                </h2>
+                                <ul class="font-medium text-gray-500 dark:text-gray-400">
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">Contact Us</a>
+                                    </li>
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">Shipping & Delivery</a>
+                                    </li>
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">Returns & Exchanges</a>
+                                    </li>
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">FAQ</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="flex flex-col items-center text-center">
+                                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Legal
+                                </h2>
+                                <ul class="font-medium text-gray-500 dark:text-gray-400">
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">Privacy Policy</a>
+                                    </li>
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">Terms & Conditions</a>
+                                    </li>
+                                    <li class="mb-4">
+                                        <a href="#" class="hover:underline">Cookie Policy</a>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="flex flex-col items-center text-center">
+                                <h2 class="mb-6 text-sm font-semibold text-gray-900 uppercase dark:text-white">Follow
+                                    Us</h2>
+                                <ul
+                                    class="flex space-x-4 font-medium text-gray-500 dark:text-gray-400 rtl:space-x-reverse">
+                                    <li>
+                                        <a href="#" class="hover:underline">
+                                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path
+                                                    d="M12 2.043c-5.52 0-10 4.48-10 10s4.48 10 10 10 10-4.48 10-10-4.48-10-10-10zm-1.6 14h-2.4v-6h2.4v6zm-1.2-7.2c-.8 0-1.2-.8-1.2-1.2s.4-1.2 1.2-1.2 1.2.4 1.2 1.2-.4 1.2-1.2 1.2zM12 4.5c-3.8 0-6.9 3.1-6.9 6.9h1.9c0-2.7 2.2-4.9 4.9-4.9 2.7 0 4.9 2.2 4.9 4.9h1.9c0-3.8-3.1-6.9-6.9-6.9z" />
+                                            </svg>
+                                            <span class="sr-only">Facebook</span>
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#" class="hover:underline">
+                                            <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg"
+                                                fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                                <path
+                                                    d="M19 3h-2c-1.1 0-2 .9-2 2v2h-2v3h2v7h3v-7h2.9l.1-3h-3v-2c0-.6.5-1 1-1h2v-3h-2c-2.2 0-4 1.8-4 4v2h-2v3h2v7h3v-7h2v-3h-2v-2c0-2.2 1.8-4 4-4h2v3h-2c-.6 0-1 .4-1 1v2h3.1l.1 3h-3v7h3v-7h2v-3h-2v-2c0-3.3-2.7-6-6-6z" />
+                                            </svg>
+                                            <span class="sr-only">Instagram</span>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="px-4 py-6 bg-gray-100 dark:bg-gray-700 md:flex md:items-center md:justify-between">
+                            <span class="text-sm text-gray-500 dark:text-gray-300 sm:text-center">
+                                © 2023 Mezgebedirijit.com - All Rights Reserved.
+                            </span>
+                            <span class="ml-4 text-sm text-gray-500 dark:text-gray-300 sm:text-center rtl:ml-0"
+                                id="timestamp"></span>
+                        </div>
+                    </div>
+                </footer>
 
-        setInterval(updateTimestamp, 1000); // Update every second
-        updateTimestamp(); // Initial call to set the timestamp immediately
-    </script>
+                <script>
+                    function updateTimestamp() {
+                        const timestampElement = document.getElementById('timestamp');
+                        const now = new Date().toLocaleString('en-US', {
+                            timeZone: 'Africa/Addis_Ababa',
+                            hour12: false,
+                        });
+                        timestampElement.textContent = now;
+                    }
+
+                    setInterval(updateTimestamp, 1000); // Update every second
+                    updateTimestamp(); // Initial call to set the timestamp immediately
+                </script>
 
 
 
@@ -895,24 +903,24 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="font-figtree bg-gray-50 dark:bg-black text-gray-900 dark:text-white">
+<body class="text-gray-900 font-figtree bg-gray-50 dark:bg-black dark:text-white">
 
     <div class="flex flex-col min-h-screen">
         <!-- Header Section -->
-        <header class="bg-gray-800 text-white py-4">
-            <div class="max-w-7xl mx-auto px-4">
+        <header class="py-4 text-white bg-gray-800">
+            <div class="px-4 mx-auto max-w-7xl">
                 <h1 class="text-3xl font-extrabold text-center">Welcome to Mezgebedirijit</h1>
-                <p class="text-xl text-center mt-2">The Best Online Store for Unique Products</p>
+                <p class="mt-2 text-xl text-center">The Best Online Store for Unique Products</p>
             </div>
         </header>
 
         <!-- Main Section -->
-        <main class="flex-1 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <main class="flex items-center justify-center flex-1 px-4 py-12 sm:px-6 lg:px-8">
             <div class="w-full max-w-4xl text-center">
-                <h2 class="text-3xl font-semibold text-gray-800 dark:text-white mb-6">Explore Our Collection</h2>
-                <p class="text-lg text-gray-600 dark:text-gray-300 mb-8">Browse through a wide range of unique products and enjoy your shopping experience!</p>
+                <h2 class="mb-6 text-3xl font-semibold text-gray-800 dark:text-white">Explore Our Collection</h2>
+                <p class="mb-8 text-lg text-gray-600 dark:text-gray-300">Browse through a wide range of unique products and enjoy your shopping experience!</p>
 
-                <div class="flex justify-center items-center gap-6">
+                <div class="flex items-center justify-center gap-6">
                     @if (Route::has('login'))
                         <div class="flex gap-4">
                             @auth
@@ -940,16 +948,16 @@
         </main>
 
         <!-- Featured Products Section (Optional, can be populated dynamically) -->
-        <section class="bg-gray-100 py-12">
-            <div class="max-w-7xl mx-auto px-4 text-center">
-                <h2 class="text-2xl font-semibold text-gray-800 dark:text-white mb-6">Featured Products</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <section class="py-12 bg-gray-100">
+            <div class="px-4 mx-auto text-center max-w-7xl">
+                <h2 class="mb-6 text-2xl font-semibold text-gray-800 dark:text-white">Featured Products</h2>
+                <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                     <!-- Example Product Card -->
-                    <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                        <img src="https://mezgebedirijit.com/images/product1.jpg" alt="Product 1" class="w-full h-64 object-cover">
+                    <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+                        <img src="https://mezgebedirijit.com/images/product1.jpg" alt="Product 1" class="object-cover w-full h-64">
                         <div class="p-4">
                             <h3 class="text-xl font-semibold text-gray-800 dark:text-white">Stylish Leather Handbag</h3>
-                            <p class="text-gray-600 dark:text-gray-300 mt-2">Perfect for any occasion</p>
+                            <p class="mt-2 text-gray-600 dark:text-gray-300">Perfect for any occasion</p>
                             <a href="/product/1" class="mt-4 inline-block px-6 py-2 text-white bg-[#FF2D20] rounded-md hover:bg-[#FF2D20]/80">
                                 View Product
                             </a>
@@ -961,7 +969,7 @@
         </section>
 
         <!-- Footer Section -->
-        <footer class="bg-gray-800 text-white text-center py-4 mt-auto">
+        <footer class="py-4 mt-auto text-center text-white bg-gray-800">
             <p>Mezgebedirijit.com - {{ now()->setTimezone('Africa/Addis_Ababa')->format('l, F j, Y, g:i A') }}</p>
         </footer>
     </div>
@@ -992,18 +1000,18 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 
-<body class="bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen flex flex-col">
-    <div class="relative min-h-screen flex flex-col items-center justify-between">
+<body class="flex flex-col min-h-screen text-gray-900 bg-gray-50 dark:bg-gray-900 dark:text-white">
+    <div class="relative flex flex-col items-center justify-between min-h-screen">
         <!-- Header Section -->
         <header class="w-full bg-gradient-to-r from-[#FF2D20] to-[#FF5E20] text-white py-6">
             <h2 class="text-3xl font-semibold text-center">Welcome to Mezgebedirijit</h2>
         </header>
 
         <!-- Main Content Section -->
-        <main class="flex-1 flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-10">
+        <main class="flex flex-col items-center justify-center flex-1 px-4 py-10 sm:px-6 lg:px-8">
             <!-- Welcome Message -->
-            <div class="text-center mb-8">
-                <h1 class="text-4xl font-extrabold text-gray-800 dark:text-white mb-4">Welcome to our store!</h1>
+            <div class="mb-8 text-center">
+                <h1 class="mb-4 text-4xl font-extrabold text-gray-800 dark:text-white">Welcome to our store!</h1>
                 <p class="text-lg text-gray-600 dark:text-gray-300">Browse through our wide range of products and enjoy your shopping experience!</p>
             </div>
 
@@ -1032,7 +1040,7 @@
         </main>
 
         <!-- Footer Section -->
-        <footer class="bg-gray-800 text-white text-center py-4 mt-10 w-full">
+        <footer class="w-full py-4 mt-10 text-center text-white bg-gray-800">
             <p class="text-sm">Mezgebedirijit.com - {{ now()->setTimezone('Africa/Addis_Ababa')->format('l, F j, Y, g:i A') }}</p>
         </footer>
     </div>
