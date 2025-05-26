@@ -47,6 +47,16 @@
 
 
 
+
+{{-- 0 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_1.jpg"
+     1 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_2.jpg"
+     2 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_1.jpg"
+     3 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_2.jpg"
+     4 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_red.jpg"
+     5 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_blue.jpg"
+     6 : "http://duka-11.2.0.local:8086/images/sizes/s.png"
+     7 : "http://duka-11.2.0.local:8086/images/sizes/l.png" --}}
+
 @php
     $variantData = $item->variants->map(function ($variant) {
         return [

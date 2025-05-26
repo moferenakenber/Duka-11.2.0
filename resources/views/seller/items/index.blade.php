@@ -44,8 +44,8 @@
 
 @section('content')
     {{--
-    <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
-        <div class="flex-1 overflow-y-auto mx-auto w-full max-w-2xl">
+    <div class="flex flex-col items-center justify-center h-full pt-8 pb-16">
+        <div class="flex-1 w-full max-w-2xl mx-auto overflow-y-auto">
             <div class="grid grid-cols-2 gap-4 p-4 pb-20">
 
                 <div class="card glass w-96">
@@ -56,7 +56,7 @@
                     <div class="card-body">
                         <h2 class="card-title">Life hack</h2>
                         <p>How to park your car at your garage?</p>
-                        <div class="card-actions justify-end">
+                        <div class="justify-end card-actions">
                             <button class="btn btn-primary">Learn now!</button>
                         </div>
                     </div>
@@ -70,7 +70,7 @@
                         <div class="card-body">
                             <h2 class="card-title">Life hack</h2>
                             <p>How to park your car at your garage?</p>
-                            <div class="card-actions justify-end">
+                            <div class="justify-end card-actions">
                                 <button class="btn btn-primary">Learn now!</button>
                             </div>
                         </div>
@@ -102,58 +102,58 @@
     </div> --}}
 
 
-    {{-- <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
-        <div class="flex-1 overflow-y-auto mx-auto w-full max-w-7xl">
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
+    {{-- <div class="flex flex-col items-center justify-center h-full pt-8 pb-16">
+        <div class="flex-1 w-full mx-auto overflow-y-auto max-w-7xl">
+            <div class="grid grid-cols-2 gap-4 p-4 pb-20 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
                 <!-- Card 1 -->
-                <div class="card glass w-full max-w-sm">
+                <div class="w-full max-w-sm card glass">
                     <figure>
                         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="car!" class="rounded-lg" />
                     </figure>
                     <div class="card-body">
-                        <h2 class="card-title text-xl font-semibold">Life hack</h2>
+                        <h2 class="text-xl font-semibold card-title">Life hack</h2>
                         <p class="text-gray-600">How to park your car at your garage?</p>
-                        <div class="badge bg-blue-500 text-white">Parking</div>
-                        <div class="badge bg-green-500 text-white">Car Care</div>
+                        <div class="text-white bg-blue-500 badge">Parking</div>
+                        <div class="text-white bg-green-500 badge">Car Care</div>
                     </div>
                 </div>
 
                 <!-- Card 2 -->
-                <div class="card glass w-full max-w-sm">
+                <div class="w-full max-w-sm card glass">
                     <figure>
                         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="car!" class="rounded-lg" />
                     </figure>
                     <div class="card-body">
-                        <h2 class="card-title text-xl font-semibold">Another Life Hack</h2>
+                        <h2 class="text-xl font-semibold card-title">Another Life Hack</h2>
                         <p class="text-gray-600">How to organize your closet?</p>
-                        <div class="badge bg-red-500 text-white">Organization</div>
-                        <div class="badge bg-yellow-500 text-white">Home Tips</div>
+                        <div class="text-white bg-red-500 badge">Organization</div>
+                        <div class="text-white bg-yellow-500 badge">Home Tips</div>
                     </div>
                 </div>
 
                 <!-- Card 3 -->
-                <div class="card glass w-full max-w-sm">
+                <div class="w-full max-w-sm card glass">
                     <figure>
                         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="car!" class="rounded-lg" />
                     </figure>
                     <div class="card-body">
-                        <h2 class="card-title text-xl font-semibold">Life Hack 3</h2>
+                        <h2 class="text-xl font-semibold card-title">Life Hack 3</h2>
                         <p class="text-gray-600">How to clean your car interior?</p>
-                        <div class="badge bg-purple-500 text-white">Interior Care</div>
-                        <div class="badge bg-orange-500 text-white">Cleaning</div>
+                        <div class="text-white bg-purple-500 badge">Interior Care</div>
+                        <div class="text-white bg-orange-500 badge">Cleaning</div>
                     </div>
                 </div>
 
                 <!-- Card 4 -->
-                <div class="card glass w-full max-w-sm">
+                <div class="w-full max-w-sm card glass">
                     <figure>
                         <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp" alt="car!" class="rounded-lg" />
                     </figure>
                     <div class="card-body">
-                        <h2 class="card-title text-xl font-semibold">Life Hack 4</h2>
+                        <h2 class="text-xl font-semibold card-title">Life Hack 4</h2>
                         <p class="text-gray-600">How to park your car in tight spots?</p>
-                        <div class="badge bg-teal-500 text-white">Parking Tips</div>
-                        <div class="badge bg-indigo-500 text-white">Car Efficiency</div>
+                        <div class="text-white bg-teal-500 badge">Parking Tips</div>
+                        <div class="text-white bg-indigo-500 badge">Car Efficiency</div>
                     </div>
                 </div>
 
@@ -162,19 +162,23 @@
         </div>
     </div> --}}
 
-    <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
-        <div class="flex-1 overflow-y-auto mx-auto w-full max-w-7xl">
+    <div class="flex flex-col items-center justify-center h-full pt-8 pb-16">
+        <div class="flex-1 w-full mx-auto overflow-y-auto max-w-7xl">
 
 
             <div class="flex justify-end p-4">
                 <form method="GET" action="{{ route('seller.items.index') }}">
                     <label for="sort" class="text-sm font-medium text-gray-700">Sort by:</label>
-                    <select name="sort" id="sort" class="ml-2 border rounded px-2 py-1" onchange="this.form.submit()">
+                    <select name="sort" id="sort" class="px-2 py-1 ml-2 border rounded" onchange="this.form.submit()">
                         <option value="">Default</option>
-                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
-                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
-                        <option value="sold_asc" {{ request('sort') == 'sold_asc' ? 'selected' : '' }}>Sold: Low to High</option>
-                        <option value="sold_desc" {{ request('sort') == 'sold_desc' ? 'selected' : '' }}>Sold: High to Low</option>
+                        <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High
+                        </option>
+                        <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to
+                            Low</option>
+                        <option value="sold_asc" {{ request('sort') == 'sold_asc' ? 'selected' : '' }}>Sold: Low to High
+                        </option>
+                        <option value="sold_desc" {{ request('sort') == 'sold_desc' ? 'selected' : '' }}>Sold: High to Low
+                        </option>
                         <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>Name: A-Z</option>
                         <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name: Z-A</option>
                     </select>
@@ -183,7 +187,7 @@
 
 
 
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
+            <div class="grid grid-cols-2 gap-4 p-4 pb-20 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 
 
 
@@ -196,11 +200,11 @@
 
                 @foreach ($items as $item)
                     <a href="{{ route('seller.items.show', $item->id) }}"
-                        class="relative bg-white border rounded-lg shadow-md overflow-hidden transition-transform transform hover:scale-105 duration-300">
+                        class="relative overflow-hidden transition-transform duration-300 transform bg-white border rounded-lg shadow-md hover:scale-105">
 
                         {{-- Discount Badge --}}
                         @if ($item->discount_percentage)
-                            <div class="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">
+                            <div class="absolute px-2 py-1 text-xs font-bold text-white bg-red-500 rounded top-2 right-2">
                                 -{{ $item->discount_percentage }}%
                             </div>
                         @endif
@@ -208,12 +212,12 @@
                         {{-- Product Image --}}
                         {{-- <figure>
                             @if ($item->product_images->isNotEmpty())
-                                <img src="{{ asset('storage/' . $item->product_images->first()->path) }}" alt="{{ $item->product_name }}" class="w-full h-48 object-cover">
+                                <img src="{{ asset('storage/' . $item->product_images->first()->path) }}" alt="{{ $item->product_name }}" class="object-cover w-full h-48">
                             @else
-                                <img src="https://picsum.photos/200/300" alt="No Image" class="w-full h-48 object-cover">
+                                <img src="https://picsum.photos/200/300" alt="No Image" class="object-cover w-full h-48">
                             @endif
                         </figure> --}}
-{{--
+                        {{--
                         @if ($item && $item->product_images)
                             @php
                                 $imagesArray = json_decode($item->product_images, true); // Decode JSON into an associative array
@@ -244,7 +248,7 @@
                             <p>Product images not found.</p>
                         @endif
 
-                        {{-- <img src="https://picsum.photos/200/300" alt="No Image" class="w-full h-48 object-cover"> --}}
+                        {{-- <img src="https://picsum.photos/200/300" alt="No Image" class="object-cover w-full h-48"> --}}
 
 
                         {{-- Product Details --}}
@@ -255,15 +259,15 @@
 
                             {{-- Price & Sold Count --}}
                             <div class="flex items-center justify-between mt-2">
-                                <span class="text-red-500 font-bold text-lg">฿{{ number_format($item->price, 0) }}</span>
-                                <span class="text-gray-500 text-xs">{{ number_format($item->sold_count) }} sold</span>
+                                <span class="text-lg font-bold text-red-500">฿{{ number_format($item->price, 0) }}</span>
+                                <span class="text-xs text-gray-500">{{ number_format($item->sold_count) }} sold</span>
                             </div>
 
                             {{-- Free Shipping & Discount Labels --}}
-                            <div class="mt-2 flex space-x-1">
-                                {{-- <span class="bg-green-500 text-white text-xs px-2 py-1 rounded">FREE Shipping</span> --}}
+                            <div class="flex mt-2 space-x-1">
+                                {{-- <span class="px-2 py-1 text-xs text-white bg-green-500 rounded">FREE Shipping</span> --}}
                                 @if ($item->has_discount)
-                                    <span class="bg-yellow-500 text-white text-xs px-2 py-1 rounded">Discount</span>
+                                    <span class="px-2 py-1 text-xs text-white bg-yellow-500 rounded">Discount</span>
                                 @endif
                             </div>
                         </div>
@@ -283,19 +287,23 @@
 
 
 
-    <div class="pt-8 pb-16 flex flex-col h-full justify-center items-center">
-        <div class="flex-1 overflow-y-auto mx-auto w-full max-w-7xl">
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-4 pb-20">
-                @foreach ($items as $item)
-                    <div class="card glass w-full max-w-sm">
-                        <figure>
-                            {{-- @if ($item->images->isNotEmpty())  <img src="{{ asset('storage/' . $item->images->first()->path) }}" alt="{{ $item->product_name }}" class="rounded-lg" />
+
+    {{-- @if ($item->images->isNotEmpty())  <img src="{{ asset('storage/' . $item->images->first()->path) }}" alt="{{ $item->product_name }}" class="rounded-lg" />
                             @else --}}
+    {{-- <img src="https://picsum.photos/200/300" alt="No Image" class="rounded-lg" /> --}}
+    {{-- @endif --}}
+
+    {{--
+    <div class="flex flex-col items-center justify-center h-full pt-8 pb-16">
+        <div class="flex-1 w-full mx-auto overflow-y-auto max-w-7xl">
+            <div class="grid grid-cols-2 gap-4 p-4 pb-20 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+                @foreach ($items as $item)
+                    <div class="w-full max-w-sm card glass">
+                        <figure>
                             <img src="https://picsum.photos/200/300" alt="No Image" class="rounded-lg" />
-                            {{-- @endif --}}
                         </figure>
                         <div class="card-body">
-                            <h2 class="card-title text-xl font-semibold">{{ $item->product_name }}</h2>
+                            <h2 class="text-xl font-semibold card-title">{{ $item->product_name }}</h2>
                             <p class="text-gray-600">{{ $item->product_description }}</p>
 
                             <div class="flex flex-wrap">
@@ -312,7 +320,12 @@
 
             </div>
         </div>
-    </div>
+    </div> --}}
+
+
+
+
+
 
 
 
@@ -324,7 +337,7 @@
     <div class="row g-4">
         @foreach ($items as $item)
             <div class="col-6 col-lg-3">  {{-- 2 columns on small screens, 4 on large
-                <div class="card glass w-full max-w-sm shadow-sm">
+                <div class="w-full max-w-sm shadow-sm card glass">
                     <figure class="p-3 text-center">
 
                             <img src="https://picsum.photos/200/300?random={{ $loop->index }}"
@@ -333,10 +346,10 @@
 
                     </figure>
                     <div class="card-body">
-                        <h5 class="card-title fw-bold text-xl">{{ $item->product_name }}</h5>
+                        <h5 class="text-xl card-title fw-bold">{{ $item->product_name }}</h5>
                         <p class="card-text text-muted">{{ $item->product_description }}</p>
 
-                        <div class="d-flex flex-wrap">
+                        <div class="flex-wrap d-flex">
                             @foreach ($item->categories as $category)
                                 <span class="badge text-bg-{{ $category->color ?? 'secondary' }} me-1 mb-1">
                                     {{ $category->category_name }}
@@ -360,7 +373,4 @@
             /* Prevents distortion */
         }
     </style>
-
-
-
 @endsection

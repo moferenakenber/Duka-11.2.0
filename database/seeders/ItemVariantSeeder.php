@@ -116,21 +116,91 @@ class ItemVariantSeeder extends Seeder
         $colorRed = ItemColor::where('name', 'Red')->first();
         $colorBlue = ItemColor::where('name', 'Blue')->first();
         $colorBlack = ItemColor::where('name', 'Black')->first();
+        $colorYellow = ItemColor::where('name', 'Yellow')->first();
+        $colorGreen = ItemColor::where('name', 'Green')->first();
+        $colorWhite = ItemColor::where('name', 'White')->first();
+        $colorPurple = ItemColor::where('name', 'Purple')->first();
+        $colorPink = ItemColor::where('name', 'Pink')->first();
+        $colorOrange = ItemColor::where('name', 'Orange')->first();
+        $colorGray = ItemColor::where('name', 'Gray')->first();
+        $colorBrown = ItemColor::where('name', 'Brown')->first();
+        $colorGold = ItemColor::where('name', 'Gold')->first();
+        $colorSilver = ItemColor::where('name', 'Silver')->first();
+
+
         $sizeSmall = ItemSize::where('name', 'Small')->first();
+        $sizeMedium = ItemSize::where('name', 'Medium')->first();
         $sizeLarge = ItemSize::where('name', 'Large')->first();
-        $boxPackaging = ItemPackagingType::where('name', 'Box')->first();
-        $bagPackaging = ItemPackagingType::where('name', 'Bag')->first();
+
+        $noteitSize = ItemSize::where('name', 'Noteit3x3')->first();
+        $noteitSize2 = ItemSize::where('name', 'Noteit4x4')->first();
+        $noteitSize3 = ItemSize::where('name', 'Noteit5x5')->first();
+
+        $piecePackaging = ItemPackagingType::where('name', 'Piece')->first();
+        $packetPackaging = ItemPackagingType::where('name', 'Packet')->first();
+        $cartoonPackaging = ItemPackagingType::where('name', 'Cartoon')->first();
 
         // Custom variations per item index (0-based)
         $variationsPerItem = [
+            // '2 side color',
             [
-                ['color' => $colorRed->id, 'size' => $sizeSmall->id, 'packaging' => $bagPackaging->id, 'price' => 950, 'stock' => 15],
-                ['color' => $colorBlue->id, 'size' => $sizeLarge->id, 'packaging' => $boxPackaging->id, 'price' => 1450, 'stock' => 8],
+                [
+                 'color' => $colorRed->id,
+                 'size' => $sizeSmall->id,
+                 'packaging' => $cartoonPackaging->id,
+                 'price' => 950, 'stock' => 15
+                ],
+
+                [
+                 'color' => $colorBlue->id,
+                 'size' => $sizeLarge->id,
+                 'packaging' => $piecePackaging->id,
+                 'price' => 1450, 'stock' => 8
+                ],
             ],
+            // 'noteit',
             [
-                ['color' => $colorBlack->id, 'size' => $sizeSmall->id, 'packaging' => $boxPackaging->id, 'price' => 1050, 'stock' => 12],
-                ['color' => $colorRed->id, 'size' => $sizeLarge->id, 'packaging' => $bagPackaging->id, 'price' => 1100, 'stock' => 6],
+                [
+                'color' => $colorRed->id,
+                'size' => $noteitSize->id,
+                'packaging' => $cartoonPackaging->id,
+                'price' => 130,
+                'stock' => 188
+                ],
+
+                [
+                'color' => $colorYellow->id,
+                'size' => $noteitSize2->id,
+                'packaging' => $piecePackaging->id,
+                'price' => 160,
+                'stock' => 520
+                ],
+
+                [
+                'color' => $colorGreen->id,
+                'size' => $noteitSize3->id,
+                'packaging' => $packetPackaging->id,
+                'price' => 190,
+                'stock' => 140
+                ],
+
             ],
+            // [
+            //     ['color' => $colorBlue->id, 'size' => $sizeSmall->id, 'packaging' => $piecePackaging->id, 'price' => 1200, 'stock' => 10],
+            //     ['color' => $colorBlack->id, 'size' => $sizeLarge->id, 'packaging' => $cartoonPackaging->id, 'price' => 1300, 'stock' => 5],
+            // ],
+            // [
+            //     ['color' => $colorRed->id, 'size' => $sizeLarge->id, 'packaging' => $piecePackaging->id, 'price' => 1150, 'stock' => 20],
+            //     ['color' => $colorBlue->id, 'size' => $sizeSmall->id, 'packaging' => $cartoonPackaging->id, 'price' => 1250, 'stock' => 18],
+            // ],
+            // [
+            //     ['color' => $colorBlack->id, 'size' => $sizeLarge->id, 'packaging' => $piecePackaging->id, 'price' => 1350, 'stock' => 25],
+            //     ['color' => $colorRed->id, 'size' => $sizeSmall->id, 'packaging' => $cartoonPackaging->id, 'price' => 1400, 'stock' => 30],
+            // ],
+            // [
+            //     ['color' => $colorBlue->id, 'size' => $sizeLarge->id, 'packaging' => $piecePackaging->id, 'price' => 1500, 'stock' => 22],
+            //     ['color' => $colorBlack->id, 'size' => $sizeSmall->id, 'packaging' => $cartoonPackaging->id, 'price' => 1550, 'stock' => 28],
+            // ],
             // Add more if needed for more items
         ];
 
@@ -153,7 +223,7 @@ class ItemVariantSeeder extends Seeder
                     'item_id' => $item->id,
                     'item_color_id' => $colorRed->id,
                     'item_size_id' => $sizeSmall->id,
-                    'item_packaging_type_id' => $boxPackaging->id,
+                    'item_packaging_type_id' => $packetPackaging->id,
                     'price' => 100,
                     'stock' => 50,
                     'owner_id' => $owner->id,
@@ -163,21 +233,21 @@ class ItemVariantSeeder extends Seeder
                     'item_id' => $item->id,
                     'item_color_id' => $colorBlue->id,
                     'item_size_id' => $sizeLarge->id,
-                    'item_packaging_type_id' => $bagPackaging->id,
+                    'item_packaging_type_id' => $packetPackaging->id,
                     'price' => 200,
                     'stock' => 30,
                     'owner_id' => $owner->id,
                 ]);
 
-                ItemVariant::create([
-                    'item_id' => $item->id,
-                    'item_color_id' => $colorBlack->id,
-                    'item_size_id' => $sizeLarge->id,
-                    'item_packaging_type_id' => $boxPackaging->id,
-                    'price' => 300,
-                    'stock' => 20,
-                    'owner_id' => $owner->id,
-                ]);
+                // ItemVariant::create([
+                //     'item_id' => $item->id,
+                //     'item_color_id' => $colorBlack->id,
+                //     'item_size_id' => $sizeLarge->id,
+                //     'item_packaging_type_id' => $packetPackaging->id,
+                //     'price' => 300,
+                //     'stock' => 20,
+                //     'owner_id' => $owner->id,
+                // ]);
             }
         }
 

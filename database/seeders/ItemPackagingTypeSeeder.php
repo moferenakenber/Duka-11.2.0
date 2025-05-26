@@ -10,12 +10,13 @@ class ItemPackagingTypeSeeder extends Seeder
     public function run(): void
     {
         $packagingTypes = [
-            'piece',
-            'packet',
-            'carton',
-            'box',
-            'bundle',
-            'bag',
+            'Piece',
+            'Packet',
+            'Cartoon',
+            'Box',
+            'Bundle',
+            'Bag',
+
         ];
 
         foreach ($packagingTypes as $type) {

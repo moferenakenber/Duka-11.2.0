@@ -43,6 +43,15 @@ class ItemColorSeeder extends Seeder
                     ['name' => 'Black', 'suffix' => 'black'],
                 ],
             ],
+            [
+                'name' => 'Noteit',
+                'colors' => [
+                    ['name' => 'Red', 'suffix' => 'red'],
+                    ['name' => 'Blue', 'suffix' => 'blue'],
+                    ['name' => 'Green', 'suffix' => 'green'],
+                    ['name' => 'Yellow', 'suffix' => 'yellow'],
+                ],
+            ]
         ];
 
         foreach ($itemsWithColors as $itemData) {
