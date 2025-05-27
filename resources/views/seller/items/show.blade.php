@@ -448,14 +448,14 @@
                             {{ $variant->stock }}@if (!$loop->last),@endif @endforeach
                     ],
 
-                    colors: [
+                    {{-- colors: [
                         @foreach ($item->variants as $variant)
                             {
                                 name: '{{ $variant->itemColor->name }}',
                                 img: '{{ asset($variant->itemColor->image_path) }}',
                                 disabled: {{ $variant->itemColor->disabled ? 'true' : 'false' }}
                             }@if (!$loop->last),@endif @endforeach
-                    ],
+                    ], --}}
 
                     {{-- variants: [
                         @foreach ($item->variants as $variant)

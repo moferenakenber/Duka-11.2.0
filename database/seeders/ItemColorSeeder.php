@@ -50,6 +50,27 @@ class ItemColorSeeder extends Seeder
                     ['name' => 'Blue', 'suffix' => 'blue'],
                     ['name' => 'Green', 'suffix' => 'green'],
                     ['name' => 'Yellow', 'suffix' => 'yellow'],
+                    ['name' => 'Black', 'suffix' => 'black'],
+                ],
+            ],
+            [
+                'name' => '3 subject',
+                'colors' => [
+                    ['name' => '3_subject_red', 'suffix' => 'red'],
+                    ['name' => '3_subject_blue', 'suffix' => 'blue'],
+                    ['name' => 'Green', 'suffix' => 'green'],
+                    ['name' => 'Yellow', 'suffix' => 'yellow'],
+                    ['name' => 'Black', 'suffix' => 'black'],
+                ],
+            ],
+            [
+                'name' => '4 subject',
+                'colors' => [
+                    ['name' => '4_subject_black', 'suffix' => 'red'],
+                    ['name' => '4_subject_red', 'suffix' => 'blue'],
+                    ['name' => '4_subject_green', 'suffix' => 'green'],
+                    ['name' => 'Yellow', 'suffix' => 'yellow'],
+                    ['name' => 'Black', 'suffix' => 'black'],
                 ],
             ]
         ];

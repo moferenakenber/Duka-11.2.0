@@ -114,6 +114,14 @@ class ItemVariantSeeder extends Seeder
 
         // Ensure these exist, or manually create them beforehand
         $colorRed = ItemColor::where('name', 'Red')->first();
+        $color3subjectRed = ItemColor::where('name', '3_subject_red')->first();
+        $color3subjectBlue = ItemColor::where('name', '3_subject_blue')->first();
+
+        $color4subjectBlack = ItemColor::where('name', '4_subject_black')->first();
+        $color4subjectRed = ItemColor::where('name', '4_subject_red')->first();
+        $color4subjectGreen = ItemColor::where('name', '4_subject_green')->first();
+
+
         $colorBlue = ItemColor::where('name', 'Blue')->first();
         $colorBlack = ItemColor::where('name', 'Black')->first();
         $colorYellow = ItemColor::where('name', 'Yellow')->first();
@@ -185,10 +193,47 @@ class ItemVariantSeeder extends Seeder
                 ],
 
             ],
-            // [
-            //     ['color' => $colorBlue->id, 'size' => $sizeSmall->id, 'packaging' => $piecePackaging->id, 'price' => 1200, 'stock' => 10],
-            //     ['color' => $colorBlack->id, 'size' => $sizeLarge->id, 'packaging' => $cartoonPackaging->id, 'price' => 1300, 'stock' => 5],
-            // ],
+            // '3 subject',
+            [
+                [
+                'color' => $color3subjectRed->id,
+                'size' => $sizeSmall->id,
+                'packaging' => $piecePackaging->id,
+                'price' => 230,
+                'stock' => 10
+                ],
+                [
+                'color' => $color3subjectBlue->id,
+                'size' => $sizeLarge->id,
+                'packaging' => $cartoonPackaging->id,
+                'price' => 230,
+                'stock' => 5
+                ],
+            ],
+            // '4 subject',
+            [
+                [
+                'color' => $color4subjectBlack->id,
+                'size' => $sizeSmall->id,
+                'packaging' => $piecePackaging->id,
+                'price' => 330,
+                'stock' => 10
+                ],
+                [
+                'color' => $color4subjectRed->id,
+                'size' => $sizeLarge->id,
+                'packaging' => $cartoonPackaging->id,
+                'price' => 330,
+                'stock' => 5
+                ],
+                [
+                'color' => $color4subjectGreen->id,
+                'size' => $sizeLarge->id,
+                'packaging' => $cartoonPackaging->id,
+                'price' => 330,
+                'stock' => 5
+                ],
+            ],
             // [
             //     ['color' => $colorRed->id, 'size' => $sizeLarge->id, 'packaging' => $piecePackaging->id, 'price' => 1150, 'stock' => 20],
             //     ['color' => $colorBlue->id, 'size' => $sizeSmall->id, 'packaging' => $cartoonPackaging->id, 'price' => 1250, 'stock' => 18],
