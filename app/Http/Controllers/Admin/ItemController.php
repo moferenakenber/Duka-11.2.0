@@ -42,9 +42,12 @@ class ItemController extends Controller
 
         // Log the categories being passed to the view
         Log::info('Categories sent to admin.items.create:', $categories);
+        $colors = []; // Initialize colors array if needed
+        $sizes = []; // Initialize sizes array if needed
+        $packagings = []; // Initialize packaging array if needed
 
         // Pass the categories to the view
-        return view('admin.items.create', compact('categories'));
+        return view('admin.items.create', compact('categories', 'colors', 'sizes', 'packagings'));
     }
 
     // Save Draft method

@@ -5,115 +5,123 @@
         </h2>
     </x-slot>
 
-    <script>
-        const categories = @json($categories);
-    </script>
+    <div class="max-w-4xl p-6 mx-auto bg-white rounded shadow">
+        <h2 class="mb-6 text-2xl font-bold">Create Draft Item</h2>
 
-    <div class="py-12">
-        <form action="{{ route('admin.saveDraft') }}" method="POST" enctype="multipart/form-data" x-data="{ packagings: [], colors: [''], variants: [] }" class="max-w-4xl p-6 mx-auto space-y-6 bg-white rounded-lg shadow">
+        <form method="POST" action="{{ route('admin.saveDraft') }}" enctype="multipart/form-data">
             @csrf
 
             <!-- Product Name -->
-            <div>
-                <label class="block mb-1 font-medium">Product Name</label>
-                <input type="text" class="w-full input input-bordered" placeholder="e.g. 3 subject">
-            </div>
-
-            <!-- Product Images -->
-            <div>
-                <label class="block mb-1 font-medium">Product Images</label>
-                <input type="file" multiple class="w-full file-input file-input-bordered" />
+            <div class="mb-4">
+                <label for="product_name" class="block font-semibold">Product Name *</label>
+                <input type="text" name="product_name" id="product_name" class="w-full px-3 py-2 border border-gray-300 rounded" required>
             </div>
 
             <!-- Product Description -->
-            <div>
-                <label class="block mb-1 font-medium">Product Description</label>
-                <textarea class="w-full textarea textarea-bordered" placeholder="Enter product description..."></textarea>
-            </div>
-
-            <!-- Variation -->
-            <div>
-                <label class="block mb-1 font-medium">Variation</label>
-                <input type="text" class="w-full input input-bordered" placeholder="e.g. aut">
-            </div>
-
-            <!-- Price -->
-            <div>
-                <label class="block mb-1 font-medium">Price</label>
-                <input type="number" step="0.01" class="w-full input input-bordered" placeholder="e.g. 120.69">
+            <div class="mb-4">
+                <label for="product_description" class="block font-semibold">Product Description</label>
+                <textarea name="product_description" id="product_description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded"></textarea>
             </div>
 
             <!-- Packaging Details -->
-            <div>
-                <label class="block mb-2 font-medium">Packaging Details</label>
-                <template x-for="(pack, index) in packagings" :key="index">
-                    <div class="flex mb-2 space-x-2">
-                        <input type="text" x-model="pack.name" class="w-1/2 input input-sm input-bordered"
-                            placeholder="Name (e.g. Doz)">
-                        <input type="number" x-model="pack.quantity" class="w-1/2 input input-sm input-bordered"
-                            placeholder="Quantity">
-                    </div>
-                </template>
-                <button type="button" class="btn btn-sm btn-outline"
-                    @click="packagings.push({ name: '', quantity: 1 })">+ Add Packaging</button>
+            <div class="mb-4">
+                <label for="packaging_details" class="block font-semibold">Packaging Details</label>
+                <textarea name="packaging_details" id="packaging_details" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded"></textarea>
             </div>
 
-            <!-- Colors -->
-            <div>
-                <label class="block mb-2 font-medium">Colors</label>
-                <template x-for="(color, index) in colors" :key="index">
-                    <div class="flex items-center mb-2 space-x-2">
-                        <input type="text" x-model="colors[index]" class="w-full input input-sm input-bordered"
-                            placeholder="Color name">
-                        <button @click="colors.splice(index, 1)"
-                            class="btn btn-sm btn-error btn-outline">Remove</button>
-                    </div>
-                </template>
-                <button type="button" class="btn btn-sm btn-outline" @click="colors.push('')">+ Add Color</button>
+            <!-- Variation -->
+            <div class="mb-4">
+                <label for="variation" class="block font-semibold">Variation</label>
+                <input type="text" name="variation" id="variation" class="w-full px-3 py-2 border border-gray-300 rounded">
             </div>
 
-            <!-- Variant Table -->
-            <div>
-                <label class="block mb-2 font-medium">Variants</label>
-                <table class="table w-full table-zebra">
-                    <thead>
-                        <tr>
-                            <th>Color</th>
-                            <th>Size</th>
-                            <th>Packaging</th>
-                            <th>Price</th>
-                            <th>Stock</th>
-                            <th>Owner</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <template x-for="(variant, index) in variants" :key="index">
-                            <tr>
-                                <td><input x-model="variant.color" class="w-full input input-sm input-bordered" /></td>
-                                <td><input x-model="variant.size" class="w-full input input-sm input-bordered" /></td>
-                                <td><input x-model="variant.packaging" class="w-full input input-sm input-bordered" />
-                                </td>
-                                <td><input x-model="variant.price" type="number"
-                                        class="w-full input input-sm input-bordered" /></td>
-                                <td><input x-model="variant.stock" type="number"
-                                        class="w-full input input-sm input-bordered" /></td>
-                                <td><input x-model="variant.owner" class="w-full input input-sm input-bordered" /></td>
-                            </tr>
-                        </template>
-                    </tbody>
-                </table>
-                <button type="button" class="mt-2 btn btn-sm btn-outline"
-                    @click="variants.push({ color: '', size: '', packaging: '', price: '', stock: '', owner: '' })">
-                    + Add Variant
-                </button>
+            <!-- Price -->
+            <div class="mb-4">
+                <label for="price" class="block font-semibold">Price</label>
+                <input type="number" name="price" step="0.01" id="price" class="w-full px-3 py-2 border border-gray-300 rounded">
+            </div>
+
+            <!-- Product Images -->
+            <div class="mb-4">
+                <label for="product_images" class="block font-semibold">Product Images (you can select multiple)</label>
+                <input type="file" name="product_images[]" multiple accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded">
+            </div>
+
+            <!-- Selected Categories (JSON) -->
+            <div class="mb-4">
+                <label for="selectedCategories" class="block font-semibold">Selected Categories (JSON)</label>
+                <input type="text" name="selectedCategories" id="selectedCategories" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder='["1","2"]'>
+            </div>
+
+            <!-- New Category Names (JSON) -->
+            <div class="mb-4">
+                <label for="newCategoryNames" class="block font-semibold">New Category Names (JSON)</label>
+                <input type="text" name="newCategoryNames" id="newCategoryNames" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder='["Notebooks","Pencils"]'>
+            </div>
+
+            <hr class="my-6">
+
+            <h3 class="mb-4 text-xl font-semibold">Variant Details</h3>
+
+            <!-- Color -->
+            <div class="mb-4">
+                <label for="item_color_id" class="block font-semibold">Color</label>
+                <select name="item_color_id" id="item_color_id" class="w-full px-3 py-2 border border-gray-300 rounded">
+                    <option value="">-- Select Color --</option>
+                    @foreach ($colors as $color)
+                        <option value="{{ $color->id }}">{{ $color->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Size -->
+            <div class="mb-4">
+                <label for="item_size_id" class="block font-semibold">Size</label>
+                <select name="item_size_id" id="item_size_id" class="w-full px-3 py-2 border border-gray-300 rounded">
+                    <option value="">-- Select Size --</option>
+                    @foreach ($sizes as $size)
+                        <option value="{{ $size->id }}">{{ $size->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Packaging Type -->
+            <div class="mb-4">
+                <label for="item_packaging_type_id" class="block font-semibold">Packaging Type</label>
+                <select name="item_packaging_type_id" id="item_packaging_type_id" class="w-full px-3 py-2 border border-gray-300 rounded">
+                    <option value="">-- Select Packaging --</option>
+                    @foreach ($packagings as $pack)
+                        <option value="{{ $pack->id }}">{{ $pack->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Variant Price -->
+            <div class="mb-4">
+                <label for="variant_price" class="block font-semibold">Variant Price</label>
+                <input type="number" name="variant_price" id="variant_price" class="w-full px-3 py-2 border border-gray-300 rounded" required>
+            </div>
+
+            <!-- Stock -->
+            <div class="mb-4">
+                <label for="variant_stock" class="block font-semibold">Stock Quantity</label>
+                <input type="number" name="variant_stock" id="variant_stock" class="w-full px-3 py-2 border border-gray-300 rounded" required>
+            </div>
+
+            <!-- Is Active -->
+            <div class="mb-4">
+                <label class="inline-flex items-center">
+                    <input type="checkbox" name="is_active" value="1" checked class="mr-2">
+                    <span>Active Variant</span>
+                </label>
             </div>
 
             <!-- Submit Button -->
-            <div class="text-right">
-                <button type="submit" class="btn btn-primary">Submit</button>
+            <div class="mt-6">
+                <button type="submit" class="px-6 py-2 font-bold text-white bg-blue-600 rounded hover:bg-blue-700">
+                    Save as Draft
+                </button>
             </div>
-
         </form>
-
-
+    </div>
 </x-app-layout>

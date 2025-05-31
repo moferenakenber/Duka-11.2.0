@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+
         Schema::create('item_packaging_types', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // e.g., "pieces", "packet", "cartoon"
