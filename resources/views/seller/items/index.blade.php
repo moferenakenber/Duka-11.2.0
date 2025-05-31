@@ -253,8 +253,13 @@
 
                         {{-- Product Details --}}
                         <div class="p-3">
-                            <h2 class="text-sm font-semibold text-gray-800 line-clamp-2">
+                            {{-- <h2 class="text-sm font-semibold text-gray-800 line-clamp-2">
                                 {{ $item->product_name }}
+                            </h2> --}}
+
+                            <h2 class="card-title">
+                                {{ $item->product_name }}
+                                <div class="badge badge-secondary">NEW</div>
                             </h2>
 
                             {{-- Price & Sold Count --}}
@@ -270,9 +275,35 @@
                                     <span class="px-2 py-1 text-xs text-white bg-yellow-500 rounded">Discount</span>
                                 @endif
                             </div>
+
+                            <div class="justify-end card-actions">
+                                <div class="badge badge-outline">Office Supplies</div>
+                                <div class="badge badge-outline">Products</div>
+                            </div>
                         </div>
 
                     </a>
+                    {{-- ///////////////////////////////////////////////////////////// --}}
+                    {{-- <div class="w-48 shadow-sm card bg-base-100">
+                        <figure>
+                            <img src="https://img.daisyui.com/images/stock/photo-1606107557195-0e29a4b5b4aa.webp"
+                                alt="Shoes" />
+                        </figure>
+                        <div class="card-body">
+                            <h2 class="card-title">
+                                Card Title
+                                <div class="badge badge-secondary">NEW</div>
+                            </h2>
+                            <p>A card component has a figure, a body part, and inside body there are title and actions parts
+                            </p>
+                            <div class="justify-end card-actions">
+                                <div class="badge badge-outline">Fashion</div>
+                                <div class="badge badge-outline">Products</div>
+                            </div>
+                        </div>
+                    </div> --}}
+
+                    {{-- ///////////////////////////////////////////////////////////// --}}
                 @endforeach
             </div>
         </div>

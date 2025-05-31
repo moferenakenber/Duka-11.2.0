@@ -224,7 +224,7 @@
                     </button>
                     <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy Now</button>
                 </div> --}}
-{{--
+                {{--
 
                 <div x-data="variantSelector({{ $variantData->toJson() }})" x-init="init()" class="space-y-4">
                     <!-- Dropdown -->
@@ -557,13 +557,36 @@
 
                 <div class="flex mt-6 space-x-4">
 
-                    <button @click="showModal = true"
+                    {{-- <button @click="showModal = true"
                         class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
                         Add to Cart
-                    </button>
+                    </button> --}}
+
+                    <button @click="showModal = true" class="btn btn-soft btn-warning">Add to Cart</button>
                     <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy
                         Now</button>
                 </div>
+
+
+
+
+
+
+                <div class="flex flex-col mt-6 space-y-4">
+                    <!-- Top Button -->
+                    <button @click="showModal = true" class="w-full btn btn-soft btn-warning">
+                        Add to Cart
+                    </button>
+
+                    <!-- Bottom Button -->
+                    <button class="w-full px-6 py-2 text-lg text-white bg-red-500 rounded btn hover:bg-red-600">
+                        Buy Now
+                    </button>
+                </div>
+
+
+
+
 
                 {{-- Overlay --}}
                 <div x-show="showModal" class="fixed inset-0 z-40 bg-black/40" @click="showModal = false"
