@@ -37,13 +37,18 @@ class CartController extends Controller
         // $carts = auth()->user()->carts; // assuming relationship is defined in User model
         // Fetch all carts along with their associated customer
         // Check if the authenticated user is an admin
-        if (auth()->user()->role === 'admin') {
-            // If the user is an admin, fetch all carts for all users
-            $carts = Cart::with('customer')->get(); // Assuming Cart has a relationship with Customer
-        } else {
-            // If the user is not an admin, fetch only the carts of the authenticated user
-            $carts = auth()->user()->carts()->with('customer')->get();
-        }
+
+
+        // if (auth()->user()->role === 'admin') {
+        //     // If the user is an admin, fetch all carts for all users
+        //     $carts = Cart::with('customer')->get(); // Assuming Cart has a relationship with Customer
+        // } else {
+        //     // If the user is not an admin, fetch only the carts of the authenticated user
+        //     $carts = auth()->user()->carts()->with('customer')->get();
+        // }
+
+        $carts = Cart::with('customer')->get();
+
         return view('seller.carts.index', compact('carts'));
     }
 
