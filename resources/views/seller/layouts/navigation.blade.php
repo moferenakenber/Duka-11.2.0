@@ -43,7 +43,7 @@
         class="border-blue-600 text-teal-600 flex flex-col items-center
     {{ request()->is('seller/carts') ? 'bg-teal-200 active' : '' }}">
 
-        <img src="http://duka-11.2.0.local:8086/images/1828533.png" alt="Carts Icon" class="w-5 h-5">
+        <img src="{{ asset('images/1828533.png.svg') }}" alt="Carts Icon" class="w-5 h-5">
 
         <span class="btm-nav-label">Carts</span>
     </a>

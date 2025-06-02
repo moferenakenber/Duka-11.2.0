@@ -578,6 +578,12 @@
                         Add to Cart
                     </button>
 
+                    <button @click="showModal = true">
+                        <img src="http://duka-11.2.0.local:8086/images/addtocartbutton.svg" alt="Product Image"
+                            class="object-cover w-full h-48 mb-4 rounded">
+                        Add to Cart
+                    </button>
+
                     <!-- Bottom Button -->
                     <button class="w-full px-6 py-2 text-lg text-white bg-red-500 rounded btn hover:bg-red-600">
                         Buy Now
