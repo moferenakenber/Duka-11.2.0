@@ -257,10 +257,16 @@
                                 {{ $item->product_name }}
                             </h2> --}}
 
-                            <h2 class="card-title">
-                                {{ $item->product_name }}
+                            {{-- <h2 class="card-title">
+
+                                <h2 class="font-semibold">{{ $item->product_name }}</h2>
                                 <div class="badge badge-secondary">NEW</div>
-                            </h2>
+                            </h2> --}}
+
+                            <div class="flex items-center justify-between">
+                                <h2 class="font-semibold">{{ $item->product_name }}</h2>
+                                <div class="badge badge-secondary">NEW</div>
+                            </div>
 
                             {{-- Price & Sold Count --}}
                             <div class="flex items-center justify-between mt-2">
@@ -302,9 +308,117 @@
                             </div>
                         </div>
                     </div> --}}
+                    {{-- ///////////////////////////////////////////////////////////// --}}
+                    {{-- <a href="http://duka-11.2.0.local:8086/seller/items/2" x-data="{ hover: false }"
+                        @mouseenter="hover = true" @mouseleave="hover = false"
+                        class="block overflow-hidden transition-all duration-300 bg-white border rounded-lg shadow-md"
+                        :class="hover ? 'scale-105' : ''">
+
+                        <div class="relative">
+                            <img src="http://duka-11.2.0.local:8086/images/product_images/2_side_color_1.jpg"
+                                alt="Product Image" class="object-cover w-full h-48">
+                            <div class="absolute px-2 py-1 text-xs font-bold text-white bg-red-500 rounded top-2 right-2">
+                                -2.28%
+                            </div>
+                        </div>
+
+                        <div class="p-3">
+                            <div class="flex items-center justify-between">
+                                <h2 class="font-semibold">2 side color</h2>
+                                <div class="px-2 py-1 text-xs bg-gray-200 rounded">NEW</div>
+                            </div>
+                            <div class="flex justify-between mt-2 text-sm">
+                                <span class="font-bold text-red-600">฿80</span>
+                                <span class="text-gray-500">61 sold</span>
+                            </div>
+                            <div class="flex gap-2 mt-3 text-xs">
+                                <span class="px-2 py-1 border rounded">Office Supplies</span>
+                                <span class="px-2 py-1 border rounded">Products</span>
+                            </div>
+                        </div>
+                    </a> --}}
+                    {{-- ///////////////////////////////////////////////////////////// --}}
+                    {{-- <a href="http://duka-11.2.0.local:8086/seller/items/1"
+                        class="block overflow-hidden transition-transform duration-200 bg-white shadow hover:scale-105 rounded-xl hover:shadow-lg">
+                        <div class="relative">
+                            <img src="http://duka-11.2.0.local:8086/images/product_images/2_side_color_1.jpg" alt="Product"
+                                class="object-cover w-full h-40">
+                            <span
+                                class="absolute px-2 py-1 text-xs font-bold text-white bg-red-500 rounded top-2 right-2">-2.28%</span>
+                        </div>
+                        <div class="p-4">
+                            <div class="flex items-center justify-between">
+                                <h3 class="text-sm font-medium">2 side color</h3>
+                                <span class="text-xs bg-gray-200 px-2 py-0.5 rounded">NEW</span>
+                            </div>
+                            <div class="flex items-center justify-between mt-2 text-sm">
+                                <span class="font-bold text-red-600">฿80</span>
+                                <span class="text-xs text-gray-500">61 sold</span>
+                            </div>
+                            <div class="flex flex-wrap gap-1 mt-3 text-xs">
+                                <span class="border border-gray-300 rounded px-2 py-0.5">Office Supplies</span>
+                                <span class="border border-gray-300 rounded px-2 py-0.5">Products</span>
+                            </div>
+                        </div>
+                    </a> --}}
+
+
+
+                    {{-- ///////////////////////////////////////////////////////////// --}}
+
+                    {{-- <a href="http://duka-11.2.0.local:8086/seller/items/1"
+                        class="w-full transition-transform duration-300 shadow-xl card bg-base-100 hover:scale-105">
+                        <figure class="relative">
+                            <img src="http://duka-11.2.0.local:8086/images/product_images/2_side_color_1.jpg"
+                                alt="Product Image" class="object-cover w-full h-48">
+                            <div class="absolute text-white top-2 right-2 badge badge-error">-2.28%</div>
+                        </figure>
+                        <div class="p-4 card-body">
+                            <h2 class="text-base card-title">
+                                2 side color
+                                <div class="badge badge-secondary">NEW</div>
+                            </h2>
+                            <div class="flex items-center justify-between mt-2">
+                                <span class="font-bold text-red-500">฿80</span>
+                                <span class="text-sm text-gray-400">61 sold</span>
+                            </div>
+                            <div class="justify-end mt-4 card-actions">
+                                <div class="badge badge-outline">Office Supplies</div>
+                                <div class="badge badge-outline">Products</div>
+                            </div>
+                        </div>
+                    </a> --}}
+                    {{-- ///////////////////////////////////////////////////////////// --}}
+                    {{-- <a href="http://duka-11.2.0.local:8086/seller/items/1"
+                        class="block max-w-sm transition-transform duration-200 bg-white border border-gray-200 rounded-lg shadow hover:scale-105">
+                        <div class="relative">
+                            <img class="object-cover w-full h-48 rounded-t-lg"
+                                src="http://duka-11.2.0.local:8086/images/product_images/2_side_color_1.jpg"
+                                alt="Product image" />
+                            <span
+                                class="absolute px-2 py-1 text-xs font-semibold text-white bg-red-600 rounded top-2 right-2">-2.28%</span>
+                        </div>
+                        <div class="p-5">
+                            <h5
+                                class="flex items-center justify-between mb-1 text-lg font-bold tracking-tight text-gray-900">
+                                2 side color
+                                <span class="bg-gray-200 text-xs px-2 py-0.5 rounded">NEW</span>
+                            </h5>
+                            <div class="flex items-center justify-between mt-2 text-sm text-gray-600">
+                                <span class="font-bold text-red-600">฿80</span>
+                                <span>61 sold</span>
+                            </div>
+                            <div class="flex gap-2 mt-3 text-xs">
+                                <span class="inline-block bg-gray-100 border px-2 py-0.5 rounded">Office Supplies</span>
+                                <span class="inline-block bg-gray-100 border px-2 py-0.5 rounded">Products</span>
+                            </div>
+                        </div>
+                    </a> --}}
 
                     {{-- ///////////////////////////////////////////////////////////// --}}
                 @endforeach
+
+                <input type="checkbox" value="synthwave" class="toggle theme-controller" />
             </div>
         </div>
     </div>

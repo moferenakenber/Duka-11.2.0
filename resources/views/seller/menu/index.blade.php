@@ -43,10 +43,12 @@
 
                     <!-- Optional Badge -->
                     {{-- <span class="ml-auto bg-blue-500 text-white text-xs font-semibold rounded-full px-2 py-0.5">3</span> --}}
-                    <span class="ml-auto bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">3</span>
+                    <span
+                        class="ml-auto bg-blue-100 text-blue-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-sm dark:bg-blue-900 dark:text-blue-300">3</span>
                 </a>
 
-                <button type="button" class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ">Dashboard</button>
+                <button type="button"
+                    class="text-white bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-blue-300 dark:focus:ring-blue-800 shadow-lg shadow-blue-500/50 dark:shadow-lg dark:shadow-blue-800/80 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ">Dashboard</button>
 
                 <a href="#"
                     class="flex items-center p-4 transition duration-200 bg-white rounded-lg shadow-sm hover:bg-gray-100">
@@ -65,6 +67,8 @@
                     {{-- <span class="ml-auto bg-blue-500 text-white text-xs font-semibold rounded-full px-2 py-0.5">3</span> --}}
                     <span class="px-2 py-1 ml-2 text-white bg-blue-500 rounded-full">2</span>
                 </a>
+
+                <button class="btn">Dashboard</button>
 
 
 

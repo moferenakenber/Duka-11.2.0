@@ -1,8 +1,7 @@
 @extends('seller.layouts.app')
 
 @section('content')
-
-        {{--
+    {{--
         <div class="flex flex-col items-center justify-center h-full p-2">
             <div
                 class="p-2 text-gray-900 bg-gray-100 {{-- dark:text-gray-100 --}} {{-- bg-white --}} {{-- dark:bg-gray-800  shadow-sm sm:rounded-lg overflow-y-auto mx-auto max-w-2xl w-full rounded-lg border-b border-gray-400/50">
@@ -40,81 +39,93 @@
                 </div>
 
             </div>
-        </div>--}}
-        <div class="min-h-screen bg-gray-100">
-            <div class="container mx-auto p-2.5">
-                <div class="relative flex items-center justify-between pt-1 mb-4">
-                    <!-- Back Button -->
-                    {{-- <a href="/seller/customers" class="text-gray-500 hover:text-gray-700">
+        </div> --}}
+    <div class="min-h-screen bg-gray-100">
+        <div class="container mx-auto p-2.5">
+            <div class="relative flex items-center justify-between pt-1 mb-4">
+                <!-- Back Button -->
+                {{-- <a href="/seller/customers" class="text-gray-500 hover:text-gray-700">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                         </svg>
                     </a> --}}
-                    <!-- Title -->
-                    <h1 class="absolute text-xl font-semibold transform -translate-x-1/2 left-1/2">Carts</h1>
-                    <!-- Right Arrow Icon -->
-                    {{-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+                <!-- Title -->
+                <h1 class="absolute text-xl font-semibold transform -translate-x-1/2 left-1/2">Carts</h1>
+                <!-- Right Arrow Icon -->
+                {{-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0" />
                 </svg> --}}
-                    <a href="{{ route('seller.carts.create') }}" class="ml-auto text-gray-500 hover:text-gray-700">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                            stroke="currentColor" class="w-6 h-6 mr-2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m-7-7h14" />
-                        </svg>
-                    </a>
+                <a href="{{ route('seller.carts.create') }}" class="ml-auto text-gray-500 hover:text-gray-700">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-6 h-6 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m-7-7h14" />
+                    </svg>
+                </a>
 
-                </div>
-
-
-
-        <div class="flex flex-col items-center justify-center h-full px-4 pt-4 pb-16">
-            <!-- Full screen container for vertical space -->
-            <!-- Scrollable and Alphabetically Sorted Customer List -->
-            <ul
-                class="flex-1 w-full max-w-2xl mx-auto overflow-y-auto divide-y rounded-lg divide-gray-400/50 dark:divide-gray-400/50">
-                @foreach ($carts as $cart)
-                    <li class="py-3 sm:py-4">
-                        <!-- Wrap each customer in an anchor tag for clickability -->
-                        <a href="{{ route('seller.carts.show', $cart->id) }}"
-                            class="flex items-center pl-4 space-x-4 rtl:space-x-reverse">
-                            <!-- Placeholder Circle Instead of Image -->
-                            <div class="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-full dark:bg-gray-700"></div>
-                            <div class="flex-1 min-w-0">
-                                <!-- Increased Font Size for First and Last Name -->
-                                <p class="text-lg font-semibold text-gray-900 truncate dark:text-white">
-                                    @if ($cart->customer)
-                                        {{ $cart->customer->first_name }}'s Cart
-                                    @else
-                                        No customer assigned
-                                    @endif
-                                </p>
-                                <p class="text-lg font-semibold text-gray-900 truncate dark:text-white">
-                                    @if ($cart->seller)
-                                        {{ $cart->seller->first_name }} {{ $cart->seller->last_name }}
-                                    @elseif ($cart->user)
-                                        {{ $cart->user->name }} (User)
-                                    @else
-                                        N/A
-                                    @endif
-                                </p>
-                            </div>
-                        </a>
-                    </li>
-                @endforeach
-
-            </ul>
-
-            <!-- Display Total with horizontal lines on the top and bottom -->
-            <div class="flex items-center justify-center pt-2">
-                <p class="relative px-4 py-2 font-semibold">
-                    <span class="absolute top-0 left-0 w-full h-px bg-white dark:bg-white"></span>
-                    <span class="mx-6">Total {{ $carts->count() }}</span>
-
-                </p>
             </div>
 
-            <div class="Izwocg" style="width: 377.2px; height: 238.036px; transform: translate(0px, 0px) rotate(0deg);"><img class="_7_i_XA" crossorigin="anonymous" src="https://media.canva.com/v2/image-resize/format:PNG/height:768/quality:100/uri:ifs%3A%2F%2FM%2F052178d2-311a-42ef-92a3-d932e73f4f9e/watermark:F/width:1217?csig=AAAAAAAAAAAAAAAAAAAAAEj9SgBZ29TUGk9F_YcI9YIvotF3s5xjv6HKbVfZqVdM&amp;exp=1748715465&amp;osig=AAAAAAAAAAAAAAAAAAAAAKi74QT3LEUxeKsXoiratWkIQXc70lgdpabw4LkIHFYa&amp;signer=media-rpc&amp;x-canva-quality=screen_3x" draggable="false" alt=""></div>
+
+
+            <div class="flex flex-col items-center justify-center h-full px-4 pt-4 pb-16">
+                <!-- Full screen container for vertical space -->
+                <!-- Scrollable and Alphabetically Sorted Customer List -->
+                <ul
+                    class="flex-1 w-full max-w-2xl mx-auto overflow-y-auto divide-y rounded-lg divide-gray-400/50 dark:divide-gray-400/50">
+                    @foreach ($carts as $cart)
+                        <li class="py-3 sm:py-4">
+                            <!-- Wrap each customer in an anchor tag for clickability -->
+                            <a href="{{ route('seller.carts.show', $cart->id) }}"
+                                class="flex items-center pl-4 space-x-4 rtl:space-x-reverse">
+                                <!-- Placeholder Circle Instead of Image -->
+                                {{-- <div class="flex-shrink-0 w-10 h-10 bg-gray-200 rounded-full dark:bg-gray-700"></div> --}}
+
+                                <div class="avatar">
+                                    <div class="w-16 rounded-full">
+                                        <img src="https://img.daisyui.com/images/profile/demo/yellingcat@192.webp" />
+                                    </div>
+                                </div>
+
+
+                                <div class="flex-1 min-w-0">
+                                    <!-- Increased Font Size for First and Last Name -->
+                                    <p class="text-lg font-semibold text-gray-900 truncate">
+                                        @if ($cart->customer)
+                                            {{ $cart->customer->first_name }}'s Cart
+                                        @else
+                                            No customer assigned
+                                        @endif
+                                    </p>
+                                    <p class="text-lg font-semibold text-gray-900 truncate dark:text-white">
+                                        @if ($cart->seller)
+                                            {{ $cart->seller->first_name }} {{ $cart->seller->last_name }}
+                                        @elseif ($cart->user)
+                                            {{ $cart->user->name }} (User)
+                                        @else
+                                            N/A
+                                        @endif
+                                    </p>
+                                </div>
+                            </a>
+                        </li>
+                    @endforeach
+
+                </ul>
+
+                <!-- Display Total with horizontal lines on the top and bottom -->
+                <div class="flex items-center justify-center pt-2">
+                    <p class="relative px-4 py-2 font-semibold">
+                        <span class="absolute top-0 left-0 w-full h-px bg-white dark:bg-white"></span>
+                        <span class="mx-6">Total {{ $carts->count() }}</span>
+
+                    </p>
+                </div>
+
+                <div class="Izwocg" style="width: 377.2px; height: 238.036px; transform: translate(0px, 0px) rotate(0deg);">
+                    <img class="_7_i_XA" crossorigin="anonymous"
+                        src="https://media.canva.com/v2/image-resize/format:PNG/height:768/quality:100/uri:ifs%3A%2F%2FM%2F052178d2-311a-42ef-92a3-d932e73f4f9e/watermark:F/width:1217?csig=AAAAAAAAAAAAAAAAAAAAAEj9SgBZ29TUGk9F_YcI9YIvotF3s5xjv6HKbVfZqVdM&amp;exp=1748715465&amp;osig=AAAAAAAAAAAAAAAAAAAAAKi74QT3LEUxeKsXoiratWkIQXc70lgdpabw4LkIHFYa&amp;signer=media-rpc&amp;x-canva-quality=screen_3x"
+                        draggable="false" alt="">
+                </div>
+            </div>
         </div>
-    </div>
-@endsection
+    @endsection

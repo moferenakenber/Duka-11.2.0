@@ -57,8 +57,9 @@ export default {
 
 
     daisyui: {
-        themes: ["light", "dark", "cupcake"],
+        themes: ["light", "dark", "cupcake","caramellatte", "retro", "business", "corporate", "synthwave", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua", "lofi", "dracula", "fantasy", "wireframe", "black", "luxury", "night"],
       },
+
 
 
 
