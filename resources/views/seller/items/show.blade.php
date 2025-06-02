@@ -108,7 +108,7 @@
                 console.log('$allImages', @json($allImages));
             </script>
 
-            <div class="overflow-x-auto">
+            <div class="p-4 overflow-x-auto">
                 <table class="w-full text-sm border border-gray-300 table-auto">
                     <thead class="bg-gray-100">
                         <tr>
@@ -199,8 +199,12 @@
 
             {{-- Product Info --}}
             <div class="p-6">
-                <h2 class="text-2xl font-semibold text-gray-800">{{ $item->product_name }}</h2>
-                <p class="mt-2 text-gray-600">{{ $item->product_description }}</p>
+                {{-- <h2 class="text-2xl font-semibold text-gray-800">{{ $item->product_name }}</h2> --}}
+                <h2 class="text-2xl font-semibold text-gray-800 font-fancy">
+                    {{ $item->product_name }}
+                </h2>
+
+                {{-- <p class="mt-2 text-gray-600">{{ $item->product_description }}</p>
 
                 <div class="mt-4">
                     <span class="text-3xl font-bold text-red-500">฿{{ number_format($item->price, 0) }}</span>
@@ -209,7 +213,39 @@
                         <span
                             class="px-3 py-1 text-xs text-white bg-yellow-500 rounded">-{{ $item->discount_percentage }}%</span>
                     @endif
+                </div> --}}
+
+                <p class="mt-2 text-gray-600 font-fancy">
+                    {{ $item->product_description }}
+                </p>
+
+                <div class="flex items-center justify-between mt-4 font-fancy">
+
+                    <!-- Left: Current Price and Original Price -->
+                    <div>
+                        <span class="text-3xl font-bold text-red-500">
+                            ฿{{ number_format($item->price, 0) }}
+                        </span>
+
+                        @if ($item->discount_price)
+                            <span class="ml-2 text-gray-400 line-through">
+                                ฿{{ number_format($item->original_price, 0) }}
+                            </span>
+                        @endif
+                    </div>
+
+                    <!-- Right: Discount Percentage -->
+                    @if ($item->discount_price)
+                        <div>
+                            <span class="px-3 py-1 text-xs text-white bg-yellow-500 rounded-full">
+                                -{{ $item->discount_percentage }}%
+                            </span>
+                        </div>
+                    @endif
+
                 </div>
+
+
 
                 @if ($item->has_discount)
                     <div class="mt-4">
@@ -554,41 +590,56 @@
                 } --}}
             }" x-cloak>
                 {{-- Trigger Button --}}
-
+                {{--
                 <div class="flex mt-6 space-x-4">
 
-                    {{-- <button @click="showModal = true"
+                    <button @click="showModal = true"
                         class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
                         Add to Cart
-                    </button> --}}
+                    </button>
 
                     <button @click="showModal = true" class="btn btn-soft btn-warning">Add to Cart</button>
                     <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy
                         Now</button>
-                </div>
+                </div> --}}
+<div class="flex flex-col items-center w-full max-w-xs pb-4 mx-auto mt-6 space-y-4">
+
+    <button @click="showModal = true"
+            class="w-full text-lg btn btn-active btn-accent btn-lg sm:w-auto">
+        Add to Cart
+    </button>
+
+    <button class="w-full text-lg btn btn-active btn-lg sm:w-auto">
+        Buy Now
+    </button>
+
+</div>
 
 
 
 
 
 
-                <div class="flex flex-col mt-6 space-y-4">
+
+
+
+                {{-- <div class="flex flex-col mt-6 space-y-4">
                     <!-- Top Button -->
                     <button @click="showModal = true" class="w-full btn btn-soft btn-warning">
 
                         <span class="sr-only">Add to Cart</span>
 
-                                        <svg aria-hidden="true" fill="none" focusable="false" width="24"
-                        class="header__nav-icon icon icon-cart" viewBox="0 0 24 24">
-                        <path
-                            d="M4.75 8.25A.75.75 0 0 0 4 9L3 19.125c0 1.418 1.207 2.625 2.625 2.625h12.75c1.418 0 2.625-1.149 2.625-2.566L20 9a.75.75 0 0 0-.75-.75H4.75Zm2.75 0v-1.5a4.5 4.5 0 0 1 4.5-4.5v0a4.5 4.5 0 0 1 4.5 4.5v1.5"
-                            stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                        </path>
-                    </svg>
+                        <svg aria-hidden="true" fill="none" focusable="false" width="24"
+                            class="header__nav-icon icon icon-cart" viewBox="0 0 24 24">
+                            <path
+                                d="M4.75 8.25A.75.75 0 0 0 4 9L3 19.125c0 1.418 1.207 2.625 2.625 2.625h12.75c1.418 0 2.625-1.149 2.625-2.566L20 9a.75.75 0 0 0-.75-.75H4.75Zm2.75 0v-1.5a4.5 4.5 0 0 1 4.5-4.5v0a4.5 4.5 0 0 1 4.5 4.5v1.5"
+                                stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                            </path>
+                        </svg>
 
-                    @if (session('cart') && count(session('cart')->items ?? []) > 0)
-                        <span class="absolute top-0 right-0 h-2.5 w-2.5 bg-red-500 rounded-full"></span>
-                    @endif
+                        @if (session('cart') && count(session('cart')->items ?? []) > 0)
+                            <span class="absolute top-0 right-0 h-2.5 w-2.5 bg-red-500 rounded-full"></span>
+                        @endif
 
                     </button>
 
@@ -596,7 +647,7 @@
                     <button class="w-full px-6 py-2 text-lg text-white bg-red-500 rounded btn hover:bg-red-600">
                         Buy Now
                     </button>
-                </div>
+                </div> --}}
 
 
 

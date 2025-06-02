@@ -1,65 +1,44 @@
-<div class="btm-nav">
+<div class="fixed bottom-0 left-0 z-50 flex items-center justify-around w-full h-16 bg-white border-t dock">
 
-    <!-- Home Button -->
-    <a href="/seller/dashboard"
-        class="border-blue-600 text-blue-600 flex flex-col items-center
-    {{ request()->is('seller/dashboard') ? 'bg-blue-200 active' : '' }}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-        </svg>
+  <!-- Home Button -->
+  <a href="/seller/dashboard"
+     class="flex flex-col items-center justify-center {{ request()->is('seller/dashboard') ? 'dock-active text-blue-600' : 'text-gray-500' }}">
+    <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <g fill="currentColor" stroke-linejoin="miter" stroke-linecap="butt">
+        <polyline points="1 11 12 2 23 11" fill="none" stroke="currentColor" stroke-width="2"></polyline>
+        <path d="m5,13v7c0,1.1.9,2,2,2h10c1.1,0,2-.9,2-2v-7" fill="none" stroke="currentColor" stroke-width="2"></path>
+        <line x1="12" y1="22" x2="12" y2="18" stroke="currentColor" stroke-width="2"></line>
+      </g>
+    </svg>
+    <span class="text-xs dock-label">Home</span>
+  </a>
 
-        <span class="btm-nav-label">Home</span>
-    </a>
+  <!-- Customers Button -->
+  <a href="/seller/customers"
+     class="flex flex-col items-center justify-center {{ request()->is('seller/customers') ? 'dock-active text-blue-600' : 'text-gray-500' }}">
+    <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <g fill="currentColor">
+        <polyline points="3 14 9 14 9 17 15 17 15 14 21 14" fill="none" stroke="currentColor" stroke-width="2"/>
+        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/>
+      </g>
+    </svg>
+    <span class="text-xs dock-label">Customers</span>
+  </a>
 
-    <!-- Customers Button -->
-    <a href="/seller/customers"
-        class="border-blue-600 text-blue-600 flex flex-col items-center
-    {{ request()->is('seller/customers') ? 'bg-blue-200 active' : '' }}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M17 20h5v-2a4 4 0 00-3-3.87M12 20v-2a4 4 0 013-3.87M6 20v-2a4 4 0 00-3-3.87M9 10a4 4 0 108 0 4 4 0 10-8 0z" />
-        </svg>
-        <span class="btm-nav-label">Customers</span>
-    </a>
+  <!-- Carts Button -->
+  <a href="/seller/carts"
+     class="flex flex-col items-center justify-center {{ request()->is('seller/carts') ? 'dock-active text-teal-600' : 'text-gray-500' }}">
+    <img src="{{ asset('images/1828533.png') }}" alt="Carts Icon" class="size-[1.2em]">
+    <span class="text-xs dock-label">Carts</span>
+  </a>
 
-
-
-    <!-- Carts Button -->
-    {{-- <a href="/seller/carts"
-        class="border-blue-600 text-teal-600 flex flex-col items-center
-    {{ request()->is('seller/carts') ? 'bg-teal-200 active' : '' }}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.6 8M17 13l1.6 8M6 17h.01M18 17h.01" />
-        </svg>
-
-        <span class="btm-nav-label">Carts</span>
-    </a> --}}
-
-    <a href="/seller/carts"
-        class="border-blue-600 text-teal-600 flex flex-col items-center
-    {{ request()->is('seller/carts') ? 'bg-teal-200 active' : '' }}">
-
-        <img src="{{ asset('images/1828533.png') }}" alt="Carts Icon" class="w-5 h-5">
-
-        <span class="btm-nav-label">Carts</span>
-    </a>
-
-
-
-
-    <!-- More Button -->
-    <a href="/seller/menu"
-        class="border-blue-600 text-purple-600 flex flex-col items-center
-    {{ request()->is('seller/menu') ? 'bg-purple-200 active' : '' }}">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-            stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-        </svg>
-        <span class="btm-nav-label">More</span>
-    </a>
+  <!-- More/Menu Button -->
+  <a href="/seller/menu"
+     class="flex flex-col items-center justify-center {{ request()->is('seller/menu') ? 'dock-active text-purple-600' : 'text-gray-500' }}">
+    <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+      <path d="M4 6h16M4 12h16M4 18h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2"/>
+    </svg>
+    <span class="text-xs dock-label">More</span>
+  </a>
 
 </div>

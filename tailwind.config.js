@@ -19,6 +19,7 @@ export default {
         extend: {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+                fancy: ['"Poppins"', 'sans-serif'],
             },
         },
     },

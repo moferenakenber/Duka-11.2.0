@@ -96,7 +96,7 @@
                                             No customer assigned
                                         @endif
                                     </p>
-                                    <p class="text-lg font-semibold text-gray-900 truncate dark:text-white">
+                                    <p class="text-lg font-semibold text-gray-900 truncate">
                                         @if ($cart->seller)
                                             {{ $cart->seller->first_name }} {{ $cart->seller->last_name }}
                                         @elseif ($cart->user)
