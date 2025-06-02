@@ -575,13 +575,21 @@
                 <div class="flex flex-col mt-6 space-y-4">
                     <!-- Top Button -->
                     <button @click="showModal = true" class="w-full btn btn-soft btn-warning">
-                        Add to Cart
-                    </button>
 
-                    <button @click="showModal = true">
-                        <img src="http://duka-11.2.0.local:8086/images/addtocartbutton.svg" alt="Product Image"
-                            class="object-cover w-full h-48 mb-4 rounded">
-                        Add to Cart
+                        <span class="sr-only">Add to Cart</span>
+
+                                        <svg aria-hidden="true" fill="none" focusable="false" width="24"
+                        class="header__nav-icon icon icon-cart" viewBox="0 0 24 24">
+                        <path
+                            d="M4.75 8.25A.75.75 0 0 0 4 9L3 19.125c0 1.418 1.207 2.625 2.625 2.625h12.75c1.418 0 2.625-1.149 2.625-2.566L20 9a.75.75 0 0 0-.75-.75H4.75Zm2.75 0v-1.5a4.5 4.5 0 0 1 4.5-4.5v0a4.5 4.5 0 0 1 4.5 4.5v1.5"
+                            stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+                        </path>
+                    </svg>
+
+                    @if (session('cart') && count(session('cart')->items ?? []) > 0)
+                        <span class="absolute top-0 right-0 h-2.5 w-2.5 bg-red-500 rounded-full"></span>
+                    @endif
+
                     </button>
 
                     <!-- Bottom Button -->
@@ -589,6 +597,8 @@
                         Buy Now
                     </button>
                 </div>
+
+
 
 
 
