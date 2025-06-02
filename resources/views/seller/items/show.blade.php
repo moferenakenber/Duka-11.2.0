@@ -204,16 +204,6 @@
                     {{ $item->product_name }}
                 </h2>
 
-                {{-- <p class="mt-2 text-gray-600">{{ $item->product_description }}</p>
-
-                <div class="mt-4">
-                    <span class="text-3xl font-bold text-red-500">฿{{ number_format($item->price, 0) }}</span>
-                    @if ($item->discount_price)
-                        <span class="ml-2 text-gray-400 line-through">฿{{ number_format($item->original_price, 0) }}</span>
-                        <span
-                            class="px-3 py-1 text-xs text-white bg-yellow-500 rounded">-{{ $item->discount_percentage }}%</span>
-                    @endif
-                </div> --}}
 
                 <p class="mt-2 text-gray-600 font-fancy">
                     {{ $item->product_description }}
@@ -602,18 +592,17 @@
                     <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy
                         Now</button>
                 </div> --}}
-<div class="flex flex-col items-center w-full max-w-xs pb-4 mx-auto mt-6 space-y-4">
+                <div class="flex flex-col items-center w-full max-w-xs pb-4 mx-auto mt-6 space-y-4">
 
-    <button @click="showModal = true"
-            class="w-full text-lg btn btn-active btn-accent btn-lg sm:w-auto">
-        Add to Cart
-    </button>
+                    <button @click="showModal = true" class="w-full text-lg btn btn-active btn-accent btn-lg sm:w-auto">
+                        Add to Cart
+                    </button>
 
-    <button class="w-full text-lg btn btn-active btn-lg sm:w-auto">
-        Buy Now
-    </button>
+                    <button class="w-full text-lg btn btn-active btn-lg sm:w-auto">
+                        Buy Now
+                    </button>
 
-</div>
+                </div>
 
 
 
@@ -660,67 +649,74 @@
                     x-transition.opacity>
                 </div>
 
+
+
                 {{-- Bottom Sheet Modal --}}
-                <div x-show="showModal" x-transition
-                    class="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
-                    <!-- Close Button -->
-                    <div class="flex justify-end">
-                        <button @click="showModal = false"
-                            class="text-2xl text-gray-400 hover:text-gray-600">&times;</button>
-                    </div>
+                {{-- <div x-show="showModal" x-transition
+                    class="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl"> --}}
 
-                    <!-- Product Preview -->
-                    <div class="flex items-center gap-4 mb-4">
-                        {{-- <img src="/img/product.jpg" alt="Product" class="object-cover w-20 h-20 border rounded"> --}}
-                        <img :src="selectedColor ? selectedColor.img : '/img/product.jpg'" alt="Product"
-                            class="object-cover w-20 h-20 border rounded">
+                    <div x-show="showModal" x-transition
+                        class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
 
-                        {{-- <div>
+
+                            <!-- Close Button -->
+                            <div class="flex justify-end">
+                                <button @click="showModal = false"
+                                    class="text-2xl text-gray-400 hover:text-gray-600">&times;</button>
+                            </div>
+
+                            <!-- Product Preview -->
+                            <div class="flex items-center gap-4 mb-4">
+                                {{-- <img src="/img/product.jpg" alt="Product" class="object-cover w-20 h-20 border rounded"> --}}
+                                <img :src="selectedColor ? selectedColor.img : '/img/product.jpg'" alt="Product"
+                                    class="object-cover w-20 h-20 border rounded">
+
+                                {{-- <div>
                             <div class="text-lg font-semibold text-red-500">฿<span x-text="item.price"></span></div>
                             <div class="text-sm text-gray-500">Stock: <span x-text="item.stock"></span></div>
                         </div> --}}
 
-                        {{-- <div class="text-lg font-semibold text-red-500">
+                                {{-- <div class="text-lg font-semibold text-red-500">
                             ฿<span x-text="selectedVariant ? selectedVariant.price : item.price"></span>
                         </div> --}}
 
-                        <div class="text-lg font-semibold text-red-500">
-                            ฿<span x-text="selectedPrice"></span>
-                        </div>
+                                <div class="text-lg font-semibold text-red-500">
+                                    ฿<span x-text="selectedPrice"></span>
+                                </div>
 
 
-                        <!------------------------------>
-                        <!-- Price Display -->
-                        {{-- <div x-show="selectedPrice !== null">
+                                <!------------------------------>
+                                <!-- Price Display -->
+                                {{-- <div x-show="selectedPrice !== null">
                             <p class="text-lg font-semibold">
                                 Price: <span x-text="selectedPrice"></span>
                             </p>
                         </div> --}}
-                        {{--
+                                {{--
                         <!-- Debugging output -->
                         <p>selectedPrice: <span x-text="selectedPrice"></span></p>
                         <p>formattedPrice: <span x-text="formattedPrice"></span></p>
  --}}
 
 
-                        <!------------------------------>
-                        <div class="text-sm text-gray-500">
-                            Stock:<span x-text="selectedStock"></span>
-                        </div>
+                                <!------------------------------>
+                                <div class="text-sm text-gray-500">
+                                    Stock:<span x-text="selectedStock"></span>
+                                </div>
 
 
-                        {{-- tryouts --}}
-                        {{-- <div class="text-lg font-semibold text-red-500">
+                                {{-- tryouts --}}
+                                {{-- <div class="text-lg font-semibold text-red-500">
                             ฿<span x-text="selectedVariant ? selectedVariant.price : item.price"></span>
                         </div>
                         <div class="text-sm text-gray-500">
                             Stock: <span x-text="selectedVariant ? selectedVariant.stock : item.stock"></span>
                         </div> --}}
 
-                    </div>
+                            </div>
 
-                    <!-- Color Selector -->
-                    {{-- <div class="mb-4">
+                            <!-- Color Selector -->
+                            {{-- <div class="mb-4">
                         <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(color, index) in item.colors" :key="index">
@@ -742,7 +738,7 @@
 
 
 
-                    {{-- <!-- Color Selector -->
+                            {{-- <!-- Color Selector -->
                     <div class="mb-4">
                         <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
@@ -762,32 +758,35 @@
                         </div>
                     </div> --}}
 
-                    <!-- Color Selector -->
-                    <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">COLOR</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(color, index) in colors" :key="index">
-                                <button type="button" @click="!color.disabled && (selectedColor = color, updatePrice())"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
-                                        'border-black bg-black text-white': selectedColor?.name === color.name && !color
-                                            .disabled
-                                    }">
-                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded" />
-                                    <span x-text="color.name"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div>
+                            <!-- Color Selector -->
+                            <div class="mb-4">
+                                <div class="mb-2 text-sm font-semibold">COLOR</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <template x-for="(color, index) in colors" :key="index">
+                                        <button type="button"
+                                            @click="!color.disabled && (selectedColor = color, updatePrice())"
+                                            class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
+                                            :class="{
+                                                'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color
+                                                    .disabled,
+                                                'border-black bg-black text-white': selectedColor?.name === color
+                                                    .name && !color
+                                                    .disabled
+                                            }">
+                                            <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded" />
+                                            <span x-text="color.name"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
 
 
 
 
 
 
-                    <!-- Color Selector -->
-                    {{-- <div class="mb-4">
+                            <!-- Color Selector -->
+                            {{-- <div class="mb-4">
                         <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(variant, index) in item.variants" :key="index">
@@ -806,8 +805,8 @@
                         </div>
                     </div> --}}
 
-                    <!-- Color Selector (2) -->
-                    {{-- <div class="mb-4">
+                            <!-- Color Selector (2) -->
+                            {{-- <div class="mb-4">
                         <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(color, index) in item.colors" :key="index">
@@ -827,8 +826,8 @@
                     </div> --}}
 
 
-                    {{-- ////////////// --}}
-                    {{-- <div>
+                            {{-- ////////////// --}}
+                            {{-- <div>
                         <label>Color:</label>
                         <select x-model="selectedVariant">
                             <template x-for="(variant, index) in item.variants" :key="index">
@@ -838,30 +837,30 @@
                         </select>
                     </div> --}}
 
-                    {{-- ////////////// --}}
+                            {{-- ////////////// --}}
 
 
-                    <!-- Size Selector -->
-                    <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">SIZE</div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <template x-for="(size, index) in item.sizes" :key="index">
-                                <button type="button" @click="!size.disabled && (selectedSize = size.value)"
-                                    class="px-3 py-2 text-xs text-left border rounded-md"
-                                    :class="{
-                                        'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
-                                        'bg-black text-white': selectedSize === size.value && !size.disabled
-                                    }"
-                                    x-text="size.label"></button>
-                            </template>
-                        </div>
-                    </div>
+                            <!-- Size Selector -->
+                            <div class="mb-4">
+                                <div class="mb-2 text-sm font-semibold">SIZE</div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <template x-for="(size, index) in item.sizes" :key="index">
+                                        <button type="button" @click="!size.disabled && (selectedSize = size.value)"
+                                            class="px-3 py-2 text-xs text-left border rounded-md"
+                                            :class="{
+                                                'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
+                                                'bg-black text-white': selectedSize === size.value && !size.disabled
+                                            }"
+                                            x-text="size.label"></button>
+                                    </template>
+                                </div>
+                            </div>
 
 
 
 
-                    <!-- Packaging Option Selector -->
-                    {{-- <div class="mb-6">
+                            <!-- Packaging Option Selector -->
+                            {{-- <div class="mb-6">
                         <div class="mb-2 text-sm font-semibold">Packaging</div>
                         <select name="packaging_details" class="form-select">
                             <template x-for="option in item.packaging_details" :key="option.name">
@@ -871,29 +870,31 @@
                     </div> --}}
 
 
-                    <!-- ---------------------------------------------------------- -->
-                    <div class="mb-6">
-                        <div class="mb-2 text-sm font-semibold">Packaging</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(option, index) in item.packaging_details" :key="option.name">
-                                <button type="button"
-                                    @click="!option.disabled && (selectedPackaging = option, updatePrice())"
-                                    class="px-4 py-2 text-sm border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': option.disabled,
-                                        'border-black bg-black text-white': selectedPackaging?.name === option.name && !
-                                            option.disabled
-                                    }">
-                                    <span x-text="`${option.name} (${option.quantity})`"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div>
-                    <!-- ---------------------------------------------------------- -->
+                            <!-- ---------------------------------------------------------- -->
+                            <div class="mb-6">
+                                <div class="mb-2 text-sm font-semibold">Packaging</div>
+                                <div class="flex flex-wrap gap-2">
+                                    <template x-for="(option, index) in item.packaging_details" :key="option.name">
+                                        <button type="button"
+                                            @click="!option.disabled && (selectedPackaging = option, updatePrice())"
+                                            class="px-4 py-2 text-sm border rounded-md"
+                                            :class="{
+                                                'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': option
+                                                    .disabled,
+                                                'border-black bg-black text-white': selectedPackaging?.name === option
+                                                    .name && !
+                                                    option.disabled
+                                            }">
+                                            <span x-text="`${option.name} (${option.quantity})`"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                            <!-- ---------------------------------------------------------- -->
 
 
 
-                    {{-- <div class="grid grid-cols-2 gap-2">
+                            {{-- <div class="grid grid-cols-2 gap-2">
                             <template x-for="(packaging_detail, index) in item.packaging_details" :key="index">
                                 <button type="button"
                                     @click="!packaging_detail.disabled && (selectedSizePackaging_detail = packaging_details.value)"
@@ -907,9 +908,9 @@
                             </template>
                         </div> --}}
 
-                    <!-- ---------------------------------------- -->
+                            <!-- ---------------------------------------- -->
 
-                    {{-- <div x-data="variantSelector({{ $variantData->toJson() }})" x-init="init()" class="space-y-4">
+                            {{-- <div x-data="variantSelector({{ $variantData->toJson() }})" x-init="init()" class="space-y-4">
                             <!-- Dropdown -->
                             <div>
                                 <label class="block text-sm font-medium text-gray-700">Choose Color:</label>
@@ -930,8 +931,8 @@
                             </div>
                         </div> --}}
 
-                    <!-- Dropdown -->
-                    {{-- <div>
+                            <!-- Dropdown -->
+                            {{-- <div>
                             <label>Choose Color:</label>
                             <select x-model="selectedColor" @change="updatePrice()">
                                 <option value="">-- Select Color --</option>
@@ -940,21 +941,21 @@
                                 </template>
                             </select>
                         </div> --}}
-                    <!-- ---------------------------------------- -->
+                            <!-- ---------------------------------------- -->
 
-                    <!-- Quantity Control -->
-                    <div class="mb-6">
-                        <div class="mb-2 text-sm font-semibold">Quantity</div>
-                        <div class="flex items-center px-2 border rounded w-max">
-                            <button type="button" class="px-2 text-lg"
-                                @click="quantity = Math.max(1, quantity - 1)">–</button>
-                            <input type="number" x-model="quantity" min="1"
-                                class="w-12 text-center outline-none border-x" />
-                            <button type="button" class="px-2 text-lg" @click="quantity++">+</button>
-                        </div>
-                    </div>
+                            <!-- Quantity Control -->
+                            <div class="mb-6">
+                                <div class="mb-2 text-sm font-semibold">Quantity</div>
+                                <div class="flex items-center px-2 border rounded w-max">
+                                    <button type="button" class="px-2 text-lg"
+                                        @click="quantity = Math.max(1, quantity - 1)">–</button>
+                                    <input type="number" x-model="quantity" min="1"
+                                        class="w-12 text-center outline-none border-x" />
+                                    <button type="button" class="px-2 text-lg" @click="quantity++">+</button>
+                                </div>
+                            </div>
 
-                    {{--
+                            {{--
                     <div>
                         <label>Color:</label>
                         <select x-model="selectedVariant">
@@ -1002,20 +1003,20 @@
 
 
 
-                    <!-- Add to Cart Button -->
-                    <button :disabled="!selectedColor || !selectedSize" @click="addToCart()"
-                        class="w-full py-3 font-bold text-white rounded"
-                        :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
-                        ADD TO CART
-                    </button>
+                            <!-- Add to Cart Button -->
+                            <button :disabled="!selectedColor || !selectedSize" @click="addToCart()"
+                                class="w-full py-3 font-bold text-white rounded"
+                                :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
+                                ADD TO CART
+                            </button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
+        @endsection
 
-        </div>
-    </div>
-@endsection
-
-{{-- @section('scripts')
+        {{-- @section('scripts')
     {{-- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         new Swiper(".mySwiper", {
@@ -1035,22 +1036,22 @@
 @endsection --}}
 
 
-@section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const swiper = new Swiper(".mySwiper", {
-                loop: true,
-                slidesPerView: 1,
-                spaceBetween: 10,
-                navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
-                },
-                pagination: {
-                    el: ".swiper-pagination",
-                    clickable: true,
-                },
-            });
-        });
-    </script>
-@endsection
+        @section('scripts')
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const swiper = new Swiper(".mySwiper", {
+                        loop: true,
+                        slidesPerView: 1,
+                        spaceBetween: 10,
+                        navigation: {
+                            nextEl: ".swiper-button-next",
+                            prevEl: ".swiper-button-prev",
+                        },
+                        pagination: {
+                            el: ".swiper-pagination",
+                            clickable: true,
+                        },
+                    });
+                });
+            </script>
+        @endsection
