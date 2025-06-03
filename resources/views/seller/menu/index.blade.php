@@ -68,7 +68,12 @@
                     <span class="px-2 py-1 ml-2 text-white bg-blue-500 rounded-full">2</span>
                 </a>
 
-                <button class="btn">Dashboard</button>
+                <button class="btn">
+                    <img src="{{ asset('images/icons8-dashboard-50.png') }}" alt="Dashboard Icon"
+                        class="inline-block w-5 h-5 mr-2">
+                    Dashboard
+                </button>
+
 
 
 

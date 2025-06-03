@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\ItemCategory;
+use App\Models\ItemSize;
+use App\Models\ItemColor;
+use App\Models\ItemPackagingType;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 
@@ -34,21 +37,35 @@ class ItemController extends Controller
     }
 
     // Show the form for creating a new item
+    // public function create()
+    // {
+    //     // Fetch categories to display in the form
+    //     $categories = ItemCategory::all();
+    //     $categories = $categories->toArray();
+
+
+
+    //     // Log the categories being passed to the view
+    //     Log::info('Categories sent to admin.items.create:', $categories);
+    //     $colors = []; // Initialize colors array if needed
+    //     $sizes = []; // Initialize sizes array if needed
+    //     $packagings = []; // Initialize packaging array if needed
+
+    //     // Pass the categories to the view
+    //     return view('admin.items.create', compact('categories', 'colors', 'sizes', 'packagings'));
+    // }
+
     public function create()
-    {
-        // Fetch categories to display in the form
-        $categories = ItemCategory::all();
-        $categories = $categories->toArray();
+{
+    return view('admin.items.create', [
+        'categories' => ItemCategory::all(),
+        'colors' => ItemColor::all(),
+        'sizes' => ItemSize::all(),
+        'packagingTypes' => ItemPackagingType::all(),
+        'sellers' => User::where('role', 'seller')->get(),
+    ]);
+}
 
-        // Log the categories being passed to the view
-        Log::info('Categories sent to admin.items.create:', $categories);
-        $colors = []; // Initialize colors array if needed
-        $sizes = []; // Initialize sizes array if needed
-        $packagings = []; // Initialize packaging array if needed
-
-        // Pass the categories to the view
-        return view('admin.items.create', compact('categories', 'colors', 'sizes', 'packagings'));
-    }
 
     // Save Draft method
     public function saveDraft(Request $request)
@@ -288,6 +305,11 @@ class ItemController extends Controller
     // Show the details of a specific item
     public function show(Item $item)
     {
+        $item->load([
+            'variants.itemColor',
+            'variants.itemSize',
+            'variants.itemPackagingType',
+        ]);
         $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
         return view('admin.items.show', compact('item', 'sellers'));
     }

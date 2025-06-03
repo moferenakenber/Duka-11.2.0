@@ -5,123 +5,159 @@
         </h2>
     </x-slot>
 
-    <div class="max-w-4xl p-6 mx-auto bg-white rounded shadow">
-        <h2 class="mb-6 text-2xl font-bold">Create Draft Item</h2>
+    <div class="max-w-6xl p-4 mx-auto" x-data="{ variants: [] }">
+        <div class="p-6 shadow-xl bg-base-100 rounded-xl">
+            <form action="{{ route('admin.saveDraft') }}" method="POST" enctype="multipart/form-data">
+                @csrf
 
-        <form method="POST" action="{{ route('admin.saveDraft') }}" enctype="multipart/form-data">
-            @csrf
+                <!-- Product Info -->
+                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
+                    <div>
+                        <label class="label">
+                            <span class="label-text">Product Name</span>
+                        </label>
+                        <input type="text" name="product_name" class="w-full input input-bordered" placeholder="Product name">
+                    </div>
+                    <div>
+                        <label class="label">
+                            <span class="label-text">Base Price</span>
+                        </label>
+                        <input type="number" step="0.01" name="price" class="w-full input input-bordered" placeholder="Base price">
+                    </div>
+                </div>
 
-            <!-- Product Name -->
-            <div class="mb-4">
-                <label for="product_name" class="block font-semibold">Product Name *</label>
-                <input type="text" name="product_name" id="product_name" class="w-full px-3 py-2 border border-gray-300 rounded" required>
-            </div>
+                <div class="mb-4">
+                    <label class="label">
+                        <span class="label-text">Product Description</span>
+                    </label>
+                    <textarea name="product_description" rows="3" class="w-full textarea textarea-bordered" placeholder="Enter description..."></textarea>
+                </div>
 
-            <!-- Product Description -->
-            <div class="mb-4">
-                <label for="product_description" class="block font-semibold">Product Description</label>
-                <textarea name="product_description" id="product_description" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded"></textarea>
-            </div>
+                <div class="mb-4">
+                    <label class="label">
+                        <span class="label-text">Packaging Details</span>
+                    </label>
+                    <textarea name="packaging_details" rows="2" class="w-full textarea textarea-bordered" placeholder="Box, Bag, etc."></textarea>
+                </div>
 
-            <!-- Packaging Details -->
-            <div class="mb-4">
-                <label for="packaging_details" class="block font-semibold">Packaging Details</label>
-                <textarea name="packaging_details" id="packaging_details" rows="2" class="w-full px-3 py-2 border border-gray-300 rounded"></textarea>
-            </div>
+                <!-- Discounts -->
+                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
+                    <div>
+                        <label class="label">
+                            <span class="label-text">Discount Price</span>
+                        </label>
+                        <input type="number" step="0.01" name="discount_price" class="w-full input input-bordered">
+                    </div>
+                    <div>
+                        <label class="label">
+                            <span class="label-text">Discount Percentage</span>
+                        </label>
+                        <input type="number" step="0.01" name="discount_percentage" class="w-full input input-bordered">
+                    </div>
+                </div>
 
-            <!-- Variation -->
-            <div class="mb-4">
-                <label for="variation" class="block font-semibold">Variation</label>
-                <input type="text" name="variation" id="variation" class="w-full px-3 py-2 border border-gray-300 rounded">
-            </div>
+                <!-- Images & Category -->
+                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
+                    <div>
+                        <label class="label">
+                            <span class="label-text">Product Images</span>
+                        </label>
+                        <input type="file" name="product_images[]" multiple class="w-full file-input file-input-bordered">
+                    </div>
+                    <div>
+                        <label class="label">
+                            <span class="label-text">Main Category</span>
+                        </label>
+                        <select name="category_id" class="w-full select select-bordered">
+                            <option value="">-- Select Category --</option>
+                            @foreach ($categories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
 
-            <!-- Price -->
-            <div class="mb-4">
-                <label for="price" class="block font-semibold">Price</label>
-                <input type="number" name="price" step="0.01" id="price" class="w-full px-3 py-2 border border-gray-300 rounded">
-            </div>
+                <!-- Status -->
+                <div class="mb-6">
+                    <label class="label">
+                        <span class="label-text">Status</span>
+                    </label>
+                    <select name="status" class="w-full select select-bordered">
+                        <option value="draft">Draft</option>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                        <option value="unavailable">Unavailable</option>
+                    </select>
+                </div>
 
-            <!-- Product Images -->
-            <div class="mb-4">
-                <label for="product_images" class="block font-semibold">Product Images (you can select multiple)</label>
-                <input type="file" name="product_images[]" multiple accept="image/*" class="w-full px-3 py-2 border border-gray-300 rounded">
-            </div>
+                <!-- Variant Section -->
+                <div class="p-4 bg-base-200 rounded-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold">Variants</h3>
+                        <button type="button" class="btn btn-outline btn-sm" @click="variants.push({})">+ Add Variant</button>
+                    </div>
 
-            <!-- Selected Categories (JSON) -->
-            <div class="mb-4">
-                <label for="selectedCategories" class="block font-semibold">Selected Categories (JSON)</label>
-                <input type="text" name="selectedCategories" id="selectedCategories" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder='["1","2"]'>
-            </div>
+                    <template x-for="(variant, index) in variants" :key="index">
+                        <div class="p-4 mb-4 border bg-base-100 rounded-xl border-base-300">
+                            <div class="grid items-end grid-cols-1 gap-3 md:grid-cols-6">
+                                <div>
+                                    <label class="label"><span class="label-text">Color</span></label>
+                                    <select :name="'variants['+index+'][item_color_id]'" class="w-full select select-bordered">
+                                        <option value="">--</option>
+                                        @foreach ($colors as $color)
+                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="label"><span class="label-text">Size</span></label>
+                                    <select :name="'variants['+index+'][item_size_id]'" class="w-full select select-bordered">
+                                        <option value="">--</option>
+                                        @foreach ($sizes as $size)
+                                            <option value="{{ $size->id }}">{{ $size->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="label"><span class="label-text">Packaging</span></label>
+                                    <select :name="'variants['+index+'][item_packaging_type_id]'" class="w-full select select-bordered">
+                                        <option value="">--</option>
+                                        @foreach ($packagingTypes as $pack)
+                                            <option value="{{ $pack->id }}">{{ $pack->name }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="label"><span class="label-text">Stock</span></label>
+                                    <input type="number" min="0" :name="'variants['+index+'][stock]'" class="w-full input input-bordered">
+                                </div>
+                                <div>
+                                    <label class="label"><span class="label-text">Price</span></label>
+                                    <input type="number" step="0.01" :name="'variants['+index+'][price]'" class="w-full input input-bordered">
+                                </div>
+                                <div class="flex gap-2">
+                                    <div class="w-full">
+                                        <label class="label"><span class="label-text">Owner</span></label>
+                                        <select :name="'variants['+index+'][owner_id]'" class="w-full select select-bordered">
+                                            <option value="">--</option>
+                                            @foreach ($sellers as $seller)
+                                                <option value="{{ $seller->id }}">{{ $seller->name }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    <div class="pt-8">
+                                        <button type="button" class="btn btn-error btn-sm" @click="variants.splice(index, 1)">✕</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
 
-            <!-- New Category Names (JSON) -->
-            <div class="mb-4">
-                <label for="newCategoryNames" class="block font-semibold">New Category Names (JSON)</label>
-                <input type="text" name="newCategoryNames" id="newCategoryNames" class="w-full px-3 py-2 border border-gray-300 rounded" placeholder='["Notebooks","Pencils"]'>
-            </div>
-
-            <hr class="my-6">
-
-            <h3 class="mb-4 text-xl font-semibold">Variant Details</h3>
-
-            <!-- Color -->
-            <div class="mb-4">
-                <label for="item_color_id" class="block font-semibold">Color</label>
-                <select name="item_color_id" id="item_color_id" class="w-full px-3 py-2 border border-gray-300 rounded">
-                    <option value="">-- Select Color --</option>
-                    @foreach ($colors as $color)
-                        <option value="{{ $color->id }}">{{ $color->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Size -->
-            <div class="mb-4">
-                <label for="item_size_id" class="block font-semibold">Size</label>
-                <select name="item_size_id" id="item_size_id" class="w-full px-3 py-2 border border-gray-300 rounded">
-                    <option value="">-- Select Size --</option>
-                    @foreach ($sizes as $size)
-                        <option value="{{ $size->id }}">{{ $size->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Packaging Type -->
-            <div class="mb-4">
-                <label for="item_packaging_type_id" class="block font-semibold">Packaging Type</label>
-                <select name="item_packaging_type_id" id="item_packaging_type_id" class="w-full px-3 py-2 border border-gray-300 rounded">
-                    <option value="">-- Select Packaging --</option>
-                    @foreach ($packagings as $pack)
-                        <option value="{{ $pack->id }}">{{ $pack->name }}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <!-- Variant Price -->
-            <div class="mb-4">
-                <label for="variant_price" class="block font-semibold">Variant Price</label>
-                <input type="number" name="variant_price" id="variant_price" class="w-full px-3 py-2 border border-gray-300 rounded" required>
-            </div>
-
-            <!-- Stock -->
-            <div class="mb-4">
-                <label for="variant_stock" class="block font-semibold">Stock Quantity</label>
-                <input type="number" name="variant_stock" id="variant_stock" class="w-full px-3 py-2 border border-gray-300 rounded" required>
-            </div>
-
-            <!-- Is Active -->
-            <div class="mb-4">
-                <label class="inline-flex items-center">
-                    <input type="checkbox" name="is_active" value="1" checked class="mr-2">
-                    <span>Active Variant</span>
-                </label>
-            </div>
-
-            <!-- Submit Button -->
-            <div class="mt-6">
-                <button type="submit" class="px-6 py-2 font-bold text-white bg-blue-600 rounded hover:bg-blue-700">
-                    Save as Draft
-                </button>
-            </div>
-        </form>
+                <div class="mt-6 text-end">
+                    <button type="submit" class="px-6 btn btn-primary">Save Product</button>
+                </div>
+            </form>
+        </div>
     </div>
 </x-app-layout>

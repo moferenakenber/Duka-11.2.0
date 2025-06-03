@@ -15,6 +15,10 @@ return new class extends Migration
         Schema::create('item_packaging_types', function (Blueprint $table) {
             $table->id();
             $table->string('name'); // e.g., "pieces", "packet", "cartoon"
+            $table->string('image')->nullable(); // Path to the image for the size
+            $table->boolean('disabled')->default(false);
+            // $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            $table->decimal('price', 10, 2)->default(0.00); // Price for the size
             $table->timestamps();
         });
     }

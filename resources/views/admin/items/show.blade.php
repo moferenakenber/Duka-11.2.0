@@ -1,13 +1,13 @@
 {{-- <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
             {{ __('Item Details') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="overflow-hidden bg-white rounded-lg shadow-md">
                 <div class="p-6 space-y-4">
                     <!-- Item Details (same as before) -->
 
@@ -16,8 +16,8 @@
                         @csrf
                         <div class="mt-4 space-y-4">
                             <!-- Select Cart -->
-                            <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
-                            <select name="cart_id" id="cart_id" class="w-40 p-2 border rounded-md text-gray-700" onchange="toggleCartOptions()">
+                            <label for="cart_id" class="font-semibold text-gray-700">Select Cart:</label>
+                            <select name="cart_id" id="cart_id" class="w-40 p-2 text-gray-700 border rounded-md" onchange="toggleCartOptions()">
                                 <option value="" selected>Create a New Cart</option>
                                 @foreach (auth()->user()->carts as $cart)
                                     <option value="{{ $cart->id }}">{{ $cart->name ?? 'Cart ' . $cart->id }}</option>
@@ -26,8 +26,8 @@
 
                             <!-- Customer Selection (appears only if 'Create a New Cart' is selected) -->
                             <div id="new_cart_customer_selector" class="hidden">
-                                <label for="customer_id" class="text-gray-700 font-semibold">Select Customer:</label>
-                                <select name="customer_id" id="customer_id" class="w-40 p-2 border rounded-md text-gray-700">
+                                <label for="customer_id" class="font-semibold text-gray-700">Select Customer:</label>
+                                <select name="customer_id" id="customer_id" class="w-40 p-2 text-gray-700 border rounded-md">
                                     <option value="" selected disabled>Select a Customer</option>
                                     @foreach ($customers as $customer)
                                         <option value="{{ $customer->id }}">{{ $customer->name }}</option>
@@ -38,7 +38,7 @@
                             <!-- Quantity Selector (same as before) -->
 
                             <!-- Submit Button -->
-                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                            <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
                                 Add to Cart
                             </button>
                         </div>
@@ -74,14 +74,14 @@
 
 {{-- <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
             {{ __('Item Details') }}
         </h2>
     </x-slot>
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="overflow-hidden bg-white rounded-lg shadow-md">
                 <div class="p-6 space-y-4">
                     <!-- Item Name -->
                     <div class="flex items-center justify-between">
@@ -126,7 +126,7 @@
 
                     @if (is_array($images) && count($images) > 0)
                         @foreach ($images as $image)
-                            <img src="{{ $image }}" alt="Item Image" class="w-32 h-32 object-cover rounded-md">
+                            <img src="{{ $image }}" alt="Item Image" class="object-cover w-32 h-32 rounded-md">
                         @endforeach
                     @else
                         <p>No images available</p>
@@ -137,8 +137,8 @@
                         @csrf
                         <div class="mt-4 space-y-4">
                             <!-- Select Cart -->
-                            <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
-                            <select name="cart_id" id="cart_id" class="w-40 p-2 border rounded-md text-gray-700">
+                            <label for="cart_id" class="font-semibold text-gray-700">Select Cart:</label>
+                            <select name="cart_id" id="cart_id" class="w-40 p-2 text-gray-700 border rounded-md">
                                 <option value="" selected>Create a New Cart</option>
                                 @foreach (auth()->user()->carts as $cart)
                                     <option value="{{ $cart->id }}">{{ $cart->name ?? 'Cart ' . $cart->id }}</option>
@@ -147,8 +147,8 @@
 
                             <!-- Quantity Selector -->
                             <div>
-                                <label for="quantity_type" class="text-gray-700 font-semibold">Choose Quantity Type:</label>
-                                <select name="quantity_type" id="quantity_type" class="w-40 p-2 border rounded-md text-gray-700" onchange="updateQuantityFields()">
+                                <label for="quantity_type" class="font-semibold text-gray-700">Choose Quantity Type:</label>
+                                <select name="quantity_type" id="quantity_type" class="w-40 p-2 text-gray-700 border rounded-md" onchange="updateQuantityFields()">
                                     <option value="pieces" selected>Pieces</option>
                                     <option value="packets">Packets</option>
                                     <option value="cartons">Cartons</option>
@@ -156,31 +156,31 @@
                             </div>
 
                             <!-- Quantity Fields -->
-                            <div class="mt-4 flex items-center space-x-4">
+                            <div class="flex items-center mt-4 space-x-4">
                                 <!-- Pieces Quantity -->
                                 <div id="pieces_field" class="w-20">
                                     <input type="number" name="pieces" id="pieces" value="1" min="1" max="{{ $item->stock }}"
-                                           class="p-2 border rounded-md text-gray-700" placeholder="Pieces" oninput="updateQuantities()">
+                                           class="p-2 text-gray-700 border rounded-md" placeholder="Pieces" oninput="updateQuantities()">
                                     <span>pieces</span>
                                 </div>
 
                                 <!-- Packets Quantity -->
-                                <div id="packets_field" class="w-20 hidden">
+                                <div id="packets_field" class="hidden w-20">
                                     <input type="number" name="packets" id="packets" value="0" min="0" max="{{ $item->stock / $item->piecesinapacket }}"
-                                           class="p-2 border rounded-md text-gray-700" placeholder="Packets" oninput="updateQuantities()">
+                                           class="p-2 text-gray-700 border rounded-md" placeholder="Packets" oninput="updateQuantities()">
                                     <span>packets</span>
                                 </div>
 
                                 <!-- Cartons Quantity -->
-                                <div id="cartons_field" class="w-20 hidden">
+                                <div id="cartons_field" class="hidden w-20">
                                     <input type="number" name="cartons" id="cartons" value="0" min="0" max="{{ $item->stock / ($item->piecesinapacket * $item->packetsinacartoon) }}"
-                                           class="p-2 border rounded-md text-gray-700" placeholder="Cartons" oninput="updateQuantities()">
+                                           class="p-2 text-gray-700 border rounded-md" placeholder="Cartons" oninput="updateQuantities()">
                                     <span>cartons</span>
                                 </div>
                             </div>
 
                             <!-- Submit Button -->
-                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                            <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
                                 Add to Cart
                             </button>
                         </div>
@@ -250,15 +250,15 @@
 
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
             {{ __('Item Details') }}
         </h2>
     </x-slot>
 
     @if ($errors->any())
-        <div class="mt-4 p-4 bg-red-100 border-l-4 border-red-500 text-red-700">
+        <div class="p-4 mt-4 text-red-700 bg-red-100 border-l-4 border-red-500">
             <h3 class="font-semibold">There were some problems with your input:</h3>
-            <ul class="list-disc pl-5 mt-2">
+            <ul class="pl-5 mt-2 list-disc">
                 @foreach ($errors->all() as $error)
                     <li class="text-sm">{{ $error }}</li>
                 @endforeach
@@ -267,8 +267,8 @@
     @endif
 
     <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white shadow-md rounded-lg overflow-hidden">
+        <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="overflow-hidden bg-white rounded-lg shadow-md">
                 <div class="p-6 space-y-4">
                     <!-- Item Name -->
                     <div class="flex items-center justify-between">
@@ -308,33 +308,48 @@
                     </div>
 
                     <!-- Item Image -->
-                    @php
+                    {{-- @php
                         $images = json_decode($item->images, true); // Decode JSON to array
+                    @endphp --}}
+
+                    @php
+                        $variantData = $item->variants->map(function ($variant) {
+                            return [
+                                'id' => $variant->id,
+                                'color' => $variant->itemColor->name,
+                                'img' => asset($variant->itemColor->image_path),
+                                'size' => $variant->itemSize->name,
+                                'packaging' => $variant->itemPackagingType->name,
+                                'price' => $variant->price,
+                                'stock' => $variant->stock,
+                            ];
+                        });
                     @endphp
 
-                    @if (is_array($images) && count($images) > 0)
-                        @foreach ($images as $image)
-                            <img src="{{ asset('storage/' . $image) }}" alt="Item Image" class="w-32 h-32 object-cover rounded-md">
+                    @if ($variantData->isNotEmpty())
+                        @foreach ($variantData as $variant)
+                            <img src="{{ $variant['img'] }}" alt="Variant Image"
+                                class="object-cover w-32 h-32 rounded-md">
                         @endforeach
                     @else
-                        <p>No images available</p>
+                        <p>No variant images available</p>
                     @endif
 
 
                     <!-- Add to Cart Button -->
                     {{-- <form method="POST" action="{{ route('admin.cart.add', $item->id) }}">
                         @csrf
-                        <div class="mt-4 flex items-center space-x-4">
-                            <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
-                            <select name="cart_id" id="cart_id" class="w-40 p-2 border rounded-md text-gray-700">
+                        <div class="flex items-center mt-4 space-x-4">
+                            <label for="cart_id" class="font-semibold text-gray-700">Select Cart:</label>
+                            <select name="cart_id" id="cart_id" class="w-40 p-2 text-gray-700 border rounded-md">
                                 @foreach (auth()->user()->carts as $cart)
                                     <option value="{{ $cart->id }}">{{ $cart->name ?? 'Cart ' . $cart->id }}</option>
                                 @endforeach
                             </select>
-                            <label for="quantity" class="text-gray-700 font-semibold">Quantity:</label>
+                            <label for="quantity" class="font-semibold text-gray-700">Quantity:</label>
                             <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $item->stock }}"
-                                   class="w-20 p-2 border rounded-md text-gray-700">
-                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                   class="w-20 p-2 text-gray-700 border rounded-md">
+                            <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
                                 Add to Cart
                             </button>
                         </div>
@@ -342,16 +357,16 @@
 
 
                     @if (auth()->user()->carts->isEmpty())
-                        <div class="mt-4 text-red-600 font-semibold">
+                        <div class="mt-4 font-semibold text-red-600">
                             You don't have any carts. Please <a href="{{ route('admin.carts.create') }}"
                                 class="text-blue-600 underline">create a cart</a> first.
                         </div>
                     @else
                         <form method="POST" action="{{ route('admin.cart.add', $item->id) }}">
                             @csrf
-                            <div class="mt-4 flex items-center space-x-4">
-                                <label for="cart_id" class="text-gray-700 font-semibold">Select Cart:</label>
-                                <select name="cart_id" id="cart_id" class="w-40 p-2 border rounded-md text-gray-700">
+                            <div class="flex items-center mt-4 space-x-4">
+                                <label for="cart_id" class="font-semibold text-gray-700">Select Cart:</label>
+                                <select name="cart_id" id="cart_id" class="w-40 p-2 text-gray-700 border rounded-md">
                                     @foreach (auth()->user()->carts as $cart)
                                         @if ($cart->customer)
                                             <!-- Check if the cart has a related customer -->
@@ -371,11 +386,11 @@
 
 
                                 </select>
-                                <label for="quantity" class="text-gray-700 font-semibold">Quantity:</label>
+                                <label for="quantity" class="font-semibold text-gray-700">Quantity:</label>
                                 <input type="number" name="quantity" id="quantity" value="1" min="1"
-                                    max="{{ $item->stock }}" class="w-20 p-2 border rounded-md text-gray-700">
+                                    max="{{ $item->stock }}" class="w-20 p-2 text-gray-700 border rounded-md">
                                 <button type="submit"
-                                    class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                                    class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
                                     Add to Cart
                                 </button>
                             </div>
@@ -392,6 +407,37 @@
             </div>
         </div>
     </div>
+
+
+    <h1 class="text-xl font-bold">{{ $item->name }}</h1>
+
+    <h2 class="mt-4 text-lg font-semibold">Variants:</h2>
+    @foreach ($item->variants as $variant)
+        <div class="p-4 mb-2 border rounded">
+            <p><strong>Color:</strong> {{ $variant->itemColor->name }}</p>
+            <p><strong>Size:</strong> {{ $variant->itemSize->name }}</p>
+            <p><strong>Packaging:</strong> {{ $variant->itemPackagingType->name }}</p>
+            <p><strong>Price:</strong> {{ $variant->price }}</p>
+            <p><strong>Stock:</strong> {{ $variant->stock }}</p>
+
+            @if ($variant->itemColor && $variant->itemColor->image_path)
+                <img src="{{ asset($variant->itemColor->image_path) }}" alt="{{ $variant->itemColor->name }}"
+                    class="w-24 h-24 mt-2 rounded">
+            @endif
+        </div>
+    @endforeach
+
+    {{-- <h2 class="mt-4 text-lg font-semibold">Item Images:</h2>
+    @if ($item->variants->itemColor->image_path->isNotEmpty())
+        <div class="flex gap-4">
+            @foreach ($item->itemImages as $image)
+                <img src="{{ asset($image->path) }}" alt="Item Image" class="object-cover w-24 h-24 rounded">
+            @endforeach
+        </div>
+    @else
+        <p>No images available.</p>
+    @endif --}}
+
     @if ($errors->any())
         <div class="mt-4">
             <ul>
