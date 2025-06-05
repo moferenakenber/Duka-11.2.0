@@ -80,6 +80,7 @@
     <div class="max-w-4xl mx-auto p-6 pb-16 overflow-y-auto max-h-[100vh]">
         <div class="overflow-hidden bg-white rounded-lg shadow-lg">
 
+
             {{-- Swiper Image Slider --}}
             <div class="swiper mySwiper">
                 <div class="swiper-wrapper">
@@ -297,35 +298,6 @@
                     </div>
                 @endif
 
-                {{-- <div class="flex mt-6 space-x-4">
-                    <button @click="showModal = true"
-                        class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
-                        Add to Cart
-                    </button>
-                    <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy Now</button>
-                </div> --}}
-                {{--
-
-                <div x-data="variantSelector({{ $variantData->toJson() }})" x-init="init()" class="space-y-4">
-                    <!-- Dropdown -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Choose Color:</label>
-                        <select x-model="selectedColor" @change="updatePrice()"
-                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="">-- Select Color --</option>
-                            <template x-for="color in colors" :key="color">
-                                <option x-text="color" :value="color"></option>
-                            </template>
-                        </select>
-                    </div>
-
-                    <!-- Price Display -->
-                    <div x-show="selectedPrice !== null">
-                        <p class="text-lg font-semibold">
-                            Price: <span x-text="formattedPrice"></span>
-                        </p>
-                    </div>
-                </div> --}}
 
                 <div x-data="{ open: false }" class="mb-4">
                     <!-- Toggle Circle Button with More Icon -->
@@ -446,6 +418,7 @@
                         return {
                             variants: variants,
                             selectedColor: '',
+
                             selectedPrice: null,
 
                             init() {
@@ -497,24 +470,18 @@
                                 // this.selectedImg = match ? match.img : '';
                                 // this.selectedDisabled = match ? match.disabled : false;
 
-                                const match = this.variants.find(v => v.color === this.selectedColor.name);
+                                const match = this.variants.find(
+                                    v => v.color === this.selectedColor.name &&
+                                    v.size === this.selectedSize &&
+                                    v.packaging === this.selectedPackaging?.name
+                                );
                                 this.selectedPrice = match ? match.price : null;
                                 this.selectedStock = match ? match.stock : null;
+                                this.selectedImg = match ? match.img : '/img/default.jpg';
                             }
                         };
                     }
                 </script>
-
-
-
-
-
-
-
-
-
-
-
 
             </div>
 
@@ -597,7 +564,7 @@
 
 
                     sizes: [
-                        @foreach ($item->variants as $variant)
+                        @foreach ($item->variants->unique('item_size_id') as $variant)
                             {{ $variant->size }}@if (!$loop->last),@endif @endforeach
                     ],
 
@@ -620,10 +587,9 @@
 
                     packaging_details: [
                         @php
-                        $seen = [];
-                        @endphp
+$seen = []; @endphp
 
-                                        @foreach ($item->variants as $variant)
+                        @foreach ($item->variants as $variant)
 
                         @php
                             $pkg = $variant->itemPackagingType;
@@ -671,19 +637,7 @@
                     });
                 } --}}
             }" x-cloak>
-                {{-- Trigger Button --}}
-                {{--
-                <div class="flex mt-6 space-x-4">
 
-                    <button @click="showModal = true"
-                        class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
-                        Add to Cart
-                    </button>
-
-                    <button @click="showModal = true" class="btn btn-soft btn-warning">Add to Cart</button>
-                    <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy
-                        Now</button>
-                </div> --}}
                 <div class="flex flex-col items-center w-full max-w-xs pb-4 mx-auto mt-6 space-y-4">
 
                     <button @click="showModal = true" class="w-full text-lg btn btn-active btn-accent btn-lg sm:w-auto">
@@ -695,46 +649,6 @@
                     </button>
 
                 </div>
-
-
-
-
-
-
-
-
-
-                {{-- <div class="flex flex-col mt-6 space-y-4">
-                    <!-- Top Button -->
-                    <button @click="showModal = true" class="w-full btn btn-soft btn-warning">
-
-                        <span class="sr-only">Add to Cart</span>
-
-                        <svg aria-hidden="true" fill="none" focusable="false" width="24"
-                            class="header__nav-icon icon icon-cart" viewBox="0 0 24 24">
-                            <path
-                                d="M4.75 8.25A.75.75 0 0 0 4 9L3 19.125c0 1.418 1.207 2.625 2.625 2.625h12.75c1.418 0 2.625-1.149 2.625-2.566L20 9a.75.75 0 0 0-.75-.75H4.75Zm2.75 0v-1.5a4.5 4.5 0 0 1 4.5-4.5v0a4.5 4.5 0 0 1 4.5 4.5v1.5"
-                                stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                            </path>
-                        </svg>
-
-                        @if (session('cart') && count(session('cart')->items ?? []) > 0)
-                            <span class="absolute top-0 right-0 h-2.5 w-2.5 bg-red-500 rounded-full"></span>
-                        @endif
-
-                    </button>
-
-                    <!-- Bottom Button -->
-                    <button class="w-full px-6 py-2 text-lg text-white bg-red-500 rounded btn hover:bg-red-600">
-                        Buy Now
-                    </button>
-                </div> --}}
-
-
-
-
-
-
 
                 {{-- Overlay --}}
                 <div x-show="showModal" class="fixed inset-0 z-40 bg-black/40" @click="showModal = false"
@@ -762,15 +676,6 @@
                         {{-- <img src="/img/product.jpg" alt="Product" class="object-cover w-20 h-20 border rounded"> --}}
                         <img :src="selectedColor ? selectedColor.img : '/img/product.jpg'" alt="Product"
                             class="object-cover w-20 h-20 border rounded">
-
-                        {{-- <div>
-                            <div class="text-lg font-semibold text-red-500">฿<span x-text="item.price"></span></div>
-                            <div class="text-sm text-gray-500">Stock: <span x-text="item.stock"></span></div>
-                        </div> --}}
-
-                        {{-- <div class="text-lg font-semibold text-red-500">
-                            ฿<span x-text="selectedVariant ? selectedVariant.price : item.price"></span>
-                        </div> --}}
 
                         <div class="text-lg font-semibold text-red-500">
                             ฿<span x-text="selectedPrice"></span>
@@ -808,49 +713,6 @@
                     </div>
 
                     <!-- Color Selector -->
-                    {{-- <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">COLOR</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(color, index) in item.colors" :key="index">
-                                <button type="button" @click="!color.disabled && (selectedColor = color)"
-                                    {{-- <button type="button" @click="if (!color.disabled) { selectedColor = color.name; updatePrice(); }"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
-                                        'border-black bg-black text-white': selectedColor?.name === color.name && !color
-                                            .disabled
-                                    }">
-                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded" alt="">
-                                    <span x-text="color.name"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div> --}}
-
-
-
-
-                    {{-- <!-- Color Selector -->
-                    <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">COLOR</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(color, index) in colors" :key="index">
-                                <button type="button" @click="!color.disabled && (selectedColor = color, updatePrice())"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
-                                        'border-black bg-black text-white': selectedColor === color && !color.disabled
-                                    }">
-                                    {{-- <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded"
-                                    <img :src="selectedColor?.img" alt="" class="w-full h-auto rounded"
-                                        alt="">
-                                    <span x-text="color"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div> --}}
-
-                    <!-- Color Selector -->
                     <div class="mb-4">
                         <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
@@ -875,77 +737,6 @@
 
 
 
-
-                    <!-- Color Selector -->
-                    {{-- <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">COLOR</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <button type="button" @click="!variant.disabled && (selectedColor = variant.color)"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': variant
-                                            .disabled,
-                                        'border-black bg-black text-white': selectedColor === variant.color && !variant
-                                            .disabled
-                                    }">
-                                    <img :src="variant.img" class="object-cover w-10 h-10 mb-1 rounded" alt="">
-                                    <span x-text="variant.color"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div> --}}
-
-                    <!-- Color Selector (2) -->
-                    {{-- <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">COLOR</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(color, index) in item.colors" :key="index">
-                                <button type="button" @click="!color.disabled && (selectedColor = color.name)"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
-                                        'border-black bg-black text-white': selectedColor === color.name && !color
-                                            .disabled
-                                    }">
-                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded"
-                                        alt="">
-                                    <span x-text="color.name"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div> --}}
-
-
-                    {{-- ////////////// --}}
-                    {{-- <div>
-                        <label>Color:</label>
-                        <select x-model="selectedVariant">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <option :value="variant" :disabled="variant.disabled" x-text="variant.color">
-                                </option>
-                            </template>
-                        </select>
-                    </div> --}}
-
-                    {{-- ////////////// --}}
-
-
-                    <!-- Size Selector -->
-                    {{-- <div class="mb-4">
-                                <div class="mb-2 text-sm font-semibold">SIZE</div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <template x-for="(size, index) in item.sizes" :key="index">
-                                        <button type="button" @click="!size.disabled && (selectedSize = size.value)"
-                                            class="px-3 py-2 text-xs text-left border rounded-md"
-                                            :class="{
-                                                'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
-                                                'bg-black text-white': selectedSize === size.value && !size.disabled
-                                            }"
-                                            x-text="size.label"></button>
-                                    </template>
-                                </div>
-                            </div> --}}
 
 
 
@@ -977,7 +768,7 @@
                         </select>
                     </div> --}}
 
-
+                    <!-- Packaging Option Selector -->
                     <!-- ---------------------------------------------------------- -->
                     <div class="mb-6">
                         <div class="mb-2 text-sm font-semibold">Packaging</div>
@@ -1002,55 +793,6 @@
 
 
 
-                    {{-- <div class="grid grid-cols-2 gap-2">
-                            <template x-for="(packaging_detail, index) in item.packaging_details" :key="index">
-                                <button type="button"
-                                    @click="!packaging_detail.disabled && (selectedSizePackaging_detail = packaging_details.value)"
-                                    class="px-3 py-2 text-xs text-left border rounded-md"
-                                    :class="{
-                                        'bg-gray-100 text-gray-400 cursor-not-allowed': packaging_detail.disabled,
-                                        'bg-black text-white': selectedSizePackaging_detail === packaging_detail
-                                            .value && !packaging_detail.disabled
-                                    }"
-                                    x-text="size.label"></button>
-                            </template>
-                        </div> --}}
-
-                    <!-- ---------------------------------------- -->
-
-                    {{-- <div x-data="variantSelector({{ $variantData->toJson() }})" x-init="init()" class="space-y-4">
-                            <!-- Dropdown -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Choose Color:</label>
-                                <select x-model="selectedColor" @change="updatePrice()"
-                                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                                    <option value="">-- Select Color --</option>
-                                    <template x-for="color in colors" :key="color">
-                                        <option x-text="color" :value="color"></option>
-                                    </template>
-                                </select>
-                            </div>
-
-                            <!-- Price Display -->
-                            <div x-show="selectedPrice !== null">
-                                <p class="text-lg font-semibold">
-                                    Price: <span x-text="formattedPrice"></span>
-                                </p>
-                            </div>
-                        </div> --}}
-
-                    <!-- Dropdown -->
-                    {{-- <div>
-                            <label>Choose Color:</label>
-                            <select x-model="selectedColor" @change="updatePrice()">
-                                <option value="">-- Select Color --</option>
-                                <template x-for="color in colors" :key="color">
-                                    <option x-text="color" :value="color"></option>
-                                </template>
-                            </select>
-                        </div> --}}
-                    <!-- ---------------------------------------- -->
-
                     <!-- Quantity Control -->
                     <div class="mb-6">
                         <div class="mb-2 text-sm font-semibold">Quantity</div>
@@ -1062,54 +804,6 @@
                             <button type="button" class="px-2 text-lg" @click="quantity++">+</button>
                         </div>
                     </div>
-
-                    {{--
-                    <div>
-                        <label>Color:</label>
-                        <select x-model="selectedVariant">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <option :value="variant" :disabled="variant.disabled" x-text="variant.color">
-                                </option>
-                            </template>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Size:</label>
-                        <select x-model="selectedSize">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <option :value="variant.size" x-text="variant.size"></option>
-                            </template>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Packaging:</label>
-                        <select x-model="selectedVariant">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <option :value="variant.packaging" x-text="variant.packaging"></option>
-                            </template>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Price:</label>
-                        <span x-text="selectedVariant ? selectedVariant.price : item.price"></span>
-                    </div>
-
-                    <div>
-                        <label>Stock:</label>
-                        <span x-text="selectedVariant ? selectedVariant.stock : item.stock"></span>
-                    </div>
-
-                    <div>
-                        <label>Quantity:</label>
-                        <input type="number" x-model="quantity" min="1"
-                            :max="selectedVariant ? selectedVariant.stock : item.stock">
-                    </div> --}}
-
-
-
 
                     <!-- Add to Cart Button -->
                     <button :disabled="!selectedColor || !selectedSize" @click="addToCart()"

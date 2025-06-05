@@ -30,6 +30,7 @@ class DatabaseSeeder extends Seeder
             ItemPackagingTypeSeeder::class,
             ItemVariantSeeder::class,
             ItemImageSeeder::class,
+            ItemVariantPriceSeeder::class,
 
 
         ]);

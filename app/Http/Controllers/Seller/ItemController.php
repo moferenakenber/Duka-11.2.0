@@ -67,6 +67,9 @@ class ItemController extends Controller
     public function show(Item $item)
     {
         $item->load([
+            // 'images',
+            // 'colors',
+            // 'variants', // contains full variant data
             'variants.itemColor',
             'variants.itemSize',
             'variants.itemPackagingType',

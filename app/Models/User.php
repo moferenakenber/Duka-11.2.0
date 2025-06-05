@@ -6,6 +6,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class User extends Authenticatable
 {
@@ -91,4 +92,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
+    public function itemPrices(): HasMany
+    {
+        // This gets prices where item_variant_prices.user_id = this user's ID
+        return $this->hasMany(ItemVariantPrice::class);
+    }
+
+
 }
