@@ -669,22 +669,14 @@ class ItemSeeder extends Seeder
             // $imageUrls[] = $images;
 
             $item = Item::create([
+                'product_name' => $productName,// 1
+                'product_description' => fake()->sentence(),// 2
+                'price' => fake()->randomFloat(2, 10, 500),// 3 Price between 10 and 500
+                'status' => fake()->randomElement(['draft', 'active', 'inactive', 'unavailable']),//7
                 'product_images' => json_encode($images), // 1 Example image URLs
-                'variation' => fake()->word(),// 2
-                'price' => fake()->randomFloat(2, 10, 500), // 3 Price between 10 and 500
-                'product_name' => $productName,// 4
-                'product_description' => fake()->sentence(),// 5
-                'packaging_details' => json_encode($packagingTypes),// 6 $packagingTypes
-                'status' => fake()->randomElement(['draft', 'active', 'inactive', 'unavailable']),// 7
-                'incomplete' => fake()->boolean(),// 8
-                'category_id' => rand(1, 10), // 9 Assuming categories exist
-                'item_category_id' => rand(1, 10),// 10
-                'selectedCategories' => json_encode(array_rand(range(1, 10), 3)), // 11
-                'newCategoryNames' => json_encode([fake()->word(), fake()->word()]), // 12
                 'sold_count' => rand(0, 500), // 13 Random sold count
                 'discount_price' => fake()->randomFloat(2, 0, 100), // 14 Random discount price
                 'discount_percentage' => fake()->randomFloat(2, 0, 100), // 15 Random discount percentage
-
 
                 'created_at' => now(),
                 'updated_at' => now(),

@@ -286,47 +286,9 @@
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white rounded-lg shadow-md">
                 <div class="p-6 space-y-4">
-                    <!-- Item Name -->
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-gray-700">Name: </h3>
-                        <p class="text-gray-600">{{ $item->product_name }}</p>
-                    </div>
 
-                    <!-- Item Description -->
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-gray-700">Description: </h3>
-                        <p class="text-gray-600">{{ $item->description }}</p>
-                    </div>
 
-                    <!-- Item Price -->
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-gray-700">Price: </h3>
-                        <p class="text-gray-600">${{ number_format($item->price, 2) }}</p>
-                    </div>
 
-                    <!-- Item Stock -->
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-gray-700">Stock: </h3>
-                        <p class="text-gray-600">{{ $item->stock }}</p>
-                    </div>
-
-                    <!-- Item Status -->
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-gray-700">Status: </h3>
-                        <p class="text-gray-600">{{ ucfirst($item->status) }}</p>
-                    </div>
-
-                    <!-- Item Packaging -->
-                    <div class="flex items-center justify-between">
-                        <h3 class="text-lg font-semibold text-gray-700">Packaging: </h3>
-                        <p class="text-gray-600">{{ $item->piecesinapacket }} pieces per packet,
-                            {{ $item->packetsinacartoon }} packets per carton</p>
-                    </div>
-
-                    <!-- Item Image -->
-                    {{-- @php
-                        $images = json_decode($item->images, true); // Decode JSON to array
-                    @endphp --}}
 
                     @php
                         $variantData = $item->variants->map(function ($variant) {
@@ -342,14 +304,102 @@
                         });
                     @endphp
 
-                    @if ($variantData->isNotEmpty())
-                        @foreach ($variantData as $variant)
-                            <img src="{{ $variant['img'] }}" alt="Variant Image"
-                                class="object-cover w-32 h-32 rounded-md">
-                        @endforeach
-                    @else
-                        <p>No variant images available</p>
-                    @endif
+
+
+
+
+                    <div class="overflow-x-auto">
+                        <table class="table">
+                            <tbody>
+                                @if ($item)
+                                    <!-- Item Row -->
+                                    <tr class="bg-base-100">
+
+                                        <td>
+                                            <div class="flex items-center gap-3">
+                                                <div class="avatar">
+                                                    <div class="w-12 h-12 mask mask-squircle">
+                                                        <img
+                                                            src="{{ asset(json_decode($item->product_images)[0] ?? 'default.jpg') }}" />
+                                                    </div>
+                                                </div>
+                                                <div>
+                                                    <div class="font-bold">{{ $item->product_name }}</div>
+                                                    <div class="text-sm opacity-50">{{ $item->product_description }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    <!-- Variant Table Below Item -->
+                                    <tr class="bg-base-200">
+                                        <td colspan="6">
+                                            <div class="overflow-x-auto">
+                                                <table class="table table-xs">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>
+                                                                <input type="checkbox" class="checkbox" />
+                                                            </th>
+                                                            <th>#</th>
+                                                            <th>Color</th>
+                                                            <th>Size</th>
+                                                            <th>Packaging</th>
+                                                            <th>Price</th>
+                                                            <th>Stock</th>
+                                                            <th>Owner</th>
+                                                            <th>Image</th>
+                                                            <th>Status</th>
+                                                            <th></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @foreach ($item->variants as $index => $variant)
+                                                            <tr>
+                                                                <th>
+                                                                    <input type="checkbox" class="checkbox" />
+                                                                </th>
+                                                                <th>{{ $index + 1 }}</th>
+                                                                <td>{{ $variant->itemColor->name ?? '-' }}</td>
+                                                                <td>{{ $variant->itemSize->name ?? '-' }}</td>
+                                                                <td>{{ $variant->itemPackagingType->name ?? '-' }}</td>
+                                                                <td>${{ number_format($variant->price, 2) }}</td>
+                                                                <td>{{ $variant->stock }}</td>
+                                                                <td>{{ $variant->owner->name ?? '-' }}</td>
+                                                                <td>
+                                                                    @if ($variant->image)
+                                                                        <img src="{{ asset('storage/' . $variant->image) }}"
+                                                                            class="w-6 h-6 rounded" />
+                                                                    @elseif ($variant->itemColor && $variant->itemColor->image_path)
+                                                                        <img src="{{ asset($variant->itemColor->image_path) }}"
+                                                                            class="w-6 h-6 rounded" />
+                                                                    @else
+                                                                        -
+                                                                    @endif
+                                                                </td>
+                                                                <td>
+                                                                    <span
+                                                                        class="badge badge-{{ $variant->is_active ? 'success' : 'neutral' }}">
+                                                                        {{ $variant->is_active ? 'Active' : 'Inactive' }}
+                                                                    </span>
+                                                                </td>
+                                                                <td>
+                                                                    <a href="{{ route('admin.items.edit', $variant) }}"
+                                                                        class="btn btn-xs btn-outline">Edit</a>
+                                                                </td>
+                                                            </tr>
+                                                        @endforeach
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
+
 
 
                     <!-- Add to Cart Button -->
@@ -423,199 +473,6 @@
             </div>
         </div>
     </div>
-
-
-    <h1 class="text-xl font-bold">{{ $item->name }}</h1>
-
-    <h2 class="mt-4 text-lg font-semibold">Variants:</h2>
-    @foreach ($item->variants as $variant)
-        <div class="p-4 mb-2 border rounded">
-            <p><strong>Color:</strong> {{ $variant->itemColor->name }}</p>
-            <p><strong>Size:</strong> {{ $variant->itemSize->name }}</p>
-            <p><strong>Packaging:</strong> {{ $variant->itemPackagingType->name }}</p>
-            <p><strong>Price:</strong> {{ $variant->price }}</p>
-            <p><strong>Stock:</strong> {{ $variant->stock }}</p>
-
-            @if ($variant->itemColor && $variant->itemColor->image_path)
-                <img src="{{ asset($variant->itemColor->image_path) }}" alt="{{ $variant->itemColor->name }}"
-                    class="w-24 h-24 mt-2 rounded">
-            @endif
-        </div>
-    @endforeach
-
-    <div class="overflow-x-auto">
-        <table class="table table-xs table-pin-rows table-pin-cols">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <td>Item</td>
-                    <td>Color</td>
-                    <td>Size</td>
-                    <td>Packaging</td>
-                    <td>Price</td>
-                    <td>Stock</td>
-                    <td>Owner</td>
-                    <td>Image</td>
-                    <td>Status</td>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($item->variants as $index => $variant)
-                    <tr>
-                        <th>{{ $index + 1 }}</th>
-                        <td>{{ $item->product_name ?? '-' }}</td>
-                        <td>{{ $variant->itemColor->name ?? '-' }}</td>
-                        <td>{{ $variant->itemSize->name ?? '-' }}</td>
-                        <td>{{ $variant->itemPackagingType->name ?? '-' }}</td>
-                        <td>${{ number_format($variant->price, 2) }}</td>
-                        <td>{{ $variant->stock }}</td>
-                        <td>{{ $variant->owner->name ?? '-' }}</td>
-                        <td>
-                            @if ($variant->image)
-                                <img src="{{ asset('storage/' . $variant->image) }}" alt="Variant Image"
-                                    class="w-6 h-6 rounded" />
-                            @elseif ($variant->itemColor && $variant->itemColor->image_path)
-                                <img src="{{ asset($variant->itemColor->image_path) }}" alt="Color Image"
-                                    class="w-6 h-6 rounded" />
-                            @else
-                                -
-                            @endif
-                        </td>
-                        <td>
-                            <span class="badge badge-{{ $variant->is_active ? 'success' : 'neutral' }}">
-                                {{ $variant->is_active ? 'Active' : 'Inactive' }}
-                            </span>
-                        </td>
-                        <th>
-                            <a href="{{ route('admin.items.edit', $variant) }}" class="btn btn-xs btn-outline">Edit</a>
-                        </th>
-                    </tr>
-                @endforeach
-            </tbody>
-            <tfoot>
-                <tr>
-                    <th>#</th>
-                    <td>Item</td>
-                    <td>Color</td>
-                    <td>Size</td>
-                    <td>Packaging</td>
-                    <td>Price</td>
-                    <td>Stock</td>
-                    <td>Owner</td>
-                    <td>Image</td>
-                    <td>Status</td>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
-    </div>
-
-
-    <div class="overflow-x-auto">
-    <table class="table">
-        <!-- Item Table Head -->
-        <thead>
-            <tr>
-                <th></th>
-                <th>Item</th>
-                <th>Category</th>
-                <th>Status</th>
-                <th>Sold</th>
-                <th></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @if ($item)
-                <!-- Item Row -->
-                <tr class="bg-base-100">
-                    <th>
-                        <input type="checkbox" class="checkbox" />
-                    </th>
-                    <td>
-                        <div class="flex items-center gap-3">
-                            <div class="avatar">
-                                <div class="w-12 h-12 mask mask-squircle">
-                                    <img src="{{ asset(json_decode($item->product_images)[0] ?? 'default.jpg') }}" />
-                                </div>
-                            </div>
-                            <div>
-                                <div class="font-bold">{{ $item->product_name }}</div>
-                                <div class="text-sm opacity-50">{{ $item->product_description }}</div>
-                            </div>
-                        </div>
-                    </td>
-                    <td>{{ $item->category->name ?? '-' }}</td>
-                    <td>
-                        <span class="badge badge-{{ $item->status == 'active' ? 'success' : 'neutral' }}">
-                            {{ ucfirst($item->status) }}
-                        </span>
-                    </td>
-                    <td>{{ $item->sold_count }}</td>
-                    <th>
-                        <a href="{{ route('admin.items.edit', $item) }}" class="btn btn-xs btn-outline">Edit</a>
-                    </th>
-                </tr>
-
-                <!-- Variant Table Below Item -->
-                <tr class="bg-base-200">
-                    <td colspan="6">
-                        <div class="overflow-x-auto">
-                            <table class="table table-xs">
-                                <thead>
-                                    <tr>
-                                        <th>#</th>
-                                        <th>Color</th>
-                                        <th>Size</th>
-                                        <th>Packaging</th>
-                                        <th>Price</th>
-                                        <th>Stock</th>
-                                        <th>Owner</th>
-                                        <th>Image</th>
-                                        <th>Status</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($item->variants as $index => $variant)
-                                        <tr>
-                                            <th>{{ $index + 1 }}</th>
-                                            <td>{{ $variant->itemColor->name ?? '-' }}</td>
-                                            <td>{{ $variant->itemSize->name ?? '-' }}</td>
-                                            <td>{{ $variant->itemPackagingType->name ?? '-' }}</td>
-                                            <td>${{ number_format($variant->price, 2) }}</td>
-                                            <td>{{ $variant->stock }}</td>
-                                            <td>{{ $variant->owner->name ?? '-' }}</td>
-                                            <td>
-                                                @if ($variant->image)
-                                                    <img src="{{ asset('storage/' . $variant->image) }}" class="w-6 h-6 rounded" />
-                                                @elseif ($variant->itemColor && $variant->itemColor->image_path)
-                                                    <img src="{{ asset($variant->itemColor->image_path) }}" class="w-6 h-6 rounded" />
-                                                @else
-                                                    -
-                                                @endif
-                                            </td>
-                                            <td>
-                                                <span class="badge badge-{{ $variant->is_active ? 'success' : 'neutral' }}">
-                                                    {{ $variant->is_active ? 'Active' : 'Inactive' }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <a href="{{ route('admin.items.edit', $variant) }}" class="btn btn-xs btn-outline">Edit</a>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
-                    </td>
-                </tr>
-            @endif
-        </tbody>
-    </table>
-</div>
-
 
 
     {{-- <h2 class="mt-4 text-lg font-semibold">Item Images:</h2>

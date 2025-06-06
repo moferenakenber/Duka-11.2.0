@@ -33,6 +33,8 @@ class ItemController extends Controller
     public function index()
     {
         $items = Item::all();
+        $items = Item::with('categories')->get();
+
         return view('admin.items.index', compact('items'));
     }
 

@@ -18,16 +18,16 @@ return new class extends Migration {
             $table->id();
             $table->string('product_name')->nullable();
             $table->text('product_description')->nullable();
-            $table->text('packaging_details')->nullable();
-            $table->string('variation')->nullable();
+            // $table->text('packaging_details')->nullable();
+            // $table->string('variation')->nullable();
             $table->decimal('price', 10, 2)->nullable();
             $table->enum('status', ['draft', 'active', 'inactive', 'unavailable'])->default('draft');
-            $table->boolean('incomplete')->default(true);
-            $table->unsignedBigInteger('category_id')->nullable();
-            $table->unsignedBigInteger('item_category_id')->nullable();
+            // $table->boolean('incomplete')->default(true);
+            // $table->unsignedBigInteger('category_id')->nullable();
+            // $table->unsignedBigInteger('item_category_id')->nullable();
             $table->json('product_images')->nullable();
-            $table->json('selectedCategories')->nullable();
-            $table->json('newCategoryNames')->nullable();
+            // $table->json('selectedCategories')->nullable();
+            // $table->json('newCategoryNames')->nullable();
             $table->bigInteger('sold_count')->default(0)->nullable(false); // Assuming this is the sold count
             $table->decimal('discount_price', 10, 2)->nullable();
             $table->decimal('discount_percentage')->nullable();

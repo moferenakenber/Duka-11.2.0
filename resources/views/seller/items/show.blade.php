@@ -587,7 +587,7 @@
 
                     packaging_details: [
                         @php
-$seen = []; @endphp
+                            $seen = []; @endphp
 
                         @foreach ($item->variants as $variant)
 
@@ -745,7 +745,7 @@ $seen = []; @endphp
                         <div class="mb-2 text-sm font-semibold">SIZE</div>
                         <div class="grid grid-cols-2 gap-2">
                             <template x-for="(size, index) in item.sizes" :key="index">
-                                <button type="button" @click="!size.disabled && (selectedSize = size.name)"
+                                <button type="button" @click="!size.disabled && (selectedSize = size.name, updatePrice())"
                                     class="px-3 py-2 text-xs text-left border rounded-md"
                                     :class="{
                                         'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,

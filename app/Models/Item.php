@@ -32,10 +32,16 @@ class Item extends Model
     }
 
     // Many-to-Many Relationship with ItemCategory
+    // public function categories()
+    // {
+    //     return $this->belongsToMany(ItemCategory::class, 'item_category_item', 'item_id', 'category_id');
+    // }
+
     public function categories()
     {
         return $this->belongsToMany(ItemCategory::class, 'item_category_item', 'item_id', 'category_id');
     }
+
 
     public function carts()
     {
