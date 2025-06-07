@@ -6,11 +6,14 @@ use App\Http\Controllers\Admin\Controller;
 use App\Models\Cart;
 use Illuminate\Http\Request;
 use App\Models\Item;
+use App\Models\ItemVariant;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\App;
 use App\Models\User;
+use Illuminate\Support\Facades\DB;
+
 
 
 
@@ -240,28 +243,86 @@ class CartController extends Controller
         return redirect()->route('seller.carts.show', $cart->id)->with('success', 'Item added to cart!');
     }
 
+    // public function add(Request $request)
+    // {
+
+
+    //     $request->validate([
+    //         'variant_id' => 'required|exists:item_variants,id',
+    //         'quantity' => 'required|integer|min:1',
+    //         'size' => 'nullable|string', // optional
+    //     ]);
+
+    //     $cart = auth()->user()->currentCart(); // however you get the current cart
+
+    //     $variant = ItemVariant::findOrFail($request->variant_id);
+
+    //     $cart->items()->create([
+    //         // 'item_id' => $request->item_id,
+    //         // 'quantity' => $request->quantity,
+    //         // 'price' => Item::find($request->item_id)->price,
+    //         // 'options' => json_encode([
+    //         //     'size' => $request->size,
+    //         // ]),
+    //         'item_variant_id' => $variant->id],
+    //     [
+    //         'quantity' => \DB::raw("quantity + {$request->quantity}"),
+    //         'price' => $variant->price,
+
+    //     ]);
+
+    //     return redirect()->back()->with('success', 'Item added to cart!');
+    // }
+
     public function add(Request $request)
     {
-
+        Log::info('Add method called', ['request' => $request->all()]);
 
         $request->validate([
-            'item_id' => 'required|exists:items,id',
+            'variant_id' => 'required|exists:item_variants,id',
             'quantity' => 'required|integer|min:1',
             'size' => 'nullable|string',
         ]);
 
-        $cart = auth()->user()->currentCart(); // however you get the current cart
+        $cart = auth()->user()->currentCart();
 
-        $cart->items()->create([
-            'item_id' => $request->item_id,
-            'quantity' => $request->quantity,
-            'price' => Item::find($request->item_id)->price,
-            'options' => json_encode([
-                'size' => $request->size,
-            ]),
-        ]);
+        Log::info('Current cart retrieved', ['cart_id' => $cart->id ?? null]);
+
+        $variantId = $request->variant_id;
+        $quantityToAdd = $request->quantity;
+
+        $variant = ItemVariant::findOrFail($variantId);
+        Log::info('Variant found', ['variant_id' => $variant->id, 'price' => $variant->price]);
+
+        $existing = $cart->items()->wherePivot('item_variant_id', $variantId)->first();
+
+        if ($existing) {
+            $currentQuantity = $existing->pivot->quantity;
+            Log::info('Variant already in cart, updating quantity', [
+                'variant_id' => $variantId,
+                'old_quantity' => $currentQuantity,
+                'added_quantity' => $quantityToAdd,
+            ]);
+            $cart->items()->updateExistingPivot($variantId, [
+                'quantity' => $currentQuantity + $quantityToAdd,
+                'price' => $variant->price,
+            ]);
+        } else {
+            Log::info('Attaching new variant to cart', [
+                'variant_id' => $variantId,
+                'quantity' => $quantityToAdd,
+                'price' => $variant->price,
+            ]);
+            $cart->items()->attach($variantId, [
+                'quantity' => $quantityToAdd,
+                'price' => $variant->price,
+            ]);
+        }
+
+        Log::info('Add method completed successfully');
 
         return redirect()->back()->with('success', 'Item added to cart!');
     }
+
 
 }

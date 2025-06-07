@@ -15,9 +15,9 @@ class ItemSizeSeeder extends Seeder
         $items = Item::all();
 
         $sizes = [
-            ['name' => 'Noteit3x3', 'image_path' => 'images/sizes/3x3.png'],
-            ['name' => 'Noteit4x4', 'image_path' => 'images/sizes/4x4.png'],
-            ['name' => 'Noteit5x5', 'image_path' => 'images/sizes/5x5.png'],
+            ['name' => '3x3', 'image_path' => 'images/sizes/3x3.png'],
+            ['name' => '4x4', 'image_path' => 'images/sizes/4x4.png'],
+            ['name' => '5x5', 'image_path' => 'images/sizes/5x5.png'],
             ['name' => '10X10', 'image_path' => 'images/sizes/10x10.png'],
             ['name' => 'Small', 'image_path' => 'images/sizes/small.png'],
             ['name' => 'Medium', 'image_path' => 'images/sizes/medium.png'],

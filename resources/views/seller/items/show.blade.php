@@ -414,16 +414,31 @@
 
 
                 <script>
-                    function variantSelector(variants) {
+                    function variantSelector(variantsData) {
                         return {
-                            variants: variants,
-                            selectedColor: '',
+                            // variants: variantsData,
+                            // selectedColor: '',
 
+                            // selectedPrice: null,
+
+                            // init() {
+                            //     this.selectedPrice = null;
+                            //     this.selectedStock = null;
+                            // },
+                            showModal: false,
+                            quantity: 1,
+                            loading: false,
+
+                            variants: variantsData,
+                            selectedColor: null,
+                            selectedSize: null,
+                            selectedPackaging: null,
                             selectedPrice: null,
+                            selectedStock: null,
+                            selectedImg: '/img/default.jpg',
 
                             init() {
-                                this.selectedPrice = null;
-                                this.selectedStock = null;
+                                this.updatePrice();
                             },
 
                             get colors() {
@@ -464,6 +479,15 @@
                                 return this.selectedPrice !== null ? this.selectedPrice.toFixed(2) : '';
                             },
 
+                            selectedCartId: '',
+                            userCarts: @json(auth()->user()->carts->map(fn($c) => [
+                                        'id' => $c->id,
+                                        'name' => $c->customer?->name ?? 'Unnamed',
+                                        'created_at' => $c->created_at->diffForHumans()
+                                    ])),
+
+
+
                             updatePrice() {
                                 // const match = this.variants.find(v => v.color === this.selectedColor);
                                 // this.selectedPrice = match ? match.price : null;
@@ -478,7 +502,44 @@
                                 this.selectedPrice = match ? match.price : null;
                                 this.selectedStock = match ? match.stock : null;
                                 this.selectedImg = match ? match.img : '/img/default.jpg';
+                            },
+
+                            addToCart() {
+                                if (!this.selectedVariant) {
+                                    alert('Please select a color, size, and packaging.');
+                                    return;
+                                }
+
+                                const cartItem = {
+                                    variant_id: this.selectedVariant.id,
+                                    quantity: this.quantity,
+                                    _token: document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                };
+
+                                this.loading = true;
+
+                                fetch('/seller/cart/add', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                            'Accept': 'application/json',
+                                        },
+                                        body: JSON.stringify(cartItem)
+                                    })
+                                    .then(res => res.json())
+                                    .then(data => {
+                                        this.loading = false;
+                                        this.showModal = false;
+                                        alert('✅ Added to cart!');
+                                    })
+                                    .catch(error => {
+                                        this.loading = false;
+                                        console.error(error);
+                                        alert('❌ Failed to add to cart.');
+                                    });
+
                             }
+
                         };
                     }
                 </script>
@@ -488,36 +549,36 @@
 
             {{-- Alpine.js Variant Modal --}}
             <div x-data="{
-                showModal: false,
+                {{-- showModal: false,
                 quantity: 1,
                 selectedColor: null,
                 selectedSize: null,
                 selectedPackaging: null,
                 selectedPrice: null,
                 selectedStock: null,
-                formattedPrice: '',
+                formattedPrice: '', --}}
 
 
                 {{-- variantSelector: {{ $variantData->toJson() }}, --}}
 
-                // Merge the logic and data from variantSelector(...)
-                ...variantSelector({{ $variantData->toJson() }}),
+                    // Merge the logic and data from variantSelector(...)
+                    ...variantSelector({{ $variantData->toJson() }}),
 
 
-                item: {
-                    {{-- price: {{ $item->price }}, --}}
+                    item: {
+                        {{-- price: {{ $item->price }}, --}}
 
-                    price: {{ $variant->price }},
+                        price: {{ $variant->price }},
 
-                    {{-- price: {{ number_format($variant->price, 2)
+                        {{-- price: {{ number_format($variant->price, 2)
                    {{-- stock: 200, --}}
 
-                    stock: [
-                        @foreach ($item->variants as $variant)
+                        stock: [
+                            @foreach ($item->variants as $variant)
                             {{ $variant->stock }}@if (!$loop->last),@endif @endforeach
-                    ],
+                        ],
 
-                    {{-- colors: [
+                        {{-- colors: [
                         @foreach ($item->variants as $variant)
                             {
                                 name: '{{ $variant->itemColor->name }}',
@@ -526,7 +587,7 @@
                             }@if (!$loop->last),@endif @endforeach
                     ], --}}
 
-                    {{-- variants: [
+                        {{-- variants: [
                         @foreach ($item->variants as $variant)
                             {
                                 color: '{{ $variant->itemColor->name }}',
@@ -538,7 +599,7 @@
                                 disabled: {{ $variant->itemColor->disabled ? 'true' : 'false' }},
                             }@if (!$loop->last),@endif @endforeach
                     ], --}}
-                    {{-- variants: [
+                        {{-- variants: [
                         @foreach ($item->variants as $variant)
                             {
                                 color: '{{ $variant->itemColor->name }}',
@@ -553,7 +614,7 @@
                     ], --}}
 
 
-                    {{-- colors: [
+                        {{-- colors: [
                         { name: 'BONE', img: '/img/colors/bone.png', disabled: false },
                         { name: 'WHITE', img: '/img/colors/white.png', disabled: false },
                         { name: 'BLACK', img: '/img/colors/black.png', disabled: false },
@@ -563,12 +624,12 @@
                     ], --}}
 
 
-                    sizes: [
-                        @foreach ($item->variants->unique('item_size_id') as $variant)
+                        sizes: [
+                            @foreach ($item->variants->unique('item_size_id') as $variant)
                             {{ $variant->size }}@if (!$loop->last),@endif @endforeach
-                    ],
+                        ],
 
-                    {{-- sizes: [
+                        {{-- sizes: [
                         { value: 'W5', label: 'W5 21cm 34–35eu', disabled: false },
                         { value: 'W6', label: 'W6 22cm 36–37eu', disabled: false },
                         { value: 'W7', label: 'W7 23cm 37–38eu', disabled: false },
@@ -577,7 +638,7 @@
                         { value: 'W10', label: 'W10 26cm 41–42eu', disabled: false }
                     ], --}}
 
-                    {{-- packaging_details: [
+                        {{-- packaging_details: [
                         @foreach ($item->variants as $variant)
                             {
                                 name: '{{ $variant->itemPackagingType->name }}',
@@ -585,11 +646,11 @@
                             }@if (!$loop->last),@endif @endforeach
                     ] --}}
 
-                    packaging_details: [
-                        @php
-                            $seen = []; @endphp
+                        packaging_details: [
+                            @php
+$seen = []; @endphp
 
-                        @foreach ($item->variants as $variant)
+                            @foreach ($item->variants as $variant)
 
                         @php
                             $pkg = $variant->itemPackagingType;
@@ -604,27 +665,39 @@
                                 disabled: {{ $pkg->disabled ? 'true' : 'false' }}
                             }@if (!$loop->last),@endif
                         @endif @endforeach
-                    ]
+                        ]
 
 
-                    {{-- packaging_details: [
+                        {{-- packaging_details: [
                         { name: 'Piece', quantity: 1 },
                         { name: 'Packet', quantity: 10 },
                         { name: 'Case', quantity: 100 }
                     ] --}}
-                },
-                addToCart() {
+                    },
+                    {{-- addToCart() {
                     // Handle adding to cart logic here (e.g., store cart item in session or make an AJAX request)
                     this.showModal = false;
-                    window.location.href = '/cart'; // Redirect to the cart page
-                },
+                    window.location.href = 'admin/cart'; // Redirect to the cart page
+                }, --}}
 
-                get selectedVariant() {
+
+
+
+                {{-- get selectedVariant() {
                     if (!this.selectedColor || !this.selectedSize) return null;
                     return this.item.variants.find(variant =>
                         variant.color === this.selectedColor && variant.size === this.selectedSize
                     );
+                } --}}
+
+                get selectedVariant() {
+                    return this.variants.find(variant =>
+                        variant.color === this.selectedColor?.name &&
+                        variant.size === this.selectedSize &&
+                        variant.packaging === this.selectedPackaging?.name
+                    );
                 }
+
                 {{-- ,
 
                 packagingOptions: @json($item->packaging_details),
@@ -745,7 +818,8 @@
                         <div class="mb-2 text-sm font-semibold">SIZE</div>
                         <div class="grid grid-cols-2 gap-2">
                             <template x-for="(size, index) in item.sizes" :key="index">
-                                <button type="button" @click="!size.disabled && (selectedSize = size.name, updatePrice())"
+                                <button type="button"
+                                    @click="!size.disabled && (selectedSize = size.name, updatePrice())"
                                     class="px-3 py-2 text-xs text-left border rounded-md"
                                     :class="{
                                         'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
@@ -790,6 +864,23 @@
                         </div>
                     </div>
                     <!-- ---------------------------------------------------------- -->
+
+
+
+
+                    <!-- 🌟 Cart Selector -->
+                    <div class="mb-6">
+                        <label class="block mb-2 text-sm font-semibold">Choose Cart</label>
+                        <select x-model="selectedCartId"
+                            class="w-full px-3 py-2 text-sm border rounded focus:outline-none focus:ring">
+                            <option value="">🆕 New Cart</option>
+                            <template x-for="cart in userCarts" :key="cart.id">
+                                <option :value="cart.id" x-text="`${cart.name}'s cart – ${cart.created_at}`">
+                                </option>
+                            </template>
+                        </select>
+                    </div>
+
 
 
 

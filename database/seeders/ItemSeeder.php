@@ -22,22 +22,28 @@ class ItemSeeder extends Seeder
         //Item::factory()->count(150)->create();
 
         $productNames = [
-            '2 side color',
+            // -----------------------
+            // '2 side color',
+            // -----------------------
             // '2025 -1',
             // '2025 ብልጭልጭ',
             // '25k - 1 ፓሪስ',
             // '25k- 5 ጨርቅ ማስታወሻ',
             'Noteit',
-            '3 subject',
-            '4 subject',
-            '5 subject',
+            // -----------------------
+            // '3 subject',
+            // '4 subject',
+            // '5 subject',
+            // -----------------------
             // '3*3 noteit',
             // '3*4 noteit',
             // '3*5 noteit',
             // '3*4',
-            '335 Kangaroo Stapler',
-            '435 Kangaroo Stapler',
-            '9*7',
+            // // -----------------------
+            // '335 Kangaroo Stapler',
+            // '435 Kangaroo Stapler',
+            // '9*7',
+            // -----------------------
             // '6 columns',
             // 'A3 laola',
             // 'A3 road map',
@@ -80,7 +86,9 @@ class ItemSeeder extends Seeder
             // 'Bic Pen Black ቢክ እስኪብርቶ ጥቁር',
             // 'Bic Pen Blue ቢክ እስኪብርቶ ሰማያዊ',
             // 'Bj ባለ 300 ብር',
-            'Box File',
+            // -----------------------
+            // 'Box File',
+            // -----------------------
             // 'Box file Black',
             // 'Box file Color',
             // 'Business Card ቢዝነስ ካርድ',
@@ -103,9 +111,11 @@ class ItemSeeder extends Seeder
             // 'Diary Small ዲያሪ ትንሹ',
             // 'Diary ዲያሪ የተለያየ',
             // 'Diary ዲያሪ ፍሩት',
-            'Dispencer big',
-            'Dispencer Medium ዲስፔስር መካከለኛ',
-            'Dispencer small',
+            // -----------------------
+            // 'Dispencer big',
+            // 'Dispencer Medium ዲስፔስር መካከለኛ',
+            // 'Dispencer small',
+            // -----------------------
             // 'Display book 100',
             // 'Display book 40',
             // 'Display book 60',
