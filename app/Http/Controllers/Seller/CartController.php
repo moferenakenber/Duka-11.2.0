@@ -50,9 +50,15 @@ class CartController extends Controller
         //     $carts = auth()->user()->carts()->with('customer')->get();
         // }
 
-        $carts = Cart::with('customer')->get();
-
-        return view('seller.carts.index', compact('carts'));
+        // $carts = Cart::with('customer')->get();
+        // $carts = auth()->user()->carts()->with('customer')->get();
+        if (auth()->user()->role === 'admin') {
+            $carts = Cart::with('customer')->get(); // all carts
+            return view('admin.carts.index', compact('carts'));
+        } else {
+            $carts = auth()->user()->carts()->with('customer')->get(); // only current user's carts
+            return view('seller.carts.index', compact('carts'));
+        }
     }
 
     /**

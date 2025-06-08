@@ -74,7 +74,10 @@ class ItemController extends Controller
             'variants.itemSize',
             'variants.itemPackagingType',
             'variants.owner',
+            'variants.basePrice',
         ]);
+
+
 
         // Ensure item has variants
         // $item->load(['variants']);

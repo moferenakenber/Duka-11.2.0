@@ -35,7 +35,13 @@ return new class extends Migration {
             $table->foreignId('owner_id')->constrained('users'); // who added the variant
 
             // Variant-specific fields
-            $table->decimal('price', 10, 2); // Price of this color+size+packaging variant
+            // $table->decimal('default_price', 10, 2)->default(0);
+
+            // $table->foreignId('variant_price_id')->nullable()->constrained('item_variant_price')->onDelete('set null'); // Link to default price if exists
+
+            // Just use unsignedBigInteger without foreign key
+            $table->unsignedBigInteger('variant_price_id')->nullable();
+
             $table->integer('stock')->default(0); // Stock for this combination
             $table->string('image')->nullable(); // Optional image representing this variant
             $table->boolean('is_active')->default(true); // Enabled or not
@@ -50,6 +56,10 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('item_variants');
+        Schema::dropIfExists('item_variants'); // Drop referencing table first
+        Schema::dropIfExists('item_sizes');    // Then drop referenced table
+        Schema::dropIfExists('item_colors');
+        Schema::dropIfExists('item_packaging_types');
+        Schema::dropIfExists('item_variant_prices');
     }
 };
