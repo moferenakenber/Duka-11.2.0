@@ -115,47 +115,42 @@ class ItemVariant extends Model
      * @param string $currency The currency code (defaults to 'USD').
      * @return float|null The applicable price or null if not found.
      */
-    public function getApplicablePrice(?User $user = null, string $currency = 'USD'): ?float
+    public function getPriceFor($user = null, $customerId = null)
     {
-        if (is_null($user) && Auth::check()) {
-            $user = Auth::user();
-        }
-
-        $queryBase = $this->prices()->where('currency', $currency);
-
-        // 1. Check for User-Specific Price
-        if ($user) {
-            $userPrice = (clone $queryBase)
-                ->where('user_id', $user->id)
-                ->whereNull('applies_to_role') // Ensure it's specifically for the user
-                ->orderBy('created_at', 'desc')
-                ->first();
-            if ($userPrice) {
-                return (float) $userPrice->price;
-            }
-        }
-
-        // 2. Check for Role-Specific Price (using the user's 'role' attribute)
-        if ($user && !empty($user->role)) { // Check if the user has a role defined
-            $rolePrice = (clone $queryBase)
-                ->where('applies_to_role', $user->role) // Match the role name
-                ->whereNull('user_id')                   // Ensure it's a role price, not user-specific
-                ->orderBy('created_at', 'desc')
-                ->first();
-            if ($rolePrice) {
-                return (float) $rolePrice->price;
-            }
-        }
-
-        // 3. Fallback to Base Price
-        $basePrice = (clone $queryBase)
-            ->whereNull('user_id')
-            ->whereNull('applies_to_role')
-            ->orderBy('created_at', 'desc')
-            ->first();
-
-        return $basePrice ? (float) $basePrice->price : null;
+        return $this->prices()
+            ->where(function ($q) use ($user, $customerId) {
+                $q->where(function ($q) use ($user) {
+                    $q->where('user_id', optional($user)->id)
+                        ->orWhereNull('user_id');
+                })->where(function ($q) use ($customerId) {
+                    $q->where('customer_id', $customerId)
+                        ->orWhereNull('customer_id');
+                })->where(function ($q) use ($user) {
+                    $q->where('role', optional($user)->role)
+                        ->orWhereNull('role');
+                });
+            })
+            ->orderByRaw('
+                (user_id IS NOT NULL) DESC,
+                (customer_id IS NOT NULL) DESC,
+                (role IS NOT NULL) DESC
+            ')
+            ->first()
+            ->price ?? $this->default_price; // fallback, see next step
     }
+
+    public function variantPrices()
+    {
+        return $this->hasMany(ItemVariantPrice::class, 'item_variant_id');
+    }
+
+    public function basePrice()
+    {
+        return $this->hasOne(ItemVariantPrice::class, 'item_variant_id')
+            ->whereNull('user_id')
+            ->whereNull('applies_to_role');
+    }
+
 
 
 }

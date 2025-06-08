@@ -36,13 +36,9 @@ class CartController extends Controller
         // $carts = auth()->user()->carts; // assuming relationship is defined in User model
         // Fetch all carts along with their associated customer
         // Check if the authenticated user is an admin
-        if (auth()->user()->role === 'admin') {
-            // If the user is an admin, fetch all carts for all users
-            $carts = Cart::with('customer')->get(); // Assuming Cart has a relationship with Customer
-        } else {
-            // If the user is not an admin, fetch only the carts of the authenticated user
-            $carts = auth()->user()->carts()->with('customer')->get();
-        }
+        $carts = Cart::with(['customer', 'user'])->get();
+
+
         return view('admin.carts.index', compact('carts'));
     }
 
@@ -86,9 +82,15 @@ class CartController extends Controller
             'seller_id' => 'required|exists:users,id,role,seller', // Ensure seller_id is valid and belongs to a seller
         ]);
 
+        $seller = \App\Models\User::where('id', $request->seller_id)->where('role', 'seller')->first();
+
+        if (!$seller) {
+            return back()->withErrors(['seller_id' => 'Invalid seller selected.']);
+        }
+
         // Create the cart
         $cart = Cart::create([
-            'user_id' => auth()->id(), // Ensure the cart is created by the authenticated user
+            'user_id' => $seller->id, // Ensure the cart is created by the authenticated user
             'customer_id' => $request->customer_id, // Set customer_id if provided
             'seller_id' => $request->seller_id, // Set seller_id if provided
         ]);

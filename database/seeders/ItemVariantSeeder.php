@@ -8,6 +8,7 @@ use App\Models\ItemPackagingType;
 use App\Models\ItemColor;
 use App\Models\ItemSize;
 use App\Models\User;
+use App\Models\ItemVariantPrice;
 
 class ItemVariantSeeder extends Seeder
 {
@@ -81,38 +82,101 @@ class ItemVariantSeeder extends Seeder
 
             if ($variations) {
                 foreach ($variations as $v) {
-                    ItemVariant::create([
+
+                     // 1. Create the item variant WITHOUT price (variant_price_id will be null initially)
+                    $variant = ItemVariant::create([
                         'item_id' => $item->id,
                         'item_color_id' => $colors[$v['color']]->id ?? null,
                         'item_size_id' => $sizes[$v['size']]->id ?? null,
                         'item_packaging_type_id' => $packagings[$v['packaging']]->id ?? null,
-                        'price' => $v['price'],
                         'stock' => $v['stock'],
                         'owner_id' => $owner->id,
                     ]);
+
+                    // 2. Create the price record for this variant
+                    $price = ItemVariantPrice::create([
+                        'item_variant_id' => $variant->id,
+                        'user_id' => $owner->id, // or null if no user association
+                        'applies_to_role' => null, // or a role string if you want to assign by role
+                        'price' => $v['price'],
+                    ]);
+
+                    // 3. Update the variant with the price id
+                    $variant->variant_price_id = $price->id;
+                    $variant->save();
+
+
+                    // ItemVariant::create([
+                    //     'item_id' => $item->id,
+                    //     'item_color_id' => $colors[$v['color']]->id ?? null,
+                    //     'item_size_id' => $sizes[$v['size']]->id ?? null,
+                    //     'item_packaging_type_id' => $packagings[$v['packaging']]->id ?? null,
+                    //     // 'default_price' => $v['price'],
+                    //     'stock' => $v['stock'],
+                    //     'owner_id' => $owner->id,
+                    // ]);
                 }
             } else {
-                // Default fallback
-                ItemVariant::insert([
+                // // Default fallback
+                // ItemVariant::insert([
+                //     [
+                //         'item_id' => $item->id,
+                //         'item_color_id' => $colors['Red']->id,
+                //         'item_size_id' => $sizes['Small']->id,
+                //         'item_packaging_type_id' => $packagings['Packet']->id,
+                //         // 'default_price' => 100,
+                //         'stock' => 50,
+                //         'owner_id' => $owner->id,
+                //     ],
+                //     [
+                //         'item_id' => $item->id,
+                //         'item_color_id' => $colors['Blue']->id,
+                //         'item_size_id' => $sizes['Large']->id,
+                //         'item_packaging_type_id' => $packagings['Packet']->id,
+                //         // 'default_price' => 200,
+                //         'stock' => 30,
+                //         'owner_id' => $owner->id,
+                //     ]
+                // ]);
+
+                // Default fallback: insert a couple of variants with prices
+                $defaultVariants = [
                     [
-                        'item_id' => $item->id,
-                        'item_color_id' => $colors['Red']->id,
-                        'item_size_id' => $sizes['Small']->id,
-                        'item_packaging_type_id' => $packagings['Packet']->id,
+                        'color' => 'Red',
+                        'size' => 'Small',
+                        'packaging' => 'Packet',
                         'price' => 100,
                         'stock' => 50,
-                        'owner_id' => $owner->id,
                     ],
                     [
-                        'item_id' => $item->id,
-                        'item_color_id' => $colors['Blue']->id,
-                        'item_size_id' => $sizes['Large']->id,
-                        'item_packaging_type_id' => $packagings['Packet']->id,
+                        'color' => 'Blue',
+                        'size' => 'Large',
+                        'packaging' => 'Packet',
                         'price' => 200,
                         'stock' => 30,
+                    ],
+                ];
+
+                foreach ($defaultVariants as $v) {
+                    $variant = ItemVariant::create([
+                        'item_id' => $item->id,
+                        'item_color_id' => $colors[$v['color']]->id ?? null,
+                        'item_size_id' => $sizes[$v['size']]->id ?? null,
+                        'item_packaging_type_id' => $packagings[$v['packaging']]->id ?? null,
+                        'stock' => $v['stock'],
                         'owner_id' => $owner->id,
-                    ]
-                ]);
+                    ]);
+
+                    $price = ItemVariantPrice::create([
+                        'item_variant_id' => $variant->id,
+                        'user_id' => $owner->id,
+                        'applies_to_role' => null,
+                        'price' => $v['price'],
+                    ]);
+
+                    $variant->variant_price_id = $price->id;
+                    $variant->save();
+                }
             }
         }
     }

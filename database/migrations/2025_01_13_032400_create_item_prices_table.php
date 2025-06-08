@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -14,10 +13,17 @@ return new class extends Migration
         Schema::create('item_prices', function (Blueprint $table) {
             $table->id();
             $table->foreignId('item_variant_id')->constrained('item_variants')->onDelete('cascade');
-            $table->enum('user_type', ['customer', 'seller', 'user', 'visitor']); // Different user types
-            $table->decimal('price', 10, 2); // Price for the variant depending on user type
+
+            $table->foreignId('user_id')->nullable()->constrained('users')->onDelete('cascade');
+            $table->foreignId('customer_id')->nullable()->constrained('customers')->onDelete('cascade');
+            $table->enum('role', ['admin', 'seller', 'visitor', 'customer'])->nullable(); // NEW: Role-based pricing
+
+            $table->decimal('price', 10, 2);
             $table->timestamps();
+
+            $table->unique(['item_variant_id', 'user_id', 'customer_id', 'role'], 'unique_price_constraint');
         });
+
     }
 
     /**
