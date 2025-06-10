@@ -134,6 +134,15 @@ return [
     */
 
     'watchers' => [
+
+
+        Laravel\Telescope\Watchers\LogWatcher::class => [
+            'enabled' => env('TELESCOPE_LOG_WATCHER', true),
+            'level' => 'debug', // or info, warning, etc.
+        ],
+
+
+
         Watchers\BatchWatcher::class => env('TELESCOPE_BATCH_WATCHER', true),
 
         Watchers\CacheWatcher::class => [
@@ -202,5 +211,7 @@ return [
 
         Watchers\ScheduleWatcher::class => env('TELESCOPE_SCHEDULE_WATCHER', true),
         Watchers\ViewWatcher::class => env('TELESCOPE_VIEW_WATCHER', true),
+
+
     ],
 ];
