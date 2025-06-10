@@ -151,21 +151,21 @@ class ItemVariantSeeder extends Seeder
         // Custom variations per item index (0-based)
         $variationsPerItem = [
             // '2 side color',
-            [
-                [
-                 'color' => $colorRed->id,
-                 'size' => $sizeSmall->id,
-                 'packaging' => $cartoonPackaging->id,
-                 'price' => 950, 'stock' => 15
-                ],
+            // [
+            //     [
+            //      'color' => $colorRed->id,
+            //      'size' => $sizeSmall->id,
+            //      'packaging' => $cartoonPackaging->id,
+            //      'price' => 950, 'stock' => 15
+            //     ],
 
-                [
-                 'color' => $colorBlue->id,
-                 'size' => $sizeLarge->id,
-                 'packaging' => $piecePackaging->id,
-                 'price' => 1450, 'stock' => 8
-                ],
-            ],
+            //     [
+            //      'color' => $colorBlue->id,
+            //      'size' => $sizeLarge->id,
+            //      'packaging' => $piecePackaging->id,
+            //      'price' => 1450, 'stock' => 8
+            //     ],
+            // ],
             // 'noteit',
             [
                 [
@@ -194,46 +194,46 @@ class ItemVariantSeeder extends Seeder
 
             ],
             // '3 subject',
-            [
-                [
-                'color' => $color3subjectRed->id,
-                'size' => $sizeSmall->id,
-                'packaging' => $piecePackaging->id,
-                'price' => 230,
-                'stock' => 10
-                ],
-                [
-                'color' => $color3subjectBlue->id,
-                'size' => $sizeLarge->id,
-                'packaging' => $cartoonPackaging->id,
-                'price' => 230,
-                'stock' => 5
-                ],
-            ],
+            // [
+            //     [
+            //     'color' => $color3subjectRed->id,
+            //     'size' => $sizeSmall->id,
+            //     'packaging' => $piecePackaging->id,
+            //     'price' => 230,
+            //     'stock' => 10
+            //     ],
+            //     [
+            //     'color' => $color3subjectBlue->id,
+            //     'size' => $sizeLarge->id,
+            //     'packaging' => $cartoonPackaging->id,
+            //     'price' => 230,
+            //     'stock' => 5
+            //     ],
+            // ],
             // '4 subject',
-            [
-                [
-                'color' => $color4subjectBlack->id,
-                'size' => $sizeSmall->id,
-                'packaging' => $piecePackaging->id,
-                'price' => 330,
-                'stock' => 10
-                ],
-                [
-                'color' => $color4subjectRed->id,
-                'size' => $sizeLarge->id,
-                'packaging' => $cartoonPackaging->id,
-                'price' => 330,
-                'stock' => 5
-                ],
-                [
-                'color' => $color4subjectGreen->id,
-                'size' => $sizeLarge->id,
-                'packaging' => $cartoonPackaging->id,
-                'price' => 330,
-                'stock' => 5
-                ],
-            ],
+            // [
+            //     [
+            //     'color' => $color4subjectBlack->id,
+            //     'size' => $sizeSmall->id,
+            //     'packaging' => $piecePackaging->id,
+            //     'price' => 330,
+            //     'stock' => 10
+            //     ],
+            //     [
+            //     'color' => $color4subjectRed->id,
+            //     'size' => $sizeLarge->id,
+            //     'packaging' => $cartoonPackaging->id,
+            //     'price' => 330,
+            //     'stock' => 5
+            //     ],
+            //     [
+            //     'color' => $color4subjectGreen->id,
+            //     'size' => $sizeLarge->id,
+            //     'packaging' => $cartoonPackaging->id,
+            //     'price' => 330,
+            //     'stock' => 5
+            //     ],
+            // ],
             // [
             //     ['color' => $colorRed->id, 'size' => $sizeLarge->id, 'packaging' => $piecePackaging->id, 'price' => 1150, 'stock' => 20],
             //     ['color' => $colorBlue->id, 'size' => $sizeSmall->id, 'packaging' => $cartoonPackaging->id, 'price' => 1250, 'stock' => 18],
