@@ -72,11 +72,6 @@
 @endphp
 
 @section('content')
-    {{-- <div class="max-w-4xl p-6 pb-16 mx-auto">
-        <div class="overflow-hidden bg-white rounded-lg shadow-lg"> --}}
-    {{-- <div class="max-w-4xl p-6 pb-16 mx-auto">
-        <div class="bg-white shadow-lg rounded-lg overflow-hidden overflow-y-auto max-h-[100vh]"> --}}
-
     <div class="max-w-4xl mx-auto p-6 pb-16 overflow-y-auto max-h-[100vh]">
         <div class="overflow-hidden bg-white rounded-lg shadow-lg">
 
@@ -98,8 +93,6 @@
                 <div class="swiper-pagination"></div>
             </div>
 
-
-            {{-- ------------------------------------------------------------------------ --}}
             {{-- Table of $variantData --}}
 
             <script>
@@ -107,88 +100,6 @@
                 console.log('$variantData', @json($variantData));
                 console.log('$allImages', @json($allImages));
             </script>
-
-            <div class="p-4 overflow-x-auto">
-                <table class="w-full text-sm border border-gray-300 table-auto">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-4 py-2 border whitespace-nowrap">Variant ID</th>
-
-                            {{-- Item Color --}}
-                            <th class="px-4 py-2 border whitespace-nowrap">Color ID</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Color Name</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Color Image</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Disabled</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Color Created</th>
-
-                            {{-- Item Size --}}
-                            <th class="px-4 py-2 border whitespace-nowrap">Size ID</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Size Name</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Size Description</th>
-
-                            {{-- Packaging --}}
-                            <th class="px-4 py-2 border whitespace-nowrap">Packaging ID</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Packaging Name</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Packaging Details</th>
-
-                            {{-- Variant --}}
-                            <th class="px-4 py-2 border whitespace-nowrap">Price</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Stock</th>
-
-                            {{-- Owner --}}
-                            <th class="px-4 py-2 border whitespace-nowrap">Owner ID</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Owner Name</th>
-                            <th class="px-4 py-2 border whitespace-nowrap">Owner Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($item->variants as $variant)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->id }}</td>
-
-                                {{-- Color --}}
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->itemColor->id ?? 'N/A' }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->itemColor->name ?? 'N/A' }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">
-                                    @if (!empty($variant->itemColor->image_path))
-                                        <img src="{{ asset($variant->itemColor->image_path) }}"
-                                            alt="{{ $variant->itemColor->name }}" class="object-cover w-8 h-8 rounded" />
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-                                <td class="px-4 py-2 border whitespace-nowrap">
-                                    {{ $variant->itemColor->disabled ? 'Yes' : 'No' }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">
-                                    {{ optional($variant->itemColor->created_at)->format('Y-m-d') ?? 'N/A' }}</td>
-
-                                {{-- Size --}}
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->itemSize->id ?? 'N/A' }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->itemSize->name ?? 'N/A' }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">
-                                    {{ $variant->itemSize->description ?? 'N/A' }}</td>
-
-                                {{-- Packaging --}}
-                                <td class="px-4 py-2 border whitespace-nowrap">
-                                    {{ $variant->itemPackagingType->id ?? 'N/A' }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">
-                                    {{ $variant->itemPackagingType->name ?? 'N/A' }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">
-                                    {{ $variant->itemPackagingType->details ?? 'N/A' }}</td>
-
-                                {{-- Variant --}}
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->price }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->stock }}</td>
-
-                                {{-- Owner --}}
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->owner->id ?? 'N/A' }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->owner->name ?? 'N/A' }}</td>
-                                <td class="px-4 py-2 border whitespace-nowrap">{{ $variant->owner->email ?? 'N/A' }}</td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
 
 
             <div class="p-4 overflow-x-auto">
@@ -225,11 +136,58 @@
                                         N/A
                                     @endif
                                 </td>
+                                {{-- Color --}}
+                                <td class="px-4 py-2 border text-center">
+                                    @if (!empty($variant->itemColor))
+                                        <div class="flex flex-col items-center space-y-1">
+                                            <span class="text-xs text-gray-400">ID: {{ $variant->itemColor->id }}</span>
+                                            <span
+                                                class="text-sm font-medium text-gray-800">{{ $variant->itemColor->name }}</span>
 
-                                {{-- Display names --}}
-                                <td class="px-4 py-2 border">{{ $variant->itemColor->name ?? '—' }}</td>
-                                <td class="px-4 py-2 border">{{ $variant->itemSize->name ?? '—' }}</td>
-                                <td class="px-4 py-2 border">{{ $variant->itemPackagingType->name ?? '—' }}</td>
+                                            @if (!empty($variant->itemColor->image_path))
+                                                <img src="{{ asset($variant->itemColor->image_path) }}"
+                                                    alt="{{ $variant->itemColor->name }}"
+                                                    class="w-8 h-8 rounded-full border border-gray-300 shadow-sm object-cover" />
+                                            @else
+                                                <span class="text-xs text-gray-400">No Image</span>
+                                            @endif
+                                        </div>
+                                    @else
+                                        <span class="text-sm text-gray-400">N/A</span>
+                                    @endif
+                                </td>
+                                {{-- Size --}}
+                                <td class="px-4 py-2 border text-center">
+                                    @if (!empty($variant->itemSize))
+                                        <div class="flex flex-col items-center space-y-1">
+                                            <span class="text-xs text-gray-400">ID: {{ $variant->itemSize->id }}</span>
+                                            <span
+                                                class="text-sm font-medium text-gray-800">{{ $variant->itemSize->name }}</span>
+                                            <span class="text-xs text-gray-500 italic text-center max-w-[120px]">
+                                                {{ $variant->itemSize->description ?? 'No description' }}
+                                            </span>
+                                        </div>
+                                    @else
+                                        <span class="text-sm text-gray-400">N/A</span>
+                                    @endif
+                                </td>
+                                {{-- PackagingType --}}
+                                <td class="px-4 py-2 border text-center">
+                                    @if (!empty($variant->itemPackagingType))
+                                        <div class="flex flex-col items-center space-y-1">
+                                            <span class="text-xs text-gray-400">ID:
+                                                {{ $variant->itemPackagingType->id }}</span>
+                                            <span
+                                                class="text-sm font-medium text-gray-800">{{ $variant->itemPackagingType->name }}</span>
+                                            <span class="text-xs text-gray-500 italic text-center max-w-[140px]">
+                                                {{ $variant->itemPackagingType->details ?? 'No details' }}
+                                            </span>
+                                        </div>
+                                    @else
+                                        <span class="text-sm text-gray-400">N/A</span>
+                                    @endif
+                                </td>
+
 
                                 {{-- Variant price/stock --}}
                                 <td class="px-4 py-2 border">{{ $variant->price }}</td>
@@ -245,11 +203,6 @@
                     </tbody>
                 </table>
             </div>
-
-
-
-            {{-- _______________________________________________________________ --}}
-
 
             {{-- Product Info --}}
             <div class="p-6">
@@ -444,11 +397,19 @@
                 <script>
                     function variantSelector(variants) {
                         return {
+                            showModal: false,
                             variants: variants,
                             selectedColor: '',
+                            selectedSize: null,
+                            selectedPackaging: null,
                             selectedPrice: null,
+                            selectedStock: null,
+                            selectedImg: '/img/default.jpg',
+                            quantity: 1,
+
 
                             init() {
+                                this.updatePrice();
                                 this.selectedPrice = null;
                                 this.selectedStock = null;
                             },
@@ -485,19 +446,17 @@
                                 return uniqueColors;
                             },
 
-
-
                             get formattedPrice() {
                                 return this.selectedPrice !== null ? this.selectedPrice.toFixed(2) : '';
                             },
 
                             updatePrice() {
-                                // const match = this.variants.find(v => v.color === this.selectedColor);
-                                // this.selectedPrice = match ? match.price : null;
-                                // this.selectedImg = match ? match.img : '';
-                                // this.selectedDisabled = match ? match.disabled : false;
 
-                                const match = this.variants.find(v => v.color === this.selectedColor.name);
+                                const match = this.variants.find(
+                                    v => v.color === this.selectedColor.name &&
+                                    v.size === this.selectedSize &&
+                                    v.packaging === this.selectedPackaging?.name
+                                );
                                 this.selectedPrice = match ? match.price : null;
                                 this.selectedStock = match ? match.stock : null;
                             }
@@ -505,34 +464,11 @@
                     }
                 </script>
 
-
-
-
-
-
-
-
-
-
-
-
             </div>
 
 
             {{-- Alpine.js Variant Modal --}}
             <div x-data="{
-                showModal: false,
-                quantity: 1,
-                selectedColor: null,
-                selectedSize: null,
-                selectedPackaging: null,
-                selectedPrice: null,
-                selectedStock: null,
-                formattedPrice: '',
-
-
-                {{-- variantSelector: {{ $variantData->toJson() }}, --}}
-
                 // Merge the logic and data from variantSelector(...)
                 ...variantSelector({{ $variantData->toJson() }}),
 
@@ -550,80 +486,17 @@
                             {{ $variant->stock }}@if (!$loop->last),@endif @endforeach
                     ],
 
-                    {{-- colors: [
-                        @foreach ($item->variants as $variant)
-                            {
-                                name: '{{ $variant->itemColor->name }}',
-                                img: '{{ asset($variant->itemColor->image_path) }}',
-                                disabled: {{ $variant->itemColor->disabled ? 'true' : 'false' }}
-                            }@if (!$loop->last),@endif @endforeach
-                    ], --}}
-
-                    {{-- variants: [
-                        @foreach ($item->variants as $variant)
-                            {
-                                color: '{{ $variant->itemColor->name }}',
-                                size: '{{ $variant->itemSize->name }}',
-                                packaging: '{{ $variant->itemPackagingType->name }}',
-                                price: {{ number_format($variant->price, 2) }},
-                                stock: {{ $variant->stock }},
-                                img: '{{ asset($variant->itemColor->image_path) }}',
-                                disabled: {{ $variant->itemColor->disabled ? 'true' : 'false' }},
-                            }@if (!$loop->last),@endif @endforeach
-                    ], --}}
-                    {{-- variants: [
-                        @foreach ($item->variants as $variant)
-                            {
-                                color: '{{ $variant->itemColor->name }}',
-                                size: '{{ $variant->itemSize->name }}',
-                                packaging: '{{ $variant->itemPackagingType->name }}',
-                                price: {{ number_format($variant->price, 2) }},
-                                stock: {{ $variant->stock }},
-                                img: '{{ asset($variant->itemColor->image_path) }}',
-                                disabled: {{ $variant->itemColor->disabled ? 'true' : 'false' }},
-                            }
-                            @if (!$loop->last),@endif @endforeach
-                    ], --}}
-
-
-                    {{-- colors: [
-                        { name: 'BONE', img: '/img/colors/bone.png', disabled: false },
-                        { name: 'WHITE', img: '/img/colors/white.png', disabled: false },
-                        { name: 'BLACK', img: '/img/colors/black.png', disabled: false },
-                        { name: 'PURPLE', img: '/img/colors/purple.png', disabled: false },
-                        { name: 'BUTTER CORN', img: '/img/colors/butter-corn.png', disabled: true },
-                        { name: 'QUARTZ', img: '/img/colors/quartz.png', disabled: false }
-                    ], --}}
-
 
                     sizes: [
-                        @foreach ($item->variants as $variant)
+                        @foreach ($item->variants->unique('item_size_id') as $variant)
                             {{ $variant->size }}@if (!$loop->last),@endif @endforeach
                     ],
 
-                    {{-- sizes: [
-                        { value: 'W5', label: 'W5 21cm 34–35eu', disabled: false },
-                        { value: 'W6', label: 'W6 22cm 36–37eu', disabled: false },
-                        { value: 'W7', label: 'W7 23cm 37–38eu', disabled: false },
-                        { value: 'W8', label: 'W8 24cm 38–39eu', disabled: false },
-                        { value: 'W9', label: 'W9 25cm 39–40eu', disabled: false },
-                        { value: 'W10', label: 'W10 26cm 41–42eu', disabled: false }
-                    ], --}}
-
-                    {{-- packaging_details: [
-                        @foreach ($item->variants as $variant)
-                            {
-                                name: '{{ $variant->itemPackagingType->name }}',
-                                quantity: {{ $variant->itemPackagingType->quantity }}
-                            }@if (!$loop->last),@endif @endforeach
-                    ] --}}
-
                     packaging_details: [
                         @php
-                        $seen = [];
-                        @endphp
+                        $seen = []; @endphp
 
-                                        @foreach ($item->variants as $variant)
+                        @foreach ($item->variants as $variant)
 
                         @php
                             $pkg = $variant->itemPackagingType;
@@ -640,12 +513,6 @@
                         @endif @endforeach
                     ]
 
-
-                    {{-- packaging_details: [
-                        { name: 'Piece', quantity: 1 },
-                        { name: 'Packet', quantity: 10 },
-                        { name: 'Case', quantity: 100 }
-                    ] --}}
                 },
                 addToCart() {
                     // Handle adding to cart logic here (e.g., store cart item in session or make an AJAX request)
@@ -654,36 +521,19 @@
                 },
 
                 get selectedVariant() {
-                    if (!this.selectedColor || !this.selectedSize) return null;
+                    {{-- if (!this.selectedColor || !this.selectedSize) return null;
                     return this.item.variants.find(variant =>
                         variant.color === this.selectedColor && variant.size === this.selectedSize
+                    ); --}}
+                    return this.variants.find(variant =>
+                        variant.color === this.selectedColor?.name &&
+                        variant.size === this.selectedSize &&
+                        variant.packaging === this.selectedPackaging?.name
                     );
                 }
-                {{-- ,
 
-                packagingOptions: @json($item->packaging_details),
-                get filteredOptions() {
-                    return this.packagingOptions.filter(option => ['Piece', 'Packet', 'Case'].includes(option.name)).map(option => {
-                        return {
-                            name: option.name === 'Case' ? 'Carton' : option.name,
-                            quantity: option.quantity
-                        }
-                    });
-                } --}}
             }" x-cloak>
-                {{-- Trigger Button --}}
-                {{--
-                <div class="flex mt-6 space-x-4">
 
-                    <button @click="showModal = true"
-                        class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
-                        Add to Cart
-                    </button>
-
-                    <button @click="showModal = true" class="btn btn-soft btn-warning">Add to Cart</button>
-                    <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy
-                        Now</button>
-                </div> --}}
                 <div class="flex flex-col items-center w-full max-w-xs pb-4 mx-auto mt-6 space-y-4">
 
                     <button @click="showModal = true" class="w-full text-lg btn btn-active btn-accent btn-lg sm:w-auto">
@@ -696,56 +546,12 @@
 
                 </div>
 
-
-
-
-
-
-
-
-
-                {{-- <div class="flex flex-col mt-6 space-y-4">
-                    <!-- Top Button -->
-                    <button @click="showModal = true" class="w-full btn btn-soft btn-warning">
-
-                        <span class="sr-only">Add to Cart</span>
-
-                        <svg aria-hidden="true" fill="none" focusable="false" width="24"
-                            class="header__nav-icon icon icon-cart" viewBox="0 0 24 24">
-                            <path
-                                d="M4.75 8.25A.75.75 0 0 0 4 9L3 19.125c0 1.418 1.207 2.625 2.625 2.625h12.75c1.418 0 2.625-1.149 2.625-2.566L20 9a.75.75 0 0 0-.75-.75H4.75Zm2.75 0v-1.5a4.5 4.5 0 0 1 4.5-4.5v0a4.5 4.5 0 0 1 4.5 4.5v1.5"
-                                stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-                            </path>
-                        </svg>
-
-                        @if (session('cart') && count(session('cart')->items ?? []) > 0)
-                            <span class="absolute top-0 right-0 h-2.5 w-2.5 bg-red-500 rounded-full"></span>
-                        @endif
-
-                    </button>
-
-                    <!-- Bottom Button -->
-                    <button class="w-full px-6 py-2 text-lg text-white bg-red-500 rounded btn hover:bg-red-600">
-                        Buy Now
-                    </button>
-                </div> --}}
-
-
-
-
-
-
-
                 {{-- Overlay --}}
                 <div x-show="showModal" class="fixed inset-0 z-40 bg-black/40" @click="showModal = false"
                     x-transition.opacity>
                 </div>
 
-
-
                 {{-- Bottom Sheet Modal --}}
-                {{-- <div x-show="showModal" x-transition
-                    class="fixed bottom-0 left-0 right-0 z-50 bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl"> --}}
 
                 <div x-show="showModal" x-transition
                     class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
@@ -759,96 +565,19 @@
 
                     <!-- Product Preview -->
                     <div class="flex items-center gap-4 mb-4">
-                        {{-- <img src="/img/product.jpg" alt="Product" class="object-cover w-20 h-20 border rounded"> --}}
                         <img :src="selectedColor ? selectedColor.img : '/img/product.jpg'" alt="Product"
                             class="object-cover w-20 h-20 border rounded">
-
-                        {{-- <div>
-                            <div class="text-lg font-semibold text-red-500">฿<span x-text="item.price"></span></div>
-                            <div class="text-sm text-gray-500">Stock: <span x-text="item.stock"></span></div>
-                        </div> --}}
-
-                        {{-- <div class="text-lg font-semibold text-red-500">
-                            ฿<span x-text="selectedVariant ? selectedVariant.price : item.price"></span>
-                        </div> --}}
 
                         <div class="text-lg font-semibold text-red-500">
                             ฿<span x-text="selectedPrice"></span>
                         </div>
 
-
-                        <!------------------------------>
-                        <!-- Price Display -->
-                        {{-- <div x-show="selectedPrice !== null">
-                            <p class="text-lg font-semibold">
-                                Price: <span x-text="selectedPrice"></span>
-                            </p>
-                        </div> --}}
-                        {{--
-                        <!-- Debugging output -->
-                        <p>selectedPrice: <span x-text="selectedPrice"></span></p>
-                        <p>formattedPrice: <span x-text="formattedPrice"></span></p>
- --}}
-
-
-                        <!------------------------------>
+                        <!----Stock------->
                         <div class="text-sm text-gray-500">
                             Stock:<span x-text="selectedStock"></span>
                         </div>
 
-
-                        {{-- tryouts --}}
-                        {{-- <div class="text-lg font-semibold text-red-500">
-                            ฿<span x-text="selectedVariant ? selectedVariant.price : item.price"></span>
-                        </div>
-                        <div class="text-sm text-gray-500">
-                            Stock: <span x-text="selectedVariant ? selectedVariant.stock : item.stock"></span>
-                        </div> --}}
-
                     </div>
-
-                    <!-- Color Selector -->
-                    {{-- <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">COLOR</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(color, index) in item.colors" :key="index">
-                                <button type="button" @click="!color.disabled && (selectedColor = color)"
-                                    {{-- <button type="button" @click="if (!color.disabled) { selectedColor = color.name; updatePrice(); }"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
-                                        'border-black bg-black text-white': selectedColor?.name === color.name && !color
-                                            .disabled
-                                    }">
-                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded" alt="">
-                                    <span x-text="color.name"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div> --}}
-
-
-
-
-                    {{-- <!-- Color Selector -->
-                    <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">COLOR</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(color, index) in colors" :key="index">
-                                <button type="button" @click="!color.disabled && (selectedColor = color, updatePrice())"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
-                                        'border-black bg-black text-white': selectedColor === color && !color.disabled
-                                    }">
-                                    {{-- <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded"
-                                    <img :src="selectedColor?.img" alt="" class="w-full h-auto rounded"
-                                        alt="">
-                                    <span x-text="color"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div> --}}
 
                     <!-- Color Selector -->
                     <div class="mb-4">
@@ -872,89 +601,13 @@
                     </div>
 
 
-
-
-
-
-                    <!-- Color Selector -->
-                    {{-- <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">COLOR</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <button type="button" @click="!variant.disabled && (selectedColor = variant.color)"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': variant
-                                            .disabled,
-                                        'border-black bg-black text-white': selectedColor === variant.color && !variant
-                                            .disabled
-                                    }">
-                                    <img :src="variant.img" class="object-cover w-10 h-10 mb-1 rounded" alt="">
-                                    <span x-text="variant.color"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div> --}}
-
-                    <!-- Color Selector (2) -->
-                    {{-- <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">COLOR</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(color, index) in item.colors" :key="index">
-                                <button type="button" @click="!color.disabled && (selectedColor = color.name)"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color.disabled,
-                                        'border-black bg-black text-white': selectedColor === color.name && !color
-                                            .disabled
-                                    }">
-                                    <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded"
-                                        alt="">
-                                    <span x-text="color.name"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div> --}}
-
-
-                    {{-- ////////////// --}}
-                    {{-- <div>
-                        <label>Color:</label>
-                        <select x-model="selectedVariant">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <option :value="variant" :disabled="variant.disabled" x-text="variant.color">
-                                </option>
-                            </template>
-                        </select>
-                    </div> --}}
-
-                    {{-- ////////////// --}}
-
-
                     <!-- Size Selector -->
-                    {{-- <div class="mb-4">
-                                <div class="mb-2 text-sm font-semibold">SIZE</div>
-                                <div class="grid grid-cols-2 gap-2">
-                                    <template x-for="(size, index) in item.sizes" :key="index">
-                                        <button type="button" @click="!size.disabled && (selectedSize = size.value)"
-                                            class="px-3 py-2 text-xs text-left border rounded-md"
-                                            :class="{
-                                                'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
-                                                'bg-black text-white': selectedSize === size.value && !size.disabled
-                                            }"
-                                            x-text="size.label"></button>
-                                    </template>
-                                </div>
-                            </div> --}}
-
-
-
-
                     <div class="mb-4" x-show="item.sizes.length > 0">
                         <div class="mb-2 text-sm font-semibold">SIZE</div>
                         <div class="grid grid-cols-2 gap-2">
                             <template x-for="(size, index) in item.sizes" :key="index">
-                                <button type="button" @click="!size.disabled && (selectedSize = size.name)"
+                                <button type="button"
+                                    @click="!size.disabled && (selectedSize = size.name, updatePrice())"
                                     class="px-3 py-2 text-xs text-left border rounded-md"
                                     :class="{
                                         'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
@@ -967,18 +620,7 @@
                     </div>
 
 
-                    <!-- Packaging Option Selector -->
-                    {{-- <div class="mb-6">
-                        <div class="mb-2 text-sm font-semibold">Packaging</div>
-                        <select name="packaging_details" class="form-select">
-                            <template x-for="option in item.packaging_details" :key="option.name">
-                                <option :value="option.name" x-text="`${option.name} (${option.quantity})`"></option>
-                            </template>
-                        </select>
-                    </div> --}}
-
-
-                    <!-- ---------------------------------------------------------- -->
+                    <!-- Packaging Selector -->
                     <div class="mb-6">
                         <div class="mb-2 text-sm font-semibold">Packaging</div>
                         <div class="flex flex-wrap gap-2">
@@ -998,58 +640,6 @@
                             </template>
                         </div>
                     </div>
-                    <!-- ---------------------------------------------------------- -->
-
-
-
-                    {{-- <div class="grid grid-cols-2 gap-2">
-                            <template x-for="(packaging_detail, index) in item.packaging_details" :key="index">
-                                <button type="button"
-                                    @click="!packaging_detail.disabled && (selectedSizePackaging_detail = packaging_details.value)"
-                                    class="px-3 py-2 text-xs text-left border rounded-md"
-                                    :class="{
-                                        'bg-gray-100 text-gray-400 cursor-not-allowed': packaging_detail.disabled,
-                                        'bg-black text-white': selectedSizePackaging_detail === packaging_detail
-                                            .value && !packaging_detail.disabled
-                                    }"
-                                    x-text="size.label"></button>
-                            </template>
-                        </div> --}}
-
-                    <!-- ---------------------------------------- -->
-
-                    {{-- <div x-data="variantSelector({{ $variantData->toJson() }})" x-init="init()" class="space-y-4">
-                            <!-- Dropdown -->
-                            <div>
-                                <label class="block text-sm font-medium text-gray-700">Choose Color:</label>
-                                <select x-model="selectedColor" @change="updatePrice()"
-                                    class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                                    <option value="">-- Select Color --</option>
-                                    <template x-for="color in colors" :key="color">
-                                        <option x-text="color" :value="color"></option>
-                                    </template>
-                                </select>
-                            </div>
-
-                            <!-- Price Display -->
-                            <div x-show="selectedPrice !== null">
-                                <p class="text-lg font-semibold">
-                                    Price: <span x-text="formattedPrice"></span>
-                                </p>
-                            </div>
-                        </div> --}}
-
-                    <!-- Dropdown -->
-                    {{-- <div>
-                            <label>Choose Color:</label>
-                            <select x-model="selectedColor" @change="updatePrice()">
-                                <option value="">-- Select Color --</option>
-                                <template x-for="color in colors" :key="color">
-                                    <option x-text="color" :value="color"></option>
-                                </template>
-                            </select>
-                        </div> --}}
-                    <!-- ---------------------------------------- -->
 
                     <!-- Quantity Control -->
                     <div class="mb-6">
@@ -1062,54 +652,6 @@
                             <button type="button" class="px-2 text-lg" @click="quantity++">+</button>
                         </div>
                     </div>
-
-                    {{--
-                    <div>
-                        <label>Color:</label>
-                        <select x-model="selectedVariant">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <option :value="variant" :disabled="variant.disabled" x-text="variant.color">
-                                </option>
-                            </template>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Size:</label>
-                        <select x-model="selectedSize">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <option :value="variant.size" x-text="variant.size"></option>
-                            </template>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Packaging:</label>
-                        <select x-model="selectedVariant">
-                            <template x-for="(variant, index) in item.variants" :key="index">
-                                <option :value="variant.packaging" x-text="variant.packaging"></option>
-                            </template>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label>Price:</label>
-                        <span x-text="selectedVariant ? selectedVariant.price : item.price"></span>
-                    </div>
-
-                    <div>
-                        <label>Stock:</label>
-                        <span x-text="selectedVariant ? selectedVariant.stock : item.stock"></span>
-                    </div>
-
-                    <div>
-                        <label>Quantity:</label>
-                        <input type="number" x-model="quantity" min="1"
-                            :max="selectedVariant ? selectedVariant.stock : item.stock">
-                    </div> --}}
-
-
-
 
                     <!-- Add to Cart Button -->
                     <button :disabled="!selectedColor || !selectedSize" @click="addToCart()"

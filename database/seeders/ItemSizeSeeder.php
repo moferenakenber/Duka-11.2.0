@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Item;
 use App\Models\ItemSize;
+use Illuminate\Support\Facades\File;
 
 class ItemSizeSeeder extends Seeder
 {
@@ -15,9 +16,9 @@ class ItemSizeSeeder extends Seeder
         $items = Item::all();
 
         $sizes = [
-            ['name' => 'Noteit3x3', 'image_path' => 'images/sizes/3x3.png'],
-            ['name' => 'Noteit4x4', 'image_path' => 'images/sizes/4x4.png'],
-            ['name' => 'Noteit5x5', 'image_path' => 'images/sizes/5x5.png'],
+            ['name' => '3x3', 'image_path' => 'images/sizes/3x3.png'],
+            ['name' => '4x4', 'image_path' => 'images/sizes/4x4.png'],
+            ['name' => '5x5', 'image_path' => 'images/sizes/5x5.png'],
             ['name' => '10X10', 'image_path' => 'images/sizes/10x10.png'],
             ['name' => 'Small', 'image_path' => 'images/sizes/small.png'],
             ['name' => 'Medium', 'image_path' => 'images/sizes/medium.png'],
@@ -34,17 +35,17 @@ class ItemSizeSeeder extends Seeder
             ['name' => 'A9', 'image_path' => 'images/sizes/a9.png'],
             ['name' => 'A10', 'image_path' => 'images/sizes/a10.png'],
         ];
-        foreach ($items as $item) {
-            foreach ($sizes as $size) {
-                ItemSize::create([
-                    'name' => $size['name'],
-                    'image' => $size['image_path'],
-                    'price' => 0.00, // Default price, can be adjusted later
-                    'disabled' => false,
 
-                    'itemid' => $item->id,
-                ]);
-            }
+        foreach ($sizes as $size) {
+            $imagePath = public_path($size['image_path']);
+            $finalImage = File::exists($imagePath) ? $size['image_path'] : null;
+
+            ItemSize::firstOrCreate(
+                ['name' => $size['name']],
+                ['image' => $finalImage]
+            );
         }
+
+
     }
 }
