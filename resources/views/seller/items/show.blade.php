@@ -137,7 +137,7 @@
                                     @endif
                                 </td>
                                 {{-- Color --}}
-                                <td class="px-4 py-2 border text-center">
+                                <td class="px-4 py-2 text-center border">
                                     @if (!empty($variant->itemColor))
                                         <div class="flex flex-col items-center space-y-1">
                                             <span class="text-xs text-gray-400">ID: {{ $variant->itemColor->id }}</span>
@@ -147,7 +147,7 @@
                                             @if (!empty($variant->itemColor->image_path))
                                                 <img src="{{ asset($variant->itemColor->image_path) }}"
                                                     alt="{{ $variant->itemColor->name }}"
-                                                    class="w-8 h-8 rounded-full border border-gray-300 shadow-sm object-cover" />
+                                                    class="object-cover w-8 h-8 border border-gray-300 rounded-full shadow-sm" />
                                             @else
                                                 <span class="text-xs text-gray-400">No Image</span>
                                             @endif
@@ -157,7 +157,7 @@
                                     @endif
                                 </td>
                                 {{-- Size --}}
-                                <td class="px-4 py-2 border text-center">
+                                <td class="px-4 py-2 text-center border">
                                     @if (!empty($variant->itemSize))
                                         <div class="flex flex-col items-center space-y-1">
                                             <span class="text-xs text-gray-400">ID: {{ $variant->itemSize->id }}</span>
@@ -172,7 +172,7 @@
                                     @endif
                                 </td>
                                 {{-- PackagingType --}}
-                                <td class="px-4 py-2 border text-center">
+                                <td class="px-4 py-2 text-center border">
                                     @if (!empty($variant->itemPackagingType))
                                         <div class="flex flex-col items-center space-y-1">
                                             <span class="text-xs text-gray-400">ID:
@@ -410,6 +410,7 @@
 
                             init() {
                                 this.updatePrice();
+                                // this.selectedPackaging = null;
                                 this.selectedPrice = null;
                                 this.selectedStock = null;
                             },
@@ -458,6 +459,7 @@
                                     v.packaging === this.selectedPackaging?.name
                                 );
                                 this.selectedPrice = match ? match.price : null;
+                                // this.selectedPackaging = match ? match.packaging.quantity : null;
                                 this.selectedStock = match ? match.stock : null;
                             }
                         };
@@ -494,7 +496,7 @@
 
                     packaging_details: [
                         @php
-                        $seen = []; @endphp
+$seen = []; @endphp
 
                         @foreach ($item->variants as $variant)
 
@@ -530,6 +532,13 @@
                         variant.size === this.selectedSize &&
                         variant.packaging === this.selectedPackaging?.name
                     );
+                },
+
+                get selectedPricePerPiece() {
+                    if (this.selectedPrice && this.selectedPackaging?.quantity) {
+                        return (this.selectedPrice / this.selectedPackaging.quantity).toFixed(2);
+                    }
+                    return '';
                 }
 
             }" x-cloak>
@@ -568,9 +577,23 @@
                         <img :src="selectedColor ? selectedColor.img : '/img/product.jpg'" alt="Product"
                             class="object-cover w-20 h-20 border rounded">
 
-                        <div class="text-lg font-semibold text-red-500">
-                            ฿<span x-text="selectedPrice"></span>
+
+
+
+                        <!-- Price Info (Stacked) -->
+                        <div class="flex flex-col">
+                            <!-- Main Price -->
+                            <div class="text-lg font-semibold text-red-500">
+                                ฿<span x-text="selectedPrice"></span>
+                            </div>
+
+                            <!-- Price per Piece -->
+                            <div class="text-sm text-gray-500">
+                            ฿<span x-text="selectedPricePerPiece"></span> / piece
+                            </div>
                         </div>
+
+
 
                         <!----Stock------->
                         <div class="text-sm text-gray-500">
