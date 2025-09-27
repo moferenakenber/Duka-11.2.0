@@ -22,15 +22,15 @@
                 @include('admin.layouts.sidebar')
 
                 <!-- Main Content -->
-                <main class="p-4 sm:ml-64 min-h-screen overflow-y-auto">
-                    <div class="p-2 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700 mt-16 min-h-screen">
+                <main class="min-h-screen p-4 overflow-y-auto sm:ml-64">
+                    <div class="min-h-screen p-2 mt-16 border-2 border-gray-200 border-dashed rounded-lg dark:border-gray-700">
 
 
 
                         <!-- Page Heading -->
                         @isset($header)
-                            <header class="bg-white dark:bg-gray-800 shadow">
-                                <div class="max-w-7xl mx-auto py-4 px-4 sm:px-4 lg:px-6">
+                            <header class="bg-white shadow dark:bg-gray-800">
+                                <div class="px-4 py-4 mx-auto max-w-7xl sm:px-4 lg:px-6">
                                     {{ $header }}
                                 </div>
                             </header>
