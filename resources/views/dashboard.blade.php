@@ -26,6 +26,8 @@
                                 class="flex w-2.5 h-2.5 bg-blue-200 rounded-full me-1.5 shrink-0"></span>Sales</span>
                         <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span
                                 class="flex w-2.5 h-2.5 bg-teal-500 rounded-full me-1.5 shrink-0"></span>Revenue</span>
+                        <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3"><span
+                                class="flex w-2.5 h-2.5 bg-teal-200 rounded-full me-1.5 shrink-0"></span>Purchases</span>
 
                     </div>
 
