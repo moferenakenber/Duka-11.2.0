@@ -15,6 +15,8 @@ class ItemVariantSeeder extends Seeder
     {
         $owner = User::first(); // Make sure at least one user exists
         $items = Item::all();
+
+
         $colors = ItemColor::all()->keyBy('name');
         $sizes = ItemSize::all()->keyBy('name');
         $packagings = ItemPackagingType::all()->keyBy('name');

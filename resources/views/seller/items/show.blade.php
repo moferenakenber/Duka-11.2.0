@@ -49,13 +49,13 @@
 
 
 {{-- 0 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_1.jpg"
-     1 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_2.jpg"
-     2 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_1.jpg"
-     3 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_2.jpg"
-     4 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_red.jpg"
-     5 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_blue.jpg"
-     6 : "http://duka-11.2.0.local:8086/images/sizes/s.png"
-     7 : "http://duka-11.2.0.local:8086/images/sizes/l.png" --}}
+1 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_2.jpg"
+2 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_1.jpg"
+3 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_2.jpg"
+4 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_red.jpg"
+5 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_blue.jpg"
+6 : "http://duka-11.2.0.local:8086/images/sizes/s.png"
+7 : "http://duka-11.2.0.local:8086/images/sizes/l.png" --}}
 
 @php
     $variantData = $item->variants->map(function ($variant) {
@@ -131,7 +131,7 @@
                                 <td class="px-4 py-2 border">
                                     @if ($variant->image_path)
                                         <img src="{{ asset($variant->image_path) }}" alt="Variant Image"
-                                            class="object-cover w-10 h-10 rounded" />
+                                                                                                                        class="object-cover w-10 h-10 rounded" />
                                     @else
                                         N/A
                                     @endif
@@ -141,13 +141,12 @@
                                     @if (!empty($variant->itemColor))
                                         <div class="flex flex-col items-center space-y-1">
                                             <span class="text-xs text-gray-400">ID: {{ $variant->itemColor->id }}</span>
-                                            <span
-                                                class="text-sm font-medium text-gray-800">{{ $variant->itemColor->name }}</span>
+                                            <span class="text-sm font-medium text-gray-800">{{ $variant->itemColor->name }}</span>
 
                                             @if (!empty($variant->itemColor->image_path))
                                                 <img src="{{ asset($variant->itemColor->image_path) }}"
-                                                    alt="{{ $variant->itemColor->name }}"
-                                                    class="object-cover w-8 h-8 border border-gray-300 rounded-full shadow-sm" />
+                                                                    alt="{{ $variant->itemColor->name }}"
+                                                                    class="object-cover w-8 h-8 border border-gray-300 rounded-full shadow-sm" />
                                             @else
                                                 <span class="text-xs text-gray-400">No Image</span>
                                             @endif
@@ -161,8 +160,7 @@
                                     @if (!empty($variant->itemSize))
                                         <div class="flex flex-col items-center space-y-1">
                                             <span class="text-xs text-gray-400">ID: {{ $variant->itemSize->id }}</span>
-                                            <span
-                                                class="text-sm font-medium text-gray-800">{{ $variant->itemSize->name }}</span>
+                                            <span class="text-sm font-medium text-gray-800">{{ $variant->itemSize->name }}</span>
                                             <span class="text-xs text-gray-500 italic text-center max-w-[120px]">
                                                 {{ $variant->itemSize->description ?? 'No description' }}
                                             </span>
@@ -178,7 +176,7 @@
                                             <span class="text-xs text-gray-400">ID:
                                                 {{ $variant->itemPackagingType->id }}</span>
                                             <span
-                                                class="text-sm font-medium text-gray-800">{{ $variant->itemPackagingType->name }}</span>
+                                                                                                                            class="text-sm font-medium text-gray-800">{{ $variant->itemPackagingType->name }}</span>
                                             <span class="text-xs text-gray-500 italic text-center max-w-[140px]">
                                                 {{ $variant->itemPackagingType->details ?? 'No details' }}
                                             </span>
@@ -252,7 +250,7 @@
 
                 {{-- <div class="flex mt-6 space-x-4">
                     <button @click="showModal = true"
-                        class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
+                                                                                                    class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
                         Add to Cart
                     </button>
                     <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy Now</button>
@@ -264,7 +262,7 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700">Choose Color:</label>
                         <select x-model="selectedColor" @change="updatePrice()"
-                            class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
+                                                                                                        class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
                             <option value="">-- Select Color --</option>
                             <template x-for="color in colors" :key="color">
                                 <option x-text="color" :value="color"></option>
@@ -283,17 +281,18 @@
                 <div x-data="{ open: false }" class="mb-4">
                     <!-- Toggle Circle Button with More Icon -->
                     <button @click="open = !open"
-                        class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300">
+                                                                                                    class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-700" fill="none"
-                            viewBox="0 0 24 24" stroke="currentColor">
+                                                                                                        viewBox="0 0 24 24"
+                                                                                                        stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M12 6v.01M12 12v.01M12 18v.01" />
+                                                                                                            d="M12 6v.01M12 12v.01M12 18v.01" />
                         </svg>
                     </button>
 
                     <!-- Details Container -->
                     <div x-show="open" x-transition
-                        class="p-4 mt-3 space-y-4 border border-gray-200 rounded-lg shadow bg-gray-50">
+                                                                                                    class="p-4 mt-3 space-y-4 border border-gray-200 rounded-lg shadow bg-gray-50">
 
                         <!-- Product Images -->
                         <div class="p-4 bg-white rounded shadow">
@@ -455,8 +454,8 @@
 
                                 const match = this.variants.find(
                                     v => v.color === this.selectedColor.name &&
-                                    v.size === this.selectedSize &&
-                                    v.packaging === this.selectedPackaging?.name
+                                        v.size === this.selectedSize &&
+                                        v.packaging === this.selectedPackaging?.name
                                 );
                                 this.selectedPrice = match ? match.price : null;
                                 // this.selectedPackaging = match ? match.packaging.quantity : null;
@@ -471,77 +470,84 @@
 
             {{-- Alpine.js Variant Modal --}}
             <div x-data="{
-                // Merge the logic and data from variantSelector(...)
-                ...variantSelector({{ $variantData->toJson() }}),
+                    // Merge the logic and data from variantSelector(...)
+                    ...variantSelector({{ $variantData->toJson() }}),
+
+                    customers: [
+                                    { id: 1, name: 'Alice', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
+                                    { id: 2, name: 'Bob', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
+                                    { id: 3, name: 'Charlie', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: true }
+                                ],
+                                selectedCustomer: null,
 
 
-                item: {
-                    {{-- price: {{ $item->price }}, --}}
+                    item: {
+                        {{-- price: {{ $item->price }}, --}}
 
-                    price: {{ $variant->price }},
+                        price: {{ $variant->price }},
 
-                    {{-- price: {{ number_format($variant->price, 2)
-                   {{-- stock: 200, --}}
+                        {{-- price: {{ number_format($variant->price, 2)
+                       {{-- stock: 200, --}}
 
-                    stock: [
-                        @foreach ($item->variants as $variant)
+                        stock: [
+                            @foreach ($item->variants as $variant)
                             {{ $variant->stock }}@if (!$loop->last),@endif @endforeach
-                    ],
+                        ],
 
 
-                    sizes: [
-                        @foreach ($item->variants->unique('item_size_id') as $variant)
+                        sizes: [
+                            @foreach ($item->variants->unique('item_size_id') as $variant)
                             {{ $variant->size }}@if (!$loop->last),@endif @endforeach
-                    ],
+                        ],
 
-                    packaging_details: [
-                        @php
-$seen = []; @endphp
+                        packaging_details: [
+                            @php
+                            $seen = []; @endphp
 
-                        @foreach ($item->variants as $variant)
+                            @foreach ($item->variants as $variant)
 
-                        @php
-                            $pkg = $variant->itemPackagingType;
-                            $key = $pkg?->id;
-                        @endphp
+                                @php
+                                    $pkg = $variant->itemPackagingType;
+                                    $key = $pkg?->id;
+                                @endphp
 
-                        @if ($pkg && !in_array($key, $seen))
-                            @php $seen[] = $key; @endphp
-                            {
-                                name: '{{ $pkg->name }}',
-                                quantity: {{ $pkg->quantity ?? 1 }},
-                                disabled: {{ $pkg->disabled ? 'true' : 'false' }}
-                            }@if (!$loop->last),@endif
-                        @endif @endforeach
-                    ]
+                                @if ($pkg && !in_array($key, $seen))
+                                    @php $seen[] = $key; @endphp
+                                    {
+                                        name: '{{ $pkg->name }}',
+                                        quantity: {{ $pkg->quantity ?? 1 }},
+                                        disabled: {{ $pkg->disabled ? 'true' : 'false' }}
+                                    }@if (!$loop->last),@endif
+                            @endif @endforeach
+                        ]
 
-                },
-                addToCart() {
-                    // Handle adding to cart logic here (e.g., store cart item in session or make an AJAX request)
-                    this.showModal = false;
-                    window.location.href = '/cart'; // Redirect to the cart page
-                },
+                    },
+                    addToCart() {
+                        // Handle adding to cart logic here (e.g., store cart item in session or make an AJAX request)
+                        this.showModal = false;
+                        window.location.href = '/cart'; // Redirect to the cart page
+                    },
 
-                get selectedVariant() {
-                    {{-- if (!this.selectedColor || !this.selectedSize) return null;
-                    return this.item.variants.find(variant =>
-                        variant.color === this.selectedColor && variant.size === this.selectedSize
-                    ); --}}
-                    return this.variants.find(variant =>
-                        variant.color === this.selectedColor?.name &&
-                        variant.size === this.selectedSize &&
-                        variant.packaging === this.selectedPackaging?.name
-                    );
-                },
+                    get selectedVariant() {
+                        {{-- if (!this.selectedColor || !this.selectedSize) return null;
+                        return this.item.variants.find(variant =>
+                            variant.color === this.selectedColor && variant.size === this.selectedSize
+                        ); --}}
+                        return this.variants.find(variant =>
+                            variant.color === this.selectedColor?.name &&
+                            variant.size === this.selectedSize &&
+                            variant.packaging === this.selectedPackaging?.name
+                        );
+                    },
 
-                get selectedPricePerPiece() {
-                    if (this.selectedPrice && this.selectedPackaging?.quantity) {
-                        return (this.selectedPrice / this.selectedPackaging.quantity).toFixed(2);
+                    get selectedPricePerPiece() {
+                        if (this.selectedPrice && this.selectedPackaging?.quantity) {
+                            return (this.selectedPrice / this.selectedPackaging.quantity).toFixed(2);
+                        }
+                        return '';
                     }
-                    return '';
-                }
 
-            }" x-cloak>
+                }" x-cloak>
 
                 <div class="flex flex-col items-center w-full max-w-xs pb-4 mx-auto mt-6 space-y-4">
 
@@ -557,25 +563,25 @@ $seen = []; @endphp
 
                 {{-- Overlay --}}
                 <div x-show="showModal" class="fixed inset-0 z-40 bg-black/40" @click="showModal = false"
-                    x-transition.opacity>
+                                                                                                x-transition.opacity>
                 </div>
 
                 {{-- Bottom Sheet Modal --}}
 
                 <div x-show="showModal" x-transition
-                    class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
+                                                                                                class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
 
 
                     <!-- Close Button -->
                     <div class="flex justify-end">
                         <button @click="showModal = false"
-                            class="text-2xl text-gray-400 hover:text-gray-600">&times;</button>
+                                                                                                        class="text-2xl text-gray-400 hover:text-gray-600">&times;</button>
                     </div>
 
                     <!-- Product Preview -->
                     <div class="flex items-center gap-4 mb-4">
                         <img :src="selectedColor ? selectedColor.img : '/img/product.jpg'" alt="Product"
-                            class="object-cover w-20 h-20 border rounded">
+                                                                                                        class="object-cover w-20 h-20 border rounded">
 
 
 
@@ -589,7 +595,7 @@ $seen = []; @endphp
 
                             <!-- Price per Piece -->
                             <div class="text-sm text-gray-500">
-                            ฿<span x-text="selectedPricePerPiece"></span> / piece
+                                ฿<span x-text="selectedPricePerPiece"></span> / piece
                             </div>
                         </div>
 
@@ -602,20 +608,39 @@ $seen = []; @endphp
 
                     </div>
 
+                    <!-- Customer Selector -->
+                    <div class="mb-4">
+                        <div class="mb-2 text-sm font-semibold">CUSTOMER</div>
+                        <div class="flex flex-wrap gap-2">
+                            <template x-for="(customer, index) in customers" :key="index">
+                                <button type="button" @click="!customer.disabled && (selectedCustomer = customer, updatePrice())"
+                                                                                                                class="flex flex-col items-center w-24 px-2 py-1 text-xs border rounded-md"
+                                                                                                                :class="{
+                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': customer.disabled,
+                        'border-blue-600 bg-blue-600 text-white': selectedCustomer?.id === customer.id && !customer.disabled
+                    }">
+                                    <img :src="customer.img" class="object-cover w-10 h-10 mb-1 rounded-full" />
+                                    <span x-text="customer.name"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+
                     <!-- Color Selector -->
                     <div class="mb-4">
                         <div class="mb-2 text-sm font-semibold">COLOR</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(color, index) in colors" :key="index">
                                 <button type="button" @click="!color.disabled && (selectedColor = color, updatePrice())"
-                                    class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color
-                                            .disabled,
-                                        'border-black bg-black text-white': selectedColor?.name === color
-                                            .name && !color
-                                            .disabled
-                                    }">
+                                                                                                                class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
+                                                                                                                :class="{
+                                            'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color
+                                                .disabled,
+                                            'border-black bg-black text-white': selectedColor?.name === color
+                                                .name && !color
+                                                .disabled
+                                        }">
                                     <img :src="color.img" class="object-cover w-10 h-10 mb-1 rounded" />
                                     <span x-text="color.name"></span>
                                 </button>
@@ -629,14 +654,12 @@ $seen = []; @endphp
                         <div class="mb-2 text-sm font-semibold">SIZE</div>
                         <div class="grid grid-cols-2 gap-2">
                             <template x-for="(size, index) in item.sizes" :key="index">
-                                <button type="button"
-                                    @click="!size.disabled && (selectedSize = size.name, updatePrice())"
-                                    class="px-3 py-2 text-xs text-left border rounded-md"
-                                    :class="{
-                                        'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
-                                        'bg-black text-white': selectedSize === size.name && !size.disabled
-                                    }"
-                                    x-text="size.name">
+                                <button type="button" @click="!size.disabled && (selectedSize = size.name, updatePrice())"
+                                                                                                                class="px-3 py-2 text-xs text-left border rounded-md"
+                                                                                                                :class="{
+                                            'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
+                                            'bg-black text-white': selectedSize === size.name && !size.disabled
+                                        }" x-text="size.name">
                                 </button>
                             </template>
                         </div>
@@ -648,16 +671,15 @@ $seen = []; @endphp
                         <div class="mb-2 text-sm font-semibold">Packaging</div>
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(option, index) in item.packaging_details" :key="option.name">
-                                <button type="button"
-                                    @click="!option.disabled && (selectedPackaging = option, updatePrice())"
-                                    class="px-4 py-2 text-sm border rounded-md"
-                                    :class="{
-                                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': option
-                                            .disabled,
-                                        'border-black bg-black text-white': selectedPackaging?.name === option
-                                            .name && !
-                                            option.disabled
-                                    }">
+                                <button type="button" @click="!option.disabled && (selectedPackaging = option, updatePrice())"
+                                                                                                                class="px-4 py-2 text-sm border rounded-md"
+                                                                                                                :class="{
+                                            'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': option
+                                                .disabled,
+                                            'border-black bg-black text-white': selectedPackaging?.name === option
+                                                .name && !
+                                                option.disabled
+                                        }">
                                     <span x-text="`${option.name} (${option.quantity})`"></span>
                                 </button>
                             </template>
@@ -669,17 +691,16 @@ $seen = []; @endphp
                         <div class="mb-2 text-sm font-semibold">Quantity</div>
                         <div class="flex items-center px-2 border rounded w-max">
                             <button type="button" class="px-2 text-lg"
-                                @click="quantity = Math.max(1, quantity - 1)">–</button>
+                                                                                                            @click="quantity = Math.max(1, quantity - 1)">–</button>
                             <input type="number" x-model="quantity" min="1"
-                                class="w-12 text-center outline-none border-x" />
+                                                                                                            class="w-12 text-center outline-none border-x" />
                             <button type="button" class="px-2 text-lg" @click="quantity++">+</button>
                         </div>
                     </div>
 
                     <!-- Add to Cart Button -->
-                    <button :disabled="!selectedColor || !selectedSize" @click="addToCart()"
-                        class="w-full py-3 font-bold text-white rounded"
-                        :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
+                    <button :disabled="!selectedColor || !selectedSize" @click="addToCart()" class="w-full py-3 font-bold text-white rounded"
+                                                                                                    :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
                         ADD TO CART
                     </button>
                 </div>
@@ -690,28 +711,29 @@ $seen = []; @endphp
 @endsection
 
 {{-- @section('scripts')
-    {{-- <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-        new Swiper(".mySwiper", {
-            loop: true,
-            slidesPerView: 1,
-            spaceBetween: 10,
-            navigation: {
-                nextEl: ".swiper-button-next",
-                prevEl: ".swiper-button-prev",
-            },
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
-        });
-    </script>
+{{--
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script>
+    new Swiper(".mySwiper", {
+        loop: true,
+        slidesPerView: 1,
+        spaceBetween: 10,
+        navigation: {
+            nextEl: ".swiper-button-next",
+            prevEl: ".swiper-button-prev",
+        },
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+    });
+</script>
 @endsection --}}
 
 
 @section('scripts')
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const swiper = new Swiper(".mySwiper", {
                 loop: true,
                 slidesPerView: 1,

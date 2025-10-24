@@ -31,6 +31,7 @@ class ItemSeeder extends Seeder
             // '25k- 5 ጨርቅ ማስታወሻ',
             ////////////////////////////
             'Noteit',
+            'Ring',
             ////////////////////////////
             // '3 subject',
             // '4 subject',
