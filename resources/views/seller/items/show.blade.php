@@ -403,6 +403,8 @@
                             selectedPackaging: null,
                             selectedPrice: null,
                             selectedStock: null,
+                            showDiscountSelector: false,
+                            selectedCart: null,
                             selectedImg: '/img/default.jpg',
                             quantity: 1,
 
@@ -473,12 +475,39 @@
                     // Merge the logic and data from variantSelector(...)
                     ...variantSelector({{ $variantData->toJson() }}),
 
+                    showDiscountSelector: false,
+                    selectedCart: null,
+                    selectedColor: null,
+                    selectedSize: null,
+
                     customers: [
-                                    { id: 1, name: 'Alice', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
-                                    { id: 2, name: 'Bob', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
-                                    { id: 3, name: 'Charlie', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: true }
+                                    { id: 1, name: 'Abebe', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
+                                    { id: 2, name: 'Helen', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
+                                    { id: 3, name: 'Chaltu', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
+                                    { id: 4, name: 'Daniel', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
+                                    { id: 5, name: 'Eyoha', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
+                                    { id: 6, name: 'Charlie', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: true }
                                 ],
                                 selectedCustomer: null,
+
+                    carts: [
+                                // Abebe
+                                { id: 101, customer: { id: 1 }, created_at: '2025-10-20' },
+                                { id: 102, customer: { id: 1 }, created_at: '2025-10-22' },
+                                // Helen
+                                { id: 201, customer: { id: 2 }, created_at: '2025-10-18' },
+                                { id: 202, customer: { id: 2 }, created_at: '2025-10-23' },
+                                { id: 203, customer: { id: 2 }, created_at: '2025-10-25' },
+                                // Chaltu
+                                { id: 301, customer: { id: 3 }, created_at: '2025-10-19' },
+                                // Daniel
+                                { id: 401, customer: { id: 4 }, created_at: '2025-10-21' },
+                                { id: 402, customer: { id: 4 }, created_at: '2025-10-24' },
+                                // Eyoha
+                                { id: 501, customer: { id: 5 }, created_at: '2025-10-22' },
+                                // Charlie (disabled customer)
+                                { id: 601, customer: { id: 6 }, created_at: '2025-10-20' }
+                            ],
 
 
                     item: {
@@ -527,6 +556,27 @@
                         this.showModal = false;
                         window.location.href = '/cart'; // Redirect to the cart page
                     },
+
+                    addToCartWithCustomer() {
+                        if (!this.selectedCustomer || !this.selectedCart) return;
+
+                        // Example: you can send an AJAX request to your backend here
+                        // For now, let's just log
+                        console.log('Adding to cart:', {
+                            customer: this.selectedCustomer,
+                            cart: this.selectedCart,
+                            variant: this.selectedVariant,
+                            quantity: this.quantity
+                        });
+
+                        // Close bottom sheet and modal
+                        this.showDiscountSelector = false;
+                        this.showModal = false;
+
+                        // Optional: redirect or refresh page
+                        // window.location.href = '/cart';
+                    },
+
 
                     get selectedVariant() {
                         {{-- if (!this.selectedColor || !this.selectedSize) return null;
@@ -608,25 +658,6 @@
 
                     </div>
 
-                    <!-- Customer Selector -->
-                    <div class="mb-4">
-                        <div class="mb-2 text-sm font-semibold">CUSTOMER</div>
-                        <div class="flex flex-wrap gap-2">
-                            <template x-for="(customer, index) in customers" :key="index">
-                                <button type="button" @click="!customer.disabled && (selectedCustomer = customer, updatePrice())"
-                                                                                                                class="flex flex-col items-center w-24 px-2 py-1 text-xs border rounded-md"
-                                                                                                                :class="{
-                        'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': customer.disabled,
-                        'border-blue-600 bg-blue-600 text-white': selectedCustomer?.id === customer.id && !customer.disabled
-                    }">
-                                    <img :src="customer.img" class="object-cover w-10 h-10 mb-1 rounded-full" />
-                                    <span x-text="customer.name"></span>
-                                </button>
-                            </template>
-                        </div>
-                    </div>
-
-
                     <!-- Color Selector -->
                     <div class="mb-4">
                         <div class="mb-2 text-sm font-semibold">COLOR</div>
@@ -698,12 +729,117 @@
                         </div>
                     </div>
 
-                    <!-- Add to Cart Button -->
+                    {{-- <!-- Add to Cart Button -->
                     <button :disabled="!selectedColor || !selectedSize" @click="addToCart()" class="w-full py-3 font-bold text-white rounded"
                                                                                                     :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
                         ADD TO CART
+                    </button> --}}
+
+                    <!-- Add to Cart Button -->
+                    {{-- <button
+                        :disabled="!selectedColor || !selectedSize"
+                        @click="showDiscountSelector = true"
+                        class="w-full py-3 font-bold text-white rounded"
+                        :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
+                        ADD TO CART
+                    </button> --}}
+
+
+                    <!-- Add to Cart Button -->
+                    <button
+                        :disabled="!selectedColor || !selectedSize"
+                        @click="if(selectedColor && selectedSize) { showDiscountSelector = true; showModal = false; }"
+                        class="w-full py-3 font-bold text-white rounded"
+                        :class="(!selectedColor || !selectedSize) ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'">
+                        ADD TO CART
                     </button>
                 </div>
+
+                <div x-show="showDiscountSelector" x-transition
+                        class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
+                        <!-- Header -->
+                        <div class="flex items-center justify-between mb-2">
+                            <h2 class="text-lg font-semibold">Select Customer & Cart</h2>
+                            <button @click="showDiscountSelector = false" class="text-gray-500 hover:text-gray-700">✕</button>
+                        </div>
+
+                        <!-- Customer Dropdown -->
+                        <!-- Customer Selector (Horizontally Scrollable) -->
+                        <div class="mb-4">
+                            <div class="mb-2 text-sm font-semibold">CUSTOMER</div>
+                            <div class="flex gap-2 py-1 overflow-x-auto">
+                                <template x-for="(customer, index) in customers" :key="index">
+                                    <button
+                                        type="button"
+                                        @click="!customer.disabled && (selectedCustomer = customer, updatePrice())"
+                                        class="flex flex-col items-center flex-shrink-0 w-24 px-2 py-1 text-xs border rounded-md"
+                                        :class="{
+                                            'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': customer.disabled,
+                                            'border-blue-600 bg-blue-600 text-white': selectedCustomer?.id === customer.id && !customer.disabled
+                                        }"
+                                    >
+                                        <img :src="customer.img" class="object-cover w-10 h-10 mb-1 rounded-full" />
+                                        <span x-text="customer.name"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+
+
+
+
+
+                        <!-- Cart Dropdown (shows after selecting a customer) -->
+                        <!-- Cart Dropdown -->
+                        <!-- Cart Dropdown -->
+                        <!-- Customer’s Cart Selector (Horizontally Scrollable Buttons) -->
+                        <!-- Customer’s Cart Selector (Horizontally Scrollable Buttons) -->
+                        <template x-if="selectedCustomer">
+                            <div class="mb-4">
+                                <div class="mb-2 text-sm font-semibold">Customer’s Carts</div>
+                                <div class="flex gap-2 py-1 overflow-x-auto">
+                                    <template x-for="cart in carts.filter(c => c.customer.id === selectedCustomer.id)" :key="cart.id">
+                                        <button
+                                            type="button"
+                                            @click="selectedCart = cart"
+                                            class="flex flex-col items-center flex-shrink-0 w-24 px-2 py-1 text-xs border rounded-md"
+                                            :class="{
+                                                'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': cart.disabled,
+                                                'border-blue-600 bg-blue-600 text-white': selectedCart?.id === cart.id && !cart.disabled
+                                            }"
+                                        >
+                                            <span x-text="'Cart #' + cart.id"></span>
+                                            <span class="text-xs" x-text="'Created ' + new Date(cart.created_at).toLocaleDateString()"></span>
+                                        </button>
+                                    </template>
+                                </div>
+                            </div>
+                        </template>
+
+
+
+
+                        <!-- Discount Info -->
+                        <template x-if="selectedCustomer && selectedCart">
+                            <div class="mt-3">
+                                <p class="text-gray-700">Checking discounts...</p>
+                                <p class="font-semibold text-green-600"
+                                x-text="discount ? `Discount: ${discount}%` : 'No discount available'">
+                                </p>
+                            </div>
+                        </template>
+
+                        <!-- Confirm Button -->
+                        <button
+                            class="w-full mt-4 btn btn-success"
+                            :disabled="!selectedCustomer || !selectedCart"
+                            @click="addToCartWithCustomer()"
+                        >
+                            Confirm & Add to Cart
+                        </button>
+                </div>
+
+
             </div>
 
         </div>

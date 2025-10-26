@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Controller;
 use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\User;
+use App\Models\Cart;
 
 class ItemController extends Controller
 {
@@ -80,7 +81,14 @@ class ItemController extends Controller
         //dd($item->variants); // This will dump the variants and stop the execution
 
         $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
-        return view('seller.items.show', compact('item', 'sellers'));
+
+        // All carts created by this seller (auth user) that belong to a customer
+        $carts = Cart::with('customer')
+            ->where('user_id', auth()->id())
+            ->whereNotNull('customer_id')
+            ->get();
+
+        return view('seller.items.show', compact('item', 'sellers', 'carts'));
     }
 
     /**
