@@ -232,11 +232,8 @@
                                                                                     d="M12 6v.01M12 12v.01M12 18v.01" />
                                 </svg>
                             </button>
-                        </div>
 
-
-                    </div>
-                    <!-- Details Container -->
+                            <!-- Details Container -->
                             <div x-show="open" x-transition
                                     class="p-4 mt-3 space-y-4 border border-gray-200 rounded-lg shadow bg-gray-50">
 
@@ -334,7 +331,10 @@
                                     </tbody>
                                 </table>
 
+                                </div>
                             </div>
+                    </div>
+
                 </div>
 
 
