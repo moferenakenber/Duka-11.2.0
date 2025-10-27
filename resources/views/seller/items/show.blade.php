@@ -278,8 +278,8 @@
                     </div>
                 </div> --}}
 
+                <!-- Toggle Circle Button with More Icon -->
                 <div x-data="{ open: false }" class="mb-4">
-                    <!-- Toggle Circle Button with More Icon -->
                     <button @click="open = !open"
                                                                                                     class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-700" fill="none"
@@ -619,22 +619,20 @@
                 {{-- Bottom Sheet Modal --}}
 
                 <div x-show="showModal" x-transition
-                                                                                                class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
+                    class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
 
 
                     <!-- Close Button -->
                     <div class="flex justify-end">
                         <button @click="showModal = false"
-                                                                                                        class="text-2xl text-gray-400 hover:text-gray-600">&times;</button>
+                            class="text-2xl text-gray-400 hover:text-gray-600">&times;
+                        </button>
                     </div>
 
                     <!-- Product Preview -->
                     <div class="flex items-center gap-4 mb-4">
                         <img :src="selectedColor ? selectedColor.img : '/img/product.jpg'" alt="Product"
-                                                                                                        class="object-cover w-20 h-20 border rounded">
-
-
-
+                            class="object-cover w-20 h-20 border rounded">
 
                         <!-- Price Info (Stacked) -->
                         <div class="flex flex-col">
@@ -650,7 +648,6 @@
                         </div>
 
 
-
                         <!----Stock------->
                         <div class="text-sm text-gray-500">
                             Stock:<span x-text="selectedStock"></span>
@@ -664,8 +661,8 @@
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(color, index) in colors" :key="index">
                                 <button type="button" @click="!color.disabled && (selectedColor = color, updatePrice())"
-                                                                                                                class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
-                                                                                                                :class="{
+                                        class="flex flex-col items-center w-20 px-2 py-1 text-xs border rounded-md"
+                                        :class="{
                                             'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': color
                                                 .disabled,
                                             'border-black bg-black text-white': selectedColor?.name === color
@@ -686,8 +683,8 @@
                         <div class="grid grid-cols-2 gap-2">
                             <template x-for="(size, index) in item.sizes" :key="index">
                                 <button type="button" @click="!size.disabled && (selectedSize = size.name, updatePrice())"
-                                                                                                                class="px-3 py-2 text-xs text-left border rounded-md"
-                                                                                                                :class="{
+                                    class="px-3 py-2 text-xs text-left border rounded-md"
+                                    :class="{
                                             'bg-gray-100 text-gray-400 cursor-not-allowed': size.disabled,
                                             'bg-black text-white': selectedSize === size.name && !size.disabled
                                         }" x-text="size.name">
@@ -703,8 +700,8 @@
                         <div class="flex flex-wrap gap-2">
                             <template x-for="(option, index) in item.packaging_details" :key="option.name">
                                 <button type="button" @click="!option.disabled && (selectedPackaging = option, updatePrice())"
-                                                                                                                class="px-4 py-2 text-sm border rounded-md"
-                                                                                                                :class="{
+                                        class="px-4 py-2 text-sm border rounded-md"
+                                        :class="{
                                             'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': option
                                                 .disabled,
                                             'border-black bg-black text-white': selectedPackaging?.name === option
@@ -722,16 +719,18 @@
                         <div class="mb-2 text-sm font-semibold">Quantity</div>
                         <div class="flex items-center px-2 border rounded w-max">
                             <button type="button" class="px-2 text-lg"
-                                                                                                            @click="quantity = Math.max(1, quantity - 1)">–</button>
+                                @click="quantity = Math.max(1, quantity - 1)">–
+                            </button>
                             <input type="number" x-model="quantity" min="1"
-                                                                                                            class="w-12 text-center outline-none border-x" />
-                            <button type="button" class="px-2 text-lg" @click="quantity++">+</button>
+                                class="w-12 text-center outline-none border-x" />
+                            <button type="button" class="px-2 text-lg" @click="quantity++">+
+                            </button>
                         </div>
                     </div>
 
                     {{-- <!-- Add to Cart Button -->
                     <button :disabled="!selectedColor || !selectedSize" @click="addToCart()" class="w-full py-3 font-bold text-white rounded"
-                                                                                                    :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
+                            :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
                         ADD TO CART
                     </button> --}}
 
