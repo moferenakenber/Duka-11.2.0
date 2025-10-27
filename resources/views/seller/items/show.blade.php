@@ -24,7 +24,7 @@
         --}}
 
 @section('content')
-<div class="max-w-4xl p-6 pb-16 mx-auto">
+<div class="max-w-4xl p-2 pb-20 mx-auto">
     <div class="overflow-hidden bg-white rounded-lg shadow-lg">
 
         {{-- Swiper Image Slider --}}
@@ -197,27 +197,144 @@
                 <div class="flex items-center justify-between mt-4 font-fancy">
 
                     <!-- Left: Current Price and Original Price -->
-                    <div>
+                    <div class="flex items-center gap-2">
                         <span class="text-3xl font-bold text-red-500">
                             ฿{{ number_format($item->price, 0) }}
                         </span>
 
                         @if ($item->discount_price)
-                            <span class="ml-2 text-gray-400 line-through">
-                                ฿{{ number_format($item->original_price, 0) }}
+                            <span class="ml-1 text-sm text-gray-400 line-through">
+                                {{-- ฿{{ number_format($item->original_price, 0) }} --}}
+                                ฿{{ number_format(229, 0) }}
                             </span>
                         @endif
                     </div>
 
                     <!-- Right: Discount Percentage -->
-                    @if ($item->discount_price)
-                        <div>
-                            <span class="px-3 py-1 text-xs text-white bg-yellow-500 rounded-full">
-                                -{{ $item->discount_percentage }}%
-                            </span>
-                        </div>
-                    @endif
+                    <div class="flex items-center gap-2">
+                        @if ($item->discount_price)
+                            <div>
+                                <span class="px-3 py-1 text-xs text-white bg-yellow-500 rounded-full">
+                                    -{{ $item->discount_percentage }}%
+                                </span>
+                            </div>
+                        @endif
 
+
+                        <!-- Toggle Circle Button with More Icon -->
+                        <div x-data="{ open: false }" class="flex items-center">
+                            <button @click="open = !open"
+                                        class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-700" fill="none"
+                                                viewBox="0 0 24 24"
+                                                stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                                    d="M12 6v.01M12 12v.01M12 18v.01" />
+                                </svg>
+                            </button>
+                        </div>
+
+
+                    </div>
+                    <!-- Details Container -->
+                            <div x-show="open" x-transition
+                                    class="p-4 mt-3 space-y-4 border border-gray-200 rounded-lg shadow bg-gray-50">
+
+                                <!-- Product Images -->
+                                <div class="p-4 bg-white rounded shadow">
+                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Product Images</h4>
+                                    <ul class="space-y-1 text-xs text-gray-600">
+                                        @foreach (explode("\n", $item->product_images) as $img)
+                                            <li>- {{ $img }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
+                                <!-- Variation -->
+                                <div class="p-4 bg-white rounded shadow">
+                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Variation</h4>
+                                    <p class="text-xs text-gray-600 break-words">{{ $item->variation }}</p>
+                                </div>
+
+                                <!-- Price -->
+                                <div class="p-4 bg-white rounded shadow">
+                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Price</h4>
+                                    <p class="text-xs text-gray-600 break-words">{{ $item->price }}</p>
+                                </div>
+
+                                <!-- Product Name -->
+                                <div class="p-4 bg-white rounded shadow">
+                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Product Name</h4>
+                                    <p class="text-xs text-gray-600 break-words">{{ $item->product_name }}</p>
+                                </div>
+
+                                <!-- Product Description (line by line) -->
+                                <div class="p-4 bg-white rounded shadow">
+                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Product Description</h4>
+                                    <ul class="space-y-1 text-xs text-gray-600">
+                                        @foreach (explode("\n", $item->product_description) as $line)
+                                            <li>- {{ $line }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
+                                <!-- Packaging Details (line by line) -->
+                                <div class="p-4 bg-white rounded shadow">
+                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Packaging Details</h4>
+                                    <ul class="space-y-1 text-xs text-gray-600">
+                                        @foreach (explode("\n", $item->packaging_details) as $pack)
+                                            <li>- {{ $pack }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
+                                <!-- Colors List -->
+                                <div class="p-4 bg-white rounded shadow">
+                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Colors</h4>
+                                    <ul class="space-y-1 text-xs text-gray-600">
+                                        @foreach (json_decode($item->colors, true) as $color)
+                                            <li>- {{ $color['name'] }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
+                                <!-- Variant Colors List -->
+                                <div class="p-4 bg-white rounded shadow">
+                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Variant Colors</h4>
+                                    <ul class="space-y-1 text-xs text-gray-600">
+                                        @foreach ($item->variants as $variant)
+                                            <li>- {{ $variant->itemColor->name }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+
+                                <!-- table of $variantData -->
+                                <table class="min-w-full text-sm text-left">
+                                    <thead class="text-xs font-semibold text-gray-700 bg-gray-100">
+                                        <tr>
+                                            <th class="px-4 py-2">Color</th>
+                                            <th class="px-4 py-2">Size</th>
+                                            <th class="px-4 py-2">Packaging</th>
+                                            <th class="px-4 py-2">Price</th>
+                                            <th class="px-4 py-2">Stock</th>
+                                            <th class="px-4 py-2">Owner</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-gray-200">
+                                        @foreach ($item->variants as $variant)
+                                            <tr>
+                                                <td class="px-4 py-2">{{ $variant->itemColor->name }}</td>
+                                                <td class="px-4 py-2">{{ $variant->itemSize->name }}</td>
+                                                <td class="px-4 py-2">{{ $variant->itemPackagingType->name }}</td>
+                                                <td class="px-4 py-2">{{ number_format($variant->price, 2) }}</td>
+                                                <td class="px-4 py-2">{{ $variant->stock }}</td>
+                                                <td class="px-4 py-2">{{ $variant->owner->name }}</td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+
+                            </div>
                 </div>
 
 
@@ -258,118 +375,6 @@
                     </div>
                 </div> --}}
 
-                <!-- Toggle Circle Button with More Icon -->
-                <div x-data="{ open: false }" class="mb-4">
-                    <button @click="open = !open"
-                                                                                                    class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-700" fill="none"
-                                                                                                        viewBox="0 0 24 24"
-                                                                                                        stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                                                            d="M12 6v.01M12 12v.01M12 18v.01" />
-                        </svg>
-                    </button>
-
-                    <!-- Details Container -->
-                    <div x-show="open" x-transition
-                                                                                                    class="p-4 mt-3 space-y-4 border border-gray-200 rounded-lg shadow bg-gray-50">
-
-                        <!-- Product Images -->
-                        <div class="p-4 bg-white rounded shadow">
-                            <h4 class="mb-2 text-sm font-bold text-gray-700">Product Images</h4>
-                            <ul class="space-y-1 text-xs text-gray-600">
-                                @foreach (explode("\n", $item->product_images) as $img)
-                                    <li>- {{ $img }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-
-                        <!-- Variation -->
-                        <div class="p-4 bg-white rounded shadow">
-                            <h4 class="mb-2 text-sm font-bold text-gray-700">Variation</h4>
-                            <p class="text-xs text-gray-600 break-words">{{ $item->variation }}</p>
-                        </div>
-
-                        <!-- Price -->
-                        <div class="p-4 bg-white rounded shadow">
-                            <h4 class="mb-2 text-sm font-bold text-gray-700">Price</h4>
-                            <p class="text-xs text-gray-600 break-words">{{ $item->price }}</p>
-                        </div>
-
-                        <!-- Product Name -->
-                        <div class="p-4 bg-white rounded shadow">
-                            <h4 class="mb-2 text-sm font-bold text-gray-700">Product Name</h4>
-                            <p class="text-xs text-gray-600 break-words">{{ $item->product_name }}</p>
-                        </div>
-
-                        <!-- Product Description (line by line) -->
-                        <div class="p-4 bg-white rounded shadow">
-                            <h4 class="mb-2 text-sm font-bold text-gray-700">Product Description</h4>
-                            <ul class="space-y-1 text-xs text-gray-600">
-                                @foreach (explode("\n", $item->product_description) as $line)
-                                    <li>- {{ $line }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-
-                        <!-- Packaging Details (line by line) -->
-                        <div class="p-4 bg-white rounded shadow">
-                            <h4 class="mb-2 text-sm font-bold text-gray-700">Packaging Details</h4>
-                            <ul class="space-y-1 text-xs text-gray-600">
-                                @foreach (explode("\n", $item->packaging_details) as $pack)
-                                    <li>- {{ $pack }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-
-                        <!-- Colors List -->
-                        <div class="p-4 bg-white rounded shadow">
-                            <h4 class="mb-2 text-sm font-bold text-gray-700">Colors</h4>
-                            <ul class="space-y-1 text-xs text-gray-600">
-                                @foreach (json_decode($item->colors, true) as $color)
-                                    <li>- {{ $color['name'] }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-
-                        <!-- Variant Colors List -->
-                        <div class="p-4 bg-white rounded shadow">
-                            <h4 class="mb-2 text-sm font-bold text-gray-700">Variant Colors</h4>
-                            <ul class="space-y-1 text-xs text-gray-600">
-                                @foreach ($item->variants as $variant)
-                                    <li>- {{ $variant->itemColor->name }}</li>
-                                @endforeach
-                            </ul>
-                        </div>
-
-                        <!-- table of $variantData -->
-                        <table class="min-w-full text-sm text-left">
-                            <thead class="text-xs font-semibold text-gray-700 bg-gray-100">
-                                <tr>
-                                    <th class="px-4 py-2">Color</th>
-                                    <th class="px-4 py-2">Size</th>
-                                    <th class="px-4 py-2">Packaging</th>
-                                    <th class="px-4 py-2">Price</th>
-                                    <th class="px-4 py-2">Stock</th>
-                                    <th class="px-4 py-2">Owner</th>
-                                </tr>
-                            </thead>
-                            <tbody class="divide-y divide-gray-200">
-                                @foreach ($item->variants as $variant)
-                                    <tr>
-                                        <td class="px-4 py-2">{{ $variant->itemColor->name }}</td>
-                                        <td class="px-4 py-2">{{ $variant->itemSize->name }}</td>
-                                        <td class="px-4 py-2">{{ $variant->itemPackagingType->name }}</td>
-                                        <td class="px-4 py-2">{{ number_format($variant->price, 2) }}</td>
-                                        <td class="px-4 py-2">{{ $variant->stock }}</td>
-                                        <td class="px-4 py-2">{{ $variant->owner->name }}</td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-
-                    </div>
-                </div>
 
 
 
