@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\User;
 use App\Models\Cart;
+use Illuminate\Support\Facades\Log;
+use App\Models\Customer;
+
 
 class ItemController extends Controller
 {
@@ -79,16 +82,84 @@ class ItemController extends Controller
 
         // Add dd() to inspect the data
         //dd($item->variants); // This will dump the variants and stop the execution
+         // 🔹 Build image collections here (same logic as in your Blade file)
+        $itemImages = collect();
+        if ($item->product_images) {
+            $decodedImages = json_decode($item->product_images, true);
+            if (is_array($decodedImages)) {
+                $itemImages = collect($decodedImages);
+            }
+        }
+
+        $variantColorImages = $item->variants
+            ->map(fn($variant) => $variant->itemColor ? asset($variant->itemColor->image_path) : null)
+            ->filter()
+            ->unique();
+
+        $sizeImages = $item->variants
+            ->map(fn($variant) => optional($variant->itemSize)->image_path ? asset($variant->itemSize->image_path) : null)
+            ->filter()
+            ->unique();
+
+        $packagingImages = $item->variants
+            ->map(fn($variant) => optional($variant->itemPackagingType)->image_path ? asset($variant->itemPackagingType->image_path) : null)
+            ->filter()
+            ->unique();
+
+        $allImages = $itemImages
+            ->merge($variantColorImages)
+            ->merge($sizeImages)
+            ->merge($packagingImages)
+            ->unique()
+            ->values();
+
+        // 🔹 Build variant data array
+        $variantData = $item->variants->map(function ($variant) {
+            return [
+                'id' => $variant->id,
+                'color' => $variant->itemColor?->name,
+                'img' => $variant->itemColor ? asset($variant->itemColor->image_path) : null,
+                'size' => $variant->itemSize?->name,
+                'packaging' => $variant->itemPackagingType?->name,
+                'price' => $variant->price,
+                'stock' => $variant->stock,
+            ];
+        });
 
         $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
 
         // All carts created by this seller (auth user) that belong to a customer
-        $carts = Cart::with('customer')
-            ->where('user_id', auth()->id())
-            ->whereNotNull('customer_id')
-            ->get();
+        // $carts = Cart::with('customer')
+        //     ->where('user_id', auth()->id())
+        //     ->whereNotNull('customer_id')
+        //     ->get();
 
-        return view('seller.items.show', compact('item', 'sellers', 'carts'));
+        $customersWithOpenCarts = Customer::whereHas('carts', function($query) {
+            $query->where('status', 'open');
+        })->get();
+
+        // 🔹 Now your logs will actually have data
+        Log::info('Item images:', $itemImages->toArray());
+        Log::info('Color images:', $variantColorImages->toArray());
+        Log::info('Size images:', $sizeImages->toArray());
+        Log::info('Packaging images:', $packagingImages->toArray());
+        Log::info('All images merged:', $allImages->toArray());
+        Log::info('Variant data:', $variantData->toArray());
+        Log::info('Item variants:', $item->variants->toArray());
+        Log::info('cart data:', Cart::where('user_id', auth()->id())->whereNotNull('customer_id')->get()->toArray());
+        Log::info('Sellers data:', $sellers->toArray());
+
+
+        // dd($item->variants->pluck('image_path'));
+
+        return view('seller.items.show', compact(
+
+                'item',
+               'sellers',
+                          'customersWithOpenCarts',
+                          'allImages',
+                          'variantData'
+            ));
     }
 
     /**

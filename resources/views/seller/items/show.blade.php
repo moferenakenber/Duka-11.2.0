@@ -1,54 +1,7 @@
 @extends('seller.layouts.app')
 
-
-@php
-    // Item-level images
-    $itemImages = collect();
-    if ($item->product_images) {
-        $decodedImages = json_decode($item->product_images, true);
-        if (is_array($decodedImages)) {
-            $itemImages = collect($decodedImages);
-        }
-    }
-
-    // Variant color images
-    $variantColorImages = $item->variants
-        ->map(function ($variant) {
-            return asset($variant->itemColor->image_path);
-        })
-        ->unique();
-
-    // Size-related images (assuming you have image_path in itemSize)
-    $sizeImages = $item->variants
-        ->map(function ($variant) {
-            return optional($variant->itemSize)->image_path ? asset($variant->itemSize->image_path) : null;
-        })
-        ->filter()
-        ->unique();
-
-    // Packaging images (assuming you have image_path in itemPackagingType)
-    $packagingImages = $item->variants
-        ->map(function ($variant) {
-            return optional($variant->itemPackagingType)->image_path
-                ? asset($variant->itemPackagingType->image_path)
-                : null;
-        })
-        ->filter()
-        ->unique();
-
-    // Merge them into one image collection
-    $allImages = $itemImages
-        ->merge($variantColorImages)
-        ->merge($sizeImages)
-        ->merge($packagingImages)
-        ->unique()
-        ->values();
-@endphp
-
-
-
-
-{{-- 0 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_1.jpg"
+{{--
+0 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_1.jpg"
 1 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_2.jpg"
 2 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_1.jpg"
 3 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_2.jpg"
@@ -57,41 +10,41 @@
 6 : "http://duka-11.2.0.local:8086/images/sizes/s.png"
 7 : "http://duka-11.2.0.local:8086/images/sizes/l.png" --}}
 
-@php
-    $variantData = $item->variants->map(function ($variant) {
-        return [
-            'id' => $variant->id,
-            'color' => $variant->itemColor->name,
-            'img' => asset($variant->itemColor->image_path),
-            'size' => $variant->itemSize->name,
-            'packaging' => $variant->itemPackagingType->name,
-            'price' => $variant->price,
-            'stock' => $variant->stock,
-        ];
-    });
-@endphp
+        {{--
+
+        return view('seller.items.show', compact(
+
+                'item',
+                'sellers',
+                'carts',
+                'allImages',
+                'variantData'
+            ));
+
+        --}}
 
 @section('content')
-    <div class="max-w-4xl mx-auto p-6 pb-16 overflow-y-auto max-h-[100vh]">
-        <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+<div class="max-w-4xl p-6 pb-16 mx-auto">
+    <div class="overflow-hidden bg-white rounded-lg shadow-lg">
 
-            {{-- Swiper Image Slider --}}
-            <div class="swiper mySwiper">
-                <div class="swiper-wrapper">
-                    @forelse ($allImages as $image)
-                        <div class="swiper-slide">
-                            <img src="{{ $image }}" alt="Product Image" class="object-cover w-full rounded">
-                        </div>
-                    @empty
-                        <div class="p-4 swiper-slide">No images available.</div>
-                    @endforelse
-                </div>
-
-                {{-- Arrows + Dots --}}
-                <div class="swiper-button-next"></div>
-                <div class="swiper-button-prev"></div>
-                <div class="swiper-pagination"></div>
+        {{-- Swiper Image Slider --}}
+        <div class="swiper mySwiper relative w-full h-[400px]">
+            <div class="h-full swiper-wrapper">
+                @forelse ($allImages as $image)
+                    <div class="flex items-center justify-center h-full swiper-slide">
+                        <img src="{{ $image }}" alt="Product Image" class="object-contain w-auto h-full">
+                    </div>
+                @empty
+                    <div class="p-4 swiper-slide">No images available.</div>
+                @endforelse
             </div>
+
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-pagination"></div>
+
+        </div>
+
 
             {{-- Table of $variantData --}}
 
@@ -102,104 +55,131 @@
             </script>
 
 
-            <div class="p-4 overflow-x-auto">
-                <table class="w-full text-sm border border-gray-300 table-auto">
-                    <thead class="bg-gray-100">
-                        <tr>
-                            <th class="px-4 py-2 border">Variant ID</th>
-                            <th class="px-4 py-2 border">Image</th>
+            <div class="p-4 overflow-x-auto" x-data="{ showTable: false }">
 
-                            {{-- Combination --}}
-                            <th class="px-4 py-2 border">Color</th>
-                            <th class="px-4 py-2 border">Size</th>
-                            <th class="px-4 py-2 border">Packaging</th>
+                <!-- Toggle Button (right-aligned) -->
+                <div class="flex justify-end mb-2">
+                    <button
+                        @click="showTable = !showTable"
+                        class="px-4 py-2 text-white bg-blue-500 rounded">
+                        <span x-text="showTable ? 'Hide Table' : 'Show Table'"></span>
+                    </button>
+                </div>
 
-                            {{-- Variant Details --}}
-                            <th class="px-4 py-2 border">Price</th>
-                            <th class="px-4 py-2 border">Stock</th>
+                <!-- Table -->
+                <div x-show="showTable" x-cloak
+                    x-transition:enter="transition ease-out duration-300"
+                    x-transition:enter-start="opacity-0 max-h-0"
+                    x-transition:enter-end="opacity-100 max-h-[2000px]"
+                    x-transition:leave="transition ease-in duration-200"
+                    x-transition:leave-start="opacity-100 max-h-[2000px]"
+                    x-transition:leave-end="opacity-0 max-h-0"
+                    class="overflow-hidden"
+                >
+                    <table class="w-full text-sm border border-gray-300 table-auto">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="px-4 py-2 border">Variant ID</th>
+                                <th class="px-4 py-2 border">Image</th>
 
-                            {{-- Owner --}}
-                            <th class="px-4 py-2 border">Owner</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($item->variants as $variant)
-                            <tr class="hover:bg-gray-50">
-                                <td class="px-4 py-2 border">{{ $variant->id }}</td>
+                                {{-- Combination --}}
+                                <th class="px-4 py-2 border">Color</th>
+                                <th class="px-4 py-2 border">Size</th>
+                                <th class="px-4 py-2 border">Packaging</th>
 
-                                {{-- Variant image --}}
-                                <td class="px-4 py-2 border">
-                                    @if ($variant->image_path)
-                                        <img src="{{ asset($variant->image_path) }}" alt="Variant Image"
-                                                                                                                        class="object-cover w-10 h-10 rounded" />
-                                    @else
-                                        N/A
-                                    @endif
-                                </td>
-                                {{-- Color --}}
-                                <td class="px-4 py-2 text-center border">
-                                    @if (!empty($variant->itemColor))
-                                        <div class="flex flex-col items-center space-y-1">
-                                            <span class="text-xs text-gray-400">ID: {{ $variant->itemColor->id }}</span>
-                                            <span class="text-sm font-medium text-gray-800">{{ $variant->itemColor->name }}</span>
-
-                                            @if (!empty($variant->itemColor->image_path))
-                                                <img src="{{ asset($variant->itemColor->image_path) }}"
-                                                                    alt="{{ $variant->itemColor->name }}"
-                                                                    class="object-cover w-8 h-8 border border-gray-300 rounded-full shadow-sm" />
-                                            @else
-                                                <span class="text-xs text-gray-400">No Image</span>
-                                            @endif
-                                        </div>
-                                    @else
-                                        <span class="text-sm text-gray-400">N/A</span>
-                                    @endif
-                                </td>
-                                {{-- Size --}}
-                                <td class="px-4 py-2 text-center border">
-                                    @if (!empty($variant->itemSize))
-                                        <div class="flex flex-col items-center space-y-1">
-                                            <span class="text-xs text-gray-400">ID: {{ $variant->itemSize->id }}</span>
-                                            <span class="text-sm font-medium text-gray-800">{{ $variant->itemSize->name }}</span>
-                                            <span class="text-xs text-gray-500 italic text-center max-w-[120px]">
-                                                {{ $variant->itemSize->description ?? 'No description' }}
-                                            </span>
-                                        </div>
-                                    @else
-                                        <span class="text-sm text-gray-400">N/A</span>
-                                    @endif
-                                </td>
-                                {{-- PackagingType --}}
-                                <td class="px-4 py-2 text-center border">
-                                    @if (!empty($variant->itemPackagingType))
-                                        <div class="flex flex-col items-center space-y-1">
-                                            <span class="text-xs text-gray-400">ID:
-                                                {{ $variant->itemPackagingType->id }}</span>
-                                            <span
-                                                                                                                            class="text-sm font-medium text-gray-800">{{ $variant->itemPackagingType->name }}</span>
-                                            <span class="text-xs text-gray-500 italic text-center max-w-[140px]">
-                                                {{ $variant->itemPackagingType->details ?? 'No details' }}
-                                            </span>
-                                        </div>
-                                    @else
-                                        <span class="text-sm text-gray-400">N/A</span>
-                                    @endif
-                                </td>
-
-
-                                {{-- Variant price/stock --}}
-                                <td class="px-4 py-2 border">{{ $variant->price }}</td>
-                                <td class="px-4 py-2 border">{{ $variant->stock }}</td>
+                                {{-- Variant Details --}}
+                                <th class="px-4 py-2 border">Price</th>
+                                <th class="px-4 py-2 border">Stock</th>
 
                                 {{-- Owner --}}
-                                <td class="px-4 py-2 border">
-                                    {{ $variant->owner->name ?? 'N/A' }} <br>
-                                    <small class="text-gray-500">{{ $variant->owner->email ?? '' }}</small>
-                                </td>
+                                <th class="px-4 py-2 border">Owner</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+                            @foreach ($item->variants as $variant)
+                                <tr class="hover:bg-gray-50">
+                                    <td class="px-4 py-2 border">{{ $variant->id }}</td>
+
+                                    {{-- Variant image --}}
+                                    <td class="px-4 py-2 border">
+                                        @if ($variant->itemColor?->image_path)
+                                            <img src="{{ asset($variant->itemColor->image_path) }}"
+                                                alt="Variant Image"
+                                                class="object-cover w-10 h-10 rounded" />
+                                        @else
+                                            N/A
+                                        @endif
+                                    </td>
+
+                                    {{-- <td class="px-4 py-2 border">
+                                        {{ $variant->image_path ?? 'No path' }}
+                                    </td> --}}
+
+                                    {{-- Color --}}
+                                    <td class="px-4 py-2 text-center border">
+                                        @if (!empty($variant->itemColor))
+                                            <div class="flex flex-col items-center space-y-1">
+                                                <span class="text-xs text-gray-400">ID: {{ $variant->itemColor->id }}</span>
+                                                <span class="text-sm font-medium text-gray-800">{{ $variant->itemColor->name }}</span>
+
+                                                @if (!empty($variant->itemColor->image_path))
+                                                    <img src="{{ asset($variant->itemColor->image_path) }}"
+                                                                        alt="{{ $variant->itemColor->name }}"
+                                                                        class="object-cover w-8 h-8 border border-gray-300 rounded-full shadow-sm" />
+                                                @else
+                                                    <span class="text-xs text-gray-400">No Image</span>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <span class="text-sm text-gray-400">N/A</span>
+                                        @endif
+                                    </td>
+                                    {{-- Size --}}
+                                    <td class="px-4 py-2 text-center border">
+                                        @if (!empty($variant->itemSize))
+                                            <div class="flex flex-col items-center space-y-1">
+                                                <span class="text-xs text-gray-400">ID: {{ $variant->itemSize->id }}</span>
+                                                <span class="text-sm font-medium text-gray-800">{{ $variant->itemSize->name }}</span>
+                                                <span class="text-xs text-gray-500 italic text-center max-w-[120px]">
+                                                    {{ $variant->itemSize->description ?? 'No description' }}
+                                                </span>
+                                            </div>
+                                        @else
+                                            <span class="text-sm text-gray-400">N/A</span>
+                                        @endif
+                                    </td>
+                                    {{-- PackagingType --}}
+                                    <td class="px-4 py-2 text-center border">
+                                        @if (!empty($variant->itemPackagingType))
+                                            <div class="flex flex-col items-center space-y-1">
+                                                <span class="text-xs text-gray-400">ID:
+                                                    {{ $variant->itemPackagingType->id }}</span>
+                                                <span
+                                                    aria-autocomplete=""class="text-sm font-medium text-gray-800">{{ $variant->itemPackagingType->name }}</span>
+                                                <span class="text-xs text-gray-500 italic text-center max-w-[140px]">
+                                                    {{ $variant->itemPackagingType->details ?? 'No details' }}
+                                                </span>
+                                            </div>
+                                        @else
+                                            <span class="text-sm text-gray-400">N/A</span>
+                                        @endif
+                                    </td>
+
+
+                                    {{-- Variant price/stock --}}
+                                    <td class="px-4 py-2 border">{{ $variant->price }}</td>
+                                    <td class="px-4 py-2 border">{{ $variant->stock }}</td>
+
+                                    {{-- Owner --}}
+                                    <td class="px-4 py-2 border">
+                                        {{ $variant->owner->name ?? 'N/A' }} <br>
+                                        <small class="text-gray-500">{{ $variant->owner->email ?? '' }}</small>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
             {{-- Product Info --}}
@@ -410,10 +390,14 @@
 
 
                             init() {
-                                this.updatePrice();
-                                // this.selectedPackaging = null;
-                                this.selectedPrice = null;
-                                this.selectedStock = null;
+                                    // Automatically select the first variant
+                                if (this.variants.length > 0) {
+                                    const first = this.variants[0];
+                                    this.selectedColor = { name: first.color, img: first.img, disabled: first.disabled };
+                                    this.selectedSize = first.size;
+                                    this.selectedPackaging = first.packaging ? { name: first.packaging, quantity: first.quantity, disabled: first.disabled } : null;
+                                    this.updatePrice();
+                                }
                             },
 
                             get colors() {
@@ -480,17 +464,35 @@
                     selectedColor: null,
                     selectedSize: null,
 
-                    customers: [
+                    {{-- customers: [
                                     { id: 1, name: 'Abebe', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
                                     { id: 2, name: 'Helen', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
                                     { id: 3, name: 'Chaltu', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
                                     { id: 4, name: 'Daniel', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
                                     { id: 5, name: 'Eyoha', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
                                     { id: 6, name: 'Charlie', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: true }
-                                ],
-                                selectedCustomer: null,
+                                ], --}}
+                    customers: {{ $customersWithOpenCarts->toJson() }},
+                    // Flatten all open carts for these customers
+                    carts: {{ $customersWithOpenCarts->flatMap(fn($c) => $c->carts->where('status', 'open'))->toJson() }},
 
-                    carts: [
+                    selectedCustomer: null,
+
+                    addToCartWithCustomer() {
+                        if (!this.selectedCustomer || !this.selectedCart) return;
+
+                        console.log('Adding to cart:', {
+                            customer: this.selectedCustomer,
+                            cart: this.selectedCart,
+                            variant: this.selectedVariant,
+                            quantity: this.quantity
+                        });
+
+                        this.showDiscountSelector = false;
+                        this.showModal = false;
+                    },
+
+                    {{-- carts: [
                                 // Abebe
                                 { id: 101, customer: { id: 1 }, created_at: '2025-10-20' },
                                 { id: 102, customer: { id: 1 }, created_at: '2025-10-22' },
@@ -507,7 +509,7 @@
                                 { id: 501, customer: { id: 5 }, created_at: '2025-10-22' },
                                 // Charlie (disabled customer)
                                 { id: 601, customer: { id: 6 }, created_at: '2025-10-20' }
-                            ],
+                            ], --}}
 
 
                     item: {
@@ -601,7 +603,7 @@
 
                 <div class="flex flex-col items-center w-full max-w-xs pb-4 mx-auto mt-6 space-y-4">
 
-                    <button @click="showModal = true" class="w-full text-lg btn btn-active btn-accent btn-lg sm:w-auto">
+                    <button @click="showModal = true; init()" class="w-full text-lg btn btn-active btn-accent btn-lg sm:w-auto">
                         Add to Cart
                     </button>
 
@@ -754,7 +756,7 @@
                     </button>
                 </div>
 
-                <div x-show="showDiscountSelector" x-transition
+                {{-- <div x-show="showDiscountSelector" x-transition
                         class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
                         <!-- Header -->
                         <div class="flex items-center justify-between mb-2">
@@ -836,7 +838,82 @@
                         >
                             Confirm & Add to Cart
                         </button>
+                </div> --}}
+
+                <div x-show="showDiscountSelector" x-transition
+                    class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl"
+                    x-data="{
+                        selectedCustomer: null,
+                        selectedCart: null,
+                        customers: {{ $customersWithOpenCarts->toJson() }},
+                        carts: {{ $customersWithOpenCarts->flatMap(fn($c) => $c->carts->where('status', 'open'))->toJson() }},
+                        addToCartWithCustomer() {
+                            if (!this.selectedCustomer || !this.selectedCart) return;
+                            console.log('Adding to cart:', {
+                                customer: this.selectedCustomer,
+                                cart: this.selectedCart
+                            });
+                            this.showDiscountSelector = false;
+                            this.showModal = false;
+                        }
+                    }">
+
+                    <!-- Header -->
+                    <div class="flex items-center justify-between mb-2">
+                        <h2 class="text-lg font-semibold">Select Customer & Cart</h2>
+                        <button @click="showDiscountSelector = false" class="text-gray-500 hover:text-gray-700">✕</button>
+                    </div>
+
+                    <!-- Customer Selector -->
+                    <div class="mb-4">
+                        <div class="mb-2 text-sm font-semibold">CUSTOMER</div>
+                        <div class="flex gap-2 py-1 overflow-x-auto">
+                            <template x-for="customer in customers" :key="customer.id">
+                                <button type="button"
+                                        @click="selectedCustomer = customer"
+                                        class="flex flex-col items-center flex-shrink-0 w-24 px-2 py-1 text-xs border rounded-md"
+                                        :class="{'bg-blue-600 text-white': selectedCustomer?.id === customer.id, 'bg-gray-100': selectedCustomer?.id !== customer.id}">
+                                    <img :src="customer.img || 'https://www.mezgebedirijit.com/images/customerprofile.jpeg'" class="object-cover w-10 h-10 mb-1 rounded-full" />
+                                    <span x-text="customer.first_name"></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
+
+                    <!-- Cart Selector (shows after selecting a customer) -->
+                    <template x-if="selectedCustomer">
+                        <div class="mb-4">
+                            <div class="mb-2 text-sm font-semibold">Customer’s Carts</div>
+                            <div class="flex gap-2 py-1 overflow-x-auto">
+                                <template x-for="cart in carts.filter(c => c.customer_id === selectedCustomer.id)" :key="cart.id">
+                                    <button @click="selectedCart = cart"
+                                            class="flex flex-col items-center flex-shrink-0 w-24 px-2 py-1 text-xs border rounded-md"
+                                            :class="{'bg-blue-600 text-white': selectedCart?.id === cart.id, 'bg-gray-100': selectedCart?.id !== cart.id}">
+                                        <span x-text="'Cart #' + cart.id"></span>
+                                        <span class="text-xs" x-text="'Created ' + new Date(cart.created_at).toLocaleDateString()"></span>
+                                    </button>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Discount Info -->
+                    <template x-if="selectedCustomer && selectedCart">
+                        <div class="mt-3">
+                            <p class="text-gray-700">Checking discounts...</p>
+                            <p class="font-semibold text-green-600"
+                            x-text="discount ? `Discount: ${discount}%` : 'No discount available'"></p>
+                        </div>
+                    </template>
+
+                    <!-- Confirm Button -->
+                    <button class="w-full mt-4 btn btn-success"
+                            :disabled="!selectedCustomer || !selectedCart"
+                            @click="addToCartWithCustomer()">
+                        Confirm & Add to Cart
+                    </button>
                 </div>
+
 
 
             </div>
@@ -866,7 +943,7 @@
 @endsection --}}
 
 
-@section('scripts')
+{{-- @section('scripts')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const swiper = new Swiper(".mySwiper", {
@@ -874,14 +951,36 @@
                 slidesPerView: 1,
                 spaceBetween: 10,
                 navigation: {
-                    nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
+                    nextEl: ".mySwiper .swiper-button-next",
+                    prevEl: ".mySwiper .swiper-button-prev",
                 },
                 pagination: {
-                    el: ".swiper-pagination",
+                    el: ".mySwiper .swiper-pagination",
                     clickable: true,
                 },
             });
         });
     </script>
-@endsection
+@endsection --}}
+
+{{-- @section('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const swiperContainer = document.querySelector(".mySwiper");
+    const swiper = new Swiper('.mySwiper', {
+        loop: true,
+        slidesPerView: 1,
+        navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+        },
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: true,
+        },
+    });
+
+});
+
+</script>
+@endsection --}}
