@@ -27,8 +27,8 @@ export default {
 
 
     // Set darkMode to 'media' so it uses system preferences for dark mode
-    darkMode: 'media', // or 'media' (based on the user's system preference)
-
+    // darkMode: 'class', // or 'media' (based on the user's system preference)
+    darkMode: 'false',
 
     safelist: [
         '[x-cloak]', // Ensures [x-cloak] is included even if not used directly in templates
@@ -57,9 +57,11 @@ export default {
     //   },
 
 
+
     daisyui: {
-        themes: ["light", "dark", "cupcake","caramellatte", "retro", "business", "corporate", "synthwave", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua", "lofi", "dracula", "fantasy", "wireframe", "black", "luxury", "night"],
-      },
+        // themes: ["light", "dark", "cupcake","caramellatte", "retro", "business", "corporate", "synthwave", "cyberpunk", "valentine", "halloween", "garden", "forest", "aqua", "lofi", "dracula", "fantasy", "wireframe", "black", "luxury", "night"],
+        themes: ["caramellatte"], // default
+    },
 
 
 

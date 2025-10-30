@@ -4,31 +4,30 @@
   <div class="min-h-screen bg-gray-100">
     <div class="container p-4 mx-auto">
         <!-- Header -->
-        <div class="relative flex items-center justify-between pt-1 mb-4">
-            <!-- Center title -->
-            <h1 class="absolute text-xl font-semibold transform -translate-x-1/2 left-1/2">
-                More
-            </h1>
+          <!-- Header with "More" and Gear -->
+        <div class="w-full px-4 py-3 rounded-b-xl" style="background-color:#F6A45D;">
+            <div class="relative flex items-center justify-between">
 
-            <!-- Gear button on the right -->
-            <!-- Gear button on the right of "More" -->
-            <!-- Gear button on the right of "More" -->
-            <a href="{{ route('seller.settings.index') }}"
-            class="flex items-center justify-center p-2 ml-auto bg-gray-100 rounded-full hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600"
-            title="Settings">
-                <!-- Gear Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" />
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.09A1.65 1.65 0 0012 3h0a1.65 1.65 0 001-.09h.09a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.09a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/>
-                </svg>
-            </a>
+                <!-- Center Title -->
+                <h1 class="absolute text-xl font-semibold text-white transform -translate-x-1/2 left-1/2">
+                    More
+                </h1>
 
+                <!-- Gear Icon on Right -->
+                <a href="{{ route('seller.settings.index') }}"
+                    class="ml-auto text-white border-2 border-white btn btn-circle hover:bg-white/10"
+                    title="Settings">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4z" />
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09a1.65 1.65 0 00-1-1.51 1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09a1.65 1.65 0 001.51-1 1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06a1.65 1.65 0 001.82.33h.09A1.65 1.65 0 0012 3h0a1.65 1.65 0 001-.09h.09a1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06a1.65 1.65 0 00-.33 1.82v.09a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" />
+                    </svg>
+                </a>
 
-
+            </div>
         </div>
-
             {{-- <div class="grid gap-4">
                 <div class="flex items-center">
                     <img src="user_profile.jpg" alt="User Profile" class="w-12 h-12 mr-4 rounded-full">

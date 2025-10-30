@@ -3,45 +3,39 @@
 @section('content')
 
 
-    <div class="flex flex-col items-center justify-center h-full pt-2 pb-16">
-        <div class="flex-1 w-full mx-auto overflow-y-auto max-w-7xl">
+    <div class="flex flex-col items-center justify-center h-full pt-2 pb-16 bg-gray-100">
+        <div class="flex-1 w-full mx-auto overflow-y-auto max-w-7xl ">
 
-            <!-- Navbar -->
-            <div class="w-full shadow-sm navbar bg-base-100">
-                <div class="flex justify-between w-full">
-                    <!-- Empty div to balance center -->
-                    <div class="navbar-start"></div>
-                    <div class="navbar-center">
-                        <a class="text-xl btn btn-ghost">Home</a>
-                    </div>
-                    <div class="flex gap-2 navbar-end">
-                        <button class="btn btn-ghost btn-circle">
+            <!-- Navbar + Search -->
+
+
+                <!-- Search Bar Below Navbar -->
+                <div class="w-full px-4 py-3 rounded-b-xl" style="background-color:#F6A45D;">
+                    <form method="GET" action="{{ route('seller.items.index') }}" class="flex w-full max-w-2xl gap-2 mx-auto">
+                        <input type="text" name="search" placeholder="Search items..."
+                            value="{{ request('search') }}"
+                            class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+                       <button class="text-white border-2 border-white btn btn-circle hover:bg-white/10">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                     d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                             </svg>
                         </button>
-                        <button class="btn btn-ghost btn-circle">
-                            <div class="indicator">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
-                                </svg>
-                                <span class="badge badge-xs badge-primary indicator-item"></span>
-                            </div>
-                        </button>
-                    </div>
+
+
+                    </form>
                 </div>
-            </div>
+
+
+
 
             {{-- <div class="flex flex-col w-full">
 
                 <div class="divider"></div>
 
             </div> --}}
-
-            <div class="flex justify-end p-2 px-4">
+            {{-- <!-- Sorting Options to be added when searching -->
+            {{-- <div class="flex justify-end p-2 px-4">
                 <form method="GET" action="{{ route('seller.items.index') }}">
                     <label for="sort" class="text-sm font-medium text-gray-700">Sort by:</label>
                     <select name="sort" id="sort" class="px-2 py-1 ml-2 border rounded" onchange="this.form.submit()">
@@ -58,11 +52,11 @@
                         <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>Name: Z-A</option>
                     </select>
                 </form>
-            </div>
+            </div> --}}
 
 
 
-            <div class="grid grid-cols-2 gap-4 p-4 pt-2 pb-20 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            <div class="grid grid-cols-2 gap-4 p-4 pt-4 pb-4 bg-gray-100 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
 
                 @foreach ($items as $item)
                     <a href="{{ route('seller.items.show', $item->id) }}"
