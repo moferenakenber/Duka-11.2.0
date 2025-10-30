@@ -55,133 +55,6 @@
             </script>
 
 
-            <div class="p-4 overflow-x-auto" x-data="{ showTable: false }">
-
-                <!-- Toggle Button (right-aligned) -->
-                <div class="flex justify-end mb-2">
-                    <button
-                        @click="showTable = !showTable"
-                        class="px-4 py-2 text-white bg-blue-500 rounded">
-                        <span x-text="showTable ? 'Hide Table' : 'Show Table'"></span>
-                    </button>
-                </div>
-
-                <!-- Table -->
-                <div x-show="showTable" x-cloak
-                    x-transition:enter="transition ease-out duration-300"
-                    x-transition:enter-start="opacity-0 max-h-0"
-                    x-transition:enter-end="opacity-100 max-h-[2000px]"
-                    x-transition:leave="transition ease-in duration-200"
-                    x-transition:leave-start="opacity-100 max-h-[2000px]"
-                    x-transition:leave-end="opacity-0 max-h-0"
-                    class="overflow-hidden"
-                >
-                    <table class="w-full text-sm border border-gray-300 table-auto">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-4 py-2 border">Variant ID</th>
-                                <th class="px-4 py-2 border">Image</th>
-
-                                {{-- Combination --}}
-                                <th class="px-4 py-2 border">Color</th>
-                                <th class="px-4 py-2 border">Size</th>
-                                <th class="px-4 py-2 border">Packaging</th>
-
-                                {{-- Variant Details --}}
-                                <th class="px-4 py-2 border">Price</th>
-                                <th class="px-4 py-2 border">Stock</th>
-
-                                {{-- Owner --}}
-                                <th class="px-4 py-2 border">Owner</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($item->variants as $variant)
-                                <tr class="hover:bg-gray-50">
-                                    <td class="px-4 py-2 border">{{ $variant->id }}</td>
-
-                                    {{-- Variant image --}}
-                                    <td class="px-4 py-2 border">
-                                        @if ($variant->itemColor?->image_path)
-                                            <img src="{{ asset($variant->itemColor->image_path) }}"
-                                                alt="Variant Image"
-                                                class="object-cover w-10 h-10 rounded" />
-                                        @else
-                                            N/A
-                                        @endif
-                                    </td>
-
-                                    {{-- <td class="px-4 py-2 border">
-                                        {{ $variant->image_path ?? 'No path' }}
-                                    </td> --}}
-
-                                    {{-- Color --}}
-                                    <td class="px-4 py-2 text-center border">
-                                        @if (!empty($variant->itemColor))
-                                            <div class="flex flex-col items-center space-y-1">
-                                                <span class="text-xs text-gray-400">ID: {{ $variant->itemColor->id }}</span>
-                                                <span class="text-sm font-medium text-gray-800">{{ $variant->itemColor->name }}</span>
-
-                                                @if (!empty($variant->itemColor->image_path))
-                                                    <img src="{{ asset($variant->itemColor->image_path) }}"
-                                                                        alt="{{ $variant->itemColor->name }}"
-                                                                        class="object-cover w-8 h-8 border border-gray-300 rounded-full shadow-sm" />
-                                                @else
-                                                    <span class="text-xs text-gray-400">No Image</span>
-                                                @endif
-                                            </div>
-                                        @else
-                                            <span class="text-sm text-gray-400">N/A</span>
-                                        @endif
-                                    </td>
-                                    {{-- Size --}}
-                                    <td class="px-4 py-2 text-center border">
-                                        @if (!empty($variant->itemSize))
-                                            <div class="flex flex-col items-center space-y-1">
-                                                <span class="text-xs text-gray-400">ID: {{ $variant->itemSize->id }}</span>
-                                                <span class="text-sm font-medium text-gray-800">{{ $variant->itemSize->name }}</span>
-                                                <span class="text-xs text-gray-500 italic text-center max-w-[120px]">
-                                                    {{ $variant->itemSize->description ?? 'No description' }}
-                                                </span>
-                                            </div>
-                                        @else
-                                            <span class="text-sm text-gray-400">N/A</span>
-                                        @endif
-                                    </td>
-                                    {{-- PackagingType --}}
-                                    <td class="px-4 py-2 text-center border">
-                                        @if (!empty($variant->itemPackagingType))
-                                            <div class="flex flex-col items-center space-y-1">
-                                                <span class="text-xs text-gray-400">ID:
-                                                    {{ $variant->itemPackagingType->id }}</span>
-                                                <span
-                                                    aria-autocomplete=""class="text-sm font-medium text-gray-800">{{ $variant->itemPackagingType->name }}</span>
-                                                <span class="text-xs text-gray-500 italic text-center max-w-[140px]">
-                                                    {{ $variant->itemPackagingType->details ?? 'No details' }}
-                                                </span>
-                                            </div>
-                                        @else
-                                            <span class="text-sm text-gray-400">N/A</span>
-                                        @endif
-                                    </td>
-
-
-                                    {{-- Variant price/stock --}}
-                                    <td class="px-4 py-2 border">{{ $variant->price }}</td>
-                                    <td class="px-4 py-2 border">{{ $variant->stock }}</td>
-
-                                    {{-- Owner --}}
-                                    <td class="px-4 py-2 border">
-                                        {{ $variant->owner->name ?? 'N/A' }} <br>
-                                        <small class="text-gray-500">{{ $variant->owner->email ?? '' }}</small>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-
             {{-- Product Info --}}
             <div class="p-6">
                 {{-- <h2 class="text-2xl font-semibold text-gray-800">{{ $item->product_name }}</h2> --}}
@@ -219,125 +92,9 @@
                                 </span>
                             </div>
                         @endif
-
-
-                        <!-- Toggle Circle Button with More Icon -->
-                        <div x-data="{ open: false }" class="flex items-center">
-                            <button @click="open = !open"
-                                        class="flex items-center justify-center w-10 h-10 bg-gray-200 rounded-full hover:bg-gray-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-700" fill="none"
-                                                viewBox="0 0 24 24"
-                                                stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                                                    d="M12 6v.01M12 12v.01M12 18v.01" />
-                                </svg>
-                            </button>
-
-                            <!-- Details Container -->
-                            <div x-show="open" x-transition
-                                    class="p-4 mt-3 space-y-4 border border-gray-200 rounded-lg shadow bg-gray-50">
-
-                                <!-- Product Images -->
-                                <div class="p-4 bg-white rounded shadow">
-                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Product Images</h4>
-                                    <ul class="space-y-1 text-xs text-gray-600">
-                                        @foreach (explode("\n", $item->product_images) as $img)
-                                            <li>- {{ $img }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-
-                                <!-- Variation -->
-                                <div class="p-4 bg-white rounded shadow">
-                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Variation</h4>
-                                    <p class="text-xs text-gray-600 break-words">{{ $item->variation }}</p>
-                                </div>
-
-                                <!-- Price -->
-                                <div class="p-4 bg-white rounded shadow">
-                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Price</h4>
-                                    <p class="text-xs text-gray-600 break-words">{{ $item->price }}</p>
-                                </div>
-
-                                <!-- Product Name -->
-                                <div class="p-4 bg-white rounded shadow">
-                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Product Name</h4>
-                                    <p class="text-xs text-gray-600 break-words">{{ $item->product_name }}</p>
-                                </div>
-
-                                <!-- Product Description (line by line) -->
-                                <div class="p-4 bg-white rounded shadow">
-                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Product Description</h4>
-                                    <ul class="space-y-1 text-xs text-gray-600">
-                                        @foreach (explode("\n", $item->product_description) as $line)
-                                            <li>- {{ $line }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-
-                                <!-- Packaging Details (line by line) -->
-                                <div class="p-4 bg-white rounded shadow">
-                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Packaging Details</h4>
-                                    <ul class="space-y-1 text-xs text-gray-600">
-                                        @foreach (explode("\n", $item->packaging_details) as $pack)
-                                            <li>- {{ $pack }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-
-                                <!-- Colors List -->
-                                <div class="p-4 bg-white rounded shadow">
-                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Colors</h4>
-                                    <ul class="space-y-1 text-xs text-gray-600">
-                                        @foreach (json_decode($item->colors, true) as $color)
-                                            <li>- {{ $color['name'] }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-
-                                <!-- Variant Colors List -->
-                                <div class="p-4 bg-white rounded shadow">
-                                    <h4 class="mb-2 text-sm font-bold text-gray-700">Variant Colors</h4>
-                                    <ul class="space-y-1 text-xs text-gray-600">
-                                        @foreach ($item->variants as $variant)
-                                            <li>- {{ $variant->itemColor->name }}</li>
-                                        @endforeach
-                                    </ul>
-                                </div>
-
-                                <!-- table of $variantData -->
-                                <table class="min-w-full text-sm text-left">
-                                    <thead class="text-xs font-semibold text-gray-700 bg-gray-100">
-                                        <tr>
-                                            <th class="px-4 py-2">Color</th>
-                                            <th class="px-4 py-2">Size</th>
-                                            <th class="px-4 py-2">Packaging</th>
-                                            <th class="px-4 py-2">Price</th>
-                                            <th class="px-4 py-2">Stock</th>
-                                            <th class="px-4 py-2">Owner</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-gray-200">
-                                        @foreach ($item->variants as $variant)
-                                            <tr>
-                                                <td class="px-4 py-2">{{ $variant->itemColor->name }}</td>
-                                                <td class="px-4 py-2">{{ $variant->itemSize->name }}</td>
-                                                <td class="px-4 py-2">{{ $variant->itemPackagingType->name }}</td>
-                                                <td class="px-4 py-2">{{ number_format($variant->price, 2) }}</td>
-                                                <td class="px-4 py-2">{{ $variant->stock }}</td>
-                                                <td class="px-4 py-2">{{ $variant->owner->name }}</td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-
-                                </div>
-                            </div>
                     </div>
 
                 </div>
-
-
 
                 @if ($item->has_discount)
                     <div class="mt-4">
@@ -345,39 +102,7 @@
                     </div>
                 @endif
 
-                {{-- <div class="flex mt-6 space-x-4">
-                    <button @click="showModal = true"
-                                                                                                    class="flex-1 px-6 py-2 text-lg text-white bg-blue-500 rounded hover:bg-blue-600">
-                        Add to Cart
-                    </button>
-                    <button class="flex-1 px-6 py-2 text-lg text-white bg-red-500 rounded hover:bg-red-600">Buy Now</button>
-                </div> --}}
-                {{--
-
-                <div x-data="variantSelector({{ $variantData->toJson() }})" x-init="init()" class="space-y-4">
-                    <!-- Dropdown -->
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700">Choose Color:</label>
-                        <select x-model="selectedColor" @change="updatePrice()"
-                                                                                                        class="block w-full mt-1 border-gray-300 rounded-md shadow-sm">
-                            <option value="">-- Select Color --</option>
-                            <template x-for="color in colors" :key="color">
-                                <option x-text="color" :value="color"></option>
-                            </template>
-                        </select>
-                    </div>
-
-                    <!-- Price Display -->
-                    <div x-show="selectedPrice !== null">
-                        <p class="text-lg font-semibold">
-                            Price: <span x-text="formattedPrice"></span>
-                        </p>
-                    </div>
-                </div> --}}
-
-
-
-
+                {{-- Alpine.js Variant Selector Logic --}}
                 <script>
                     function variantSelector(variants) {
                         return {
@@ -497,30 +222,10 @@
                         this.showModal = false;
                     },
 
-                    {{-- carts: [
-                                // Abebe
-                                { id: 101, customer: { id: 1 }, created_at: '2025-10-20' },
-                                { id: 102, customer: { id: 1 }, created_at: '2025-10-22' },
-                                // Helen
-                                { id: 201, customer: { id: 2 }, created_at: '2025-10-18' },
-                                { id: 202, customer: { id: 2 }, created_at: '2025-10-23' },
-                                { id: 203, customer: { id: 2 }, created_at: '2025-10-25' },
-                                // Chaltu
-                                { id: 301, customer: { id: 3 }, created_at: '2025-10-19' },
-                                // Daniel
-                                { id: 401, customer: { id: 4 }, created_at: '2025-10-21' },
-                                { id: 402, customer: { id: 4 }, created_at: '2025-10-24' },
-                                // Eyoha
-                                { id: 501, customer: { id: 5 }, created_at: '2025-10-22' },
-                                // Charlie (disabled customer)
-                                { id: 601, customer: { id: 6 }, created_at: '2025-10-20' }
-                            ], --}}
-
-
                     item: {
-                        {{-- price: {{ $item->price }}, --}}
+                        price: {{ $item->price }},
 
-                        price: {{ $variant->price }},
+                        {{-- price: {{ $item_variants->price }}, --}}
 
                         {{-- price: {{ number_format($variant->price, 2)
                        {{-- stock: 200, --}}
@@ -617,6 +322,9 @@
                     </button>
 
                 </div>
+
+
+
 
                 {{-- Overlay --}}
                 <div x-show="showModal" class="fixed inset-0 z-40 bg-black/40" @click="showModal = false"
@@ -735,22 +443,6 @@
                         </div>
                     </div>
 
-                    {{-- <!-- Add to Cart Button -->
-                    <button :disabled="!selectedColor || !selectedSize" @click="addToCart()" class="w-full py-3 font-bold text-white rounded"
-                            :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
-                        ADD TO CART
-                    </button> --}}
-
-                    <!-- Add to Cart Button -->
-                    {{-- <button
-                        :disabled="!selectedColor || !selectedSize"
-                        @click="showDiscountSelector = true"
-                        class="w-full py-3 font-bold text-white rounded"
-                        :class="(!selectedColor || !selectedSize) ? 'bg-gray-400' : 'bg-red-500 hover:bg-red-600'">
-                        ADD TO CART
-                    </button> --}}
-
-
                     <!-- Add to Cart Button -->
                     <button
                         :disabled="!selectedColor || !selectedSize"
@@ -761,89 +453,7 @@
                     </button>
                 </div>
 
-                {{-- <div x-show="showDiscountSelector" x-transition
-                        class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl">
-                        <!-- Header -->
-                        <div class="flex items-center justify-between mb-2">
-                            <h2 class="text-lg font-semibold">Select Customer & Cart</h2>
-                            <button @click="showDiscountSelector = false" class="text-gray-500 hover:text-gray-700">✕</button>
-                        </div>
 
-                        <!-- Customer Dropdown -->
-                        <!-- Customer Selector (Horizontally Scrollable) -->
-                        <div class="mb-4">
-                            <div class="mb-2 text-sm font-semibold">CUSTOMER</div>
-                            <div class="flex gap-2 py-1 overflow-x-auto">
-                                <template x-for="(customer, index) in customers" :key="index">
-                                    <button
-                                        type="button"
-                                        @click="!customer.disabled && (selectedCustomer = customer, updatePrice())"
-                                        class="flex flex-col items-center flex-shrink-0 w-24 px-2 py-1 text-xs border rounded-md"
-                                        :class="{
-                                            'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': customer.disabled,
-                                            'border-blue-600 bg-blue-600 text-white': selectedCustomer?.id === customer.id && !customer.disabled
-                                        }"
-                                    >
-                                        <img :src="customer.img" class="object-cover w-10 h-10 mb-1 rounded-full" />
-                                        <span x-text="customer.name"></span>
-                                    </button>
-                                </template>
-                            </div>
-                        </div>
-
-
-
-
-
-                        <!-- Cart Dropdown (shows after selecting a customer) -->
-                        <!-- Cart Dropdown -->
-                        <!-- Cart Dropdown -->
-                        <!-- Customer’s Cart Selector (Horizontally Scrollable Buttons) -->
-                        <!-- Customer’s Cart Selector (Horizontally Scrollable Buttons) -->
-                        <template x-if="selectedCustomer">
-                            <div class="mb-4">
-                                <div class="mb-2 text-sm font-semibold">Customer’s Carts</div>
-                                <div class="flex gap-2 py-1 overflow-x-auto">
-                                    <template x-for="cart in carts.filter(c => c.customer.id === selectedCustomer.id)" :key="cart.id">
-                                        <button
-                                            type="button"
-                                            @click="selectedCart = cart"
-                                            class="flex flex-col items-center flex-shrink-0 w-24 px-2 py-1 text-xs border rounded-md"
-                                            :class="{
-                                                'border-gray-300 bg-gray-100 text-gray-400 cursor-not-allowed': cart.disabled,
-                                                'border-blue-600 bg-blue-600 text-white': selectedCart?.id === cart.id && !cart.disabled
-                                            }"
-                                        >
-                                            <span x-text="'Cart #' + cart.id"></span>
-                                            <span class="text-xs" x-text="'Created ' + new Date(cart.created_at).toLocaleDateString()"></span>
-                                        </button>
-                                    </template>
-                                </div>
-                            </div>
-                        </template>
-
-
-
-
-                        <!-- Discount Info -->
-                        <template x-if="selectedCustomer && selectedCart">
-                            <div class="mt-3">
-                                <p class="text-gray-700">Checking discounts...</p>
-                                <p class="font-semibold text-green-600"
-                                x-text="discount ? `Discount: ${discount}%` : 'No discount available'">
-                                </p>
-                            </div>
-                        </template>
-
-                        <!-- Confirm Button -->
-                        <button
-                            class="w-full mt-4 btn btn-success"
-                            :disabled="!selectedCustomer || !selectedCart"
-                            @click="addToCartWithCustomer()"
-                        >
-                            Confirm & Add to Cart
-                        </button>
-                </div> --}}
 
                 <div x-show="showDiscountSelector" x-transition
                     class="fixed bottom-0 left-0 right-0 z-[51] bg-white rounded-t-2xl p-4 max-h-[90vh] overflow-y-auto md:max-w-md md:mx-auto md:rounded-xl"
@@ -926,66 +536,3 @@
         </div>
     </div>
 @endsection
-
-{{-- @section('scripts')
-{{--
-<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-<script>
-    new Swiper(".mySwiper", {
-        loop: true,
-        slidesPerView: 1,
-        spaceBetween: 10,
-        navigation: {
-            nextEl: ".swiper-button-next",
-            prevEl: ".swiper-button-prev",
-        },
-        pagination: {
-            el: ".swiper-pagination",
-            clickable: true,
-        },
-    });
-</script>
-@endsection --}}
-
-
-{{-- @section('scripts')
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const swiper = new Swiper(".mySwiper", {
-                loop: true,
-                slidesPerView: 1,
-                spaceBetween: 10,
-                navigation: {
-                    nextEl: ".mySwiper .swiper-button-next",
-                    prevEl: ".mySwiper .swiper-button-prev",
-                },
-                pagination: {
-                    el: ".mySwiper .swiper-pagination",
-                    clickable: true,
-                },
-            });
-        });
-    </script>
-@endsection --}}
-
-{{-- @section('scripts')
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    const swiperContainer = document.querySelector(".mySwiper");
-    const swiper = new Swiper('.mySwiper', {
-        loop: true,
-        slidesPerView: 1,
-        navigation: {
-            nextEl: '.swiper-button-next',
-            prevEl: '.swiper-button-prev',
-        },
-        pagination: {
-            el: '.swiper-pagination',
-            clickable: true,
-        },
-    });
-
-});
-
-</script>
-@endsection --}}

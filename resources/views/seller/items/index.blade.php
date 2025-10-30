@@ -418,7 +418,7 @@
                     {{-- ///////////////////////////////////////////////////////////// --}}
                 @endforeach
 
-                <input type="checkbox" value="synthwave" class="toggle theme-controller" />
+
             </div>
         </div>
     </div>

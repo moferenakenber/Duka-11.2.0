@@ -14,6 +14,7 @@ use App\Http\Controllers\Seller\CustomerController as SellerCustomerController;
 use App\Http\Controllers\Seller\ItemController as SellerItemController;
 use App\Http\Controllers\Seller\CartController as SellerCartController;
 use App\Http\Controllers\Seller\MenuController as SellerMenuController;
+use App\Http\Controllers\Seller\SellerSettingsController;
 
 use App\Http\Controllers\Stockkeeper\OrderController as StockkeeperOrderController;
 use App\Http\Controllers\Stockkeeper\InventoryController as StockkeeperInventoryController;
@@ -108,6 +109,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('carts', SellerCartController::class);
         Route::resource('menu', SellerMenuController::class);
         Route::post('/cart/add', [SellerCartController::class, 'add'])->name('cart.add');
+        // In your routes:
+        Route::get('/settings', [SellerSettingsController::class, 'index'])->name('settings.index');
+        Route::post('/settings', [SellerSettingsController::class, 'update'])->name('settings.update');
+
 
     });
 
