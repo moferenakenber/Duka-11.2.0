@@ -3,7 +3,7 @@
 @section('content')
 
 
-    <div class="flex flex-col items-center justify-center h-full pt-2 pb-16 bg-gray-100">
+    <div class="flex flex-col items-center justify-center h-full pb-16 bg-gray-100">
         <div class="flex-1 w-full mx-auto overflow-y-auto max-w-7xl ">
 
             <!-- Navbar + Search -->
