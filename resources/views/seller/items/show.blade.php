@@ -313,11 +313,13 @@
 
                 <div class="flex flex-col items-center w-full max-w-xs pb-4 mx-auto mt-6 space-y-4">
 
-                    <button @click="showModal = true; init()" class="w-full text-lg btn btn-active btn-accent btn-lg sm:w-auto">
+                    <button @click="showModal = true; init()"
+                        class="w-full py-3 text-lg sm:w-auto btn btn-active btn-info">
                         Add to Cart
                     </button>
 
-                    <button class="w-full text-lg btn btn-active btn-lg sm:w-auto">
+                    <button
+                        class="w-full py-3 text-lg sm:w-auto btn btn-active btn-info">
                         Buy Now
                     </button>
 
@@ -447,7 +449,7 @@
                     <button
                         :disabled="!selectedColor || !selectedSize"
                         @click="if(selectedColor && selectedSize) { showDiscountSelector = true; showModal = false; }"
-                        class="w-full py-3 font-bold text-white rounded"
+                        class="w-full py-3 btn btn-active btn-warning"
                         :class="(!selectedColor || !selectedSize) ? 'bg-gray-400 cursor-not-allowed' : 'bg-red-500 hover:bg-red-600'">
                         ADD TO CART
                     </button>

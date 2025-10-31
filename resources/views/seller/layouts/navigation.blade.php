@@ -13,17 +13,13 @@
     <span class="text-xs dock-label">Home</span>
   </a>
 
-  <!-- Customers Button -->
-  <a href="/seller/customers"
-     class="flex flex-col items-center justify-center {{ request()->is('seller/customers') ? 'dock-active text-blue-600' : 'text-gray-500' }}">
-    <svg class="size-[1.2em]" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
-      <g fill="currentColor">
-        <polyline points="3 14 9 14 9 17 15 17 15 14 21 14" fill="none" stroke="currentColor" stroke-width="2"/>
-        <rect x="3" y="3" width="18" height="18" rx="2" ry="2" fill="none" stroke="currentColor" stroke-width="2"/>
-      </g>
-    </svg>
+    <!-- Customers Button -->
+    <a href="/seller/customers"
+    class="flex flex-col items-center justify-center {{ request()->is('seller/customers') ? 'dock-active text-blue-600' : 'text-gray-500' }}">
+    <x-lucide-users class="size-[1.2em]" />
     <span class="text-xs dock-label">Customers</span>
-  </a>
+    </a>
+
 
   <!-- Carts Button -->
   <a href="/seller/carts"
