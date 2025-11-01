@@ -24,7 +24,8 @@
   <!-- Carts Button -->
   <a href="/seller/carts"
      class="flex flex-col items-center justify-center {{ request()->is('seller/carts') ? 'dock-active text-teal-600' : 'text-gray-500' }}">
-    <img src="{{ asset('images/1828533.png') }}" alt="Carts Icon" class="size-[1.2em]">
+    {{-- <img src="{{ asset('images/1828533.png') }}" alt="Carts Icon" class="size-[1.2em]"> --}}
+    <x-lucide-shopping-cart class="size-[1.2em]" />
     <span class="text-xs dock-label">Carts</span>
   </a>
 
