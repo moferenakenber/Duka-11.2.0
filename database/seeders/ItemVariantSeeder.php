@@ -21,6 +21,9 @@ class ItemVariantSeeder extends Seeder
         $sizes = ItemSize::all()->keyBy('name');
         $packagings = ItemPackagingType::all()->keyBy('name');
 
+          // Default discount for seeding
+        $defaultDiscount = 10;
+
         // Ensure these exist, or manually create them beforehand
         $colorRed = ItemColor::where('name', 'Red')->first();
         $color3subjectRed = ItemColor::where('name', '3_subject_red')->first();
@@ -106,20 +109,30 @@ class ItemVariantSeeder extends Seeder
             ],
         ];
 
+                // Helper function to create a variant
+        $createVariant = function($item, $v) use ($owner, $colors, $sizes, $packagings, $defaultDiscount) {
+            $price = $v['price'];
+            $discountPrice = $price * (1 - $defaultDiscount / 100);
+
+            return ItemVariant::create([
+                'item_id' => $item->id,
+                'item_color_id' => $colors[$v['color']]->id ?? null,
+                'item_size_id' => $sizes[$v['size']]->id ?? null,
+                'item_packaging_type_id' => $packagings[$v['packaging']]->id ?? null,
+                'price' => $price,
+                'stock' => $v['stock'],
+                'owner_id' => $owner->id,
+                'discount_percentage' => $defaultDiscount,
+                'discount_price' => $discountPrice,
+            ]);
+        };
+
         foreach ($items as $index => $item) {
             $variations = $variationsPerItem[$index] ?? null;
 
             if ($variations) {
                 foreach ($variations as $v) {
-                    ItemVariant::create([
-                        'item_id' => $item->id,
-                        'item_color_id' => $colors[$v['color']]->id ?? null,
-                        'item_size_id' => $sizes[$v['size']]->id ?? null,
-                        'item_packaging_type_id' => $packagings[$v['packaging']]->id ?? null,
-                        'price' => $v['price'],
-                        'stock' => $v['stock'],
-                        'owner_id' => $owner->id,
-                    ]);
+                    $createVariant($item, $v);
                 }
             } else {
                 // Default fallback

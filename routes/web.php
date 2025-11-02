@@ -84,6 +84,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         //Route::resource('products', ProductController::class);
         Route::resource('sales', SaleController::class);
         Route::resource('purchases', PurchaseController::class);
+            // Upload images route
+
+        Route::post('items/upload-images', [ItemController::class, 'uploadImages'])
+        ->name('items.uploadImages');
 
         // Cart routes
         Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
@@ -109,6 +113,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('carts', SellerCartController::class);
         Route::resource('menu', SellerMenuController::class);
         Route::post('/cart/add', [SellerCartController::class, 'add'])->name('cart.add');
+
         // In your routes:
         Route::get('/settings', [SellerSettingsController::class, 'index'])->name('settings.index');
         Route::post('/settings', [SellerSettingsController::class, 'update'])->name('settings.update');

@@ -77,6 +77,10 @@ class ItemController extends Controller
             'variants.owner',
         ]);
 
+        $itemArray = $item->toArray();
+        Log::info('Item: ' . print_r($itemArray, true));
+
+
         // Ensure item has variants
         // $item->load(['variants']);
 
@@ -139,15 +143,15 @@ class ItemController extends Controller
         })->get();
 
         // 🔹 Now your logs will actually have data
-        Log::info('Item images:', $itemImages->toArray());
-        Log::info('Color images:', $variantColorImages->toArray());
-        Log::info('Size images:', $sizeImages->toArray());
-        Log::info('Packaging images:', $packagingImages->toArray());
-        Log::info('All images merged:', $allImages->toArray());
-        Log::info('Variant data:', $variantData->toArray());
-        Log::info('Item variants:', $item->variants->toArray());
-        Log::info('cart data:', Cart::where('user_id', auth()->id())->whereNotNull('customer_id')->get()->toArray());
-        Log::info('Sellers data:', $sellers->toArray());
+        // Log::info('Item images:', $itemImages->toArray());
+        // Log::info('Color images:', $variantColorImages->toArray());
+        // Log::info('Size images:', $sizeImages->toArray());
+        // Log::info('Packaging images:', $packagingImages->toArray());
+        // Log::info('All images merged:', $allImages->toArray());
+        // Log::info('Variant data:', $variantData->toArray());
+        // Log::info('Item variants:', $item->variants->toArray());
+        // Log::info('cart data:', Cart::where('user_id', auth()->id())->whereNotNull('customer_id')->get()->toArray());
+        // Log::info('Sellers data:', $sellers->toArray());
 
 
         // dd($item->variants->pluck('image_path'));

@@ -44,19 +44,6 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'first_name' => 'Gelila',
-                'last_name' => 'Mesfin',
-                'phone_number' => '0912344567',
-                'email' => 'gm@gmail.com',
-                'email_verified_at' => now(),
-                'role' => 'seller',
-                'password' => Hash::make('12345678'),
-                'remember_token' => Str::random(10),
-                'created_at' => now(),
-                'created_by' => 1, // Assuming user with ID 1 is creating the record
-                'updated_at' => now(),
-            ],
-            [
                 'first_name' => 'Sultan',
                 'last_name' => 'Sultan',
                 'phone_number' => '0914344567',

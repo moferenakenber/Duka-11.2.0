@@ -85,14 +85,13 @@ class ItemController extends Controller
                 'product_description' => 'nullable|string',
 
                 'packaging_details' => 'nullable|string',
-                'variation' => 'nullable|string',
-                'price' => 'nullable|numeric',
-                'product_images' => 'nullable|image|max:2048',
 
                 'selectedCategories' => 'nullable|string', // Will be JSON encoded array of category IDs
                 'newCategoryNames' => 'nullable|string', // Will be JSON encoded array of new category names
 
+                'product_images' => 'nullable|array',
                 'product_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
                 //'variants' => 'required|array',
                 //'barcode' => 'required|string',
                 //'images' => 'required|array',
@@ -108,26 +107,62 @@ class ItemController extends Controller
             $selectedCategories = json_decode($request->input('selectedCategories', '[]'), true);
             $newCategoryNames = json_decode($request->input('newCategoryNames', '[]'), true);
 
-
-            // Create a new draft item
-            $draft = new Item();
-            $draft->product_name = $validatedData['product_name'];
-            $draft->product_description = $validatedData['product_description'] ?? null;
-            $draft->incomplete = true; // Drafts are always incomplete
-            $draft->status = 'draft';
-
-            // Handle image upload if exists
-            if ($request->hasFile('product_images')) {
-                $images = [];
-                foreach ($request->file('product_images') as $image) {
-                    $path = $image->store('images', 'public');
-                    $images[] = $path;
+            // Determine completeness
+            $requiredFields = ['product_name', 'product_description', 'category_id', 'product_images'];
+            $isComplete = true;
+            foreach ($requiredFields as $field) {
+                if ($field === 'category_id' && empty($selectedCategories) && empty($newCategoryNames)) {
+                    $isComplete = false;
+                    break;
                 }
-                $path = $request->file('product_images')->store('images', 'public');
-                $draft->images = json_encode($images); // Store as JSON
+                if ($field === 'product_images' && !$request->hasFile('product_images')) {
+                    $isComplete = false;
+                    break;
+                }
+                if (in_array($field, ['product_name', 'product_description']) && empty($request->input($field))) {
+                    $isComplete = false;
+                    break;
+                }
             }
 
-            $draft->save();
+            // Create the item
+            $item = new Item();
+            $item->product_name = $request->input('product_name');
+            $item->product_description = $request->input('product_description');
+            $item->packaging_details = $request->input('packaging_details') ?? null;
+
+            // Status always inactive initially
+            $item->status = 'inactive';
+            $item->incomplete = !$isComplete; // true if incomplete, false if complete
+
+            // Handle images
+            if ($request->product_images) {
+                $item->product_images = json_encode($request->product_images);
+            }
+
+
+            $item->save();
+
+
+            // Create a new draft item
+            // $draft = new Item();
+            // $draft->product_name = $validatedData['product_name'];
+            // $draft->product_description = $validatedData['product_description'] ?? null;
+            // $draft->incomplete = true; // Drafts are always incomplete
+            // $draft->status = 'draft';
+
+            // // Handle image upload if exists
+            // if ($request->hasFile('product_images')) {
+            //     $images = [];
+            //     foreach ($request->file('product_images') as $image) {
+            //         $path = $image->store('images', 'public');
+            //         $images[] = $path;
+            //     }
+            //     $path = $request->file('product_images')->store('images', 'public');
+            //     $draft->images = json_encode($images); // Store as JSON
+            // }
+
+            // $draft->save();
 
             // Handle existing and new categories
             $categoryIds = [];
@@ -147,7 +182,7 @@ class ItemController extends Controller
 
             // Attach categories to the draft item
             if (!empty($categoryIds)) {
-                $draft->categories()->attach($categoryIds);
+                $item->categories()->attach($categoryIds);
             }
 
 
@@ -156,8 +191,11 @@ class ItemController extends Controller
 
             Log::info('Draft saved successfully.');
 
-            // Return a success response
-            return response()->json(['success' => true, 'message' => 'Draft saved successfully'], 200);
+            return response()->json([
+            'success' => true,
+            'message' => $isComplete ? 'Item saved as complete (inactive)' : 'Item saved as draft (inactive)',
+        ]);
+
         } catch (\Exception $e) {
             DB::rollBack();
 
@@ -366,4 +404,26 @@ class ItemController extends Controller
         $item->delete();
         return redirect()->route('admin.items.index')->with('success', 'Item deleted successfully.');
     }
+
+public function uploadImages(Request $request)
+{
+    $request->validate([
+        'product_images.*' => 'required|image|max:4096',
+    ]);
+
+    $paths = [];
+
+    foreach ($request->file('product_images') as $file) {
+        $path = $file->store('images/product_images', 'public');
+
+        // ✅ Generate FULL URL
+        $paths[] = url('images/product_images/' . basename($path));
+    }
+
+    return response()->json([
+        'success' => true,
+        'paths' => $paths,
+    ]);
+}
+
 }

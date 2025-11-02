@@ -54,6 +54,13 @@
                 console.log('$allImages', @json($allImages));
             </script>
 
+            @php
+                // Get the minimum variant price
+                $minVariant = $item->variants->sortBy('price')->first();
+                $displayPrice = $minVariant->discount_price ?? $minVariant->price;
+            @endphp
+
+
 
             {{-- Product Info --}}
             <div class="p-6">
@@ -72,27 +79,27 @@
                     <!-- Left: Current Price and Original Price -->
                     <div class="flex items-center gap-2">
                         <span class="text-3xl font-bold text-red-500">
-                            ฿{{ number_format($item->price, 0) }}
+                            ฿{{ number_format($displayPrice, 0) }}
                         </span>
 
-                        @if ($item->discount_price)
+                        @if ($minVariant->discount_price)
                             <span class="ml-1 text-sm text-gray-400 line-through">
-                                {{-- ฿{{ number_format($item->original_price, 0) }} --}}
-                                ฿{{ number_format(229, 0) }}
+                                ฿{{ number_format($minVariant->price, 0) }}
                             </span>
                         @endif
                     </div>
 
                     <!-- Right: Discount Percentage -->
                     <div class="flex items-center gap-2">
-                        @if ($item->discount_price)
+                        @if ($minVariant->discount_price)
                             <div>
                                 <span class="px-3 py-1 text-xs text-white bg-yellow-500 rounded-full">
-                                    -{{ $item->discount_percentage }}%
+                                    -{{ $minVariant->discount_percentage }}%
                                 </span>
                             </div>
                         @endif
                     </div>
+
 
                 </div>
 
@@ -194,14 +201,6 @@
                     selectedColor: null,
                     selectedSize: null,
 
-                    {{-- customers: [
-                                    { id: 1, name: 'Abebe', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
-                                    { id: 2, name: 'Helen', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
-                                    { id: 3, name: 'Chaltu', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
-                                    { id: 4, name: 'Daniel', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
-                                    { id: 5, name: 'Eyoha', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: false },
-                                    { id: 6, name: 'Charlie', img: 'https://www.mezgebedirijit.com/images/customerprofile.jpeg', disabled: true }
-                                ], --}}
                     customers: {{ $customersWithOpenCarts->toJson() }},
                     // Flatten all open carts for these customers
                     carts: {{ $customersWithOpenCarts->flatMap(fn($c) => $c->carts->where('status', 'open'))->toJson() }},
@@ -223,18 +222,12 @@
                     },
 
                     item: {
-                        price: {{ $item->price }},
-
-                        {{-- price: {{ $item_variants->price }}, --}}
-
-                        {{-- price: {{ number_format($variant->price, 2)
-                       {{-- stock: 200, --}}
+                        price: {{ number_format($displayPrice, 0) }},
 
                         stock: [
                             @foreach ($item->variants as $variant)
                             {{ $variant->stock }}@if (!$loop->last),@endif @endforeach
                         ],
-
 
                         sizes: [
                             @foreach ($item->variants->unique('item_size_id') as $variant)
@@ -291,10 +284,7 @@
 
 
                     get selectedVariant() {
-                        {{-- if (!this.selectedColor || !this.selectedSize) return null;
-                        return this.item.variants.find(variant =>
-                            variant.color === this.selectedColor && variant.size === this.selectedSize
-                        ); --}}
+
                         return this.variants.find(variant =>
                             variant.color === this.selectedColor?.name &&
                             variant.size === this.selectedSize &&
@@ -324,8 +314,6 @@
                     </button>
 
                 </div>
-
-
 
 
                 {{-- Overlay --}}
@@ -530,7 +518,6 @@
                         Confirm & Add to Cart
                     </button>
                 </div>
-
 
 
             </div>

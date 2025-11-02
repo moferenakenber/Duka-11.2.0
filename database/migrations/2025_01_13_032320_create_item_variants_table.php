@@ -36,9 +36,12 @@ return new class extends Migration {
 
             // Variant-specific fields
             $table->decimal('price', 10, 2); // Price of this color+size+packaging variant
+            $table->decimal('discount_price', 10, 2)->nullable();
+            $table->decimal('discount_percentage', 5, 2)->nullable();
             $table->integer('stock')->default(0); // Stock for this combination
             $table->string('image')->nullable(); // Optional image representing this variant
             $table->boolean('is_active')->default(true); // Enabled or not
+
 
             $table->timestamps();
         });

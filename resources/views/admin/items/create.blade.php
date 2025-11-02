@@ -11,18 +11,12 @@
                 @csrf
 
                 <!-- Product Info -->
-                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
+                <div class="mb-4">
                     <div>
                         <label class="label">
                             <span class="label-text">Product Name</span>
                         </label>
                         <input type="text" name="product_name" class="w-full input input-bordered" placeholder="Product name">
-                    </div>
-                    <div>
-                        <label class="label">
-                            <span class="label-text">Base Price</span>
-                        </label>
-                        <input type="number" step="0.01" name="price" class="w-full input input-bordered" placeholder="Base price">
                     </div>
                 </div>
 
@@ -40,41 +34,53 @@
                     <textarea name="packaging_details" rows="2" class="w-full textarea textarea-bordered" placeholder="Box, Bag, etc."></textarea>
                 </div>
 
-                <!-- Discounts -->
-                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
-                    <div>
-                        <label class="label">
-                            <span class="label-text">Discount Price</span>
-                        </label>
-                        <input type="number" step="0.01" name="discount_price" class="w-full input input-bordered">
-                    </div>
-                    <div>
-                        <label class="label">
-                            <span class="label-text">Discount Percentage</span>
-                        </label>
-                        <input type="number" step="0.01" name="discount_percentage" class="w-full input input-bordered">
-                    </div>
-                </div>
-
                 <!-- Images & Category -->
-                <div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2">
+                <div class="mb-4" x-data="fileUpload()">
                     <div>
                         <label class="label">
                             <span class="label-text">Product Images</span>
                         </label>
-                        <input type="file" name="product_images[]" multiple class="w-full file-input file-input-bordered">
+                        <input type="file" name="product_images[]" multiple
+                            class="w-full file-input file-input-bordered"
+                            @change="uploadFiles($event)">
                     </div>
-                    <div>
-                        <label class="label">
-                            <span class="label-text">Main Category</span>
-                        </label>
-                        <select name="category_id" class="w-full select select-bordered">
-                            <option value="">-- Select Category --</option>
-                            @foreach ($categories as $cat)
-                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                            @endforeach
-                        </select>
+
+                    <div class="flex gap-3 mt-3">
+                        <template x-for="img in images" :key="img">
+                            <img :src="img" class="w-16 h-16 border rounded" />
+                        </template>
                     </div>
+
+                    <!-- Progress Bar -->
+                    <div class="mt-2" x-show="uploading">
+                        <div class="w-full h-4 bg-gray-200 rounded-full">
+                            <div class="h-4 bg-blue-600 rounded-full"
+                                :style="'width: ' + progress + '%'"></div>
+                        </div>
+                        <p class="mt-1 text-sm text-gray-700" x-text="progress + '%'"></p>
+                    </div>
+
+                    <template x-for="img in images" :key="img">
+                        <input type="hidden" name="product_images[]" :value="img">
+                    </template>
+
+
+                    <!-- Done Message -->
+                    <p class="mt-2 font-semibold text-green-600" x-show="done">Upload Complete!</p>
+                </div>
+
+
+                <!-- Main Category -->
+                <div>
+                    <label class="label">
+                        <span class="label-text">Main Category</span>
+                    </label>
+                    <select name="category_id" class="w-full select select-bordered">
+                        <option value="">-- Select Category --</option>
+                        @foreach ($categories as $cat)
+                            <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                        @endforeach
+                    </select>
                 </div>
 
                 <!-- Status -->
@@ -90,69 +96,103 @@
                     </select>
                 </div>
 
-                <!-- Variant Section -->
-                <div class="p-4 bg-base-200 rounded-xl">
-                    <div class="flex items-center justify-between mb-4">
-                        <h3 class="text-lg font-semibold">Variants</h3>
-                        <button type="button" class="btn btn-outline btn-sm" @click="variants.push({})">+ Add Variant</button>
+                <!-- Colors -->
+                <div x-data="{
+                    colors: [], selectedColor: '',
+                    sizes: [], selectedSize: '',
+                    packs: [], selectedPack: ''
+                }">
+
+                    <!-- Colors -->
+                    <div class="mb-4">
+                        <label class="label">Colors</label>
+                        <select x-model="selectedColor" @change="
+                            if(selectedColor && !colors.find(c => c.id == selectedColor)) {
+                                let name = $event.target.options[$event.target.selectedIndex].text;
+                                colors.push({ id: selectedColor, name: name });
+                            }
+                            selectedColor = '';
+                        " class="w-full select select-bordered">
+                            <option value="">-- Select Color --</option>
+                            @foreach($colors as $color)
+                                <option value="{{ $color->id }}">{{ $color->name }}</option>
+                            @endforeach
+                        </select>
+
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <template x-for="(color, index) in colors" :key="index">
+                                <span class="flex items-center gap-2 px-3 py-1 text-white bg-blue-500 rounded-full">
+                                    <span x-text="color.name"></span>
+                                    <button type="button" @click="colors.splice(index, 1)">✕</button>
+                                </span>
+                            </template>
+                        </div>
+                        <template x-for="color in colors" :key="color.id">
+                            <input type="hidden" name="colors[]" :value="color.id">
+                        </template>
                     </div>
 
-                    <template x-for="(variant, index) in variants" :key="index">
-                        <div class="p-4 mb-4 border bg-base-100 rounded-xl border-base-300">
-                            <div class="grid items-end grid-cols-1 gap-3 md:grid-cols-6">
-                                <div>
-                                    <label class="label"><span class="label-text">Color</span></label>
-                                    <select :name="'variants['+index+'][item_color_id]'" class="w-full select select-bordered">
-                                        <option value="">--</option>
-                                        @foreach ($colors as $color)
-                                            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="label"><span class="label-text">Size</span></label>
-                                    <select :name="'variants['+index+'][item_size_id]'" class="w-full select select-bordered">
-                                        <option value="">--</option>
-                                        @foreach ($sizes as $size)
-                                            <option value="{{ $size->id }}">{{ $size->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="label"><span class="label-text">Packaging</span></label>
-                                    <select :name="'variants['+index+'][item_packaging_type_id]'" class="w-full select select-bordered">
-                                        <option value="">--</option>
-                                        @foreach ($packagingTypes as $pack)
-                                            <option value="{{ $pack->id }}">{{ $pack->name }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div>
-                                    <label class="label"><span class="label-text">Stock</span></label>
-                                    <input type="number" min="0" :name="'variants['+index+'][stock]'" class="w-full input input-bordered">
-                                </div>
-                                <div>
-                                    <label class="label"><span class="label-text">Price</span></label>
-                                    <input type="number" step="0.01" :name="'variants['+index+'][price]'" class="w-full input input-bordered">
-                                </div>
-                                <div class="flex gap-2">
-                                    <div class="w-full">
-                                        <label class="label"><span class="label-text">Owner</span></label>
-                                        <select :name="'variants['+index+'][owner_id]'" class="w-full select select-bordered">
-                                            <option value="">--</option>
-                                            @foreach ($sellers as $seller)
-                                                <option value="{{ $seller->id }}">{{ $seller->name }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="pt-8">
-                                        <button type="button" class="btn btn-error btn-sm" @click="variants.splice(index, 1)">✕</button>
-                                    </div>
-                                </div>
-                            </div>
+                    <!-- Sizes -->
+                    <div class="mb-4">
+                        <label class="label">Sizes</label>
+                        <select x-model="selectedSize" @change="
+                            if(selectedSize && !sizes.find(s => s.id == selectedSize)) {
+                                let name = $event.target.options[$event.target.selectedIndex].text;
+                                sizes.push({ id: selectedSize, name: name });
+                            }
+                            selectedSize = '';
+                        " class="w-full select select-bordered">
+                            <option value="">-- Select Size --</option>
+                            @foreach($sizes as $size)
+                                <option value="{{ $size->id }}">{{ $size->name }}</option>
+                            @endforeach
+                        </select>
+
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <template x-for="(size, index) in sizes" :key="index">
+                                <span class="flex items-center gap-2 px-3 py-1 text-white bg-green-500 rounded-full">
+                                    <span x-text="size.name"></span>
+                                    <button type="button" @click="sizes.splice(index, 1)">✕</button>
+                                </span>
+                            </template>
                         </div>
-                    </template>
+                        <template x-for="size in sizes" :key="size.id">
+                            <input type="hidden" name="sizes[]" :value="size.id">
+                        </template>
+                    </div>
+
+                    <!-- Packaging -->
+                    <div class="mb-4">
+                        <label class="label">Packaging</label>
+                        <select x-model="selectedPack" @change="
+                            if(selectedPack && !packs.find(p => p.id == selectedPack)) {
+                                let name = $event.target.options[$event.target.selectedIndex].text;
+                                packs.push({ id: selectedPack, name: name });
+                            }
+                            selectedPack = '';
+                        " class="w-full select select-bordered">
+                            <option value="">-- Select Packaging --</option>
+                            @foreach($packagingTypes as $pack)
+                                <option value="{{ $pack->id }}">{{ $pack->name }}</option>
+                            @endforeach
+                        </select>
+
+                        <div class="flex flex-wrap gap-2 mt-2">
+                            <template x-for="(pack, index) in packs" :key="index">
+                                <span class="flex items-center gap-2 px-3 py-1 text-white bg-purple-500 rounded-full">
+                                    <span x-text="pack.name"></span>
+                                    <button type="button" @click="packs.splice(index, 1)">✕</button>
+                                </span>
+                            </template>
+                        </div>
+                        <template x-for="pack in packs" :key="pack.id">
+                            <input type="hidden" name="packaging[]" :value="pack.id">
+                        </template>
+                    </div>
+
                 </div>
+
+
 
                 <div class="mt-6 text-end">
                     <button type="submit" class="px-6 btn btn-primary">Save Product</button>
@@ -160,4 +200,49 @@
             </form>
         </div>
     </div>
+
+           <script>
+function fileUpload() {
+    return {
+        uploading: false,
+        progress: 0,
+        done: false,
+
+        uploadFiles(event) {
+            this.uploading = true;
+            this.done = false;
+            this.progress = 0;
+
+            let formData = new FormData();
+            let files = event.target.files;
+
+            for (let i = 0; i < files.length; i++) {
+                formData.append('product_images[]', files[i]);
+            }
+
+            axios.post("{{ route('admin.items.uploadImages') }}", formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                onUploadProgress: (e) => {
+                    if (e.lengthComputable) {
+                        this.progress = Math.round((e.loaded * 100) / e.total);
+                    }
+                }
+            })
+            .then((res) => {
+                this.uploading = false;
+                this.done = true;
+            })
+            .catch((error) => {
+                this.uploading = false;
+                alert('Upload failed');
+                console.error(error);
+            });
+        }
+    }
+}
+</script>
+
 </x-app-layout>

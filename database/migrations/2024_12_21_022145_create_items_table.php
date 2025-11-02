@@ -19,8 +19,6 @@ return new class extends Migration {
             $table->string('product_name')->nullable();
             $table->text('product_description')->nullable();
             $table->text('packaging_details')->nullable();
-            $table->string('variation')->nullable();
-            $table->decimal('price', 10, 2)->nullable();
             $table->enum('status', ['draft', 'active', 'inactive', 'unavailable'])->default('draft');
             $table->boolean('incomplete')->default(true);
             $table->unsignedBigInteger('category_id')->nullable();
@@ -30,61 +28,10 @@ return new class extends Migration {
             $table->json('newCategoryNames')->nullable();
             $table->bigInteger('sold_count')->default(0)->nullable(false); // Assuming this is the sold count
             $table->decimal('discount_price', 10, 2)->nullable();
-            $table->decimal('discount_percentage')->nullable();
+            $table->decimal('discount_percentage', 5, 2)->nullable();
 
 
             $table->timestamps();
-
-
-            // Foreign Key Constraints
-            //$table->foreign('category_id')->references('id')->on('item_categories')->onDelete('cascade');
-            //$table->foreign('item_category_id')->references('id')->on('item_categories')->onDelete('cascade');
-
-
-
-
-            // $table->id();
-            // $table->string('product_name')->nullable();
-            // $table->text('product_description')->nullable();
-            // $table->foreignId('item_category_id')->nullable()->constrained()->onDelete('cascade');
-            // $table->enum('status', ['draft', 'active', 'inactive', 'unavailable'])->default('draft'); // Set by the user when the item is ready
-            // $table->boolean('incomplete')->default(true);
-            // $table->timestamps();
-
-            // $table->unsignedBigInteger('category_id')->nullable();  // Add the foreign key column
-            // // Foreign key constraint
-            // $table->foreign('category_id')->references('id')->on('item_categories')->onDelete('cascade')->nullable();
-            // //$table->json('images')->nullable();
-
-
-
-
-
-
-            // $table->decimal('price', 8, 2);
-            // $table->string('status')->default('available');
-            // $table->integer('stock')->default(0); // Changed to integer
-            // $table->json('images')->nullable();
-            // $table->integer('piecesinapacket')->default(0);
-            // $table->integer('packetsinacartoon')->default(0);
-            // $table->timestamps();
-
-
-            // _token: 78dsKLbM6Hx1bAz67kJUdjWIdYX1pirhZbI3bxKy
-            // product_name: dfgdfgdsdf
-            // product_description: fgdfgsdfsdf
-            // item_category_id: 1
-            // new_category_name:
-            // status: draft
-            // incomplete: 1
-            // packaging[]: piece
-            // colors[]: green
-            // colors[]: purple
-            // sizes[]: large
-            // image_a: (binary)
-            // image_b: (binary)
-            // image_c: (binary)
-
 
         });
     }

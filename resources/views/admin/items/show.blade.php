@@ -31,7 +31,7 @@
         });
     @endphp
 
-    <div class="py-12">
+    <div class="py-12" x-data="{ variants: [], showVariants: false }">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white rounded-lg shadow-md">
                 <div class="p-6 space-y-4">
@@ -71,6 +71,15 @@
                                                     </div>
                                                 </div>
                                             </div>
+                                            <!-- Add a Button Somewhere -->
+                                            <div class="mb-4 text-right">
+                                                <button type="button"
+                                                    class="px-4 py-2 btn btn-primary"
+                                                    @click="showVariants = !showVariants">
+                                                    Add Variant
+                                                </button>
+                                            </div>
+
                                         </td>
                                     </tr>
 
@@ -132,6 +141,82 @@
                                                                 </td>
                                                             </tr>
                                                         @endforeach
+
+                                                        <!-- Variant Section (Initially Hidden) -->
+<div x-show="showVariants" x-transition class="p-4 mt-4 bg-base-200 rounded-xl">
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold">Variants</h3>
+        <button type="button" class="btn btn-outline btn-sm" @click="variants.push({})">+ Add New Variant</button>
+    </div>
+
+    <template x-for="(variant, index) in variants" :key="index">
+        <div class="p-4 mb-4 border bg-base-100 rounded-xl border-base-300">
+            <div class="grid items-end grid-cols-1 gap-3 md:grid-cols-6">
+                <!-- Color -->
+                <div>
+                    <label class="label"><span class="label-text">Color</span></label>
+                    {{-- <select :name="'variants['+index+'][item_color_id]'" class="w-full select select-bordered">
+                        <option value="">--</option>
+                        @foreach ($colors as $color)
+                            <option value="{{ $color->id }}">{{ $color->name }}</option>
+                        @endforeach
+                    </select> --}}
+                </div>
+
+                <!-- Size -->
+                <div>
+                    <label class="label"><span class="label-text">Size</span></label>
+                    <select :name="'variants['+index+'][item_size_id]'" class="w-full select select-bordered">
+                        <option value="">--</option>
+                        {{-- @foreach ($sizes as $size)
+                            <option value="{{ $size->id }}">{{ $size->name }}</option>
+                        @endforeach --}}
+                    </select>
+                </div>
+
+                <!-- Packaging -->
+                <div>
+                    <label class="label"><span class="label-text">Packaging</span></label>
+                    <select :name="'variants['+index+'][item_packaging_type_id]'" class="w-full select select-bordered">
+                        <option value="">--</option>
+                        {{-- @foreach ($packagingTypes as $pack)
+                            <option value="{{ $pack->id }}">{{ $pack->name }}</option>
+                        @endforeach --}}
+                    </select>
+                </div>
+
+                <!-- Stock -->
+                <div>
+                    <label class="label"><span class="label-text">Stock</span></label>
+                    <input type="number" min="0" :name="'variants['+index+'][stock]'" class="w-full input input-bordered">
+                </div>
+
+                <!-- Price -->
+                <div>
+                    <label class="label"><span class="label-text">Price</span></label>
+                    <input type="number" step="0.01" :name="'variants['+index+'][price]'" class="w-full input input-bordered">
+                </div>
+
+                <!-- Owner -->
+                <div class="flex gap-2">
+                    <div class="w-full">
+                        <label class="label"><span class="label-text">Owner</span></label>
+                        <select :name="'variants['+index+'][owner_id]'" class="w-full select select-bordered">
+                            <option value="">--</option>
+                            @foreach ($sellers as $seller)
+                                <option value="{{ $seller->id }}">{{ $seller->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="pt-8">
+                        <button type="button" class="btn btn-error btn-sm" @click="variants.splice(index, 1)">✕</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </template>
+</div>
                                                     </tbody>
                                                 </table>
                                             </div>

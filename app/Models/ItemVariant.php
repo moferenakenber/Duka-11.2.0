@@ -31,6 +31,8 @@ class ItemVariant extends Model
         'price',
         'stock',
         'owner_id',
+        'discount_price',
+        'discount_percentage',
     ];
 
 
@@ -41,6 +43,9 @@ class ItemVariant extends Model
      */
     protected $casts = [
         'is_active' => 'boolean',
+        'price' => 'decimal:2',
+        'discount_price' => 'decimal:2',
+        'discount_percentage' => 'decimal:2',
     ];
 
     /**
@@ -94,5 +99,28 @@ class ItemVariant extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+
+    // Variant.php
+    protected static function booted()
+    {
+        static::saving(function ($variant) {
+            // If price changed, recalc discount price if a percentage exists
+            if ($variant->isDirty('price') && $variant->discount_percentage !== null) {
+                $variant->discount_price = $variant->price * (1 - $variant->discount_percentage / 100);
+            }
+
+            // If discount_price changed manually, recalc percentage
+            if ($variant->isDirty('discount_price') && $variant->discount_price !== null) {
+                $variant->discount_percentage = (($variant->price - $variant->discount_price) / $variant->price) * 100;
+            }
+
+            // Optional: if no discount_percentage, set discount_price = price
+            if ($variant->discount_percentage === null) {
+                $variant->discount_price = $variant->price;
+            }
+        });
+    }
+
 
 }

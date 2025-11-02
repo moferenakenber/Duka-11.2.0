@@ -22,6 +22,10 @@ class Item extends Model
         'category_id',
         'sold_count',
     ];
+
+    protected $casts = [
+        'images' => 'array', // This helps Laravel automatically cast JSON to array
+    ];
     // public function images()
     // {
     //     return $this->hasMany(Image::class);
