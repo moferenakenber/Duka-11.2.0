@@ -1,30 +1,30 @@
 @extends('seller.layouts.app')
 
 @section('content')
-
-
     <div class="flex flex-col items-center justify-center h-full pb-16 bg-gray-100">
         <div class="flex-1 w-full mx-auto overflow-y-auto max-w-7xl ">
 
             <!-- Navbar + Search -->
 
 
-                <!-- Search Bar Below Navbar -->
-                <div class="w-full px-4 py-3 rounded-b-xl" style="background-color:#F6A45D;">
-                    <form method="GET" action="{{ route('seller.items.index') }}" class="flex w-full max-w-2xl gap-2 mx-auto">
-                        <input type="text" name="search" placeholder="Search items..."
-                            value="{{ request('search') }}"
-                            class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
-                       <button class="text-white border-2 border-white btn btn-circle hover:bg-white/10">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                        </button>
+            <div class="w-full px-4 py-3 rounded-b-xl" style="background-color:#F6A45D;">
+                <form method="GET" action="{{ route('seller.items.index') }}" class="flex w-full max-w-2xl gap-2 mx-auto">
+                    <!-- Search Input -->
+                    <input type="text" name="search" placeholder="Search items..." value="{{ request('search') }}"
+                        class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
 
+                    <!-- Search Button -->
+                    <button type="submit" class="text-white border-2 border-white btn btn-circle hover:bg-white/10">
+                        <x-lucide-search class="w-5 h-5" />
+                    </button>
 
-                    </form>
-                </div>
+                    <!-- Scan Button -->
+                    <button type="button" class="text-white border-2 border-white btn btn-circle hover:bg-white/10"
+                        @click="startScan()">
+                        <x-lucide-scan-barcode class="w-5 h-5" />
+                    </button>
+                </form>
+            </div>
 
 
 
@@ -71,19 +71,24 @@
 
                         {{-- Product Image --}}
 
-                        @if ($item && $item->product_images)
-                            @php
-                                $decodedImages = json_decode($item->product_images, true);
-                            @endphp
+                        @php
+                            // Decode images safely
+                            $decoded = json_decode($item->product_images, true);
 
-                            @if (is_array($decodedImages) && !empty($decodedImages))
-                                <img src="{{ $decodedImages[0] }}" alt="First Product Image">
-                            @else
-                                <p>No images available.</p>
-                            @endif
-                        @else
-                            <p>Product images not found.</p>
-                        @endif
+                            // Make sure it's always an array
+$images = is_array($decoded) ? $decoded : [];
+
+// Keep only string values (avoid arrays breaking asset())
+$images = array_values(array_filter($images, fn($img) => is_string($img)));
+
+// Select the first valid image
+$mainImage = $images[0] ?? 'images/default.jpg';
+                        @endphp
+
+                        <div class="flex items-center justify-center w-full h-48 bg-white rounded-t-lg">
+                            <img src="{{ asset($mainImage) }}" alt="Default Image" class="object-contain w-full h-full">
+                        </div>
+
 
                         {{-- <img src="https://picsum.photos/200/300" alt="No Image" class="object-cover w-full h-48"> --}}
 
@@ -98,7 +103,14 @@
 
                             {{-- Price & Sold Count --}}
                             <div class="flex items-center justify-between mt-2">
-                                <span class="text-lg font-bold text-red-500">฿{{ number_format($item->price, 0) }}</span>
+                                @php
+                                    $minPrice = $item->variants->min('price') ?? 0;
+                                @endphp
+
+                                <span class="text-lg font-bold text-red-500">
+                                    ฿{{ number_format($minPrice, 0) }}
+                                </span>
+
                                 <span class="text-xs text-gray-500">{{ number_format($item->sold_count) }} sold</span>
                             </div>
 
@@ -117,7 +129,6 @@
                         </div>
 
                     </a>
-
                 @endforeach
 
 

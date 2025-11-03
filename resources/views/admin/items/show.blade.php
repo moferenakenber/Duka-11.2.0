@@ -31,7 +31,7 @@
         });
     @endphp
 
-    <div class="py-12" x-data="{ variants: [], showVariants: false }">
+    <div class="py-12" x-data="{ variants: []}">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
             <div class="overflow-hidden bg-white rounded-lg shadow-md">
                 <div class="p-6 space-y-4">
@@ -55,39 +55,225 @@
                             <tbody>
                                 @if ($item)
                                     <!-- Item Row -->
-                                    <tr class="bg-base-100">
+<tr class="p-4 transition bg-base-100 hover:bg-gray-50">
+    <td>
+        <div class="flex flex-col items-start gap-4 md:flex-row">
 
-                                        <td>
-                                            <div class="flex items-center gap-3">
-                                                <div class="avatar">
-                                                    <div class="w-12 h-12 mask mask-squircle">
-                                                        <img
-                                                            src="{{ asset(json_decode($item->product_images)[0] ?? 'default.jpg') }}" />
-                                                    </div>
-                                                </div>
-                                                <div>
-                                                    <div class="font-bold">{{ $item->product_name }}</div>
-                                                    <div class="text-sm opacity-50">{{ $item->product_description }}
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <!-- Add a Button Somewhere -->
-                                            <div class="mb-4 text-right">
-                                                <button type="button"
-                                                    class="px-4 py-2 btn btn-primary"
-                                                    @click="showVariants = !showVariants">
-                                                    Add Variant
-                                                </button>
-                                            </div>
+            <!-- Images Column -->
+            <div class="flex flex-col items-center gap-2">
+                @php
+                    $images = json_decode($item->product_images, true) ?? [];
+                    $mainImage = $images[0] ?? 'default.jpg';
+                    $otherImages = array_slice($images, 1);
+                @endphp
+
+                <!-- Main Image -->
+                <div class="w-32 h-32 overflow-hidden shadow-md rounded-xl">
+                    <img src="{{ asset($mainImage) }}" alt="{{ $item->product_name }}" class="object-cover w-full h-full">
+                </div>
+
+                <!-- Other Images -->
+                @if(count($otherImages))
+                    <div class="flex gap-1 mt-1 overflow-x-auto">
+                        @foreach($otherImages as $img)
+                            <div class="flex-shrink-0 w-12 h-12 overflow-hidden rounded-lg shadow-sm">
+                                <img src="{{ asset($img) }}" alt="{{ $item->product_name }}" class="object-cover w-full h-full">
+                            </div>
+                        @endforeach
+                    </div>
+                @endif
+            </div>
+
+            <!-- Info Column -->
+            <div class="flex flex-col flex-1 gap-2">
+                <!-- Name -->
+                <div class="text-lg font-bold text-gray-800 dark:text-gray-200">{{ $item->product_name }}</div>
+
+                <!-- Description -->
+                <div class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">{{ $item->product_description }}</div>
+
+                <!-- Packaging -->
+                @if($item->packaging_details)
+                    <div class="text-sm italic text-gray-500 dark:text-gray-400">Packaging: {{ $item->packaging_details }}</div>
+                @endif
+
+                <!-- Categories -->
+                <div class="flex flex-wrap gap-1 mt-1">
+                    @foreach($item->categories as $cat)
+                        <span class="px-2 py-1 text-xs text-white bg-blue-500 rounded-full">{{ $cat->category_name }}</span>
+                    @endforeach
+                </div>
+
+                <!-- Status -->
+                <div class="mt-1">
+                    <span class="px-2 py-1 rounded-full text-xs font-semibold
+                        {{ $item->status == 'active' ? 'bg-green-500 text-white' : ($item->status == 'inactive' ? 'bg-gray-400 text-white' : 'bg-yellow-500 text-white') }}">
+                        {{ ucfirst($item->status) }}
+                    </span>
+                </div>
+
+                <!-- Colors -->
+                @if(!empty($item->colors))
+                    <div class="flex flex-wrap gap-1 mt-1">
+                        @foreach($item->colors as $colorId)
+                            @php
+                                $color = \App\Models\ItemColor::find($colorId);
+                            @endphp
+                            @if($color)
+                                <span class="px-2 py-1 text-xs rounded-full" style="background-color: {{ $color->hex_code ?? '#000' }}; color: #fff;">
+                                    {{ $color->name }}
+                                </span>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
+
+                <!-- Sizes -->
+                @if(!empty($item->sizes))
+                    <div class="flex flex-wrap gap-1 mt-1">
+                        @foreach($item->sizes as $sizeId)
+                            @php
+                                $size = \App\Models\ItemSize::find($sizeId);
+                            @endphp
+                            @if($size)
+                                <span class="px-2 py-1 text-xs bg-gray-200 rounded-full dark:bg-gray-700">{{ $size->name }}</span>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
+
+                <!-- Packaging Types -->
+                @if(!empty($item->packaging))
+                    <div class="flex flex-wrap gap-1 mt-1">
+                        @foreach($item->packaging as $packId)
+                            @php
+                                $pack = \App\Models\ItemPackagingType::find($packId);
+                            @endphp
+                            @if($pack)
+                                <span class="px-2 py-1 text-xs text-white bg-purple-500 rounded-full">{{ $pack->name }}</span>
+                            @endif
+                        @endforeach
+                    </div>
+                @endif
+
+            </div>
+        </div>
+    </td>
+</tr>
+
+
+
+
+
+
 
                                         </td>
                                     </tr>
+
 
                                     <!-- Variant Table Below Item -->
                                     <tr class="bg-base-200">
                                         <td colspan="6">
                                             <div class="overflow-x-auto">
                                                 <table class="table table-xs">
+                                                    <!-- Variant Section (Initially Hidden) -->
+<div class="p-2 mt-4 bg-base-200 rounded-xl">
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-4">
+        <h3 class="text-lg font-semibold">Variants</h3>
+        <button type="button" class="btn btn-outline btn-sm" @click="variants.push({ color: '', size: '', packaging: '', stock: 0, price: 0, owner_id: '' })">
+            + Add New Variant
+        </button>
+    </div>
+
+    <!-- Variants List -->
+    <template x-for="(variant, index) in variants" :key="index">
+    <div class="flex items-start justify-between gap-2 p-2 border bg-base-100 rounded-xl border-base-300">
+        <div class="flex items-end gap-2 overflow-x-auto flex-nowrap">
+
+            <!-- Color -->
+            <div class="flex-shrink-0 w-32">
+                <label class="label"><span class="label-text">Color</span></label>
+                <select :name="'variants['+index+'][item_color_id]'" x-model="variant.color" class="w-full select select-bordered">
+                    <option value="">-- Select Color --</option>
+                    @foreach($colors as $color)
+                        <option value="{{ $color->id }}">{{ $color->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Size -->
+            <div class="flex-shrink-0 w-24">
+                <label class="label"><span class="label-text">Size</span></label>
+                <select :name="'variants['+index+'][item_size_id]'" x-model="variant.size" class="w-full select select-bordered">
+                    <option value="">-- Select Size --</option>
+                    @foreach($sizes as $size)
+                        <option value="{{ $size->id }}">{{ $size->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Packaging -->
+            <div class="flex-shrink-0 w-32">
+                <label class="label"><span class="label-text">Packaging</span></label>
+                <select :name="'variants['+index+'][item_packaging_type_id]'" x-model="variant.packaging" class="w-full select select-bordered">
+                    <option value="">-- Select Packaging --</option>
+                    @foreach($packagingTypes as $pack)
+                        <option value="{{ $pack->id }}">{{ $pack->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Price -->
+            <div class="flex-shrink-0 w-24">
+                <label class="label"><span class="label-text">Price</span></label>
+                <input type="number" step="0.01" :name="'variants['+index+'][price]'" x-model="variant.price" class="w-full input input-bordered">
+            </div>
+
+            <!-- Stock -->
+            <div class="flex-shrink-0 w-24">
+                <label class="label"><span class="label-text">Stock</span></label>
+                <input type="number" min="0" :name="'variants['+index+'][stock]'" x-model="variant.stock" class="w-full input input-bordered">
+            </div>
+
+            <!-- Owner -->
+            <div class="flex-shrink-0 w-32">
+                <label class="label"><span class="label-text">Owner</span></label>
+                <select :name="'variants['+index+'][owner_id]'" x-model="variant.owner_id" class="w-full select select-bordered">
+                    <option value="">-- Select Owner --</option>
+                    @foreach ($sellers as $seller)
+                        <option value="{{ $seller->id }}">{{ $seller->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <!-- Image -->
+            <div class="flex-shrink-0 w-36">
+                <label class="label"><span class="label-text">Image</span></label>
+                <input type="file" :name="'variants['+index+'][image]'" class="w-full file-input file-input-bordered" />
+            </div>
+
+            <!-- Status -->
+            <div class="flex-shrink-0 w-28">
+                <label class="label"><span class="label-text">Status</span></label>
+                <select :name="'variants['+index+'][status]'" x-model="variant.status" class="w-full select select-bordered">
+                    <option value="">-- Select Status --</option>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+            </div>
+
+
+
+        </div>
+                    <!-- Remove Button -->
+            <div class="flex-shrink-0 pt-6">
+                <button type="button" class="btn btn-error btn-sm" @click="variants.splice(index, 1)">✕</button>
+            </div>
+    </div>
+</template>
+
+</div>
                                                     <thead>
                                                         <tr>
                                                             <th>
@@ -142,81 +328,6 @@
                                                             </tr>
                                                         @endforeach
 
-                                                        <!-- Variant Section (Initially Hidden) -->
-<div x-show="showVariants" x-transition class="p-4 mt-4 bg-base-200 rounded-xl">
-    <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold">Variants</h3>
-        <button type="button" class="btn btn-outline btn-sm" @click="variants.push({})">+ Add New Variant</button>
-    </div>
-
-    <template x-for="(variant, index) in variants" :key="index">
-        <div class="p-4 mb-4 border bg-base-100 rounded-xl border-base-300">
-            <div class="grid items-end grid-cols-1 gap-3 md:grid-cols-6">
-                <!-- Color -->
-                <div>
-                    <label class="label"><span class="label-text">Color</span></label>
-                    {{-- <select :name="'variants['+index+'][item_color_id]'" class="w-full select select-bordered">
-                        <option value="">--</option>
-                        @foreach ($colors as $color)
-                            <option value="{{ $color->id }}">{{ $color->name }}</option>
-                        @endforeach
-                    </select> --}}
-                </div>
-
-                <!-- Size -->
-                <div>
-                    <label class="label"><span class="label-text">Size</span></label>
-                    <select :name="'variants['+index+'][item_size_id]'" class="w-full select select-bordered">
-                        <option value="">--</option>
-                        {{-- @foreach ($sizes as $size)
-                            <option value="{{ $size->id }}">{{ $size->name }}</option>
-                        @endforeach --}}
-                    </select>
-                </div>
-
-                <!-- Packaging -->
-                <div>
-                    <label class="label"><span class="label-text">Packaging</span></label>
-                    <select :name="'variants['+index+'][item_packaging_type_id]'" class="w-full select select-bordered">
-                        <option value="">--</option>
-                        {{-- @foreach ($packagingTypes as $pack)
-                            <option value="{{ $pack->id }}">{{ $pack->name }}</option>
-                        @endforeach --}}
-                    </select>
-                </div>
-
-                <!-- Stock -->
-                <div>
-                    <label class="label"><span class="label-text">Stock</span></label>
-                    <input type="number" min="0" :name="'variants['+index+'][stock]'" class="w-full input input-bordered">
-                </div>
-
-                <!-- Price -->
-                <div>
-                    <label class="label"><span class="label-text">Price</span></label>
-                    <input type="number" step="0.01" :name="'variants['+index+'][price]'" class="w-full input input-bordered">
-                </div>
-
-                <!-- Owner -->
-                <div class="flex gap-2">
-                    <div class="w-full">
-                        <label class="label"><span class="label-text">Owner</span></label>
-                        <select :name="'variants['+index+'][owner_id]'" class="w-full select select-bordered">
-                            <option value="">--</option>
-                            @foreach ($sellers as $seller)
-                                <option value="{{ $seller->id }}">{{ $seller->name }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="pt-8">
-                        <button type="button" class="btn btn-error btn-sm" @click="variants.splice(index, 1)">✕</button>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </template>
-</div>
                                                     </tbody>
                                                 </table>
                                             </div>

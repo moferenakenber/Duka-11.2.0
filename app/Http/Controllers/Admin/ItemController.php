@@ -56,157 +56,14 @@ class ItemController extends Controller
     // }
 
     public function create()
-{
-    return view('admin.items.create', [
-        'categories' => ItemCategory::all(),
-        'colors' => ItemColor::all(),
-        'sizes' => ItemSize::all(),
-        'packagingTypes' => ItemPackagingType::all(),
-        'sellers' => User::where('role', 'seller')->get(),
-    ]);
-}
-
-
-    // Save Draft method
-    public function saveDraft(Request $request)
     {
-        Log::info('First Log -> Draft save request received. ItemController -> saveDraft');
-        Log::info('Second Log -> Request Data:', $request->all());
-
-
-
-
-        // Start a database transaction
-        DB::beginTransaction();
-        try {
-            // Validate form data
-            $validatedData = $request->validate([
-                'product_name' => 'required|string|max:255',
-                'product_description' => 'nullable|string',
-
-                'packaging_details' => 'nullable|string',
-
-                'selectedCategories' => 'nullable|string', // Will be JSON encoded array of category IDs
-                'newCategoryNames' => 'nullable|string', // Will be JSON encoded array of new category names
-
-                'product_images' => 'nullable|array',
-                'product_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-
-                //'variants' => 'required|array',
-                //'barcode' => 'required|string',
-                //'images' => 'required|array',
-
-            ]);
-
-            Log::info('Validation passed for save draft.', $validatedData);
-
-            Log::info('Request Data:', $request->all());
-
-
-            // Decode JSON inputs
-            $selectedCategories = json_decode($request->input('selectedCategories', '[]'), true);
-            $newCategoryNames = json_decode($request->input('newCategoryNames', '[]'), true);
-
-            // Determine completeness
-            $requiredFields = ['product_name', 'product_description', 'category_id', 'product_images'];
-            $isComplete = true;
-            foreach ($requiredFields as $field) {
-                if ($field === 'category_id' && empty($selectedCategories) && empty($newCategoryNames)) {
-                    $isComplete = false;
-                    break;
-                }
-                if ($field === 'product_images' && !$request->hasFile('product_images')) {
-                    $isComplete = false;
-                    break;
-                }
-                if (in_array($field, ['product_name', 'product_description']) && empty($request->input($field))) {
-                    $isComplete = false;
-                    break;
-                }
-            }
-
-            // Create the item
-            $item = new Item();
-            $item->product_name = $request->input('product_name');
-            $item->product_description = $request->input('product_description');
-            $item->packaging_details = $request->input('packaging_details') ?? null;
-
-            // Status always inactive initially
-            $item->status = 'inactive';
-            $item->incomplete = !$isComplete; // true if incomplete, false if complete
-
-            // Handle images
-            if ($request->product_images) {
-                $item->product_images = json_encode($request->product_images);
-            }
-
-
-            $item->save();
-
-
-            // Create a new draft item
-            // $draft = new Item();
-            // $draft->product_name = $validatedData['product_name'];
-            // $draft->product_description = $validatedData['product_description'] ?? null;
-            // $draft->incomplete = true; // Drafts are always incomplete
-            // $draft->status = 'draft';
-
-            // // Handle image upload if exists
-            // if ($request->hasFile('product_images')) {
-            //     $images = [];
-            //     foreach ($request->file('product_images') as $image) {
-            //         $path = $image->store('images', 'public');
-            //         $images[] = $path;
-            //     }
-            //     $path = $request->file('product_images')->store('images', 'public');
-            //     $draft->images = json_encode($images); // Store as JSON
-            // }
-
-            // $draft->save();
-
-            // Handle existing and new categories
-            $categoryIds = [];
-
-            // Process existing categories
-            if (!empty($selectedCategories)) {
-                $categoryIds = array_merge($categoryIds, array_filter($selectedCategories, 'is_numeric'));
-            }
-
-            // Process new categories
-            if (!empty($newCategoryNames)) {
-                foreach ($newCategoryNames as $categoryName) {
-                    $category = ItemCategory::firstOrCreate(['category_name' => $categoryName]);
-                    $categoryIds[] = $category->id;
-                }
-            }
-
-            // Attach categories to the draft item
-            if (!empty($categoryIds)) {
-                $item->categories()->attach($categoryIds);
-            }
-
-
-            // Commit the transaction
-            DB::commit();
-
-            Log::info('Draft saved successfully.');
-
-            return response()->json([
-            'success' => true,
-            'message' => $isComplete ? 'Item saved as complete (inactive)' : 'Item saved as draft (inactive)',
+        return view('admin.items.create', [
+            'categories' => ItemCategory::all(),
+            'colors' => ItemColor::all(),
+            'sizes' => ItemSize::all(),
+            'packagingTypes' => ItemPackagingType::all(),
+            'sellers' => User::where('role', 'seller')->get(),
         ]);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-
-            Log::error('Error saving draft:', ['exception' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Error saving draft.',
-                'error' => $e->getMessage(), // Show actual error
-            ], 500);
-        }
     }
 
 
@@ -348,8 +205,20 @@ class ItemController extends Controller
             'variants.itemSize',
             'variants.itemPackagingType',
         ]);
+
+        // Decode JSON arrays stored in the item
+        $colorIds = json_decode($item->colors ?? '[]', true);
+        $sizeIds = json_decode($item->sizes ?? '[]', true);
+        $packagingIds = json_decode($item->packaging ?? '[]', true);
+
+        // Fetch only the relevant entries
+        $colors = ItemColor::whereIn('id', $colorIds)->get();
+        $sizes = ItemSize::whereIn('id', $sizeIds)->get();
+        $packagingTypes = ItemPackagingType::whereIn('id', $packagingIds)->get();
+
+
         $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
-        return view('admin.items.show', compact('item', 'sellers'));
+        return view('admin.items.show', compact('item', 'colors', 'sizes', 'packagingTypes', 'sellers'));
     }
 
     // Show the form for editing the specified item
@@ -405,25 +274,206 @@ class ItemController extends Controller
         return redirect()->route('admin.items.index')->with('success', 'Item deleted successfully.');
     }
 
-public function uploadImages(Request $request)
-{
-    $request->validate([
-        'product_images.*' => 'required|image|max:4096',
-    ]);
 
-    $paths = [];
+    // Save Draft method/////////////////////////////////////////////////////////////////////////////////////////
+    public function saveDraft(Request $request)
+    {
+        Log::info('First Log -> Draft save request received. ItemController -> saveDraft');
+        Log::info('Second Log -> Request Data:', $request->all());
 
-    foreach ($request->file('product_images') as $file) {
-        $path = $file->store('images/product_images', 'public');
 
-        // ✅ Generate FULL URL
-        $paths[] = url('images/product_images/' . basename($path));
+        // Start a database transaction
+        DB::beginTransaction();
+        try {
+            // Validate form data
+            $validatedData = $request->validate([
+                'product_name' => 'required|string|max:255',
+                'product_description' => 'nullable|string',
+
+                'packaging_details' => 'nullable|string',
+
+                'selectedCategories' => 'nullable|string', // Will be JSON encoded array of category IDs
+                'newCategoryNames' => 'nullable|string', // Will be JSON encoded array of new category names
+
+                'product_images' => 'nullable|array',
+                'product_images.*' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+
+                //'variants' => 'required|array',
+                //'barcode' => 'required|string',
+                //'images' => 'required|array',
+
+            ]);
+
+            Log::info('Validation passed for save draft.', $validatedData);
+
+            Log::info('Request Data:', $request->all());
+
+
+            // Decode JSON inputs
+            $selectedCategories = json_decode($request->input('selectedCategories', '[]'), true);
+            $newCategoryNames = json_decode($request->input('newCategoryNames', '[]'), true);
+
+            // Determine completeness
+            $requiredFields = ['product_name', 'product_description', 'category_id', 'product_images'];
+            $isComplete = true;
+            foreach ($requiredFields as $field) {
+                if ($field === 'category_id' && empty($selectedCategories) && empty($newCategoryNames)) {
+                    $isComplete = false;
+                    break;
+                }
+                if ($field === 'product_images' && !$request->hasFile('product_images')) {
+                    $isComplete = false;
+                    break;
+                }
+                if (in_array($field, ['product_name', 'product_description']) && empty($request->input($field))) {
+                    $isComplete = false;
+                    break;
+                }
+            }
+
+            // Create the item
+            $item = new Item();
+            $item->product_name = $request->input('product_name');
+            $item->product_description = $request->input('product_description');
+            $item->packaging_details = $request->input('packaging_details') ?? null;
+
+            // Status always inactive initially
+            $item->status = 'inactive';
+            $item->incomplete = !$isComplete; // true if incomplete, false if complete
+
+            // Handle images
+
+            if ($request->hasFile('product_images')) {
+                $paths = [];
+                foreach ($request->file('product_images') as $file) {
+                    // Store file in public disk
+                    $path = $file->store('images/product_images', 'public');
+                    $paths[] = 'storage/' . $path; // relative path for Blade asset()
+                }
+                // Save JSON array of paths
+                $item->product_images = json_encode($paths);
+            }
+
+
+
+
+            $item->save();
+
+
+            Log::info('Saved item product_images JSON:', ['product_images' => $item->product_images]);
+
+
+
+            // Create a new draft item
+            // $draft = new Item();
+            // $draft->product_name = $validatedData['product_name'];
+            // $draft->product_description = $validatedData['product_description'] ?? null;
+            // $draft->incomplete = true; // Drafts are always incomplete
+            // $draft->status = 'draft';
+
+            // // Handle image upload if exists
+            // if ($request->hasFile('product_images')) {
+            //     $images = [];
+            //     foreach ($request->file('product_images') as $image) {
+            //         $path = $image->store('images', 'public');
+            //         $images[] = $path;
+            //     }
+            //     $path = $request->file('product_images')->store('images', 'public');
+            //     $draft->images = json_encode($images); // Store as JSON
+            // }
+
+            // $draft->save();
+
+            // Handle existing and new categories
+            $categoryIds = [];
+
+            // Process existing categories
+            if (!empty($selectedCategories)) {
+                $categoryIds = array_merge($categoryIds, array_filter($selectedCategories, 'is_numeric'));
+            }
+
+            // Process new categories
+            if (!empty($newCategoryNames)) {
+                foreach ($newCategoryNames as $categoryName) {
+                    $category = ItemCategory::firstOrCreate(['category_name' => $categoryName]);
+                    $categoryIds[] = $category->id;
+                }
+            }
+
+            // Attach categories to the draft item
+            if (!empty($categoryIds)) {
+                $item->categories()->attach($categoryIds);
+            }
+
+
+            // Commit the transaction
+            DB::commit();
+
+            Log::info('Draft saved successfully.');
+
+            return response()->json([
+                'success' => true,
+                'message' => $isComplete ? 'Item saved as complete (inactive)' : 'Item saved as draft (inactive)',
+            ]);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+
+            Log::error('Error saving draft:', ['exception' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
+
+            return response()->json([
+                'success' => false,
+                'message' => 'Error saving draft.',
+                'error' => $e->getMessage(), // Show actual error
+            ], 500);
+        }
     }
 
-    return response()->json([
-        'success' => true,
-        'paths' => $paths,
-    ]);
-}
+
+    // public function uploadImages(Request $request)
+    // {
+    //     $request->validate([
+    //         'product_images.*' => 'required|image|max:4096',
+    //     ]);
+
+    //     $paths = [];
+
+    //     foreach ($request->file('product_images') as $file) {
+    //         $path = $file->store('images/product_images', 'public');
+
+    //         // ✅ Generate FULL URL
+    //         $paths[] = url('images/product_images/' . basename($path));
+    //     }
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'paths' => $paths,
+    //     ]);
+    // }
+    public function uploadImages(Request $request)
+    {
+        $request->validate([
+            'product_images' => 'required|array',
+            'product_images.*' => 'image|max:5120', // 5MB max
+        ]);
+
+        $paths = [];
+        foreach ($request->file('product_images') as $file) {
+            $path = $file->store('images/product_images', 'public');
+            $paths[] = 'storage/' . $path; // store relative path
+        }
+
+        // Here, instead of returning JSON, we return JS to redirect with a popup
+        $redirect = route('admin.items.index');
+        $message = 'Images uploaded successfully!';
+
+        return response()->json([
+            'redirect' => $redirect,
+            'message' => $message,
+            'paths' => $paths,
+        ]);
+    }
+
+
 
 }
