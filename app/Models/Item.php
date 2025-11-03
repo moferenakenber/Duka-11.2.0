@@ -38,8 +38,14 @@ class Item extends Model
     // Many-to-Many Relationship with ItemCategory
     public function categories()
     {
-        return $this->belongsToMany(ItemCategory::class, 'item_category_item', 'item_id', 'category_id');
+        return $this->belongsToMany(
+            ItemCategory::class,    // related model
+            'item_category_item',   // pivot table
+            'item_id',              // this model's FK in pivot
+            'category_id'           // related model's FK in pivot
+        );
     }
+
 
     public function carts()
     {

@@ -13,7 +13,7 @@ class ItemCategorySeeder extends Seeder
      */
     public function run(): void
     {
-        $categories = ['Stationery', 'Office Supplies', 'Art Materials', 'School Supplies', 'Writing Tools', 'Notebooks'];
+        $categories = ['Pen', 'Pencil', 'Office Supplies', 'Art Materials', 'School Supplies', 'Writing Tools', 'Notebooks'];
 
         foreach ($categories as $name) {
             ItemCategory::create(['category_name' => $name]);

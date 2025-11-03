@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\ItemCategory;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -31,6 +32,7 @@ class DatabaseSeeder extends Seeder
             ItemVariantSeeder::class,
             ItemImageSeeder::class,
             ItemOwnerSeeder::class,
+            ItemCategorySeeder::class,
 
         ]);
     }

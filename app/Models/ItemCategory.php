@@ -21,7 +21,12 @@ class ItemCategory extends Model
     // Many-to-Many Relationship with Item
     public function items()
     {
-        return $this->belongsToMany(Item::class, 'item_category_item', 'category_id', 'item_id');
+        return $this->belongsToMany(
+            Item::class,
+            'item_category_item',
+            'category_id',
+            'item_id'
+        );
     }
 
 }

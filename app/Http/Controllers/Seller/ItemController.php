@@ -18,7 +18,8 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Item::query();
+        $query = Item::with('categories');   // <-- Load categories
+
 
         if ($request->has('sort')) {
             switch ($request->sort) {
@@ -86,7 +87,7 @@ class ItemController extends Controller
 
         // Add dd() to inspect the data
         //dd($item->variants); // This will dump the variants and stop the execution
-         // 🔹 Build image collections here (same logic as in your Blade file)
+        // 🔹 Build image collections here (same logic as in your Blade file)
         $itemImages = collect();
         if ($item->product_images) {
             $decodedImages = json_decode($item->product_images, true);
@@ -138,7 +139,7 @@ class ItemController extends Controller
         //     ->whereNotNull('customer_id')
         //     ->get();
 
-        $customersWithOpenCarts = Customer::whereHas('carts', function($query) {
+        $customersWithOpenCarts = Customer::whereHas('carts', function ($query) {
             $query->where('status', 'open');
         })->get();
 
@@ -158,12 +159,12 @@ class ItemController extends Controller
 
         return view('seller.items.show', compact(
 
-                'item',
-               'sellers',
-                          'customersWithOpenCarts',
-                          'allImages',
-                          'variantData'
-            ));
+            'item',
+            'sellers',
+            'customersWithOpenCarts',
+            'allImages',
+            'variantData'
+        ));
     }
 
     /**
