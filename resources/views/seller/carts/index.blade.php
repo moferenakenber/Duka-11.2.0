@@ -41,29 +41,76 @@
             </div>
         </div> --}}
     <div class="min-h-screen bg-gray-100">
-        <div class="container mx-auto p-2.5">
-            <div class="relative flex items-center justify-between pt-1 mb-4">
-                <!-- Back Button -->
-                {{-- <a href="/seller/customers" class="text-gray-500 hover:text-gray-700">
+        {{-- <div class="container mx-auto p-2.5">
+            <div class="flex flex-col items-center justify-center h-full pb-16 bg-gray-100"> --}}
+
+        <div class="flex-1 w-full mx-auto overflow-y-auto max-w-7xl ">
+
+            <!-- Carts Header -->
+            <div class="w-full px-4 py-3 rounded-b-xl" style="background-color:#F6A45D;">
+                <div class="relative flex items-center justify-between w-full max-w-2xl mx-auto">
+                    <!-- Center Title -->
+                    <h1 class="absolute text-xl font-semibold text-white transform -translate-x-1/2 left-1/2">
+                        Carts
+                    </h1>
+
+                    <!-- Add Cart Button on Right -->
+                    <a href="{{ route('seller.carts.create') }}"
+                        class="ml-auto text-white border-2 border-white btn btn-circle hover:bg-white/10" title="Add Cart">
+                        <x-lucide-circle-plus class="w-7 h-7" />
+                    </a>
+                </div>
+            </div>
+
+            {{-- <div class="w-full px-4 py-3 rounded-b-xl" style="background-color:#F6A45D;"> --}}
+            <!-- Back Button -->
+            {{-- <a href="/seller/customers" class="text-gray-500 hover:text-gray-700">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-6 h-6 mr-2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
                         </svg>
                     </a> --}}
-                <!-- Title -->
-                <h1 class="absolute text-xl font-semibold transform -translate-x-1/2 left-1/2">Carts</h1>
-                <!-- Right Arrow Icon -->
-                {{-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
+            <!-- Title -->
+            {{-- <h1 class="absolute text-xl font-semibold transform -translate-x-1/2 left-1/2">Carts</h1> --}}
+            <!-- Right Arrow Icon -->
+            {{-- <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 mr-2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0" />
                 </svg> --}}
-                <a href="{{ route('seller.carts.create') }}" class="ml-auto text-gray-500 hover:text-gray-700">
+            {{-- <a href="{{ route('seller.carts.create') }}" class="ml-auto text-gray-500 hover:text-gray-700">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                         stroke="currentColor" class="w-6 h-6 mr-2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M12 5v14m-7-7h14" />
                     </svg>
                 </a>
 
-            </div>
+
+
+
+            </div> --}}
+
+
+
+
+
+
+            {{-- <div class="w-full px-4 py-3 rounded-b-xl" style="background-color:#F6A45D;">
+                <form method="GET" action="{{ route('seller.items.index') }}" class="flex w-full max-w-2xl gap-2 mx-auto">
+                    <!-- Search Input -->
+                    <input type="text" name="search" placeholder="Search items..." value="{{ request('search') }}"
+                        class="flex-1 px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500">
+
+                    <!-- Search Button -->
+                    <button type="submit" class="text-white border-2 border-white btn btn-circle hover:bg-white/10">
+                        <x-lucide-search class="w-5 h-5" />
+                    </button>
+
+                    <!-- Scan Button -->
+                    <button type="button" class="text-white border-2 border-white btn btn-circle hover:bg-white/10"
+                        @click="startScan()">
+                        <x-lucide-scan-barcode class="w-5 h-5" />
+                    </button>
+                </form>
+            </div> --}}
 
 
 
