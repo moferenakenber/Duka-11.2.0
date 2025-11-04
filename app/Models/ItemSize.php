@@ -45,11 +45,12 @@ class ItemSize extends Model
     ];
 
     // Relationships (if any)
-    public function item()
+    public function items()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsToMany(Item::class, 'item_item_size', 'item_size_id', 'item_id')->withTimestamps();
     }
-    public function itemVariant ()
+
+    public function itemVariant()
     {
         return $this->hasMany(ItemVariant::class);
     }

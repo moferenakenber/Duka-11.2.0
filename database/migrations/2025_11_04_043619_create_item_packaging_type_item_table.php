@@ -10,10 +10,10 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('item_colors', function (Blueprint $table) {
+        Schema::create('item_packaging_type_item', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('image_path')->nullable();
+            $table->foreignId('item_id')->constrained()->onDelete('cascade');
+            $table->foreignId('item_packaging_type_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        Schema::dropIfExists('item_colors');
+        Schema::dropIfExists('item_packaging_type_item');
     }
 };

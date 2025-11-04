@@ -5,24 +5,7 @@ use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
-    // {
-    //     Schema::create('item_variants', function (Blueprint $table) {
-    //         $table->id();
-    //         $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
-    //         $table->foreignId('item_color_id')->nullable()->constrained('item_colors')->onDelete('set null');
-    //         $table->foreignId('item_size_id')->nullable()->constrained('item_sizes')->onDelete('set null');
-    //         $table->foreignId('item_packaging_type_id')->nullable()->constrained('item_packaging_types')->onDelete('set null');
-    //         $table->boolean('is_active')->default(true);
-    //         $table->integer('price');
-    //         $table->integer('stock');
-    //         $table->foreignId('owner_id')->constrained('users');
-    //         $table->timestamps();
-    //     });
-    // }
     {
         Schema::create('item_variants', function (Blueprint $table) {
             $table->id();
@@ -32,25 +15,24 @@ return new class extends Migration {
             $table->foreignId('item_color_id')->nullable()->constrained('item_colors')->onDelete('set null');
             $table->foreignId('item_size_id')->nullable()->constrained('item_sizes')->onDelete('set null');
             $table->foreignId('item_packaging_type_id')->nullable()->constrained('item_packaging_types')->onDelete('set null');
-            $table->foreignId('owner_id')->constrained('users'); // who added the variant
+            $table->foreignId('owner_id')->nullable()->constrained('users'); // who added the variant
 
+            $table->string('barcode')->nullable()->unique();
             // Variant-specific fields
-            $table->decimal('price', 10, 2); // Price of this color+size+packaging variant
-            $table->decimal('discount_price', 10, 2)->nullable();
-            $table->decimal('discount_percentage', 5, 2)->nullable();
-            $table->integer('stock')->default(0); // Stock for this combination
-            $table->string('image')->nullable(); // Optional image representing this variant
-            $table->boolean('is_active')->default(true); // Enabled or not
+            $table->decimal('price', 10, 2); // base price
+            $table->decimal('discount_price', 10, 2)->nullable(); // optional discounted price
+            $table->decimal('discount_percentage', 5, 2)->nullable()->default(0); // added this column
+            $table->string('image')->nullable(); // optional image for this variant
+
+            // Status enum
+            $table->enum('status', ['active', 'inactive', 'unavailable', 'out_of_stock'])->default('inactive');
+            $table->boolean('is_active')->default(0);
 
 
             $table->timestamps();
         });
     }
 
-
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('item_variants');

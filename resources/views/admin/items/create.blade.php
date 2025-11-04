@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+        <h2 class="dark:text-gray-200 text-xl font-semibold leading-tight text-gray-800">
             {{ __('Create Item') }}
         </h2>
     </x-slot>
 
-    <div class="max-w-6xl p-4 mx-auto" x-data="{ variants: [] }">
-        <div class="p-6 shadow-xl bg-base-100 rounded-xl">
+    <div class="mx-auto max-w-6xl p-4" x-data="{ variants: [] }">
+        <div class="rounded-xl bg-base-100 p-6 shadow-xl">
             <form action="{{ route('admin.saveDraft') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
@@ -16,8 +16,7 @@
                         <label class="label">
                             <span class="label-text">Product Name</span>
                         </label>
-                        <input type="text" name="product_name" class="w-full input input-bordered"
-                            placeholder="Product name">
+                        <input type="text" name="product_name" class="input input-bordered w-full" placeholder="Product name">
                     </div>
                 </div>
 
@@ -25,16 +24,14 @@
                     <label class="label">
                         <span class="label-text">Product Description</span>
                     </label>
-                    <textarea name="product_description" rows="3" class="w-full textarea textarea-bordered"
-                        placeholder="Enter description..."></textarea>
+                    <textarea name="product_description" rows="3" class="textarea textarea-bordered w-full" placeholder="Enter description..."></textarea>
                 </div>
 
                 <div class="mb-4">
                     <label class="label">
                         <span class="label-text">Packaging Details</span>
                     </label>
-                    <textarea name="packaging_details" rows="2" class="w-full textarea textarea-bordered"
-                        placeholder="Box, Bag, etc."></textarea>
+                    <textarea name="packaging_details" rows="2" class="textarea textarea-bordered w-full" placeholder="Box, Bag, etc."></textarea>
                 </div>
 
                 <!-- Images & Category -->
@@ -43,20 +40,21 @@
                         <label class="label">
                             <span class="label-text">Product Images</span>
                         </label>
-                        <input type="file" name="product_images[]" multiple
-                            class="w-full file-input file-input-bordered" @change="uploadFiles($event)">
+                        <input type="file" name="product_images[]" multiple class="file-input file-input-bordered w-full"
+                            @change="uploadFiles($event)">
                     </div>
 
-                    <div class="flex gap-3 mt-3">
+                    <div class="mt-3 flex gap-3">
                         <template x-for="img in images" :key="img">
-                            <img :src="img" class="w-16 h-16 border rounded" />
+                            <img :src="img" class="h-16 w-16 rounded border" />
                         </template>
                     </div>
 
                     <!-- Progress Bar -->
                     <div class="mt-2" x-show="uploading">
-                        <div class="w-full h-4 bg-gray-200 rounded-full">
-                            <div class="h-4 bg-blue-600 rounded-full" :style="'width: ' + progress + '%'"></div>
+                        <div class="h-4 w-full rounded-full bg-gray-200">
+                            <div class="h-4 rounded-full bg-blue-600" :style="'width: ' + progress + '%'">
+                            </div>
                         </div>
                         <p class="mt-1 text-sm text-gray-700" x-text="progress + '%'"></p>
                     </div>
@@ -92,7 +90,7 @@
                             }
                             selectedCategory = '';
                         "
-                        class="w-full text-black select select-bordered">
+                        class="select select-bordered w-full text-black">
                         <option value="">-- Select Category --</option>
                         @foreach ($categories as $cat)
                             <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
@@ -101,8 +99,8 @@
                     </select>
 
                     <!-- Add New Category -->
-                    <div class="flex gap-2 mt-2">
-                        <input type="text" x-model="newCategory" class="flex-1 input input-bordered"
+                    <div class="mt-2 flex gap-2">
+                        <input type="text" x-model="newCategory" class="input input-bordered flex-1"
                             placeholder="Add new category">
 
                         <button type="button" class="btn btn-primary"
@@ -121,9 +119,9 @@
                     </div>
 
                     <!-- Selected Categories -->
-                    <div class="flex flex-wrap gap-2 mt-2">
+                    <div class="mt-2 flex flex-wrap gap-2">
                         <template x-for="(cat, index) in categories" :key="cat.id">
-                            <span class="flex items-center gap-2 px-3 py-1 text-white bg-indigo-500 rounded-full">
+                            <span class="flex items-center gap-2 rounded-full bg-indigo-500 px-3 py-1 text-white">
                                 <span x-text="cat.name"></span>
                                 <button type="button" @click="categories.splice(index, 1)">✕</button>
                             </span>
@@ -137,27 +135,11 @@
                     </template>
                 </div>
 
-
-
-                <!-- Status -->
-                <div class="mb-6">
-                    <label class="label">
-                        <span class="label-text">Status</span>
-                    </label>
-                    <select name="status" class="w-full select select-bordered">
-                        <option value="draft">Draft</option>
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                        <option value="unavailable">Unavailable</option>
-                    </select>
-                </div>
-
-                <!-- Colors -->
                 <!-- Colors -->
                 <div class="mb-4" x-data="{ colors: [], selectedColor: '', newColor: '', noColor: false }">
                     <label class="label">Colors</label>
 
-                    <label class="flex items-center gap-2 mb-2">
+                    <label class="mb-2 flex items-center gap-2">
                         <input type="checkbox" x-model="noColor" @change="colors = []">
                         <span>No color for this item</span>
                     </label>
@@ -172,16 +154,15 @@
                         }
                         selectedColor = '';
                       "
-                                class="w-full select select-bordered">
+                                class="select select-bordered w-full">
                                 <option value="">-- Select Color --</option>
                                 @foreach ($colors as $color)
                                     <option value="{{ $color->id }}">{{ $color->name }}</option>
                                 @endforeach
                             </select>
 
-                            <div class="flex gap-2 mt-2">
-                                <input x-model="newColor" class="flex-1 input input-bordered"
-                                    placeholder="Add new color">
+                            <div class="mt-2 flex gap-2">
+                                <input x-model="newColor" class="input input-bordered flex-1" placeholder="Add new color">
                                 <button type="button" class="btn btn-primary"
                                     @click="
                             if (newColor.trim()) {
@@ -193,10 +174,9 @@
                                 </button>
                             </div>
 
-                            <div class="flex flex-wrap gap-2 mt-2">
+                            <div class="mt-2 flex flex-wrap gap-2">
                                 <template x-for="(c, i) in colors" :key="c.id">
-                                    <span
-                                        class="flex items-center gap-2 px-3 py-1 text-white bg-blue-500 rounded-full">
+                                    <span class="flex items-center gap-2 rounded-full bg-blue-500 px-3 py-1 text-white">
                                         <span x-text="c.name"></span>
                                         <button @click="colors.splice(i,1)">✕</button>
                                     </span>
@@ -212,73 +192,140 @@
                 </div>
 
                 <!-- Sizes -->
-                <div class="mb-4">
-                    <label class="label">Sizes</label>
-                    <select x-model="selectedSize"
-                        @change="
-                            if(selectedSize && !sizes.find(s => s.id == selectedSize)) {
-                                let name = $event.target.options[$event.target.selectedIndex].text;
-                                sizes.push({ id: selectedSize, name: name });
-                            }
-                            selectedSize = '';
-                        "
-                        class="w-full select select-bordered">
-                        <option value="">-- Select Size --</option>
-                        @foreach ($sizes as $size)
-                            <option value="{{ $size->id }}">{{ $size->name }}</option>
-                        @endforeach
-                    </select>
+                <div class="mb-4" x-data="{ sizes: [], selectedSize: '', newSize: '', noSize: false }">
 
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        <template x-for="(size, index) in sizes" :key="index">
-                            <span class="flex items-center gap-2 px-3 py-1 text-white bg-green-500 rounded-full">
-                                <span x-text="size.name"></span>
-                                <button type="button" @click="sizes.splice(index, 1)">✕</button>
-                            </span>
-                        </template>
-                    </div>
-                    <template x-for="size in sizes" :key="size.id">
-                        <input type="hidden" name="sizes[]" :value="size.id">
+                    <label class="label">Sizes</label>
+
+                    <!-- No Size Option -->
+                    <label class="mb-2 flex items-center gap-2">
+                        <input type="checkbox" x-model="noSize" @change="sizes = []">
+                        <span>No size for this item</span>
+                    </label>
+
+                    <!-- Multi Size Selection -->
+                    <template x-if="!noSize">
+                        <div>
+                            <!-- Existing Size Selector -->
+                            <select x-model="selectedSize"
+                                @change="
+                    if(selectedSize && !sizes.find(s => s.id == selectedSize)) {
+                        let name = $event.target.options[$event.target.selectedIndex].text;
+                        sizes.push({ id: selectedSize, name: name, isNew: false });
+                    }
+                    selectedSize = '';
+                "
+                                class="select select-bordered w-full">
+                                <option value="">-- Select Size --</option>
+                                @foreach ($sizes as $size)
+                                    <option value="{{ $size->id }}">{{ $size->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <!-- Add New Size -->
+                            <div class="mt-2 flex gap-2">
+                                <input x-model="newSize" class="input input-bordered flex-1" placeholder="Add new size">
+                                <button type="button" class="btn btn-primary"
+                                    @click="
+                        if (newSize.trim()) {
+                            sizes.push({ id: 'new_'+newSize.replace(/\s+/g,'_'), name: newSize, isNew: true });
+                            newSize = '';
+                        }
+                    ">
+                                    Add
+                                </button>
+                            </div>
+
+                            <!-- Selected Sizes -->
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <template x-for="(s, i) in sizes" :key="s.id">
+                                    <span class="flex items-center gap-2 rounded-full bg-green-600 px-3 py-1 text-white">
+                                        <span x-text="s.name"></span>
+                                        <button type="button" @click="sizes.splice(i, 1)">✕</button>
+                                    </span>
+                                </template>
+                            </div>
+
+                            <!-- Hidden Inputs -->
+                            <template x-for="s in sizes" :key="'hidden_' + s.id">
+                                <input type="hidden" :name="s.isNew ? 'newSizes[]' : 'sizes[]'"
+                                    :value="s.isNew ? s.name : s.id">
+                            </template>
+                        </div>
                     </template>
+
                 </div>
 
                 <!-- Packaging -->
-                <div class="mb-4">
-                    <label class="label">Packaging</label>
-                    <select x-model="selectedPack"
-                        @change="
-                            if(selectedPack && !packs.find(p => p.id == selectedPack)) {
-                                let name = $event.target.options[$event.target.selectedIndex].text;
-                                packs.push({ id: selectedPack, name: name });
-                            }
-                            selectedPack = '';
-                        "
-                        class="w-full select select-bordered">
-                        <option value="">-- Select Packaging --</option>
-                        @foreach ($packagingTypes as $pack)
-                            <option value="{{ $pack->id }}">{{ $pack->name }}</option>
-                        @endforeach
-                    </select>
+                <div class="mb-4" x-data="{ packs: [], selectedPack: '', newPack: '', noPack: false }">
 
-                    <div class="flex flex-wrap gap-2 mt-2">
-                        <template x-for="(pack, index) in packs" :key="index">
-                            <span class="flex items-center gap-2 px-3 py-1 text-white bg-purple-500 rounded-full">
-                                <span x-text="pack.name"></span>
-                                <button type="button" @click="packs.splice(index, 1)">✕</button>
-                            </span>
-                        </template>
-                    </div>
-                    <template x-for="pack in packs" :key="pack.id">
-                        <input type="hidden" name="packaging[]" :value="pack.id">
+                    <label class="label">Packaging</label>
+
+                    <!-- No Packaging Option -->
+                    <label class="mb-2 flex items-center gap-2">
+                        <input type="checkbox" x-model="noPack" @change="packs = []">
+                        <span>No packaging for this item</span>
+                    </label>
+
+                    <template x-if="!noPack">
+                        <div>
+                            <!-- Existing Packaging Selector -->
+                            <select x-model="selectedPack"
+                                @change="
+                    if(selectedPack && !packs.find(p => p.id == selectedPack)) {
+                        let name = $event.target.options[$event.target.selectedIndex].text;
+                        packs.push({ id: selectedPack, name: name, isNew: false });
+                    }
+                    selectedPack = '';
+                "
+                                class="select select-bordered w-full">
+                                <option value="">-- Select Packaging --</option>
+                                @foreach ($packagingTypes as $pack)
+                                    <option value="{{ $pack->id }}">{{ $pack->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            <!-- Add New Packaging -->
+                            <div class="mt-2 flex gap-2">
+                                <input x-model="newPack" class="input input-bordered flex-1" placeholder="Add new packaging">
+                                <button type="button" class="btn btn-primary"
+                                    @click="
+                        if (newPack.trim()) {
+                            packs.push({ id: 'new_'+newPack.replace(/\s+/g,'_'), name: newPack, isNew: true });
+                            newPack = '';
+                        }
+                    ">
+                                    Add
+                                </button>
+                            </div>
+
+                            <!-- Selected Packagings -->
+                            <div class="mt-2 flex flex-wrap gap-2">
+                                <template x-for="(p, i) in packs" :key="p.id">
+                                    <span class="flex items-center gap-2 rounded-full bg-green-600 px-3 py-1 text-white">
+                                        <span x-text="p.name"></span>
+                                        <button type="button" @click="packs.splice(i, 1)">✕</button>
+                                    </span>
+                                </template>
+                            </div>
+
+                            <!-- Hidden Inputs -->
+                            <template x-for="p in packs" :key="'hidden_' + p.id">
+                                <input type="hidden" :name="p.isNew ? 'newPackaging[]' : 'packaging[]'"
+                                    :value="p.isNew ? p.name : p.id">
+                            </template>
+                        </div>
                     </template>
                 </div>
+
 
         </div>
 
 
 
         <div class="mt-6 text-end">
-            <button type="submit" class="px-6 btn btn-primary">Save Product</button>
+            <button type="submit" class="btn btn-primary px-6">Save Product</button>
         </div>
         </form>
     </div>

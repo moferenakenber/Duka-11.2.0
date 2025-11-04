@@ -18,9 +18,16 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Item::with('categories');   // <-- Load categories
+        // ✅ Only show active items
+        $query = Item::with('categories')
+            ->where('status', 'active');
 
+        // ✅ Search logic (product name)
+        if ($request->filled('search')) {
+            $query->where('product_name', 'LIKE', '%' . $request->search . '%');
+        }
 
+        // ✅ Sorting
         if ($request->has('sort')) {
             switch ($request->sort) {
                 case 'price_asc':
@@ -44,11 +51,12 @@ class ItemController extends Controller
             }
         }
 
-        $items = $query->paginate(300); // Add pagination if needed
+        // ✅ Paginate results
+        $items = $query->paginate(300);
 
         return view('seller.items.index', compact('items'));
-
     }
+
 
     /**
      * Show the form for creating a new resource.

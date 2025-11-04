@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\ItemController;
 use App\Http\Controllers\Admin\SaleController;
 use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\Admin\ProfileController;
+use App\Http\Controllers\Admin\VariantController;
 //use App\Http\Controllers\Admin\ProductController;
 
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
@@ -84,10 +85,19 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         //Route::resource('products', ProductController::class);
         Route::resource('sales', SaleController::class);
         Route::resource('purchases', PurchaseController::class);
-            // Upload images route
+        // Upload images route
 
         Route::post('items/upload-images', [ItemController::class, 'uploadImages'])
-        ->name('items.uploadImages');
+            ->name('items.uploadImages');
+
+        Route::patch('items/{item}/status', [ItemController::class, 'updateStatus'])
+            ->name('items.updateStatus');
+
+        // Keep all REST routes EXCEPT store
+        Route::resource('variants', VariantController::class)->except(['store']);
+
+        Route::post('variants/{item}', [VariantController::class, 'store'])
+            ->name('variants.store');
 
         // Cart routes
         Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');

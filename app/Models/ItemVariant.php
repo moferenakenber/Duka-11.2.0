@@ -32,7 +32,7 @@ class ItemVariant extends Model
         'stock',
         'owner_id',
         'discount_price',
-        'discount_percentage',
+        'barcode',
     ];
 
 
@@ -45,7 +45,6 @@ class ItemVariant extends Model
         'is_active' => 'boolean',
         'price' => 'decimal:2',
         'discount_price' => 'decimal:2',
-        'discount_percentage' => 'decimal:2',
     ];
 
     /**
@@ -87,7 +86,7 @@ class ItemVariant extends Model
 
     public function itemSize()
     {
-        return $this->belongsTo(ItemSize::class);
+        return $this->belongsTo(ItemSize::class, 'item_size_id');
     }
 
     public function itemPackagingType()
@@ -99,6 +98,17 @@ class ItemVariant extends Model
     {
         return $this->belongsTo(User::class, 'owner_id');
     }
+
+    public function stocks()
+    {
+        return $this->hasMany(ItemStock::class, 'item_variant_id');
+    }
+
+    public function totalStock()
+    {
+        return $this->stocks()->sum('quantity');
+    }
+
 
 
     // Variant.php

@@ -95,8 +95,7 @@ class ItemColorSeeder extends Seeder
                 ItemColor::create([
                     'name' => $color['name'],
                     'image_path' => "images/product_images/{$slug}_{$color['suffix']}.jpg",
-                    'disabled' => false,
-                    'item_id' => $item->id,
+
                 ]);
                 echo "✅ Seeded color {$color['name']} for item '{$itemName}'\n";
             }

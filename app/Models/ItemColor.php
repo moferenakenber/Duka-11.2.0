@@ -46,10 +46,11 @@ class ItemColor extends Model
 
 
     // Relationships (if any)
-    public function item()
+    public function items()
     {
-        return $this->belongsTo(Item::class);
+        return $this->belongsToMany(Item::class, 'item_color_item', 'item_color_id', 'item_id')->withTimestamps();
     }
+
 
     public function variants()
     {

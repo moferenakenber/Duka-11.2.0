@@ -736,15 +736,15 @@ class ItemSeeder extends Seeder
             //         'owner_id' => 1,
             //     ]);
 
-                // ItemVariant::create([
-                //     'item_id' => $item->id,
-                //     'item_color_id' => 2,
-                //     'item_size_id' => $size->id,
-                //     'item_packaging_type_id' => $packaging->id,
-                //     'price' => 2,
-                //     'stock' => 20,
-                //     'owner_id' => $owner->id,
-                // ]);
+            // ItemVariant::create([
+            //     'item_id' => $item->id,
+            //     'item_color_id' => 2,
+            //     'item_size_id' => $size->id,
+            //     'item_packaging_type_id' => $packaging->id,
+            //     'price' => 2,
+            //     'stock' => 20,
+            //     'owner_id' => $owner->id,
+            // ]);
 
 
         }

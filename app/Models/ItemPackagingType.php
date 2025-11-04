@@ -31,6 +31,12 @@ class ItemPackagingType extends Model
 
     // Relationships (if any)
 
+    public function items()
+    {
+        return $this->belongsToMany(Item::class, 'item_packaging_type_item', 'item_packaging_type_id', 'item_id')->withTimestamps();
+    }
+
+
     public function variants()
     {
         return $this->hasMany(ItemVariant::class);

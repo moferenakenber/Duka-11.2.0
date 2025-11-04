@@ -29,10 +29,13 @@ class DatabaseSeeder extends Seeder
             ItemColorSeeder::class,
             ItemSizeSeeder::class,
             ItemPackagingTypeSeeder::class,
+            ItemInventoryLocationSeeder::class,
             ItemVariantSeeder::class,
             ItemImageSeeder::class,
             ItemOwnerSeeder::class,
             ItemCategorySeeder::class,
+
+
 
         ]);
     }

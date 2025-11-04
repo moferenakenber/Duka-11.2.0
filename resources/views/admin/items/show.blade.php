@@ -1,15 +1,14 @@
-
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+        <h2 class="dark:text-gray-200 text-xl font-semibold leading-tight text-gray-800">
             {{ __('Item Details') }}
         </h2>
     </x-slot>
 
     @if ($errors->any())
-        <div class="p-4 mt-4 text-red-700 bg-red-100 border-l-4 border-red-500">
+        <div class="mt-4 border-l-4 border-red-500 bg-red-100 p-4 text-red-700">
             <h3 class="font-semibold">There were some problems with your input:</h3>
-            <ul class="pl-5 mt-2 list-disc">
+            <ul class="mt-2 list-disc pl-5">
                 @foreach ($errors->all() as $error)
                     <li class="text-sm">{{ $error }}</li>
                 @endforeach
@@ -21,264 +20,304 @@
         $variantData = $item->variants->map(function ($variant) {
             return [
                 'id' => $variant->id,
-                'color' => $variant->itemColor->name,
-                'img' => asset($variant->itemColor->image_path),
-                'size' => $variant->itemSize->name,
-                'packaging' => $variant->itemPackagingType->name,
+                'color' => $variant->itemColor?->name ?? 'N/A',
+                'img' => $variant->itemColor?->image_path ? asset($variant->itemColor->image_path) : null,
+                'size' => $variant->itemSize?->name ?? 'N/A',
+                'packaging' => $variant->itemPackagingType?->name ?? 'N/A',
                 'price' => $variant->price,
                 'stock' => $variant->stock,
             ];
         });
     @endphp
 
-    <div class="py-12" x-data="{ variants: []}">
+
+    <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <div class="overflow-hidden bg-white rounded-lg shadow-md">
-                <div class="p-6 space-y-4">
-
-                    @php
-                        $variantData = $item->variants->map(function ($variant) {
-                            return [
-                                'id' => $variant->id,
-                                'color' => $variant->itemColor->name,
-                                'img' => asset($variant->itemColor->image_path),
-                                'size' => $variant->itemSize->name,
-                                'packaging' => $variant->itemPackagingType->name,
-                                'price' => $variant->price,
-                                'stock' => $variant->stock,
-                            ];
-                        });
-                    @endphp
-
+            <div class="overflow-hidden rounded-lg bg-white shadow-md">
+                <div class="space-y-4 p-6">
                     <div class="overflow-x-auto">
                         <table class="table">
                             <tbody>
                                 @if ($item)
-                                    <!-- Item Row -->
-<tr class="p-4 transition bg-base-100 hover:bg-gray-50">
-    <td>
-        <div class="flex flex-col items-start gap-4 md:flex-row">
+                                    <tr class="bg-base-100 p-4 transition hover:bg-gray-50">
+                                        <td>
+                                            <div class="flex flex-col items-start gap-4 md:flex-row">
 
-            <!-- Images Column -->
-            <div class="flex flex-col items-center gap-2">
-                @php
-                    $images = json_decode($item->product_images, true) ?? [];
-                    $mainImage = $images[0] ?? 'default.jpg';
-                    $otherImages = array_slice($images, 1);
-                @endphp
+                                                <div class="flex flex-col items-center gap-2">
+                                                    @php
+                                                        $images = collect(json_decode($item->product_images, true) ?? []);
+                                                        $images = $images->map(fn($img) => asset($img));
+                                                        $mainImage = $images->first() ?? asset('images/default.jpg');
+                                                        $otherImages = $images->slice(1);
+                                                    @endphp
 
-                <!-- Main Image -->
-                <div class="w-32 h-32 overflow-hidden shadow-md rounded-xl">
-                    <img src="{{ asset($mainImage) }}" alt="{{ $item->product_name }}" class="object-cover w-full h-full">
-                </div>
+                                                    <div class="h-32 w-32 overflow-hidden rounded-xl shadow-md">
+                                                        <img src="{{ $mainImage }}" alt="{{ $item->product_name }}"
+                                                            class="h-full w-full object-cover">
+                                                    </div>
 
-                <!-- Other Images -->
-                @if(count($otherImages))
-                    <div class="flex gap-1 mt-1 overflow-x-auto">
-                        @foreach($otherImages as $img)
-                            <div class="flex-shrink-0 w-12 h-12 overflow-hidden rounded-lg shadow-sm">
-                                <img src="{{ asset($img) }}" alt="{{ $item->product_name }}" class="object-cover w-full h-full">
-                            </div>
-                        @endforeach
-                    </div>
-                @endif
-            </div>
+                                                    @if (count($otherImages))
+                                                        <div class="mt-1 flex gap-1 overflow-x-auto">
+                                                            @foreach ($otherImages as $img)
+                                                                <div
+                                                                    class="h-12 w-12 flex-shrink-0 overflow-hidden rounded-lg shadow-sm">
+                                                                    <img src="{{ $img }}" alt="{{ $item->product_name }}"
+                                                                        class="h-full w-full object-cover">
+                                                                </div>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
+                                                </div>
 
-            <!-- Info Column -->
-            <div class="flex flex-col flex-1 gap-2">
-                <!-- Name -->
-                <div class="text-lg font-bold text-gray-800 dark:text-gray-200">{{ $item->product_name }}</div>
+                                                <div class="flex flex-1 flex-col gap-2">
+                                                    <div class="dark:text-gray-200 text-lg font-bold text-gray-800">
+                                                        {{ $item->product_name }}
+                                                    </div>
 
-                <!-- Description -->
-                <div class="text-sm text-gray-600 dark:text-gray-300 line-clamp-3">{{ $item->product_description }}</div>
+                                                    <div class="dark:text-gray-300 line-clamp-3 text-sm text-gray-600">
+                                                        {{ $item->product_description }}
+                                                    </div>
 
-                <!-- Packaging -->
-                @if($item->packaging_details)
-                    <div class="text-sm italic text-gray-500 dark:text-gray-400">Packaging: {{ $item->packaging_details }}</div>
-                @endif
+                                                    @if ($item->packaging_details)
+                                                        <div class="dark:text-gray-400 text-sm italic text-gray-500">
+                                                            Packaging: {{ $item->packaging_details }}
+                                                        </div>
+                                                    @endif
 
-                <!-- Categories -->
-                <div class="flex flex-wrap gap-1 mt-1">
-                    @foreach($item->categories as $cat)
-                        <span class="px-2 py-1 text-xs text-white bg-blue-500 rounded-full">{{ $cat->category_name }}</span>
-                    @endforeach
-                </div>
+                                                    <div class="mt-1 flex flex-wrap gap-1">
+                                                        @foreach ($item->categories as $cat)
+                                                            <span
+                                                                class="rounded-full bg-blue-500 px-2 py-1 text-xs text-white">{{ $cat->category_name }}</span>
+                                                        @endforeach
+                                                    </div>
 
-                <!-- Status -->
-                <div class="mt-1">
-                    <span class="px-2 py-1 rounded-full text-xs font-semibold
-                        {{ $item->status == 'active' ? 'bg-green-500 text-white' : ($item->status == 'inactive' ? 'bg-gray-400 text-white' : 'bg-yellow-500 text-white') }}">
-                        {{ ucfirst($item->status) }}
-                    </span>
-                </div>
+                                                    <div class="mt-1">
+                                                        <span
+                                                            class="{{ $item->status == 'active' ? 'bg-green-500 text-white' : ($item->status == 'inactive' ? 'bg-gray-400 text-white' : 'bg-yellow-500 text-white') }} rounded-full px-2 py-1 text-xs font-semibold">
+                                                            {{ ucfirst($item->status) }}
+                                                        </span>
+                                                    </div>
 
-                <!-- Colors -->
-                @if(!empty($item->colors))
-                    <div class="flex flex-wrap gap-1 mt-1">
-                        @foreach($item->colors as $colorId)
-                            @php
-                                $color = \App\Models\ItemColor::find($colorId);
-                            @endphp
-                            @if($color)
-                                <span class="px-2 py-1 text-xs rounded-full" style="background-color: {{ $color->hex_code ?? '#000' }}; color: #fff;">
-                                    {{ $color->name }}
-                                </span>
-                            @endif
-                        @endforeach
-                    </div>
-                @endif
+                                                    <form action="{{ route('admin.items.updateStatus', $item->id) }}"
+                                                        method="POST" class="mt-2">
+                                                        @csrf
+                                                        @method('PATCH')
 
-                <!-- Sizes -->
-                @if(!empty($item->sizes))
-                    <div class="flex flex-wrap gap-1 mt-1">
-                        @foreach($item->sizes as $sizeId)
-                            @php
-                                $size = \App\Models\ItemSize::find($sizeId);
-                            @endphp
-                            @if($size)
-                                <span class="px-2 py-1 text-xs bg-gray-200 rounded-full dark:bg-gray-700">{{ $size->name }}</span>
-                            @endif
-                        @endforeach
-                    </div>
-                @endif
+                                                        <label class="label"><span class="label-text">Change
+                                                                Status</span></label>
 
-                <!-- Packaging Types -->
-                @if(!empty($item->packaging))
-                    <div class="flex flex-wrap gap-1 mt-1">
-                        @foreach($item->packaging as $packId)
-                            @php
-                                $pack = \App\Models\ItemPackagingType::find($packId);
-                            @endphp
-                            @if($pack)
-                                <span class="px-2 py-1 text-xs text-white bg-purple-500 rounded-full">{{ $pack->name }}</span>
-                            @endif
-                        @endforeach
-                    </div>
-                @endif
+                                                        <div class="flex items-center gap-2">
+                                                            <select name="status" class="select select-bordered select-sm">
+                                                                <option value="active"
+                                                                    {{ $item->status == 'active' ? 'selected' : '' }}>
+                                                                    Active</option>
+                                                                <option value="inactive"
+                                                                    {{ $item->status == 'inactive' ? 'selected' : '' }}>
+                                                                    Inactive</option>
+                                                                <option value="unavailable"
+                                                                    {{ $item->status == 'unavailable' ? 'selected' : '' }}>
+                                                                    Unavailable</option>
+                                                                <option value="draft"
+                                                                    {{ $item->status == 'draft' ? 'selected' : '' }}>
+                                                                    Draft</option>
+                                                            </select>
 
-            </div>
-        </div>
-    </td>
-</tr>
+                                                            <button class="btn btn-primary btn-sm">Update</button>
+                                                        </div>
+                                                    </form>
 
+                                                    @if (!empty($item->colors))
+                                                        <div class="mt-1 flex flex-wrap gap-1">
+                                                            @foreach ($item->colors as $color)
+                                                                <span class="rounded-full px-2 py-1 text-xs"
+                                                                    style="background-color: {{ $color->hex_code ?? '#000' }};">
+                                                                    {{ $color->name }}
+                                                                </span>
+                                                            @endforeach
+                                                        </div>
+
+                                                    @endif
+
+                                                    @if (!empty($item->sizes))
+                                                        <div class="mt-1 flex flex-wrap gap-1">
+                                                            @foreach ($item->sizes as $size)
+                                                                <span
+                                                                    class="rounded-full bg-gray-200 px-2 py-1 text-xs">{{ $size->name }}</span>
+                                                            @endforeach
 
 
+                                                        </div>
+                                                    @endif
 
+                                                    @if (!empty($item->packaging))
+                                                        <div class="mt-1 flex flex-wrap gap-1">
+                                                            @foreach ($item->packagingTypes as $pack)
+                                                                <span
+                                                                    class="rounded-full bg-purple-500 px-2 py-1 text-xs text-white">{{ $pack->name }}</span>
+                                                            @endforeach
+                                                        </div>
+                                                    @endif
 
-
-
+                                                </div>
+                                            </div>
                                         </td>
                                     </tr>
 
-
-                                    <!-- Variant Table Below Item -->
                                     <tr class="bg-base-200">
                                         <td colspan="6">
                                             <div class="overflow-x-auto">
                                                 <table class="table table-xs">
-                                                    <!-- Variant Section (Initially Hidden) -->
-<div class="p-2 mt-4 bg-base-200 rounded-xl">
-    <!-- Header -->
-    <div class="flex items-center justify-between mb-4">
-        <h3 class="text-lg font-semibold">Variants</h3>
-        <button type="button" class="btn btn-outline btn-sm" @click="variants.push({ color: '', size: '', packaging: '', stock: 0, price: 0, owner_id: '' })">
-            + Add New Variant
-        </button>
-    </div>
+                                                    <div class="mt-4 bg-base-200 p-2" x-data="variantForm()">
+                                                        <div class="mb-4 flex items-center justify-between">
+                                                            <h3 class="text-lg font-semibold">Add Variant</h3>
+                                                            <button type="button" class="btn btn-outline btn-sm"
+                                                                @click="variants.push({ item_color_id: '', item_size_id: '', item_packaging_type_id: '' })">
+                                                                + Add Variant
+                                                            </button>
+                                                        </div>
 
-    <!-- Variants List -->
-    <template x-for="(variant, index) in variants" :key="index">
-    <div class="flex items-start justify-between gap-2 p-2 border bg-base-100 rounded-xl border-base-300">
-        <div class="flex items-end gap-2 overflow-x-auto flex-nowrap">
+                                                        <template x-for="(variant, index) in variants" :key="index">
+                                                            <div
+                                                                class="flex flex-wrap items-end gap-2 rounded-xl border bg-base-100 p-2">
 
-            <!-- Color -->
-            <div class="flex-shrink-0 w-32">
-                <label class="label"><span class="label-text">Color</span></label>
-                <select :name="'variants['+index+'][item_color_id]'" x-model="variant.color" class="w-full select select-bordered">
-                    <option value="">-- Select Color --</option>
-                    @foreach($colors as $color)
-                        <option value="{{ $color->id }}">{{ $color->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+                                                                <!-- Color -->
+                                                                <div class="w-32"
+                                                                    x-show="{{ $colors->isNotEmpty() ? 'true' : 'false' }}">
+                                                                    <label class="label"><span
+                                                                            class="label-text">Color</span></label>
+                                                                    <select class="select select-bordered w-full"
+                                                                        :name="'variants[' + index + '][item_color_id]'"
+                                                                        x-model="variant.item_color_id">
+                                                                        <option value="">-- Select Color --</option>
+                                                                        @foreach ($colors as $color)
+                                                                            <option value="{{ $color->id }}">
+                                                                                {{ $color->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
 
-            <!-- Size -->
-            <div class="flex-shrink-0 w-24">
-                <label class="label"><span class="label-text">Size</span></label>
-                <select :name="'variants['+index+'][item_size_id]'" x-model="variant.size" class="w-full select select-bordered">
-                    <option value="">-- Select Size --</option>
-                    @foreach($sizes as $size)
-                        <option value="{{ $size->id }}">{{ $size->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+                                                                <!-- Size -->
+                                                                <div class="w-32"
+                                                                    x-show="{{ $sizes->isNotEmpty() ? 'true' : 'false' }}">
+                                                                    <label class="label"><span
+                                                                            class="label-text">Size</span></label>
+                                                                    <select class="select select-bordered w-full"
+                                                                        :name="'variants[' + index + '][item_size_id]'"
+                                                                        x-model="variant.item_size_id">
+                                                                        <option value="">-- Select Size --</option>
+                                                                        @foreach ($sizes as $size)
+                                                                            <option value="{{ $size->id }}">
+                                                                                {{ $size->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
 
-            <!-- Packaging -->
-            <div class="flex-shrink-0 w-32">
-                <label class="label"><span class="label-text">Packaging</span></label>
-                <select :name="'variants['+index+'][item_packaging_type_id]'" x-model="variant.packaging" class="w-full select select-bordered">
-                    <option value="">-- Select Packaging --</option>
-                    @foreach($packagingTypes as $pack)
-                        <option value="{{ $pack->id }}">{{ $pack->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+                                                                <!-- Packaging -->
+                                                                <div class="w-32"
+                                                                    x-show="{{ $packagingTypes->isNotEmpty() ? 'true' : 'false' }}">
+                                                                    <label class="label"><span
+                                                                            class="label-text">Packaging</span></label>
+                                                                    <select class="select select-bordered w-full"
+                                                                        :name="'variants[' + index + '][item_packaging_type_id]'"
+                                                                        x-model="variant.item_packaging_type_id">
+                                                                        <option value="">-- Select Packaging --</option>
+                                                                        @foreach ($packagingTypes as $pack)
+                                                                            <option value="{{ $pack->id }}">
+                                                                                {{ $pack->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
 
-            <!-- Price -->
-            <div class="flex-shrink-0 w-24">
-                <label class="label"><span class="label-text">Price</span></label>
-                <input type="number" step="0.01" :name="'variants['+index+'][price]'" x-model="variant.price" class="w-full input input-bordered">
-            </div>
+                                                                <!-- Price -->
+                                                                <div class="w-32">
+                                                                    <label class="label"><span
+                                                                            class="label-text">Price</span></label>
+                                                                    <input type="number" step="0.01"
+                                                                        class="input input-bordered w-full"
+                                                                        :name="'variants[' + index + '][price]'"
+                                                                        x-model="variant.price" />
+                                                                </div>
 
-            <!-- Stock -->
-            <div class="flex-shrink-0 w-24">
-                <label class="label"><span class="label-text">Stock</span></label>
-                <input type="number" min="0" :name="'variants['+index+'][stock]'" x-model="variant.stock" class="w-full input input-bordered">
-            </div>
+                                                                <!-- Stock -->
+                                                                <div class="w-24">
+                                                                    <label class="label"><span
+                                                                            class="label-text">Stock</span></label>
+                                                                    <input type="number" class="input input-bordered w-full"
+                                                                        :name="'variants[' + index + '][stock]'"
+                                                                        x-model="variant.stock" />
+                                                                </div>
 
-            <!-- Owner -->
-            <div class="flex-shrink-0 w-32">
-                <label class="label"><span class="label-text">Owner</span></label>
-                <select :name="'variants['+index+'][owner_id]'" x-model="variant.owner_id" class="w-full select select-bordered">
-                    <option value="">-- Select Owner --</option>
-                    @foreach ($sellers as $seller)
-                        <option value="{{ $seller->id }}">{{ $seller->name }}</option>
-                    @endforeach
-                </select>
-            </div>
+                                                                <!-- Stock Location -->
+                                                                <div class="w-32" x-show="variant.stock > 0">
+                                                                    <label class="label"><span class="label-text">Stock
+                                                                            Location</span></label>
+                                                                    <select class="select select-bordered w-full"
+                                                                        :name="'variants[' + index + '][inventory_location_id]'"
+                                                                        x-model="variant.inventory_location_id">
+                                                                        <option value="">-- Select Location --</option>
+                                                                        @foreach ($inventoryLocations as $loc)
+                                                                            <option value="{{ $loc->id }}">
+                                                                                {{ $loc->name }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </div>
 
-            <!-- Image -->
-            <div class="flex-shrink-0 w-36">
-                <label class="label"><span class="label-text">Image</span></label>
-                <input type="file" :name="'variants['+index+'][image]'" class="w-full file-input file-input-bordered" />
-            </div>
+                                                                <!-- Barcode -->
+                                                                <div class="w-48 md:w-32"> <!-- bigger width -->
+                                                                    <label class="label"><span
+                                                                            class="label-text">Barcode</span></label>
+                                                                    <input type="text" name="barcode" id="barcodeInput"
+                                                                        inputmode="numeric" pattern="[0-9]*"
+                                                                        placeholder="Scan barcode"
+                                                                        class="input input-bordered w-full">
 
-            <!-- Status -->
-            <div class="flex-shrink-0 w-28">
-                <label class="label"><span class="label-text">Status</span></label>
-                <select :name="'variants['+index+'][status]'" x-model="variant.status" class="w-full select select-bordered">
-                    <option value="">-- Select Status --</option>
-                    <option value="active">Active</option>
-                    <option value="inactive">Inactive</option>
-                </select>
-            </div>
+                                                                    <div id="scanner" style="width:100%; margin-top:10px;">
+                                                                    </div>
+                                                                </div>
 
 
 
-        </div>
-                    <!-- Remove Button -->
-            <div class="flex-shrink-0 pt-6">
-                <button type="button" class="btn btn-error btn-sm" @click="variants.splice(index, 1)">✕</button>
-            </div>
-    </div>
-</template>
 
-</div>
+
+
+                                                                <!-- Image -->
+                                                                <div class="w-32">
+                                                                    <label class="label"><span
+                                                                            class="label-text">Image</span></label>
+                                                                    <input type="file"
+                                                                        :name="'variants[' + index + '][image]'"
+                                                                        @change="variant.image = $event.target.files[0]" />
+                                                                </div>
+
+                                                                <!-- Active -->
+                                                                <div class="mt-2 flex w-24 items-center">
+                                                                    <label class="label cursor-pointer">
+                                                                        <span class="label-text mr-2">Active</span>
+                                                                        <input type="checkbox" class="toggle toggle-sm"
+                                                                            :name="'variants[' + index + '][is_active]'"
+                                                                            x-model="variant.is_active" />
+                                                                    </label>
+                                                                </div>
+
+                                                                <!-- Save & Remove buttons -->
+                                                                <div class="flex items-center gap-2 pt-6">
+                                                                    <button type="button" class="btn btn-success btn-sm"
+                                                                        @click="saveVariant(variant, index)">Save
+                                                                        Variant</button>
+                                                                    <button type="button" class="btn btn-error btn-sm"
+                                                                        @click="variants.splice(index, 1)">✕</button>
+                                                                </div>
+
+                                                            </div>
+                                                        </template>
+
+
+
+                                                    </div>
+
                                                     <thead>
                                                         <tr>
-                                                            <th>
-                                                                <input type="checkbox" class="checkbox" />
-                                                            </th>
+                                                            <th><input type="checkbox" class="checkbox" /></th>
                                                             <th>#</th>
                                                             <th>Color</th>
                                                             <th>Size</th>
@@ -287,47 +326,56 @@
                                                             <th>Stock</th>
                                                             <th>Owner</th>
                                                             <th>Image</th>
+                                                            <th>Bar Code</th>
                                                             <th>Status</th>
-                                                            <th></th>
+
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         @foreach ($item->variants as $index => $variant)
                                                             <tr>
-                                                                <th>
-                                                                    <input type="checkbox" class="checkbox" />
-                                                                </th>
+                                                                <th><input type="checkbox" class="checkbox" /></th>
                                                                 <th>{{ $index + 1 }}</th>
                                                                 <td>{{ $variant->itemColor->name ?? '-' }}</td>
-                                                                <td>{{ $variant->itemSize->name ?? '-' }}</td>
+                                                                <td>{{ optional($variant->itemSize)->name ?? '-' }}</td>
+
                                                                 <td>{{ $variant->itemPackagingType->name ?? '-' }}</td>
                                                                 <td>${{ number_format($variant->price, 2) }}</td>
-                                                                <td>{{ $variant->stock }}</td>
+                                                                <td>{{ $variant->totalStock() }}</td>
+
+
                                                                 <td>{{ $variant->owner->name ?? '-' }}</td>
                                                                 <td>
                                                                     @if ($variant->image)
                                                                         <img src="{{ asset('storage/' . $variant->image) }}"
-                                                                            class="w-6 h-6 rounded" />
+                                                                            class="h-6 w-6 rounded" />
                                                                     @elseif ($variant->itemColor && $variant->itemColor->image_path)
                                                                         <img src="{{ asset($variant->itemColor->image_path) }}"
-                                                                            class="w-6 h-6 rounded" />
+                                                                            class="h-6 w-6 rounded" />
                                                                     @else
                                                                         -
                                                                     @endif
                                                                 </td>
                                                                 <td>
+                                                                    <input type="text"
+                                                                        name="variants[{{ $index }}][barcode]"
+                                                                        value="{{ $variant->barcode ?? '' }}"
+                                                                        placeholder="Enter or scan barcode"
+                                                                        class="form-control input input-sm input-bordered w-full">
+                                                                </td>
+
+                                                                <td>
                                                                     <span
-                                                                        class="badge badge-{{ $variant->is_active ? 'success' : 'neutral' }}">
+                                                                        class="badge-{{ $variant->is_active ? 'success' : 'neutral' }} badge">
                                                                         {{ $variant->is_active ? 'Active' : 'Inactive' }}
                                                                     </span>
                                                                 </td>
                                                                 <td>
                                                                     <a href="{{ route('admin.items.edit', $variant) }}"
-                                                                        class="btn btn-xs btn-outline">Edit</a>
+                                                                        class="btn btn-outline btn-xs">Edit</a>
                                                                 </td>
                                                             </tr>
                                                         @endforeach
-
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -337,100 +385,98 @@
                             </tbody>
                         </table>
                     </div>
-
-
-                    <!-- Add to Cart Button -->
-                    {{-- <form method="POST" action="{{ route('admin.cart.add', $item->id) }}">
-                        @csrf
-                        <div class="flex items-center mt-4 space-x-4">
-                            <label for="cart_id" class="font-semibold text-gray-700">Select Cart:</label>
-                            <select name="cart_id" id="cart_id" class="w-40 p-2 text-gray-700 border rounded-md">
-                                @foreach (auth()->user()->carts as $cart)
-                                    <option value="{{ $cart->id }}">{{ $cart->name ?? 'Cart ' . $cart->id }}</option>
-                                @endforeach
-                            </select>
-                            <label for="quantity" class="font-semibold text-gray-700">Quantity:</label>
-                            <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ $item->stock }}"
-                                   class="w-20 p-2 text-gray-700 border rounded-md">
-                            <button type="submit" class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                                Add to Cart
-                            </button>
-                        </div>
-                    </form> --}}
-
-
-                    @if (auth()->user()->carts->isEmpty())
-                        <div class="mt-4 font-semibold text-red-600">
-                            You don't have any carts. Please <a href="{{ route('admin.carts.create') }}"
-                                class="text-blue-600 underline">create a cart</a> first.
-                        </div>
-                    @else
-                        <form method="POST" action="{{ route('admin.cart.add', $item->id) }}">
-                            @csrf
-                            <div class="flex items-center mt-4 space-x-4">
-                                <label for="cart_id" class="font-semibold text-gray-700">Select Cart:</label>
-                                <select name="cart_id" id="cart_id" class="w-40 p-2 text-gray-700 border rounded-md">
-                                    @foreach (auth()->user()->carts as $cart)
-                                        @if ($cart->customer)
-                                            <!-- Check if the cart has a related customer -->
-                                            <option value="{{ $cart->customer->id }}">
-                                                {{ $cart->customer->first_name }} {{ $cart->customer->last_name }}
-                                                (Created by: {{ $cart->seller->first_name }})
-                                                <!-- Indicate who created the cart -->
-                                            </option>
-                                        @else
-                                            <option value="{{ $cart->id }}">
-                                                Cart {{ $cart->id }}
-                                                (Created by: {{ $cart->seller->first_name }})
-                                                <!-- Indicate who created the cart -->
-                                            </option>
-                                        @endif
-                                    @endforeach
-
-
-                                </select>
-                                <label for="quantity" class="font-semibold text-gray-700">Quantity:</label>
-                                <input type="number" name="quantity" id="quantity" value="1" min="1"
-                                    max="{{ $item->stock }}" class="w-20 p-2 text-gray-700 border rounded-md">
-                                <button type="submit"
-                                    class="px-4 py-2 text-white bg-blue-600 rounded-md hover:bg-blue-700">
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </form>
-                    @endif
-
-
-                    <!-- Back Button -->
-                    <div class="mt-4">
-                        <a href="{{ route('admin.items.index') }}" class="text-blue-600 hover:text-blue-800">Back to
-                            Items List</a>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <script>
+        function variantForm() {
+            return {
+                variants: [],
+
+                saveVariant(variant, index) {
+                    let formData = new FormData();
+
+                    // ✅ Laravel expects array: variants[0][...]
+                    formData.append('variants[0][item_color_id]', variant.item_color_id || '');
+                    formData.append('variants[0][item_size_id]', variant.item_size_id || '');
+                    formData.append('variants[0][item_packaging_type_id]', variant.item_packaging_type_id || '');
+                    formData.append('variants[0][price]', variant.price || 0);
+                    formData.append('variants[0][discount_price]', variant.discount_price || 0);
+                    formData.append('variants[0][inventory_location_id]', variant.inventory_location_id || '');
+                    formData.append('variants[0][is_active]', variant.is_active ? 1 : 0);
+                    formData.append('variants[0][barcode]', variant.barcode || '');
 
 
-    {{-- <h2 class="mt-4 text-lg font-semibold">Item Images:</h2>
-    @if ($item->variants->itemColor->image_path->isNotEmpty())
-        <div class="flex gap-4">
-            @foreach ($item->itemImages as $image)
-                <img src="{{ asset($image->path) }}" alt="Item Image" class="object-cover w-24 h-24 rounded">
-            @endforeach
-        </div>
-    @else
-        <p>No images available.</p>
-    @endif --}}
+                    // ✅ Stock is NOT stored inside item_variants
+                    formData.append('variants[0][stock]', variant.stock || 0);
 
-    @if ($errors->any())
-        <div class="mt-4">
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+                    // ✅ Image
+                    if (variant.image) {
+                        formData.append('variants[0][image]', variant.image);
+                    }
+
+                    axios.post("{{ route('admin.variants.store', $item->id) }}", formData, {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                            }
+                        })
+                        .then(res => {
+                            alert("Variant saved!");
+                            this.variants.splice(index, 1);
+                            window.location.reload(); // refresh to display new variant
+                        })
+                        .catch(err => {
+                            console.error(err);
+
+                            if (err.response?.data?.errors) {
+                                // ✅ Show validation errors
+                                let message = Object.values(err.response.data.errors)
+                                    .flat()
+                                    .join("\n");
+                                alert("Failed to save variant:\n" + message);
+                            } else if (err.response?.data?.message) {
+                                alert("Failed to save variant:\n" + err.response.data.message);
+                            } else {
+                                alert("Failed to save variant. Check console.");
+                            }
+                        });
+                }
+            }
+        }
+    </script>
+
+    <script>
+        function startScanner() {
+            const html5QrCode = new Html5Qrcode("scanner");
+            html5QrCode.start({
+                    facingMode: "environment"
+                }, // rear camera
+                {
+                    fps: 10,
+                    qrbox: 250
+                },
+                (decodedText, decodedResult) => {
+                    // When a barcode is detected
+                    document.getElementById("barcodeInput").value = decodedText;
+                    html5QrCode.stop();
+                },
+                (errorMessage) => {
+                    // optional: show scan errors
+                    console.warn(errorMessage);
+                }
+            ).catch(err => {
+                console.error(err);
+            });
+        }
+
+        startScanner();
+    </script>
+
+
+
+
+
 </x-app-layout>

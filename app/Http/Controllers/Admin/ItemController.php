@@ -11,6 +11,7 @@ use App\Models\ItemColor;
 use App\Models\ItemPackagingType;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use App\Models\ItemInventoryLocation;
 
 
 //This single line generates the following routes:
@@ -91,22 +92,23 @@ class ItemController extends Controller
             'variants.itemColor',
             'variants.itemSize',
             'variants.itemPackagingType',
+            'colors',
+            'sizes',
+            'packagingTypes',
+            'categories'
         ]);
 
-        // Decode JSON arrays stored in the item
-        $colorIds = json_decode($item->colors ?? '[]', true);
-        $sizeIds = json_decode($item->sizes ?? '[]', true);
-        $packagingIds = json_decode($item->packaging ?? '[]', true);
+        // Use Eloquent relations directly
+        $colors = $item->colors;              // Eloquent Collection
+        $sizes = $item->sizes;
+        $packagingTypes = $item->packagingTypes;
+        $inventoryLocations = ItemInventoryLocation::all();
 
-        // Fetch only the relevant entries
-        $colors = ItemColor::whereIn('id', $colorIds)->get();
-        $sizes = ItemSize::whereIn('id', $sizeIds)->get();
-        $packagingTypes = ItemPackagingType::whereIn('id', $packagingIds)->get();
+        $sellers = User::where('role', 'seller')->get();
 
-
-        $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
-        return view('admin.items.show', compact('item', 'colors', 'sizes', 'packagingTypes', 'sellers'));
+        return view('admin.items.show', compact('item', 'colors', 'sizes', 'packagingTypes', 'sellers', 'inventoryLocations'));
     }
+
 
     // Show the form for editing the specified item
     public function edit(Item $item)
@@ -268,6 +270,42 @@ class ItemController extends Controller
             Log::info('Final attached categories:', $existingCategoryIds);
 
 
+            // Colors
+            $colorIds = $request->input('colors', []); // existing color IDs
+            $newColorNames = $request->input('newColors', []); // new color names
+
+            foreach ($newColorNames as $name) {
+                if (!empty($name)) {
+                    $color = ItemColor::firstOrCreate(['name' => $name]);
+                    $colorIds[] = $color->id;
+                }
+            }
+            $item->colors()->sync($colorIds);
+
+            // Sizes
+            $sizeIds = $request->input('sizes', []);
+            $newSizeNames = $request->input('newSizes', []);
+
+            foreach ($newSizeNames as $name) {
+                if (!empty($name)) {
+                    $size = ItemSize::firstOrCreate(['name' => $name]);
+                    $sizeIds[] = $size->id;
+                }
+            }
+            $item->sizes()->sync($sizeIds);
+
+            // Packaging
+            $packIds = $request->input('packaging', []);
+            $newPackNames = $request->input('newPackaging', []);
+
+            foreach ($newPackNames as $name) {
+                if (!empty($name)) {
+                    $pack = ItemPackagingType::firstOrCreate(['name' => $name]);
+                    $packIds[] = $pack->id;
+                }
+            }
+            $item->packagingTypes()->sync($packIds);
+
             // Commit the transaction
             DB::commit();
 
@@ -314,5 +352,19 @@ class ItemController extends Controller
             'paths' => $paths,
         ]);
     }
+
+    public function updateStatus(Request $request, Item $item)
+    {
+        $request->validate([
+            'status' => 'required|in:active,inactive,unavailable,draft',
+        ]);
+
+        $item->update([
+            'status' => $request->status,
+        ]);
+
+        return back()->with('success', 'Status updated successfully.');
+    }
+
 
 }
