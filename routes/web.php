@@ -93,6 +93,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::patch('items/{item}/status', [ItemController::class, 'updateStatus'])
             ->name('items.updateStatus');
 
+        Route::get('items/{item}/variants', [VariantController::class, 'index'])
+            ->name('items.variants.index');
+
         // Keep all REST routes EXCEPT store
         Route::resource('variants', VariantController::class)->except(['store']);
 

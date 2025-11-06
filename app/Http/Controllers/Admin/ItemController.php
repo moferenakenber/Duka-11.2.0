@@ -296,15 +296,23 @@ class ItemController extends Controller
 
             // Packaging
             $packIds = $request->input('packaging', []);
-            $newPackNames = $request->input('newPackaging', []);
 
-            foreach ($newPackNames as $name) {
-                if (!empty($name)) {
-                    $pack = ItemPackagingType::firstOrCreate(['name' => $name]);
-                    $packIds[] = $pack->id;
+            $packIdsWithQuantity = collect($packIds)->mapWithKeys(function ($id) use ($request) {
+
+                // Handle custom packs
+                if (str_starts_with($id, 'custom_')) {
+                    $name = $request->input("custom_pack_name.$id"); // get the name
+                    $pack = ItemPackagingType::create([
+                        'name' => $name,
+                        'quantity' => $request->input("packaging_qty.$id", 1),
+                    ]);
+                    $id = $pack->id; // replace temporary string ID with numeric ID
                 }
-            }
-            $item->packagingTypes()->sync($packIds);
+
+                return [$id => ['quantity' => $request->input("packaging_qty.$id", 1)]];
+            })->toArray();
+
+            $item->packagingTypes()->sync($packIdsWithQuantity);
 
             // Commit the transaction
             DB::commit();

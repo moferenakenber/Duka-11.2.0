@@ -257,12 +257,12 @@
                 </div>
 
                 <!-- Packaging -->
-                <div class="mb-4" x-data="{ packs: [], selectedPack: '', newPack: '', noPack: false }">
+                {{-- <div class="mb-4" x-data="{ packs: [], selectedPack: '', newPack: '', noPack: false }">
 
                     <label class="label">Packaging</label>
 
                     <!-- No Packaging Option -->
-                    <label class="mb-2 flex items-center gap-2">
+                    <label class="flex items-center gap-2 mb-2">
                         <input type="checkbox" x-model="noPack" @change="packs = []">
                         <span>No packaging for this item</span>
                     </label>
@@ -278,7 +278,7 @@
                     }
                     selectedPack = '';
                 "
-                                class="select select-bordered w-full">
+                                class="w-full select select-bordered">
                                 <option value="">-- Select Packaging --</option>
                                 @foreach ($packagingTypes as $pack)
                                     <option value="{{ $pack->id }}">{{ $pack->name }}
@@ -287,8 +287,8 @@
                             </select>
 
                             <!-- Add New Packaging -->
-                            <div class="mt-2 flex gap-2">
-                                <input x-model="newPack" class="input input-bordered flex-1" placeholder="Add new packaging">
+                            <div class="flex gap-2 mt-2">
+                                <input x-model="newPack" class="flex-1 input input-bordered" placeholder="Add new packaging">
                                 <button type="button" class="btn btn-primary"
                                     @click="
                         if (newPack.trim()) {
@@ -301,9 +301,9 @@
                             </div>
 
                             <!-- Selected Packagings -->
-                            <div class="mt-2 flex flex-wrap gap-2">
+                            <div class="flex flex-wrap gap-2 mt-2">
                                 <template x-for="(p, i) in packs" :key="p.id">
-                                    <span class="flex items-center gap-2 rounded-full bg-green-600 px-3 py-1 text-white">
+                                    <span class="flex items-center gap-2 px-3 py-1 text-white bg-green-600 rounded-full">
                                         <span x-text="p.name"></span>
                                         <button type="button" @click="packs.splice(i, 1)">✕</button>
                                     </span>
@@ -317,17 +317,83 @@
                             </template>
                         </div>
                     </template>
+                </div> --}}
+
+
+
+                <!-- Packaging -->
+                <div class="mb-4" x-data="packagingForm()">
+                    <label class="label">Packaging</label>
+
+                    <!-- No Packaging Option -->
+                    <label class="mb-2 flex items-center gap-2">
+                        <input type="checkbox" x-model="noPack">
+                        <span>No packaging for this item</span>
+                    </label>
+
+                    <!-- Select Packaging -->
+                    <div class="mb-2 flex gap-2">
+                        <select x-model="selectedPack" class="select select-bordered w-full" :disabled="noPack">
+                            <option value="">-- Select Packaging --</option>
+                            @foreach ($packagingTypes as $pack)
+                                <option value="{{ $pack->id }}" :data-type="'{{ $pack->type ?? 'custom' }}'">
+                                    {{ $pack->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                        <button type="button" class="btn btn-primary" @click="addPack(selectedPack)"
+                            :disabled="noPack">Add</button>
+                    </div>
+
+                    <!-- Custom Packaging -->
+                    <div class="mb-2 flex gap-2">
+                        <input type="text" x-model="customPackName" placeholder="Custom Packaging Name"
+                            class="input input-bordered flex-1" :disabled="noPack">
+                        <button type="button" class="btn btn-secondary" @click="addCustomPack()" :disabled="noPack">Add
+                            Custom</button>
+                    </div>
+
+                    <!-- Selected Packagings -->
+                    <div class="mt-2 space-y-2">
+                        <template x-for="(p, i) in packs" :key="p.id">
+                            <div class="flex items-center gap-2 rounded bg-gray-100 px-3 py-1">
+                                <span x-text="p.name"></span>
+
+                                <!-- Quantity Input for non-piece -->
+                                <template x-if="p.type !== 'piece'">
+                                    <input type="number" min="1" class="input input-sm input-bordered w-20"
+                                        placeholder="Quantity" x-model.number="p.quantity" @input="calculateTotals()">
+                                </template>
+
+                                <!-- Display text -->
+                                <span class="text-xs text-gray-700" x-text="p.displayText"></span>
+
+                                <button type="button" class="btn btn-error btn-xs"
+                                    @click="packs.splice(i,1); calculateTotals()">✕</button>
+
+                                <!-- Hidden Inputs for form submission -->
+                                <input type="hidden" :name="'packaging[]'" :value="p.id">
+                                <input type="hidden" :name="'packaging_qty[' + p.id + ']'" :value="p.quantity ?? 1">
+                                <input type="hidden" :name="'packaging_total_pieces[]'"
+                                    :value="p.totalPieces ?? (p.type === 'piece' ? 1 : p.quantity)">
+                                <input type="hidden" :name="'custom_pack_name[' + p.id + ']'" :value="p.name">
+
+                            </div>
+                        </template>
+                    </div>
                 </div>
 
-
         </div>
 
 
+    </div>
 
-        <div class="mt-6 text-end">
-            <button type="submit" class="btn btn-primary px-6">Save Product</button>
-        </div>
-        </form>
+
+
+    <div class="mt-6 text-end">
+        <button type="submit" class="btn btn-primary px-6">Save Product</button>
+    </div>
+    </form>
     </div>
     </div>
 
@@ -370,6 +436,105 @@
                             alert('Upload failed');
                             console.error(error);
                         });
+                }
+            }
+        }
+
+        function packagingForm() {
+            return {
+                packs: [{
+                    // id: 'piece',
+                    // name: 'Piece',
+                    // type: 'piece',
+                    // quantity: 1,
+                    // totalPieces: 1,
+                    // displayText: '(1 pcs)'
+                    id: @json($packagingTypes->where('name', 'Piece')->first()?->id ?? 1),
+                    name: 'Piece',
+                    type: 'piece',
+                    quantity: 1,
+                    totalPieces: 1,
+                    displayText: '(1 pcs)'
+                }],
+                selectedPack: '',
+                customPackName: '',
+
+                addPack(selectedId) {
+                    if (!selectedId || selectedId === 'piece') return;
+
+                    const select = document.querySelector(`select[x-model="selectedPack"]`);
+                    const option = select.options[select.selectedIndex];
+                    const type = option.dataset.type || 'custom';
+                    const name = option.text;
+
+                    if (!this.packs.find(p => p.id == selectedId)) {
+                        this.packs.push({
+                            id: selectedId,
+                            name: name,
+                            type: type,
+                            quantity: 1,
+                            totalPieces: 1,
+                            displayText: ''
+                        });
+                    }
+
+                    this.selectedPack = '';
+                    this.calculateTotals();
+                },
+
+                addCustomPack() {
+                    if (!this.customPackName) return;
+
+                    const id = 'custom_' + Date.now();
+
+                    this.packs.push({
+                        id: id,
+                        name: this.customPackName,
+                        type: 'custom',
+                        quantity: 1,
+                        totalPieces: 1,
+                        displayText: ''
+                    });
+
+                    this.customPackName = '';
+                    this.calculateTotals();
+                },
+
+                calculateTotals() {
+                    for (let i = 0; i < this.packs.length; i++) {
+                        let p = this.packs[i];
+
+                        if (p.type === 'piece') {
+                            p.totalPieces = 1;
+                            p.displayText = '(1 pcs)';
+                        } else {
+                            let qty = p.quantity || 1;
+
+                            // Calculate total pieces
+                            let parent = this.packs[i - 1];
+                            p.totalPieces = qty * parent.totalPieces;
+
+                            // Build display text including all ancestors for levels > Packet
+                            if (i === 1) {
+                                // Packet after Piece
+                                p.displayText = `(${qty} ${parent.name}, ${p.totalPieces} pcs)`;
+                            } else if (i === 2) {
+                                // Cartoon after Packet
+                                p.displayText = `(${qty} ${parent.name}, ${p.totalPieces} pcs)`;
+                            } else {
+                                // Container or deeper levels: show all ancestors
+                                let ancestors = [];
+                                for (let j = i - 1; j >= 0; j--) {
+                                    let ancestorQty = 1;
+                                    for (let k = j + 1; k <= i; k++) {
+                                        ancestorQty *= this.packs[k].quantity || 1;
+                                    }
+                                    ancestors.push(`${ancestorQty} ${this.packs[j].name}`);
+                                }
+                                p.displayText = `(${qty} ${parent.name}, ${ancestors.join(', ')}, ${p.totalPieces} pcs)`;
+                            }
+                        }
+                    }
                 }
             }
         }

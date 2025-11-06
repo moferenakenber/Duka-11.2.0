@@ -8,15 +8,26 @@ use Illuminate\Http\Request;
 use App\Models\Item;
 use App\Models\ItemStock;
 use Illuminate\Support\Facades\Log;
+use App\Models\ItemSize;
+use App\Models\ItemColor;
+use App\Models\ItemPackagingType;
+use App\Models\ItemInventoryLocation;
 
 class VariantController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Item $item)
     {
-        //
+        return view('admin.variants.index', [
+            'item' => $item,
+            'variants' => $item->variants,
+            'colors' => ItemColor::all(),
+            'sizes' => ItemSize::all(),
+            'packagingTypes' => ItemPackagingType::all(),
+            'inventoryLocations' => ItemInventoryLocation::all(),
+        ]);
     }
 
     /**

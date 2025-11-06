@@ -1,287 +1,249 @@
-<aside
-  id="sidebar-multi-level-sidebar"
-  class="fixed top-0 left-0 z-40 w-64 min-h-screen overflow-y-auto pt-20 transition-transform -translate-x-full bg-white border-r border-gray-200 sm:translate-x-0 dark:bg-gray-800 dark:border-gray-700"
-  aria-label="Sidebar"
->
-  <div class="h-full px-3 py-2 overflow-y-auto bg-gray-50 dark:bg-gray-800">
-    <ul class="space-y-2 font-medium">
-      <li>
-        <a
-          href="{{ route('admin.dashboard') }}"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 22 21"
-          >
-            <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-            <path
-              d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
-            />
-          </svg>
-          <span class="ms-3">Dashboard</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="{{ route('admin.users.index') }}"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 22 21"
-          >
-            <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-            <path
-              d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
-            />
-          </svg>
-          <span class="ms-3">User Management</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="{{ route('admin.customers.index') }}"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 22 21"
-          >
-            <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-            <path
-              d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z"
-            />
-          </svg>
-          <span class="ms-3">Customers</span>
-        </a>
-      </li>
-      <li>
-        <button
-          type="button"
-          class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-          aria-controls="dropdown-example"
-          data-collapse-toggle="dropdown-example"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 group-hover:text-gray-900 dark:text-gray-400 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 18 21"
-          >
-            <path
-              d="M15 12a1 1 0 0 0 .962-.726l2-7A1 1 0 0 0 17 3H3.77L3.175.745A1 1 0 0 0 2.208 0H1a1 1 0 0 0 0 2h.438l.6 2.255v.019l2 7 .746 2.986A3 3 0 1 0 9 17a2.966 2.966 0 0 0-.184-1h2.368c-.118.32-.18.659-.184 1a3 3 0 1 0 3-3H6.78l-.5-2H15Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 text-left rtl:text-right whitespace-nowrap">Inventory</span>
-          <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="m1 1 4 4 4-4"
-            />
-          </svg>
-        </button>
-        <ul id="dropdown-example" class="hidden py-2 space-y-2">
-          <li>
-            <a
-              href="{{ route('admin.items.index') }}"
-              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-            >
-              Items
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-            >
-              Price Rules
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg pl-11 group hover:bg-gray-100 dark:text-white dark:hover:bg-gray-700"
-            >
-              Promotion and Discounts
-            </a>
-          </li>
-        </ul>
-      </li>
-      <li>
-        <a
-          href="{{ route('admin.carts.index') }}"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 18 20"
-          >
-            <path
-              d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Carts</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="{{ route('admin.sales.index') }}"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 18 20"
-          >
-            <path
-              d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Sales</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="{{ route('admin.purchases.index') }}"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 18 20"
-          >
-            <path
-              d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Purchases</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 18 20"
-          >
-            <path
-              d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Balance</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 18 20"
-          >
-            <path
-              d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Tasks</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 18 20"
-          >
-            <path
-              d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Calender</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 18 20"
-          >
-            <path
-              d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Documents</span>
-        </a>
-      </li>
-      <li>
-        <a
-          href="#"
-          class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
-        >
-          <svg
-            class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="currentColor"
-            viewBox="0 0 18 20"
-          >
-            <path
-              d="M17 5.923A1 1 0 0 0 16 5h-3V4a4 4 0 1 0-8 0v1H2a1 1 0 0 0-1 .923L.086 17.846A2 2 0 0 0 2.08 20h13.84a2 2 0 0 0 1.994-2.153L17 5.923ZM7 9a1 1 0 0 1-2 0V7h2v2Zm0-5a2 2 0 1 1 4 0v1H7V4Zm6 5a1 1 0 1 1-2 0V7h2v2Z"
-            />
-          </svg>
-          <span class="flex-1 ms-3 whitespace-nowrap">Payments</span>
-        </a>
-      </li>
+<aside id="sidebar-multi-level-sidebar"
+    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 overflow-y-auto bg-white border-r border-gray-200 scrollbar-gutter stable dark:bg-gray-800 dark:border-gray-700"
+    aria-label="Sidebar">
+    <div class="px-3 py-2 pr-2">
+        <ul class="space-y-2 font-medium">
+            <li>
+                <a href="{{ route('admin.dashboard') }}"
+                    class="{{ request()->routeIs('admin.dashboard') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-400' }} flex items-center rounded-lg p-2">
 
-      {{--
+                    <x-lucide-layout-dashboard
+                        class="{{ request()->routeIs('admin.dashboard') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="ms-3">Dashboard</span>
+                </a>
+
+            </li>
+
+            <li>
+                <a href="{{ route('admin.users.index') }}"
+                    class="{{ request()->routeIs('admin.users.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2">
+
+                    <x-lucide-user
+                        class="{{ request()->routeIs('admin.users.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="ms-3">User Management</span>
+                </a>
+
+            </li>
+
+
+            <li>
+                <button type="button"
+                    class="{{ request()->routeIs('admin.items.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100' }} flex w-full items-center rounded-lg p-2 text-base transition duration-75"
+                    aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
+
+                    <x-lucide-box
+                        class="{{ request()->routeIs('admin.items.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 text-left ms-3 whitespace-nowrap rtl:text-right">Product Management</span>
+
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
+
+
+                <ul id="dropdown-example" class="hidden py-2 space-y-2">
+                    <li>
+                        <a href="{{ route('admin.items.index') }}"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group pl-11 hover:bg-gray-100">
+                            Items
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group pl-11 hover:bg-gray-100">
+                            Variations
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group pl-11 hover:bg-gray-100">
+                            Prices
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#"
+                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group pl-11 hover:bg-gray-100">
+                            Discounts and Promotions
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+            <li>
+                <a href="#" onclick="return false;"
+                    class="{{ request()->routeIs('admin.store.*') ? 'bg-orange-100 dark:bg-orange-700' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2">
+
+                    <x-lucide-store
+                        class="{{ request()->routeIs('admin.store.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Store</span>
+                </a>
+            </li>
+            <li>
+                <a href="{{ route('admin.customers.index') }}"
+                    class="{{ request()->routeIs('admin.customers.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2">
+
+                    <x-lucide-users
+                        class="{{ request()->routeIs('admin.customers.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="ms-3">Customers</span>
+                </a>
+
+            </li>
+
+
+
+
+
+            <li>
+                <a href="{{ route('admin.carts.index') }}"
+                    class="{{ request()->routeIs('admin.carts.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
+
+                    <x-lucide-shopping-cart
+                        class="{{ request()->routeIs('admin.carts.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Carts</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="{{ route('admin.sales.index') }}"
+                    class="{{ request()->routeIs('admin.sales.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
+
+                    <x-lucide-trending-up
+                        class="{{ request()->routeIs('admin.sales.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Sales</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#"
+                    class="{{ request()->routeIs('admin.delivery.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
+
+                    <x-lucide-truck
+                        class="{{ request()->routeIs('admin.delivery.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Delivery</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="#"
+                    class="{{ request()->routeIs('admin.stock.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
+
+                    <x-lucide-boxes
+                        class="{{ request()->routeIs('admin.stock.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Stock</span>
+                </a>
+            </li>
+            <li>
+                <a href="#"
+                    class="{{ request()->routeIs('admin.stock-orders.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
+
+                    <x-lucide-calendar-arrow-down
+                        class="{{ request()->routeIs('admin.stock-orders.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Stock Orders</span>
+                </a>
+            <li>
+                <a href="{{ route('admin.purchases.index') }}"
+                    class="{{ request()->routeIs('admin.purchases.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
+
+                    <x-lucide-scan-barcode
+                        class="{{ request()->routeIs('admin.purchases.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Purchase Orders</span>
+                </a>
+            </li>
+
+
+            <li>
+                <a href="#"
+                    class="{{ request()->routeIs('admin.balance.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
+
+                    <x-lucide-wallet
+                        class="{{ request()->routeIs('admin.balance.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Balance</span>
+                </a>
+            </li>
+
+
+
+
+
+
+            <li>
+                <a href="#"
+                    class="{{ request()->routeIs('admin.documents.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
+
+                    <x-lucide-file
+                        class="{{ request()->routeIs('admin.documents.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Documents</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="#"
+                    class="{{ request()->routeIs('admin.calendar.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
+
+                    <x-lucide-calendar-days
+                        class="{{ request()->routeIs('admin.calendar.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 ms-3 whitespace-nowrap">Calendar</span>
+                </a>
+            </li>
+
+            <li>
+                <button type="button"
+                    class="{{ request()->routeIs('admin.tasks.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100' }} flex w-full items-center rounded-lg p-2 text-base transition duration-75"
+                    aria-controls="tasks-dropdown" data-collapse-toggle="tasks-dropdown">
+
+                    <x-lucide-circle-check
+                        class="{{ request()->routeIs('admin.tasks.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <span class="flex-1 text-left ms-3 whitespace-nowrap">Tasks</span>
+
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="m1 1 4 4 4-4" />
+                    </svg>
+                </button>
+
+                <ul id="tasks-dropdown" class="hidden py-2 space-y-2">
+                    <li>
+                        <a href="#"
+                            class="{{ request()->routeIs('admin.payments.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100' }} flex w-full items-center rounded-lg p-2 pl-11 text-base transition duration-75">
+                            <x-lucide-scan-barcode
+                                class="{{ request()->routeIs('admin.payments.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+                            <span class="ms-3">Payments</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+
+
+
+
+
+
+
+            {{--
         <li>
         <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
         <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
         <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"/>
         </svg>
         <span class="flex-1 ms-3 whitespace-nowrap">Kanban</span>
-        <span class="inline-flex items-center justify-center px-2 ms-3 text-sm font-medium text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">Pro</span>
+        <span class="inline-flex items-center justify-center px-2 text-sm font-medium text-gray-800 bg-gray-100 rounded-full ms-3 dark:bg-gray-700 dark:text-gray-300">Pro</span>
         </a>
         </li>
         <li>
@@ -290,7 +252,7 @@
         <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z"/>
         </svg>
         <span class="flex-1 ms-3 whitespace-nowrap">Inbox</span>
-        <span class="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">3</span>
+        <span class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full ms-3 dark:bg-blue-900 dark:text-blue-300">3</span>
         </a>
         </li>
         <li>
@@ -320,6 +282,6 @@
         </a>
         </li>
       --}}
-    </ul>
-  </div>
+        </ul>
+    </div>
 </aside>
