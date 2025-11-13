@@ -1,6 +1,13 @@
 <aside id="sidebar-multi-level-sidebar"
-    class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 overflow-y-auto bg-white border-r border-gray-200 scrollbar-gutter stable dark:bg-gray-800 dark:border-gray-700"
+    class="dark:bg-gray-800 dark:border-gray-700 fixed left-0 top-16 z-40 h-[calc(100vh-4rem)] w-64 -translate-x-full transform overflow-y-auto border-r border-gray-200 bg-white pt-4 transition-transform xl:translate-x-0"
     aria-label="Sidebar">
+
+
+    {{--  /* mobile */
+          /* medium: icon-only */
+          /* desktop: full */        --}}
+
+
     <div class="px-3 py-2 pr-2">
         <ul class="space-y-2 font-medium">
             <li>
@@ -10,7 +17,7 @@
                     <x-lucide-layout-dashboard
                         class="{{ request()->routeIs('admin.dashboard') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="ms-3">Dashboard</span>
+                    <span class="ms-3 md:inline xl:inline">Dashboard</span>
                 </a>
 
             </li>
@@ -30,7 +37,7 @@
 
             <li>
                 <button type="button"
-                    class="{{ request()->routeIs('admin.items.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100' }} flex w-full items-center rounded-lg p-2 text-base transition duration-75"
+                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg cursor-default dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100"
                     aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
 
                     <x-lucide-box
@@ -45,10 +52,11 @@
                 </button>
 
 
-                <ul id="dropdown-example" class="hidden py-2 space-y-2">
+                {{-- <ul id="dropdown-example" class="hidden py-2 space-y-2"> --}}
+                <ul id="dropdown-example" class="{{ request()->routeIs('admin.items.*') ? 'block' : 'hidden' }} space-y-2 py-2">
                     <li>
                         <a href="{{ route('admin.items.index') }}"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group pl-11 hover:bg-gray-100">
+                            class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.items.index') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-11 text-gray-900 transition duration-75 hover:bg-gray-100">
                             Items
                         </a>
                     </li>
@@ -100,13 +108,21 @@
 
 
             <li>
-                <a href="{{ route('admin.carts.index') }}"
+                <a href="{{ route('admin.carts.index') }}" @if (request()->routeIs('admin.carts.*')) aria-current="page" @endif
                     class="{{ request()->routeIs('admin.carts.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
 
                     <x-lucide-shopping-cart
                         class="{{ request()->routeIs('admin.carts.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
                     <span class="flex-1 ms-3 whitespace-nowrap">Carts</span>
+
+                    {{-- optional badge: only show if $cartCount is provided --}}
+                    @isset($cartCount)
+                        <span
+                            class="{{ request()->routeIs('admin.carts.*') ? 'bg-orange-200 text-orange-800 dark:bg-orange-600 dark:text-white' : 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' }} ms-3 inline-flex items-center justify-center rounded-full px-2 py-0.5 text-xs font-medium">
+                            {{ $cartCount }}
+                        </span>
+                    @endisset
                 </a>
             </li>
 
