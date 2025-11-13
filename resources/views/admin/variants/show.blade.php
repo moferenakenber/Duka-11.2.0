@@ -41,17 +41,16 @@
                 </div>
 
                 <form method="POST" action="{{ route('admin.variants.store', $item->id) }}">
-
                     @csrf
 
-                    <template x-for="(variant, index) in variants" :key="index">
+                    <template x-for="(variant, index) in newVariants" :key="index">
                         <div class="flex flex-wrap items-end gap-2 p-2 mb-2 border rounded-xl bg-base-100">
 
                             {{-- Color --}}
                             @if ($item->colors->isNotEmpty())
                                 <div class="flex-1">
                                     <label class="block mb-1 text-xs font-semibold text-gray-600">Color</label>
-                                    <select x-model="variant.item_color_id" :name="`variants[${index}][item_color_id]`"
+                                    <select x-model="variant.item_color_id" name="variants[][item_color_id]"
                                         class="w-full h-12 input input-sm input-bordered">
                                         <option value="">Select Color</option>
                                         @foreach ($item->colors as $color)
@@ -65,7 +64,7 @@
                             @if ($item->sizes->isNotEmpty())
                                 <div class="flex-1">
                                     <label class="block mb-1 text-xs font-semibold text-gray-600">Size</label>
-                                    <select x-model="variant.item_size_id" :name="`variants[${index}][item_size_id]`"
+                                    <select x-model="variant.item_size_id" name="variants[][item_size_id]"
                                         class="w-full h-12 input input-sm input-bordered">
                                         <option value="">Select Size</option>
                                         @foreach ($item->sizes as $size)
@@ -79,8 +78,7 @@
                             @if ($item->packagingTypes->isNotEmpty())
                                 <div class="flex-1">
                                     <label class="block mb-1 text-xs font-semibold text-gray-600">Packaging</label>
-                                    <select x-model="variant.item_packaging_type_id"
-                                        :name="`variants[${index}][item_packaging_type_id]`"
+                                    <select x-model="variant.item_packaging_type_id" name="variants[][item_packaging_type_id]"
                                         class="w-full h-12 input input-sm input-bordered">
                                         <option value="">Select Packaging</option>
                                         @foreach ($item->packagingTypes as $pack)
@@ -90,24 +88,39 @@
                                 </div>
                             @endif
 
+
+
                             {{-- Price --}}
                             <div class="flex-1">
-                                <label class="block mb-1 text-xs font-semibold text-gray-600">Price</label>
-                                <input type="number" x-model="variant.price" :name="`variants[${index}][price]`"
-                                    class="w-full h-12 input input-sm input-bordered" placeholder="Price">
+                                <label class="block text-xs font-medium">Price</label>
+                                <input type="number" x-model="variant.price" :name="'variants[' + index + '][price]'" required
+                                    class="w-full input input-sm input-bordered" step="0.01" min="0">
                             </div>
 
                             {{-- Stock --}}
                             <div class="flex-1">
-                                <label class="block mb-1 text-xs font-semibold text-gray-600">Stock</label>
-                                <input type="number" x-model="variant.stock" :name="`variants[${index}][stock]`"
-                                    class="w-full h-12 input input-sm input-bordered" placeholder="Stock">
+                                <label class="block text-xs font-medium">Stock</label>
+                                <input type="number" x-model="variant.stock" :name="'variants[' + index + '][stock]'" required
+                                    class="w-full input input-sm input-bordered" min="0">
                             </div>
 
-                            {{-- Remove button --}}
-                            <div class="flex items-center gap-2 mt-2">
+                            {{-- Inventory Location --}}
+                            <div class="flex-1">
+                                <label class="block text-xs font-medium">Inventory Location</label>
+                                <select x-model="variant.inventory_location_id"
+                                    :name="'variants[' + index + '][inventory_location_id]'" required
+                                    class="w-full input input-sm input-bordered">
+                                    <option value="">Select Location</option>
+                                    @foreach ($inventoryLocations as $location)
+                                        <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+
+                            {{-- Remove Variant --}}
+                            <div class="flex items-center">
                                 <button type="button" class="btn btn-error btn-sm"
-                                    @click="variants.splice(index, 1)">Remove</button>
+                                    @click="newVariants.splice(index, 1)">Remove</button>
                             </div>
                         </div>
                     </template>
@@ -116,46 +129,48 @@
                 </form>
             </div>
 
-            @if (session('success'))
-                <div class="p-4 mb-4 text-green-700 bg-green-100 rounded">
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if (session('error'))
-                <div class="p-4 mb-4 text-red-700 bg-red-100 rounded">
-                    {{ session('error') }}
-                </div>
-            @endif
-
-
             {{-- Variant Table --}}
             <div class="overflow-x-auto rounded-xl bg-base-100">
                 <table class="table w-full table-xs">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Color</th>
-                            <th>Size</th>
-                            <th>Packaging</th>
+                            @if ($colors->isNotEmpty())
+                                <th>Color</th>
+                            @endif
+                            @if ($sizes->isNotEmpty())
+                                <th>Size</th>
+                            @endif
+                            @if ($packagingTypes->isNotEmpty())
+                                <th>Packaging</th>
+                            @endif
                             <th>Price</th>
                             <th>Stock</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse ($variants as $variant)
+                        @foreach ($item->variants as $index => $variant)
                             <tr>
-                                <td>{{ $variant->itemColor->name ?? '—' }}</td>
-                                <td>{{ $variant->itemSize->name ?? '—' }}</td>
-                                <td>{{ $variant->price }}</td>
+                                <th>{{ $index + 1 }}</th>
+                                @if ($colors->isNotEmpty())
+                                    <td>{{ $variant->itemColor->name ?? '-' }}</td>
+                                @endif
+                                @if ($sizes->isNotEmpty())
+                                    <td>{{ optional($variant->itemSize)->name ?? '-' }}</td>
+                                @endif
+                                @if ($packagingTypes->isNotEmpty())
+                                    <td>{{ optional($variant->itemPackagingType)->name ?? '-' }}</td>
+                                @endif
+                                <td>${{ number_format($variant->price, 2) }}</td>
                                 <td>{{ $variant->stock }}</td>
+                                <td>
+                                    <span class="badge-{{ $variant->is_active ? 'success' : 'neutral' }} badge">
+                                        {{ $variant->is_active ? 'Active' : 'Inactive' }}
+                                    </span>
+                                </td>
                             </tr>
-                        @empty
-                            <tr>
-                                <td colspan="4">No variants found</td>
-                            </tr>
-                        @endforelse
+                        @endforeach
                     </tbody>
                 </table>
             </div>
@@ -166,19 +181,21 @@
     <script>
         function variantForm() {
             return {
-                variants: [],
+                newVariants: [],
                 addVariant() {
-                    this.variants.push({
-                        item_color_id: '',
-                        item_size_id: '',
-                        item_packaging_type_id: '',
+                    this.newVariants.push({
+                        item_color_id: null,
+                        item_size_id: null,
+                        item_packaging_type_ids: [],
                         price: 0,
                         stock: 0,
-                        is_active: true
+                        inventory_location_id: '',
+                        is_active: 1,
+                        barcode: '',
+                        image: null,
                     });
                 }
             }
         }
     </script>
-
 </x-app-layout>

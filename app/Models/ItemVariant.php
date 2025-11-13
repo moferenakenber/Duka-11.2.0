@@ -74,24 +74,20 @@ class ItemVariant extends Model
     /**
      * Get the packaging type associated with the variant.
      */
-    public function packagingType(): BelongsTo
+    public function itemPackagingType(): BelongsTo
     {
         return $this->belongsTo(ItemPackagingType::class, 'item_packaging_type_id');
     }
 
+
     public function itemColor()
     {
-        return $this->belongsTo(ItemColor::class);
+        return $this->belongsTo(ItemColor::class, 'item_color_id');
     }
 
     public function itemSize()
     {
         return $this->belongsTo(ItemSize::class, 'item_size_id');
-    }
-
-    public function itemPackagingType()
-    {
-        return $this->belongsTo(ItemPackagingType::class);
     }
 
     public function owner()

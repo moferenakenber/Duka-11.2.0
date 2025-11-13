@@ -93,16 +93,28 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::patch('items/{item}/status', [ItemController::class, 'updateStatus'])
             ->name('items.updateStatus');
 
-        Route::get('items/{item}/variants', [VariantController::class, 'index'])
-            ->name('items.variants.index');
 
-        // Keep all REST routes EXCEPT store
-        Route::resource('variants', VariantController::class)->except(['store']);
+        // Prefix for all variant-related routes
+        Route::prefix('variants')->group(function () {
 
-        Route::post('variants/{item}', [VariantController::class, 'store'])
-            ->name('variants.store');
+            // List all items & variants (extra index)
+            Route::get('/items', [VariantController::class, 'itemsIndex'])
+                ->name('variants.items.index');
 
-        // Cart routes
+            // List variants for a specific item
+            Route::get('/{item}', [VariantController::class, 'index'])
+                ->name('variants.index');
+
+            // Store variant for a specific item
+            Route::post('/{item}', [VariantController::class, 'store'])
+                ->name('variants.store');
+
+            // Variant CRUD (except store)
+            Route::resource('crud', VariantController::class)->except(['store']);
+        });
+
+
+
         Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
     });
 

@@ -29,7 +29,7 @@ class ItemController extends Controller
     // Display a listing of the items
     public function index()
     {
-        $items = Item::all();
+        $items = Item::with(['colors', 'sizes', 'packagingTypes', 'variants'])->get();
         return view('admin.items.index', compact('items'));
     }
 

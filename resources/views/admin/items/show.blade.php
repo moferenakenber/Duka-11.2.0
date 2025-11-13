@@ -148,9 +148,10 @@
                                 </span>
 
                                 {{-- Manage Variants --}}
-                                <a href="{{ route('admin.items.variants.index', $item->id) }}" class="btn btn-primary btn-sm">
+                                <a href="{{ route('admin.variants.index', $item->id) }}" class="btn btn-primary btn-sm">
                                     Manage Variants
                                 </a>
+
                             </div>
 
 

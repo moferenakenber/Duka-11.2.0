@@ -55,10 +55,24 @@ class Item extends Model
     }
 
     // Many-to-many with packaging types
+    // public function packagingTypes()
+    // {
+    //     return $this->belongsToMany(ItemPackagingType::class, 'item_packaging_type_item', 'item_id', 'item_packaging_type_id')->withTimestamps();
+    // }
     public function packagingTypes()
     {
-        return $this->belongsToMany(ItemPackagingType::class, 'item_packaging_type_item', 'item_id', 'item_packaging_type_id')->withTimestamps();
+        return $this->belongsToMany(
+            ItemPackagingType::class,
+            'item_packaging_type_item',
+            'item_id',
+            'item_packaging_type_id'
+        )
+            ->withPivot('quantity')   // add this line
+            ->withTimestamps();
     }
+
+
+
 
     // Variants
     public function variants()
@@ -79,4 +93,41 @@ class Item extends Model
     {
         return $this->hasMany(ItemImage::class);
     }
+
+    public function getPackagingDisplay(): array
+    {
+        $packs = $this->packagingTypes->sortBy('pivot_id')->values();
+        $result = [];
+        $totals = [];
+
+        foreach ($packs as $index => $pack) {
+            $qty = $pack->pivot->quantity ?? 1;
+
+            if ($index === 0) {
+                // Base level (Piece)
+                $totals[$pack->name] = 1;
+                $result[] = "{$pack->name} (1 pcs)";
+            } else {
+                // Total pieces = qty * previous pack's total
+                $prevPack = $packs[$index - 1];
+                $totals[$pack->name] = $qty * $totals[$prevPack->name];
+
+                // Build ancestor display text
+                $ancestorText = [];
+                for ($i = $index - 1; $i >= 0; $i--) {
+                    $childQty = $packs[$i + 1]->pivot->quantity ?? 1;
+                    $ancestorText[] = "{$childQty} {$packs[$i]->name}";
+                }
+                $ancestorText = array_reverse($ancestorText);
+
+                $display = "{$pack->name} (" . implode(', ', $ancestorText) . ", {$totals[$pack->name]} pcs)";
+                $result[] = $display;
+            }
+        }
+
+        return $result;
+    }
+
 }
+
+
