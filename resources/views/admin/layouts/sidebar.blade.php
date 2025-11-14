@@ -23,27 +23,19 @@
             </li>
 
             <li>
-                <a href="{{ route('admin.users.index') }}"
-                    class="{{ request()->routeIs('admin.users.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2">
-
-                    <x-lucide-user
-                        class="{{ request()->routeIs('admin.users.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-
-                    <span class="ms-3">User Management</span>
-                </a>
-
-            </li>
-
-
-            <li>
                 <button type="button"
                     class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg cursor-default dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100"
                     aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
 
                     <x-lucide-box
-                        class="{{ request()->routeIs('admin.items.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+                        class="{{ request()->routeIs('admin.items.*') ||
+                        request()->routeIs('admin.variants.items.*') ||
+                        request()->routeIs('admin.stocks.*') ||
+                        request()->routeIs('admin.transfers.*')
+                            ? 'text-orange-500 dark:text-white'
+                            : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="flex-1 text-left ms-3 whitespace-nowrap rtl:text-right">Product Management</span>
+                    <span class="flex-1 text-left ms-3 whitespace-nowrap rtl:text-right">Products</span>
 
                     <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -53,31 +45,78 @@
 
 
                 {{-- <ul id="dropdown-example" class="hidden py-2 space-y-2"> --}}
-                <ul id="dropdown-example" class="{{ request()->routeIs('admin.items.*') ? 'block' : 'hidden' }} space-y-2 py-2">
-                    <li>
-                        <a href="{{ route('admin.items.index') }}"
-                            class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.items.index') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-11 text-gray-900 transition duration-75 hover:bg-gray-100">
-                            Items
-                        </a>
-                    </li>
-                    <li>
-                        <a href="{{ route('admin.variants.items.index') }}"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group pl-11 hover:bg-gray-100">
-                            Variations
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group pl-11 hover:bg-gray-100">
-                            Prices
-                        </a>
-                    </li>
-                    <li>
-                        <a href="#"
-                            class="flex items-center w-full p-2 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group pl-11 hover:bg-gray-100">
-                            Discounts and Promotions
-                        </a>
-                    </li>
+                <ul id="dropdown-example"
+                    class="{{ request()->routeIs('admin.items.*') ||
+                    request()->routeIs('admin.variants.items.*') ||
+                    request()->routeIs('admin.stocks.*') ||
+                    request()->routeIs('admin.transfers.*')
+                        ? 'block'
+                        : 'hidden' }} space-y-2 py-2">
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="{{ route('admin.items.index') }}"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.items.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                Items
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="{{ route('admin.variants.items.index') }}"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.variants.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                Variations
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="{{ route('admin.stocks.index') }}"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.stocks.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+
+                                {{-- Put this icon in the title
+                            <x-lucide-boxes
+                                class="{{ request()->routeIs('admin.stock.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" /> --}}
+
+                                Stock
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="{{ route('admin.transfers.index') }}"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.transfers.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+
+                                {{-- Put this icon in the title
+                            <x-lucide-calendar-arrow-down
+                                class="{{ request()->routeIs('admin.stock-orders.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" /> --}}
+
+                                Transfers
+                            </a>
+                        <li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="#"
+                                class="flex items-center w-full p-2 pl-4 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group hover:bg-gray-100">
+                                Prices
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="#"
+                                class="flex items-center w-full p-2 pl-4 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group hover:bg-gray-100">
+                                Discounts and Promotions
+                            </a>
+                        </li>
+                    </div>
+
                 </ul>
             </li>
 
@@ -91,6 +130,7 @@
                     <span class="flex-1 ms-3 whitespace-nowrap">Store</span>
                 </a>
             </li>
+
             <li>
                 <a href="{{ route('admin.customers.index') }}"
                     class="{{ request()->routeIs('admin.customers.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2">
@@ -102,10 +142,6 @@
                 </a>
 
             </li>
-
-
-
-
 
             <li>
                 <a href="{{ route('admin.carts.index') }}" @if (request()->routeIs('admin.carts.*')) aria-current="page" @endif
@@ -127,177 +163,138 @@
             </li>
 
             <li>
-                <a href="{{ route('admin.sales.index') }}"
-                    class="{{ request()->routeIs('admin.sales.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
-
-                    <x-lucide-trending-up
-                        class="{{ request()->routeIs('admin.sales.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Sales</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#"
-                    class="{{ request()->routeIs('admin.delivery.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
-
-                    <x-lucide-truck
-                        class="{{ request()->routeIs('admin.delivery.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Delivery</span>
-                </a>
-            </li>
-
-
-            <li>
-                <a href="#"
-                    class="{{ request()->routeIs('admin.stock.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
-
-                    <x-lucide-boxes
-                        class="{{ request()->routeIs('admin.stock.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Stock</span>
-                </a>
-            </li>
-            <li>
-                <a href="#"
-                    class="{{ request()->routeIs('admin.stock-orders.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
-
-                    <x-lucide-calendar-arrow-down
-                        class="{{ request()->routeIs('admin.stock-orders.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Stock Orders</span>
-                </a>
-            <li>
-                <a href="{{ route('admin.purchases.index') }}"
-                    class="{{ request()->routeIs('admin.purchases.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
-
-                    <x-lucide-scan-barcode
-                        class="{{ request()->routeIs('admin.purchases.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Purchase Orders</span>
-                </a>
-            </li>
-
-
-            <li>
-                <a href="#"
-                    class="{{ request()->routeIs('admin.balance.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
-
-                    <x-lucide-wallet
-                        class="{{ request()->routeIs('admin.balance.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Balance</span>
-                </a>
-            </li>
-
-
-
-
-
-
-            <li>
-                <a href="#"
-                    class="{{ request()->routeIs('admin.documents.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
-
-                    <x-lucide-file
-                        class="{{ request()->routeIs('admin.documents.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Documents</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="#"
-                    class="{{ request()->routeIs('admin.calendar.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
-
-                    <x-lucide-calendar-days
-                        class="{{ request()->routeIs('admin.calendar.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-
-                    <span class="flex-1 ms-3 whitespace-nowrap">Calendar</span>
-                </a>
-            </li>
-
-            <li>
                 <button type="button"
-                    class="{{ request()->routeIs('admin.tasks.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100' }} flex w-full items-center rounded-lg p-2 text-base transition duration-75"
-                    aria-controls="tasks-dropdown" data-collapse-toggle="tasks-dropdown">
+                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg cursor-default dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100"
+                    aria-controls="more-dropdown" data-collapse-toggle="more-dropdown">
 
-                    <x-lucide-circle-check
-                        class="{{ request()->routeIs('admin.tasks.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+                    <x-lucide-ellipsis
+                        class="{{ request()->is('admin/more/*') ||
+                        request()->routeIs('admin.sales.*') ||
+                        request()->routeIs('admin.deliverys.*') ||
+                        request()->routeIs('admin.purchases.*') ||
+                        request()->routeIs('admin.balances.*') ||
+                        request()->routeIs('admin.documents.*') ||
+                        request()->routeIs('admin.calendars.*') ||
+                        request()->routeIs('admin.payments.*') ||
+                        request()->routeIs('admin.tasks.*')
+                            ? 'text-orange-500 dark:text-white'
+                            : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="flex-1 text-left ms-3 whitespace-nowrap">Tasks</span>
+                    <span class="flex-1 text-left ms-3 whitespace-nowrap rtl:text-right">More</span>
 
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 1 4 4 4-4" />
                     </svg>
                 </button>
 
-                <ul id="tasks-dropdown" class="hidden py-2 space-y-2">
-                    <li>
-                        <a href="#"
-                            class="{{ request()->routeIs('admin.payments.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100' }} flex w-full items-center rounded-lg p-2 pl-11 text-base transition duration-75">
-                            <x-lucide-scan-barcode
-                                class="{{ request()->routeIs('admin.payments.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
-                            <span class="ms-3">Payments</span>
-                        </a>
-                    </li>
+                <ul id="more-dropdown"
+                    class="{{ request()->is('admin/more/*') ||
+                    request()->routeIs('admin.sales.*') ||
+                    request()->routeIs('admin.deliverys.*') ||
+                    request()->routeIs('admin.purchases.*') ||
+                    request()->routeIs('admin.balances.*') ||
+                    request()->routeIs('admin.documents.*') ||
+                    request()->routeIs('admin.calendars.*') ||
+                    request()->routeIs('admin.payments.*') ||
+                    request()->routeIs('admin.tasks.*')
+                        ? 'block'
+                        : 'hidden' }} space-y-2 py-2">
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="{{ route('admin.sales.index') }}"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.sales.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                {{-- <x-lucide-trending-up class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+                                Sales
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="#"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.deliverys.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                {{-- <x-lucide-truck class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+                                Delivery
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="{{ route('admin.purchases.index') }}"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.purchases.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                {{-- <x-lucide-scan-barcode class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+                                Purchase Orders
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="#"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.balances.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                {{-- <x-lucide-wallet class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+                                Balance
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="#"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.documents.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                {{-- <x-lucide-file class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+                                Documents
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="#"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.calendars.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                {{-- <x-lucide-calendar-days class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+                                Calendar
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="#"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.payments.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                {{-- <x-lucide-scan-barcode class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+                                Payments
+                            </a>
+                        </li>
+                    </div>
+
+                    <div class="pl-11">
+                        <li>
+                            <a href="#"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.tasks.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                {{-- <x-lucide-circle-check class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+                                Tasks
+                            </a>
+                        </li>
+                    </div>
+
                 </ul>
             </li>
 
+            <li>
+                <a href="{{ route('admin.settings.index') }}"
+                    class="{{ request()->routeIs('admin.setting.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2 transition duration-75">
 
+                    <x-lucide-settings
+                        class="{{ request()->routeIs('admin.settings.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
+                    <span class="flex-1 ms-3 whitespace-nowrap">Settings</span>
+                </a>
+            </li>
 
-
-
-
-            {{--
-        <li>
-        <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 18 18">
-        <path d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"/>
-        </svg>
-        <span class="flex-1 ms-3 whitespace-nowrap">Kanban</span>
-        <span class="inline-flex items-center justify-center px-2 text-sm font-medium text-gray-800 bg-gray-100 rounded-full ms-3 dark:bg-gray-700 dark:text-gray-300">Pro</span>
-        </a>
-        </li>
-        <li>
-        <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-        <path d="m17.418 3.623-.018-.008a6.713 6.713 0 0 0-2.4-.569V2h1a1 1 0 1 0 0-2h-2a1 1 0 0 0-1 1v2H9.89A6.977 6.977 0 0 1 12 8v5h-2V8A5 5 0 1 0 0 8v6a1 1 0 0 0 1 1h8v4a1 1 0 0 0 1 1h2a1 1 0 0 0 1-1v-4h6a1 1 0 0 0 1-1V8a5 5 0 0 0-2.582-4.377ZM6 12H4a1 1 0 0 1 0-2h2a1 1 0 0 1 0 2Z"/>
-        </svg>
-        <span class="flex-1 ms-3 whitespace-nowrap">Inbox</span>
-        <span class="inline-flex items-center justify-center w-3 h-3 p-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full ms-3 dark:bg-blue-900 dark:text-blue-300">3</span>
-        </a>
-        </li>
-        <li>
-        <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 18">
-        <path d="M14 2a3.963 3.963 0 0 0-1.4.267 6.439 6.439 0 0 1-1.331 6.638A4 4 0 1 0 14 2Zm1 9h-1.264A6.957 6.957 0 0 1 15 15v2a2.97 2.97 0 0 1-.184 1H19a1 1 0 0 0 1-1v-1a5.006 5.006 0 0 0-5-5ZM6.5 9a4.5 4.5 0 1 0 0-9 4.5 4.5 0 0 0 0 9ZM8 10H5a5.006 5.006 0 0 0-5 5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2a5.006 5.006 0 0 0-5-5Z"/>
-        </svg>
-        <span class="flex-1 ms-3 whitespace-nowrap">Users</span>
-        </a>
-        </li>
-        <li>
-        <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 18 16">
-        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M1 8h11m0 0L8 4m4 4-4 4m4-11h3a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2h-3"/>
-        </svg>
-        <span class="flex-1 ms-3 whitespace-nowrap">Sign In</span>
-        </a>
-        </li>
-        <li>
-        <a href="#" class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
-        <svg class="flex-shrink-0 w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
-        <path d="M5 5V.13a2.96 2.96 0 0 0-1.293.749L.879 3.707A2.96 2.96 0 0 0 .13 5H5Z"/>
-        <path d="M6.737 11.061a2.961 2.961 0 0 1 .81-1.515l6.117-6.116A4.839 4.839 0 0 1 16 2.141V2a1.97 1.97 0 0 0-1.933-2H7v5a2 2 0 0 1-2 2H0v11a1.969 1.969 0 0 0 1.933 2h12.134A1.97 1.97 0 0 0 16 18v-3.093l-1.546 1.546c-.413.413-.94.695-1.513.81l-3.4.679a2.947 2.947 0 0 1-1.85-.227 2.96 2.96 0 0 1-1.635-3.257l.681-3.397Z"/>
-        <path d="M8.961 16a.93.93 0 0 0 .189-.019l3.4-.679a.961.961 0 0 0 .49-.263l6.118-6.117a2.884 2.884 0 0 0-4.079-4.078l-6.117 6.117a.96.96 0 0 0-.263.491l-.679 3.4A.961.961 0 0 0 8.961 16Zm7.477-9.8a.958.958 0 0 1 .68-.281.961.961 0 0 1 .682 1.644l-.315.315-1.36-1.36.313-.318Zm-5.911 5.911 4.236-4.236 1.359 1.359-4.236 4.237-1.7.339.341-1.699Z"/>
-        </svg>
-        <span class="flex-1 ms-3 whitespace-nowrap">Sign Up</span>
-        </a>
-        </li>
-      --}}
         </ul>
     </div>
 </aside>

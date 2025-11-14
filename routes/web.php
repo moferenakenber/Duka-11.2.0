@@ -9,6 +9,8 @@ use App\Http\Controllers\Admin\PurchaseController;
 use App\Http\Controllers\Admin\ProfileController;
 use App\Http\Controllers\Admin\VariantController;
 //use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\TransferController;
+use App\Http\Controllers\Admin\StockController;
 
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Seller\CustomerController as SellerCustomerController;
@@ -20,7 +22,7 @@ use App\Http\Controllers\Seller\SellerSettingsController;
 use App\Http\Controllers\Stockkeeper\OrderController as StockkeeperOrderController;
 use App\Http\Controllers\Stockkeeper\InventoryController as StockkeeperInventoryController;
 use App\Http\Controllers\Stockkeeper\MenuController as StockkeeperMenuController;
-
+use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -85,6 +87,8 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         //Route::resource('products', ProductController::class);
         Route::resource('sales', SaleController::class);
         Route::resource('purchases', PurchaseController::class);
+        Route::resource('stocks', StockController::class);
+        Route::resource('transfers', TransferController::class);
         // Upload images route
 
         Route::post('items/upload-images', [ItemController::class, 'uploadImages'])
@@ -116,6 +120,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
 
         Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
+
+        Route::get('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'index'])
+            ->name('settings.index');
+
+        Route::post('settings', [\App\Http\Controllers\Admin\SettingsController::class, 'update'])
+            ->name('settings.update');
     });
 
     // Seller routes group

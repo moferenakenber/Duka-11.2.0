@@ -5,7 +5,9 @@
     <x-slot name="header">
         <div class="flex items-center justify-between">
             <!-- Left side: Title -->
-            <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+
+            <h2 class="flex items-center gap-2 text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+                <x-lucide-scan-barcode class="w-5 h-5 text-orange-500 dark:text-white" />
                 {{ __('Purchases') }}
             </h2>
 
@@ -32,7 +34,7 @@
                                     d="m9 12l2 2 4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0z"></path>
                             </svg>
                         </label>
-                        <ul class="p-2 shadow dropdown-content menu bg-base-100 rounded-box w-52">
+                        <ul class="p-2 shadow menu dropdown-content w-52 rounded-box bg-base-100">
                             <li><a href="#">User Management</a></li>
                             <li><a href="#">Payroll Process</a></li>
                             <li><a href="#">Payroll Payment</a></li>
@@ -76,8 +78,8 @@
                     <label for="my-drawer-3" aria-label="open sidebar" class="btn btn-square btn-ghost">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             class="inline-block w-6 h-6 stroke-current">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M4 6h16M4 12h16M4 18h16"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16">
+                            </path>
                         </svg>
                     </label>
                 </div>

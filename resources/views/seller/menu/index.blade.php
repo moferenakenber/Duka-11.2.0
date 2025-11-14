@@ -85,7 +85,7 @@
                         <x-lucide-calendar-arrow-down class="w-6 h-6 mr-2 text-gray-600" />
 
                         <!-- Label -->
-                        <span class="ml-2">Stock Orders</span>
+                        <span class="ml-2">Transfers</span>
                     </a>
 
                     <a href="#" class="flex items-center p-4 bg-white rounded-lg hover:bg-gray-100">
@@ -131,6 +131,13 @@
 
                         <!-- Right section: Badge -->
                         <span class="px-2 py-1 text-white bg-blue-500 rounded-full">1</span>
+                    </a>
+                    <a href="#" class="flex items-center p-4 bg-white rounded-lg hover:bg-gray-100">
+                        <!-- Lucide Icon -->
+                        <x-lucide-calendar-days class="w-6 h-6 mr-2 text-gray-600" />
+
+                        <!-- Label -->
+                        <span class="ml-2">Payments</span>
                     </a>
                     {{-- {/* Add more menu items here */} --}}
                 </div>
