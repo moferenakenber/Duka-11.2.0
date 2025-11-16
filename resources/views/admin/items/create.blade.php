@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="dark:text-gray-200 text-xl font-semibold leading-tight text-gray-800">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
             {{ __('Create Item') }}
         </h2>
     </x-slot>
 
-    <div class="mx-auto max-w-6xl p-4" x-data="{ variants: [] }">
-        <div class="rounded-xl bg-base-100 p-6 shadow-xl">
+    <div class="max-w-6xl p-4 mx-auto" x-data="{ variants: [] }">
+        <div class="p-6 shadow-xl rounded-xl bg-base-100">
             <form action="{{ route('admin.saveDraft') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
@@ -16,7 +16,7 @@
                         <label class="label">
                             <span class="label-text">Product Name</span>
                         </label>
-                        <input type="text" name="product_name" class="input input-bordered w-full" placeholder="Product name">
+                        <input type="text" name="product_name" class="w-full input input-bordered" placeholder="Product name">
                     </div>
                 </div>
 
@@ -24,14 +24,14 @@
                     <label class="label">
                         <span class="label-text">Product Description</span>
                     </label>
-                    <textarea name="product_description" rows="3" class="textarea textarea-bordered w-full" placeholder="Enter description..."></textarea>
+                    <textarea name="product_description" rows="3" class="w-full textarea textarea-bordered" placeholder="Enter description..."></textarea>
                 </div>
 
                 <div class="mb-4">
                     <label class="label">
                         <span class="label-text">Packaging Details</span>
                     </label>
-                    <textarea name="packaging_details" rows="2" class="textarea textarea-bordered w-full" placeholder="Box, Bag, etc."></textarea>
+                    <textarea name="packaging_details" rows="2" class="w-full textarea textarea-bordered" placeholder="Box, Bag, etc."></textarea>
                 </div>
 
                 <!-- Images & Category -->
@@ -40,20 +40,20 @@
                         <label class="label">
                             <span class="label-text">Product Images</span>
                         </label>
-                        <input type="file" name="product_images[]" multiple class="file-input file-input-bordered w-full"
+                        <input type="file" name="product_images[]" multiple class="w-full file-input file-input-bordered"
                             @change="uploadFiles($event)">
                     </div>
 
-                    <div class="mt-3 flex gap-3">
+                    <div class="flex gap-3 mt-3">
                         <template x-for="img in images" :key="img">
-                            <img :src="img" class="h-16 w-16 rounded border" />
+                            <img :src="img" class="w-16 h-16 border rounded" />
                         </template>
                     </div>
 
                     <!-- Progress Bar -->
                     <div class="mt-2" x-show="uploading">
-                        <div class="h-4 w-full rounded-full bg-gray-200">
-                            <div class="h-4 rounded-full bg-blue-600" :style="'width: ' + progress + '%'">
+                        <div class="w-full h-4 bg-gray-200 rounded-full">
+                            <div class="h-4 bg-blue-600 rounded-full" :style="'width: ' + progress + '%'">
                             </div>
                         </div>
                         <p class="mt-1 text-sm text-gray-700" x-text="progress + '%'"></p>
@@ -90,7 +90,7 @@
                             }
                             selectedCategory = '';
                         "
-                        class="select select-bordered w-full text-black">
+                        class="w-full text-black select select-bordered">
                         <option value="">-- Select Category --</option>
                         @foreach ($categories as $cat)
                             <option value="{{ $cat->id }}">{{ $cat->category_name }}</option>
@@ -99,8 +99,8 @@
                     </select>
 
                     <!-- Add New Category -->
-                    <div class="mt-2 flex gap-2">
-                        <input type="text" x-model="newCategory" class="input input-bordered flex-1"
+                    <div class="flex gap-2 mt-2">
+                        <input type="text" x-model="newCategory" class="flex-1 input input-bordered"
                             placeholder="Add new category">
 
                         <button type="button" class="btn btn-primary"
@@ -119,9 +119,9 @@
                     </div>
 
                     <!-- Selected Categories -->
-                    <div class="mt-2 flex flex-wrap gap-2">
+                    <div class="flex flex-wrap gap-2 mt-2">
                         <template x-for="(cat, index) in categories" :key="cat.id">
-                            <span class="flex items-center gap-2 rounded-full bg-indigo-500 px-3 py-1 text-white">
+                            <span class="flex items-center gap-2 px-3 py-1 text-white bg-indigo-500 rounded-full">
                                 <span x-text="cat.name"></span>
                                 <button type="button" @click="categories.splice(index, 1)">✕</button>
                             </span>
@@ -139,7 +139,7 @@
                 <div class="mb-4" x-data="{ colors: [], selectedColor: '', newColor: '', noColor: false }">
                     <label class="label">Colors</label>
 
-                    <label class="mb-2 flex items-center gap-2">
+                    <label class="flex items-center gap-2 mb-2">
                         <input type="checkbox" x-model="noColor" @change="colors = []">
                         <span>No color for this item</span>
                     </label>
@@ -154,15 +154,15 @@
                         }
                         selectedColor = '';
                       "
-                                class="select select-bordered w-full">
+                                class="w-full select select-bordered">
                                 <option value="">-- Select Color --</option>
                                 @foreach ($colors as $color)
                                     <option value="{{ $color->id }}">{{ $color->name }}</option>
                                 @endforeach
                             </select>
 
-                            <div class="mt-2 flex gap-2">
-                                <input x-model="newColor" class="input input-bordered flex-1" placeholder="Add new color">
+                            <div class="flex gap-2 mt-2">
+                                <input x-model="newColor" class="flex-1 input input-bordered" placeholder="Add new color">
                                 <button type="button" class="btn btn-primary"
                                     @click="
                             if (newColor.trim()) {
@@ -174,9 +174,9 @@
                                 </button>
                             </div>
 
-                            <div class="mt-2 flex flex-wrap gap-2">
+                            <div class="flex flex-wrap gap-2 mt-2">
                                 <template x-for="(c, i) in colors" :key="c.id">
-                                    <span class="flex items-center gap-2 rounded-full bg-blue-500 px-3 py-1 text-white">
+                                    <span class="flex items-center gap-2 px-3 py-1 text-white bg-blue-500 rounded-full">
                                         <span x-text="c.name"></span>
                                         <button @click="colors.splice(i,1)">✕</button>
                                     </span>
@@ -197,7 +197,7 @@
                     <label class="label">Sizes</label>
 
                     <!-- No Size Option -->
-                    <label class="mb-2 flex items-center gap-2">
+                    <label class="flex items-center gap-2 mb-2">
                         <input type="checkbox" x-model="noSize" @change="sizes = []">
                         <span>No size for this item</span>
                     </label>
@@ -214,7 +214,7 @@
                     }
                     selectedSize = '';
                 "
-                                class="select select-bordered w-full">
+                                class="w-full select select-bordered">
                                 <option value="">-- Select Size --</option>
                                 @foreach ($sizes as $size)
                                     <option value="{{ $size->id }}">{{ $size->name }}
@@ -223,8 +223,8 @@
                             </select>
 
                             <!-- Add New Size -->
-                            <div class="mt-2 flex gap-2">
-                                <input x-model="newSize" class="input input-bordered flex-1" placeholder="Add new size">
+                            <div class="flex gap-2 mt-2">
+                                <input x-model="newSize" class="flex-1 input input-bordered" placeholder="Add new size">
                                 <button type="button" class="btn btn-primary"
                                     @click="
                         if (newSize.trim()) {
@@ -237,9 +237,9 @@
                             </div>
 
                             <!-- Selected Sizes -->
-                            <div class="mt-2 flex flex-wrap gap-2">
+                            <div class="flex flex-wrap gap-2 mt-2">
                                 <template x-for="(s, i) in sizes" :key="s.id">
-                                    <span class="flex items-center gap-2 rounded-full bg-green-600 px-3 py-1 text-white">
+                                    <span class="flex items-center gap-2 px-3 py-1 text-white bg-green-600 rounded-full">
                                         <span x-text="s.name"></span>
                                         <button type="button" @click="sizes.splice(i, 1)">✕</button>
                                     </span>
@@ -326,14 +326,14 @@
                     <label class="label">Packaging</label>
 
                     <!-- No Packaging Option -->
-                    <label class="mb-2 flex items-center gap-2">
+                    <label class="flex items-center gap-2 mb-2">
                         <input type="checkbox" x-model="noPack">
                         <span>No packaging for this item</span>
                     </label>
 
                     <!-- Select Packaging -->
-                    <div class="mb-2 flex gap-2">
-                        <select x-model="selectedPack" class="select select-bordered w-full" :disabled="noPack">
+                    <div class="flex gap-2 mb-2">
+                        <select x-model="selectedPack" class="w-full select select-bordered" :disabled="noPack">
                             <option value="">-- Select Packaging --</option>
                             @foreach ($packagingTypes as $pack)
                                 <option value="{{ $pack->id }}" :data-type="'{{ $pack->type ?? 'custom' }}'">
@@ -346,9 +346,9 @@
                     </div>
 
                     <!-- Custom Packaging -->
-                    <div class="mb-2 flex gap-2">
+                    <div class="flex gap-2 mb-2">
                         <input type="text" x-model="customPackName" placeholder="Custom Packaging Name"
-                            class="input input-bordered flex-1" :disabled="noPack">
+                            class="flex-1 input input-bordered" :disabled="noPack">
                         <button type="button" class="btn btn-secondary" @click="addCustomPack()" :disabled="noPack">Add
                             Custom</button>
                     </div>
@@ -356,12 +356,12 @@
                     <!-- Selected Packagings -->
                     <div class="mt-2 space-y-2">
                         <template x-for="(p, i) in packs" :key="p.id">
-                            <div class="flex items-center gap-2 rounded bg-gray-100 px-3 py-1">
+                            <div class="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded">
                                 <span x-text="p.name"></span>
 
                                 <!-- Quantity Input for non-piece -->
                                 <template x-if="p.type !== 'piece'">
-                                    <input type="number" min="1" class="input input-sm input-bordered w-20"
+                                    <input type="number" min="1" class="w-20 input input-sm input-bordered"
                                         placeholder="Quantity" x-model.number="p.quantity" @input="calculateTotals()">
                                 </template>
 
@@ -391,7 +391,7 @@
 
 
     <div class="mt-6 text-end">
-        <button type="submit" class="btn btn-primary px-6">Save Product</button>
+        <button type="submit" class="px-6 btn btn-primary">Save Product</button>
     </div>
     </form>
     </div>
@@ -440,15 +440,108 @@
             }
         }
 
+        // function packagingForm() {
+        //     return {
+        //         packs: [{
+        //             // id: 'piece',
+        //             // name: 'Piece',
+        //             // type: 'piece',
+        //             // quantity: 1,
+        //             // totalPieces: 1,
+        //             // displayText: '(1 pcs)'
+        //             id: @json($packagingTypes->where('name', 'Piece')->first()?->id ?? 1),
+        //             name: 'Piece',
+        //             type: 'piece',
+        //             quantity: 1,
+        //             totalPieces: 1,
+        //             displayText: '(1 pcs)'
+        //         }],
+        //         selectedPack: '',
+        //         customPackName: '',
+
+        //         addPack(selectedId) {
+        //             if (!selectedId || selectedId === 'piece') return;
+
+        //             const select = document.querySelector(`select[x-model="selectedPack"]`);
+        //             const option = select.options[select.selectedIndex];
+        //             const type = option.dataset.type || 'custom';
+        //             const name = option.text;
+
+        //             if (!this.packs.find(p => p.id == selectedId)) {
+        //                 this.packs.push({
+        //                     id: selectedId,
+        //                     name: name,
+        //                     type: type,
+        //                     quantity: 1,
+        //                     totalPieces: 1,
+        //                     displayText: ''
+        //                 });
+        //             }
+
+        //             this.selectedPack = '';
+        //             this.calculateTotals();
+        //         },
+
+        //         addCustomPack() {
+        //             if (!this.customPackName) return;
+
+        //             const id = 'custom_' + Date.now();
+
+        //             this.packs.push({
+        //                 id: id,
+        //                 name: this.customPackName,
+        //                 type: 'custom',
+        //                 quantity: 1,
+        //                 totalPieces: 1,
+        //                 displayText: ''
+        //             });
+
+        //             this.customPackName = '';
+        //             this.calculateTotals();
+        //         },
+
+        //         calculateTotals() {
+        //             for (let i = 0; i < this.packs.length; i++) {
+        //                 let p = this.packs[i];
+
+        //                 if (p.type === 'piece') {
+        //                     p.totalPieces = 1;
+        //                     p.displayText = '(1 pcs)';
+        //                 } else {
+        //                     let qty = p.quantity || 1;
+
+        //                     // Calculate total pieces
+        //                     let parent = this.packs[i - 1];
+        //                     p.totalPieces = qty * parent.totalPieces;
+
+        //                     // Build display text including all ancestors for levels > Packet
+        //                     if (i === 1) {
+        //                         // Packet after Piece
+        //                         p.displayText = `(${qty} ${parent.name}, ${p.totalPieces} pcs)`;
+        //                     } else if (i === 2) {
+        //                         // Cartoon after Packet
+        //                         p.displayText = `(${qty} ${parent.name}, ${p.totalPieces} pcs)`;
+        //                     } else {
+        //                         // Container or deeper levels: show all ancestors
+        //                         let ancestors = [];
+        //                         for (let j = i - 1; j >= 0; j--) {
+        //                             let ancestorQty = 1;
+        //                             for (let k = j + 1; k <= i; k++) {
+        //                                 ancestorQty *= this.packs[k].quantity || 1;
+        //                             }
+        //                             ancestors.push(`${ancestorQty} ${this.packs[j].name}`);
+        //                         }
+        //                         p.displayText = `(${qty} ${parent.name}, ${ancestors.join(', ')}, ${p.totalPieces} pcs)`;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
+
         function packagingForm() {
             return {
                 packs: [{
-                    // id: 'piece',
-                    // name: 'Piece',
-                    // type: 'piece',
-                    // quantity: 1,
-                    // totalPieces: 1,
-                    // displayText: '(1 pcs)'
                     id: @json($packagingTypes->where('name', 'Piece')->first()?->id ?? 1),
                     name: 'Piece',
                     type: 'piece',
@@ -458,15 +551,18 @@
                 }],
                 selectedPack: '',
                 customPackName: '',
+                noPack: false,
 
                 addPack(selectedId) {
-                    if (!selectedId || selectedId === 'piece') return;
+                    if (!selectedId) return;
 
+                    // Find the selected option
                     const select = document.querySelector(`select[x-model="selectedPack"]`);
                     const option = select.options[select.selectedIndex];
                     const type = option.dataset.type || 'custom';
                     const name = option.text;
 
+                    // Avoid duplicates
                     if (!this.packs.find(p => p.id == selectedId)) {
                         this.packs.push({
                             id: selectedId,
@@ -506,32 +602,21 @@
 
                         if (p.type === 'piece') {
                             p.totalPieces = 1;
-                            p.displayText = '(1 pcs)';
+                            p.displayText = `(1 pcs)`;
                         } else {
-                            let qty = p.quantity || 1;
+                            // Multiply quantity by all previous levels
+                            let total = p.quantity || 1;
+                            for (let j = i - 1; j >= 0; j--) {
+                                total *= this.packs[j].quantity || 1;
+                            }
+                            p.totalPieces = total;
 
-                            // Calculate total pieces
-                            let parent = this.packs[i - 1];
-                            p.totalPieces = qty * parent.totalPieces;
-
-                            // Build display text including all ancestors for levels > Packet
-                            if (i === 1) {
-                                // Packet after Piece
-                                p.displayText = `(${qty} ${parent.name}, ${p.totalPieces} pcs)`;
-                            } else if (i === 2) {
-                                // Cartoon after Packet
-                                p.displayText = `(${qty} ${parent.name}, ${p.totalPieces} pcs)`;
+                            // Display text showing hierarchy
+                            if (i > 0) {
+                                const parent = this.packs[i - 1];
+                                p.displayText = `(${p.quantity} ${parent.name}, ${p.totalPieces} pcs)`;
                             } else {
-                                // Container or deeper levels: show all ancestors
-                                let ancestors = [];
-                                for (let j = i - 1; j >= 0; j--) {
-                                    let ancestorQty = 1;
-                                    for (let k = j + 1; k <= i; k++) {
-                                        ancestorQty *= this.packs[k].quantity || 1;
-                                    }
-                                    ancestors.push(`${ancestorQty} ${this.packs[j].name}`);
-                                }
-                                p.displayText = `(${qty} ${parent.name}, ${ancestors.join(', ')}, ${p.totalPieces} pcs)`;
+                                p.displayText = `(${p.quantity} pcs)`;
                             }
                         }
                     }

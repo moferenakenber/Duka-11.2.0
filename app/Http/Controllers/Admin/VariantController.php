@@ -161,25 +161,35 @@ class VariantController extends Controller
         Log::info('Variant store request:', $request->all());
 
         if ($request->has('variants')) {
-            foreach ($request->variants as $variantData) {
-                // Save variant (without stock)
+            foreach ($request->variants as $index => $variantData) {
+
+                // Handle image upload
+                $imagePath = null;
+                if (isset($variantData['image']) && $variantData['image'] instanceof \Illuminate\Http\UploadedFile) {
+                    $imagePath = $variantData['image']->store('variants', 'public');
+                }
+
                 $variant = ItemVariant::create([
                     'item_id' => $itemId,
                     'item_color_id' => $variantData['item_color_id'] ?? null,
                     'item_size_id' => $variantData['item_size_id'] ?? null,
                     'item_packaging_type_id' => $variantData['item_packaging_type_id'] ?? null,
                     'price' => $variantData['price'] ?? 0,
+                    'barcode' => $variantData['barcode'] ?? null,
+                    'image' => $imagePath,
                     'is_active' => true,
+                    'packaging_total_pieces' => $variantData['packaging_total_pieces'] ?? 1,
                 ]);
 
-                // Save stock for the variant
+                // Save stock
                 ItemStock::create([
                     'item_variant_id' => $variant->id,
-                    'item_inventory_location_id' => 1, // default location ID
+                    'item_inventory_location_id' => 1, // default location
                     'quantity' => $variantData['stock'] ?? 0,
                 ]);
             }
         }
+
 
         return redirect()->back()->with('success', 'Variants saved successfully!');
     }
@@ -273,6 +283,20 @@ class VariantController extends Controller
 
         return view('admin.variants.items_index', compact('items'));
     }
+
+
+    public function updateStatus(Request $request, ItemVariant $variant)
+    {
+        $request->validate([
+            'status' => 'required|in:active,inactive,unavailable,out_of_stock',
+        ]);
+
+        $variant->status = $request->status;
+        $variant->save();
+
+        return redirect()->back()->with('success', 'Variant status updated successfully.');
+    }
+
 
 
 

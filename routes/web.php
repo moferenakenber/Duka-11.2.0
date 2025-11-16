@@ -115,6 +115,13 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
             // Variant CRUD (except store)
             Route::resource('crud', VariantController::class)->except(['store']);
+            // --- Add status update route ---
+            Route::put('/{variant}/status', [VariantController::class, 'updateStatus'])
+                ->name('variants.updateStatus');
+
+            // Variant edit page
+            Route::get('/{variant}/edit', [VariantController::class, 'edit'])
+                ->name('variants.edit');
         });
 
 

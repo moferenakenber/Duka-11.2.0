@@ -24,7 +24,7 @@
 
             <li>
                 <button type="button"
-                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg cursor-default dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100"
+                    class="dark:text-white dark:hover:bg-gray-700 flex w-full cursor-default items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100"
                     aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
 
                     <x-lucide-box
@@ -35,9 +35,9 @@
                             ? 'text-orange-500 dark:text-white'
                             : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="flex-1 text-left ms-3 whitespace-nowrap rtl:text-right">Products</span>
+                    <span class="ms-3 flex-1 whitespace-nowrap text-left rtl:text-right">Products</span>
 
-                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 1 4 4 4-4" />
                     </svg>
@@ -81,6 +81,7 @@
                                 class="{{ request()->routeIs('admin.stock.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" /> --}}
 
                                 Stock
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -95,6 +96,7 @@
                                 class="{{ request()->routeIs('admin.stock-orders.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" /> --}}
 
                                 Transfers
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         <li>
                     </div>
@@ -102,8 +104,9 @@
                     <div class="pl-11">
                         <li>
                             <a href="#"
-                                class="flex items-center w-full p-2 pl-4 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group hover:bg-gray-100">
+                                class="dark:text-white dark:hover:bg-gray-700 group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
                                 Prices
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -111,8 +114,9 @@
                     <div class="pl-11">
                         <li>
                             <a href="#"
-                                class="flex items-center w-full p-2 pl-4 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group hover:bg-gray-100">
+                                class="dark:text-white dark:hover:bg-gray-700 group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
                                 Discounts and Promotions
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -120,7 +124,7 @@
                 </ul>
             </li>
 
-            <li>
+            {{-- <li>
                 <a href="#" onclick="return false;"
                     class="{{ request()->routeIs('admin.store.*') ? 'bg-orange-100 dark:bg-orange-700' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2">
 
@@ -129,7 +133,25 @@
 
                     <span class="flex-1 ms-3 whitespace-nowrap">Store</span>
                 </a>
+            </li> --}}
+
+            <li>
+                <a href="#" onclick="return false;"
+                    class="{{ request()->routeIs('admin.store.*') ? 'bg-orange-100 dark:bg-orange-700' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2">
+
+                    <!-- Icon -->
+                    <x-lucide-store
+                        class="{{ request()->routeIs('admin.store.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+
+                    <!-- Text -->
+                    <span class="ms-3 flex-1 whitespace-nowrap">Store</span>
+
+                    <!-- Dot indicator on the far right -->
+                    <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
+
+                </a>
             </li>
+
 
             <li>
                 <a href="{{ route('admin.customers.index') }}"
@@ -150,7 +172,7 @@
                     <x-lucide-shopping-cart
                         class="{{ request()->routeIs('admin.carts.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="flex-1 ms-3 whitespace-nowrap">Carts</span>
+                    <span class="ms-3 flex-1 whitespace-nowrap">Carts</span>
 
                     {{-- optional badge: only show if $cartCount is provided --}}
                     @isset($cartCount)
@@ -164,7 +186,7 @@
 
             <li>
                 <button type="button"
-                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg cursor-default dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100"
+                    class="dark:text-white dark:hover:bg-gray-700 flex w-full cursor-default items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100"
                     aria-controls="more-dropdown" data-collapse-toggle="more-dropdown">
 
                     <x-lucide-ellipsis
@@ -180,9 +202,9 @@
                             ? 'text-orange-500 dark:text-white'
                             : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="flex-1 text-left ms-3 whitespace-nowrap rtl:text-right">More</span>
+                    <span class="ms-3 flex-1 whitespace-nowrap text-left rtl:text-right">More</span>
 
-                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 1 4 4 4-4" />
                     </svg>
@@ -205,8 +227,9 @@
                         <li>
                             <a href="{{ route('admin.sales.index') }}"
                                 class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.sales.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
-                                {{-- <x-lucide-trending-up class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+
                                 Sales
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -215,8 +238,9 @@
                         <li>
                             <a href="#"
                                 class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.deliverys.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
-                                {{-- <x-lucide-truck class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+
                                 Delivery
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -225,8 +249,9 @@
                         <li>
                             <a href="{{ route('admin.purchases.index') }}"
                                 class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.purchases.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
-                                {{-- <x-lucide-scan-barcode class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+
                                 Purchase Orders
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -235,8 +260,9 @@
                         <li>
                             <a href="#"
                                 class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.balances.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
-                                {{-- <x-lucide-wallet class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+
                                 Balance
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -245,8 +271,9 @@
                         <li>
                             <a href="#"
                                 class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.documents.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
-                                {{-- <x-lucide-file class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+
                                 Documents
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -255,8 +282,9 @@
                         <li>
                             <a href="#"
                                 class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.calendars.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
-                                {{-- <x-lucide-calendar-days class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+
                                 Calendar
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -265,8 +293,9 @@
                         <li>
                             <a href="#"
                                 class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.payments.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
-                                {{-- <x-lucide-scan-barcode class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+
                                 Payments
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
@@ -275,11 +304,13 @@
                         <li>
                             <a href="#"
                                 class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.tasks.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
-                                {{-- <x-lucide-circle-check class="flex-shrink-0 w-5 h-5 transition duration-75" /> --}}
+
                                 Tasks
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
                         </li>
                     </div>
+
 
                 </ul>
             </li>
@@ -291,7 +322,7 @@
                     <x-lucide-settings
                         class="{{ request()->routeIs('admin.settings.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="flex-1 ms-3 whitespace-nowrap">Settings</span>
+                    <span class="ms-3 flex-1 whitespace-nowrap">Settings</span>
                 </a>
             </li>
 

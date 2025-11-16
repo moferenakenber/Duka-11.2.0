@@ -128,5 +128,29 @@ class ItemVariant extends Model
         });
     }
 
+    public function calculateTotalPieces(): int
+    {
+        if (!$this->item_packaging_type_id)
+            return 1;
+
+        $item = $this->item;
+        $packs = $item->packagingTypes->sortBy('pivot_id')->values();
+        $total = 1;
+        $found = false;
+
+        foreach ($packs as $pack) {
+            $qty = $pack->pivot->quantity ?? 1;
+            $total *= $qty;
+
+            if ($pack->id == $this->item_packaging_type_id) {
+                $found = true;
+                break;
+            }
+        }
+
+        return $found ? $total : 1;
+    }
+
+
 
 }

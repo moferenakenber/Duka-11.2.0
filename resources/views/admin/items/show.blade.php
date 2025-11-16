@@ -4,6 +4,21 @@
             <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                 {{ __('Item Details') }}
             </h2>
+            <div class="flex items-center gap-2">
+                <a href="{{ route('admin.items.edit', $item->id) }}"
+                    class="inline-flex items-center px-3 py-1 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-blue-600 border border-transparent rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
+                    Edit
+                </a>
+                <form action="{{ route('admin.items.destroy', $item->id) }}" method="POST"
+                    onsubmit="return confirm('Are you sure you want to delete this item?');">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit"
+                        class="inline-flex items-center px-3 py-1 text-xs font-semibold tracking-widest text-white uppercase transition duration-150 ease-in-out bg-red-600 border border-transparent rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2">
+                        Delete
+                    </button>
+                </form>
+            </div>
         </div>
     </x-slot>
 
@@ -33,7 +48,6 @@
                     @endphp
 
                     {{-- Product Info --}}
-                    <h3 class="mb-2 text-lg font-semibold">Product Information</h3>
                     <div class="flex flex-col gap-6 md:flex-row">
                         {{-- Left: Images --}}
                         <div class="flex flex-col items-center gap-2">
@@ -127,33 +141,16 @@
                                 {{ ucfirst($item->status) }}
                             </span>
 
-
-
-
-                            {{-- Price --}}
-                            <h3 class="mt-4 font-semibold text-gray-700">Price</h3>
-                            <div class="mt-1">
-                                @php
-                                    $minPrice = $item->variants->min('price') ?? 0;
-                                @endphp
-                                <span class="text-lg font-bold text-red-500">฿{{ number_format($minPrice, 0) }}</span>
-                            </div>
-
                             {{-- Variants --}}
                             <h3 class="mt-4 font-semibold text-gray-700">Variants</h3>
                             <div class="flex items-center gap-4 mt-1">
-                                {{-- Count --}}
                                 <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
                                     {{ $item->variants->count() }} variant{{ $item->variants->count() !== 1 ? 's' : '' }}
                                 </span>
-
-                                {{-- Manage Variants --}}
                                 <a href="{{ route('admin.variants.index', $item->id) }}" class="btn btn-primary btn-sm">
                                     Manage Variants
                                 </a>
-
                             </div>
-
 
                             {{-- Update Status --}}
                             <h3 class="mt-4 font-semibold text-gray-700">Update Status</h3>
@@ -162,7 +159,8 @@
                                     class="flex items-center gap-2">
                                     @csrf
                                     @method('PATCH')
-                                    <select name="status" class="select select-bordered select-sm">
+                                    <select name="status"
+                                        class="w-full px-3 py-2 text-sm rounded-md select select-bordered sm:w-auto">
                                         <option value="active" {{ $item->status == 'active' ? 'selected' : '' }}>Active</option>
                                         <option value="inactive" {{ $item->status == 'inactive' ? 'selected' : '' }}>Inactive
                                         </option>
@@ -170,10 +168,10 @@
                                             Unavailable</option>
                                         <option value="draft" {{ $item->status == 'draft' ? 'selected' : '' }}>Draft</option>
                                     </select>
+
                                     <button class="btn btn-success btn-sm">Update</button>
                                 </form>
                             </div>
-
 
                             {{-- Created / Updated --}}
                             <div class="flex gap-4 mt-4 text-xs text-gray-400">
