@@ -102,11 +102,31 @@
                         <div class="mb-2 flex flex-wrap items-end gap-2 rounded-xl border bg-base-100 p-2">
 
                             {{-- Image uploader --}}
-                            <div class="flex-1">
-                                <label class="mb-1 block text-xs font-semibold text-gray-600">Image</label>
-                                <input type="file" x-model="variant.image" :name="`variants[${index}][image]`"
-                                    class="input input-sm input-bordered h-12 w-full" accept="image/*">
+                            <div x-data="variantFileUpload({{ $loop->index ?? 0 }})" class="mb-2">
+                                <label class="label">Variant Image</label>
+
+                                <input type="file" :name="`variants[${index}][image][]`" multiple
+                                    class="file-input file-input-bordered w-full" @change="uploadFiles($event)">
+
+                                <div class="mt-2 flex gap-2">
+                                    <template x-for="img in images" :key="img">
+                                        <img :src="imageUrl(img)" class="h-16 w-16 rounded border">
+                                    </template>
+                                </div>
+
+                                <template x-for="img in images" :key="img">
+                                    <input type="hidden" :name="`variants[${index}][image_paths][]`" :value="img">
+                                </template>
+
+                                <div x-show="uploading" class="mt-2">
+                                    <div class="h-2 w-full rounded bg-gray-200">
+                                        <div class="h-2 rounded bg-blue-600" :style="'width: ' + progress + '%'"></div>
+                                    </div>
+                                    <p x-text="progress + '%'"></p>
+                                </div>
                             </div>
+
+
 
                             {{-- Color --}}
                             @if ($item->colors->isNotEmpty())
@@ -153,7 +173,8 @@
                                     <span x-text="variant.capacityText" class="ml-2 text-sm text-gray-500"></span>
 
                                     {{-- Hidden input for total pieces --}}
-                                    <input type="hidden" :name="`variants[${index}][total_pieces]`" :value="variant.totalPieces">
+                                    <input type="hidden" :name="`variants[${index}][total_pieces]`"
+                                        :value="variant.totalPieces">
                                 </div>
                             @endif
 
@@ -193,8 +214,8 @@
 
 
             @if (session('success'))
-                <div x-data="{ showToast: true }" x-show="showToast" x-transition class="mb-4 rounded bg-green-100 p-4 text-green-700"
-                    x-init="setTimeout(() => showToast = false, 3000)">
+                <div x-data="{ showToast: true }" x-show="showToast" x-transition
+                    class="mb-4 rounded bg-green-100 p-4 text-green-700" x-init="setTimeout(() => showToast = false, 3000)">
                     {{ session('success') }}
                 </div>
             @endif
@@ -232,12 +253,14 @@
 
                                 {{-- Image --}}
                                 <td>
-                                    @if ($variant->image)
-                                        <img src="{{ asset($variant->image) }}" class="h-8 w-8 rounded object-cover"
-                                            alt="Variant Image">
+                                    @if ($variant->images && count($variant->images) > 0)
+                                        <img src="{{ asset('storage/' . $variant->images[0]) }}"
+                                            class="h-8 w-8 rounded object-cover" alt="Variant Image">
                                     @else
                                         —
                                     @endif
+
+
                                 </td>
 
                                 <td>{{ $variant->itemColor->name ?? '—' }}</td>
@@ -354,6 +377,53 @@
                 },
                 handleImageUpload(index, event) {
                     this.variants[index].image = event.target.files[0];
+                }
+            }
+        }
+
+        function variantFileUpload(variantIndex) {
+            return {
+                images: [],
+                uploading: false,
+                progress: 0,
+                done: false,
+
+                imageUrl(path) {
+                    return "{{ asset('') }}" + path;
+                },
+
+                uploadFiles(event) {
+                    this.uploading = true;
+                    this.done = false;
+                    this.progress = 0;
+
+                    let formData = new FormData();
+                    let files = event.target.files;
+
+                    for (let i = 0; i < files.length; i++) {
+                        formData.append('variant_images[]', files[i]);
+                    }
+
+                    axios.post("{{ route('admin.variants.uploadImages') }}", formData, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                            },
+                            onUploadProgress: (e) => {
+                                if (e.lengthComputable) {
+                                    this.progress = Math.round((e.loaded * 100) / e.total);
+                                }
+                            }
+                        })
+                        .then((res) => {
+                            this.images = res.data.paths;
+                            this.uploading = false;
+                            this.done = true;
+                        })
+                        .catch(err => {
+                            this.uploading = false;
+                            alert('Image upload failed');
+                        });
                 }
             }
         }

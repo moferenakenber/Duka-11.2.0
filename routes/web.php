@@ -122,6 +122,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             // Variant edit page
             Route::get('/{variant}/edit', [VariantController::class, 'edit'])
                 ->name('variants.edit');
+
+            // web.php
+            Route::post('variants/upload-images', [VariantController::class, 'uploadImages'])->name('variants.uploadImages');
+
         });
 
 

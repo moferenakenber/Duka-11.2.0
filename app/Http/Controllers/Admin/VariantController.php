@@ -158,41 +158,81 @@ class VariantController extends Controller
         // return redirect()->back()->with('success', 'Variants saved successfully!');
 
         // Log the entire request
+
+
         Log::info('Variant store request:', $request->all());
 
         if ($request->has('variants')) {
             foreach ($request->variants as $index => $variantData) {
 
-                // Handle image upload
-                $imagePath = null;
-                if (isset($variantData['image']) && $variantData['image'] instanceof \Illuminate\Http\UploadedFile) {
-                    $imagePath = $variantData['image']->store('variants', 'public');
+                $images = [];
+
+                // 1. Direct file upload (multiple files)
+                if ($request->hasFile("variants.$index.image")) {
+                    Log::info("Direct upload detected for variant $index");
+
+                    foreach ($request->file("variants.$index.image") as $file) {
+                        $path = $file->store('images/variant_images', 'public');
+                        $images[] = $path;
+
+                        Log::info("Uploaded file for variant $index:", [
+                            'original_name' => $file->getClientOriginalName(),
+                            'stored_path' => $path,
+                            'size' => $file->getSize(),
+                            'mime' => $file->getClientMimeType()
+                        ]);
+                    }
                 }
 
+                // 2. Already uploaded via Axios, paths in hidden input
+                if (!empty($variantData['image_paths'])) {
+                    Log::info("Axios-uploaded images for variant $index", $variantData['image_paths']);
+                    foreach ($variantData['image_paths'] as $path) {
+                        // Remove 'storage/' prefix if present
+                        $images[] = str_replace('storage/', '', $path);
+                    }
+                }
+
+                // Avoid duplicate barcode
+                $barcode = $variantData['barcode'] ?? null;
+                if ($barcode && ItemVariant::where('barcode', $barcode)->exists()) {
+                    $barcode = null; // or generate a unique one
+                    Log::warning("Duplicate barcode detected for variant $index, setting to null");
+                }
+
+                // Log final images array
+                Log::info("Final images array for variant $index:", $images);
+
+                // Create variant
                 $variant = ItemVariant::create([
                     'item_id' => $itemId,
                     'item_color_id' => $variantData['item_color_id'] ?? null,
                     'item_size_id' => $variantData['item_size_id'] ?? null,
                     'item_packaging_type_id' => $variantData['item_packaging_type_id'] ?? null,
                     'price' => $variantData['price'] ?? 0,
-                    'barcode' => $variantData['barcode'] ?? null,
-                    'image' => $imagePath,
+                    'discount_price' => $variantData['discount_price'] ?? null,
+                    'barcode' => $barcode,
+                    'images' => $images ?: [], // Save as JSON
                     'is_active' => true,
-                    'packaging_total_pieces' => $variantData['packaging_total_pieces'] ?? 1,
+                    'status' => 'active',
+                    'packaging_total_pieces' => $variantData['total_pieces'] ?? 1,
                 ]);
+
+                Log::info("Variant created with ID: {$variant->id}");
 
                 // Save stock
                 ItemStock::create([
                     'item_variant_id' => $variant->id,
-                    'item_inventory_location_id' => 1, // default location
+                    'item_inventory_location_id' => 1,
                     'quantity' => $variantData['stock'] ?? 0,
                 ]);
             }
         }
 
-
         return redirect()->back()->with('success', 'Variants saved successfully!');
+
     }
+
 
 
 
@@ -298,6 +338,24 @@ class VariantController extends Controller
     }
 
 
+    public function uploadImages(Request $request)
+    {
+        $request->validate([
+            'variant_images' => 'required|array',
+            'variant_images.*' => 'image|max:5120', // 5MB max
+        ]);
+
+        $paths = [];
+        foreach ($request->file('variant_images') as $file) {
+            $path = $file->store('images/variant_images', 'public');
+            $paths[] = 'storage/' . $path;
+        }
+
+        return response()->json([
+            'success' => true,
+            'paths' => $paths
+        ]);
+    }
 
 
 

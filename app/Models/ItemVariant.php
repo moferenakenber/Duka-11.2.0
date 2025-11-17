@@ -33,6 +33,7 @@ class ItemVariant extends Model
         'owner_id',
         'discount_price',
         'barcode',
+        'images',
     ];
 
 
@@ -45,6 +46,7 @@ class ItemVariant extends Model
         'is_active' => 'boolean',
         'price' => 'decimal:2',
         'discount_price' => 'decimal:2',
+        'images' => 'array', // so JSON becomes array automatically
     ];
 
     /**

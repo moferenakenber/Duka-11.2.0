@@ -22,7 +22,7 @@ return new class extends Migration {
             $table->decimal('price', 10, 2); // base price
             $table->decimal('discount_price', 10, 2)->nullable(); // optional discounted price
             $table->decimal('discount_percentage', 5, 2)->nullable()->default(0); // added this column
-            $table->string('image')->nullable(); // optional image for this variant
+            $table->json('images')->nullable();
 
             // Status enum
             $table->enum('status', ['active', 'inactive', 'unavailable', 'out_of_stock'])->default('inactive');
