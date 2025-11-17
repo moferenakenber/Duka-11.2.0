@@ -88,6 +88,7 @@ class ItemController extends Controller
     // Show the details of a specific item
     public function show(Item $item)
     {
+        // 1️⃣ Eager load relations
         $item->load([
             'variants.itemColor',
             'variants.itemSize',
@@ -97,17 +98,83 @@ class ItemController extends Controller
             'packagingTypes',
             'categories'
         ]);
+        logger('Step 1: Loaded item relations', ['item_id' => $item->id]);
 
-        // Use Eloquent relations directly
-        $colors = $item->colors;              // Eloquent Collection
+        // 2️⃣ Get related data
+        $colors = $item->colors;
         $sizes = $item->sizes;
         $packagingTypes = $item->packagingTypes;
         $inventoryLocations = ItemInventoryLocation::all();
-
         $sellers = User::where('role', 'seller')->get();
+        logger('Step 2: Retrieved related collections', [
+            'colors' => $colors->pluck('name'),
+            'sizes' => $sizes->pluck('name'),
+            'packagingTypes' => $packagingTypes->pluck('name')
+        ]);
 
-        return view('admin.items.show', compact('item', 'colors', 'sizes', 'packagingTypes', 'sellers', 'inventoryLocations'));
+        // 3️⃣ Decode item images
+        $itemImages = [];
+        if ($item->product_images) {
+            $clean = preg_replace('/[^\[\]{}",:a-zA-Z0-9_\.\-\/]/', '', $item->product_images);
+            $itemImages = json_decode($clean, true) ?: [];
+        }
+        logger('Step 3: Decoded item images', ['itemImages' => $itemImages]);
+
+        // 4️⃣ Prepare variant data
+        // ✅ Prepare variant data including only variant images
+        $variantData = $item->variants->map(function ($variant) {
+            $images = [];
+
+            if ($variant->images) {
+                if (is_string($variant->images)) {
+                    $images = json_decode($variant->images, true) ?: [];
+                } elseif (is_array($variant->images)) {
+                    $images = $variant->images;
+                }
+            }
+
+            return [
+                'color' => $variant->itemColor->name ?? null,
+                'size' => $variant->itemSize->name ?? null,
+                'packaging' => $variant->itemPackagingType->name ?? null,
+                'img' => $images[0] ? asset('storage/' . $images[0]) : '/img/default.jpg', // first variant image
+                'images' => array_map(fn($i) => asset('storage/' . $i), $images), // all variant images
+                'price' => $variant->price,
+                'stock' => $variant->stock,
+                'disabled' => $variant->status !== 'active',
+            ];
+        });
+        logger('Step 4: Prepared variant data', ['variantData' => $variantData->toArray()]);
+
+        // 5️⃣ Merge all images (item + variant images)
+        $variantImages = $item->variants->pluck('images')
+            ->filter()
+            ->map(function ($img) {
+                if (is_string($img)) {
+                    return json_decode($img, true);
+                }
+                return $img;
+            })
+            ->flatten()
+            ->toArray();
+        logger('Step 5: Flattened variant images', ['variantImages' => $variantImages]);
+
+        $allImages = array_values(array_unique(array_merge($itemImages, $variantImages)));
+        logger('Step 6: Merged all images', ['allImages' => $allImages]);
+
+        // 6️⃣ Return view
+        return view('admin.items.show', compact(
+            'item',
+            'colors',
+            'sizes',
+            'packagingTypes',
+            'sellers',
+            'inventoryLocations',
+            'variantData' // pass only variant images
+        ));
     }
+
+
 
 
     // Show the form for editing the specified item

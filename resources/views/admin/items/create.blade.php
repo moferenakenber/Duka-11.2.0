@@ -355,31 +355,50 @@
 
                     <!-- Selected Packagings -->
                     <div class="mt-2 space-y-2">
-                        <template x-for="(p, i) in packs" :key="p.id">
-                            <div class="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded">
-                                <span x-text="p.name"></span>
+<div class="mt-2 space-y-2">
+    <template x-for="(p, i) in packs"
+              :key="p.id">
+        <div class="flex items-center gap-2 px-3 py-1 bg-gray-100 rounded">
+            <span x-text="p.name"></span>
 
-                                <!-- Quantity Input for non-piece -->
-                                <template x-if="p.type !== 'piece'">
-                                    <input type="number" min="1" class="w-20 input input-sm input-bordered"
-                                        placeholder="Quantity" x-model.number="p.quantity" @input="calculateTotals()">
-                                </template>
+            <!-- Quantity Input for non-piece -->
+            <template x-if="!p.fixed">
+                <input type="number"
+                       min="1"
+                       class="w-20 input input-sm input-bordered"
+                       placeholder="Quantity"
+                       x-model.number="p.quantity"
+                       @input="calculateTotals()">
+            </template>
 
-                                <!-- Display text -->
-                                <span class="text-xs text-gray-700" x-text="p.displayText"></span>
+            <!-- Display text -->
+            <span class="text-xs text-gray-700"
+                  x-text="p.displayText"></span>
 
-                                <button type="button" class="btn btn-error btn-xs"
-                                    @click="packs.splice(i,1); calculateTotals()">✕</button>
+            <!-- Remove Button for non-fixed packs -->
+            <template x-if="!p.fixed">
+                <button type="button"
+                        class="btn btn-error btn-xs"
+                        @click="packs.splice(i,1); calculateTotals()">✕</button>
+            </template>
 
-                                <!-- Hidden Inputs for form submission -->
-                                <input type="hidden" :name="'packaging[]'" :value="p.id">
-                                <input type="hidden" :name="'packaging_qty[' + p.id + ']'" :value="p.quantity ?? 1">
-                                <input type="hidden" :name="'packaging_total_pieces[]'"
-                                    :value="p.totalPieces ?? (p.type === 'piece' ? 1 : p.quantity)">
-                                <input type="hidden" :name="'custom_pack_name[' + p.id + ']'" :value="p.name">
+            <!-- Hidden Inputs for form submission -->
+            <input type="hidden"
+                   :name="'packaging[]'"
+                   :value="p.id">
+            <input type="hidden"
+                   :name="'packaging_qty[' + p.id + ']'"
+                   :value="p.quantity ?? 1">
+            <input type="hidden"
+                   :name="'packaging_total_pieces[]'"
+                   :value="p.totalPieces ?? (p.type === 'piece' ? 1 : p.quantity)">
+            <input type="hidden"
+                   :name="'custom_pack_name[' + p.id + ']'"
+                   :value="p.name">
+        </div>
+    </template>
+</div>
 
-                            </div>
-                        </template>
                     </div>
                 </div>
 
@@ -539,7 +558,7 @@
         //     }
         // }
 
-        function packagingForm() {
+       function packagingForm() {
             return {
                 packs: [{
                     id: @json($packagingTypes->where('name', 'Piece')->first()?->id ?? 1),
@@ -547,7 +566,8 @@
                     type: 'piece',
                     quantity: 1,
                     totalPieces: 1,
-                    displayText: '(1 pcs)'
+                    displayText: '(1 pcs)',
+                    fixed: true // Mark it as fixed
                 }],
                 selectedPack: '',
                 customPackName: '',
@@ -556,11 +576,11 @@
                 addPack(selectedId) {
                     if (!selectedId) return;
 
-                    // Find the selected option
-                    const select = document.querySelector(`select[x-model="selectedPack"]`);
-                    const option = select.options[select.selectedIndex];
-                    const type = option.dataset.type || 'custom';
+                    // Prevent adding "Piece" again
+                    const option = document.querySelector(`select[x-model="selectedPack"]`).selectedOptions[0];
                     const name = option.text;
+                    const type = option.dataset.type || 'custom';
+                    if (name === 'Piece') return;
 
                     // Avoid duplicates
                     if (!this.packs.find(p => p.id == selectedId)) {
@@ -598,31 +618,21 @@
 
                 calculateTotals() {
                     for (let i = 0; i < this.packs.length; i++) {
-                        let p = this.packs[i];
+                        const p = this.packs[i];
 
-                        if (p.type === 'piece') {
+                        if (p.type === 'piece' || p.fixed) {
                             p.totalPieces = 1;
-                            p.displayText = `(1 pcs)`;
+                            p.displayText = '(1 pcs)';
                         } else {
-                            // Multiply quantity by all previous levels
-                            let total = p.quantity || 1;
-                            for (let j = i - 1; j >= 0; j--) {
-                                total *= this.packs[j].quantity || 1;
-                            }
-                            p.totalPieces = total;
-
-                            // Display text showing hierarchy
-                            if (i > 0) {
-                                const parent = this.packs[i - 1];
-                                p.displayText = `(${p.quantity} ${parent.name}, ${p.totalPieces} pcs)`;
-                            } else {
-                                p.displayText = `(${p.quantity} pcs)`;
-                            }
+                            const prevTotal = i > 0 ? this.packs[i - 1].totalPieces : 1;
+                            p.totalPieces = p.quantity * prevTotal;
+                            p.displayText = `(${p.quantity} ${this.packs[i - 1].name}, ${p.totalPieces} pcs)`;
                         }
                     }
                 }
             }
         }
+
     </script>
 
 </x-app-layout>

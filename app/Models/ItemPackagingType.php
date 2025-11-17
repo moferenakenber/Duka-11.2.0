@@ -33,8 +33,16 @@ class ItemPackagingType extends Model
 
     public function items()
     {
-        return $this->belongsToMany(Item::class, 'item_packaging_type_item', 'item_packaging_type_id', 'item_id')->withTimestamps();
+        return $this->belongsToMany(
+            Item::class,
+            'item_packaging_type_item',
+            'item_packaging_type_id',
+            'item_id'
+        )
+            ->withPivot('quantity') // include quantity
+            ->withTimestamps();
     }
+
 
 
     public function variants()
