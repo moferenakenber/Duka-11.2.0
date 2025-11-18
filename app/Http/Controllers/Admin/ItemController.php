@@ -123,19 +123,32 @@ class ItemController extends Controller
         // 4️⃣ Prepare variant data
         // ✅ Prepare variant data including only variant images
         $variantData = $item->variants->map(function ($variant) {
-            $images = $variant->images ?? [];
+            // Ensure $images is always an array
+            $images = [];
+
+            if ($variant->images) {
+                if (is_array($variant->images)) {
+                    $images = $variant->images;
+                } elseif (is_string($variant->images)) {
+                    $images = json_decode($variant->images, true);
+                    if (!is_array($images)) {
+                        $images = [];
+                    }
+                }
+            }
 
             return [
                 'color' => $variant->itemColor->name ?? null,
                 'size' => $variant->itemSize->name ?? null,
                 'packaging' => $variant->itemPackagingType->name ?? null,
-                'img' => count($images) > 0 ? asset('storage/' . $images[0]) : '/img/default.jpg',
+                'img' => !empty($images) ? asset('storage/' . $images[0]) : '/img/default.jpg',
                 'images' => array_map(fn($i) => asset('storage/' . $i), $images),
                 'price' => $variant->price,
                 'stock' => $variant->stock,
                 'disabled' => $variant->status !== 'active',
             ];
         });
+
 
         logger('Step 4: Prepared variant data', ['variantData' => $variantData->toArray()]);
 
