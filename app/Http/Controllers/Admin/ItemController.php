@@ -133,12 +133,13 @@ class ItemController extends Controller
                 }
             }
 
+
             return [
                 'color' => $variant->itemColor->name ?? null,
                 'size' => $variant->itemSize->name ?? null,
                 'packaging' => $variant->itemPackagingType->name ?? null,
-                'img' => $images[0] ? asset('storage/' . $images[0]) : '/img/default.jpg', // first variant image
-                'images' => array_map(fn($i) => asset('storage/' . $i), $images), // all variant images
+                'img' => count($images) > 0 ? asset('storage/' . $images[0]) : '/img/default.jpg',
+                'images' => array_map(fn($i) => asset('storage/' . $i), $images),
                 'price' => $variant->price,
                 'stock' => $variant->stock,
                 'disabled' => $variant->status !== 'active',
