@@ -34,6 +34,8 @@ class ItemVariant extends Model
         'discount_price',
         'barcode',
         'images',
+        'status',
+        'packaging_total_pieces'
     ];
 
 

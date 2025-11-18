@@ -212,20 +212,22 @@ class VariantController extends Controller
                     'price' => $variantData['price'] ?? 0,
                     'discount_price' => $variantData['discount_price'] ?? null,
                     'barcode' => $barcode,
-                    'images' => $images ?: [], // Save as JSON
+                    'images' => json_encode($images ?: []), // encode JSON
                     'is_active' => true,
                     'status' => 'active',
                     'packaging_total_pieces' => $variantData['total_pieces'] ?? 1,
                 ]);
+
 
                 Log::info("Variant created with ID: {$variant->id}");
 
                 // Save stock
                 ItemStock::create([
                     'item_variant_id' => $variant->id,
-                    'item_inventory_location_id' => 1,
+                    'item_inventory_location_id' => $variantData['inventory_location_id'] ?? ItemInventoryLocation::first()->id,
                     'quantity' => $variantData['stock'] ?? 0,
                 ]);
+
             }
         }
 
