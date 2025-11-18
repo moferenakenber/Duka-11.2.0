@@ -123,16 +123,7 @@ class ItemController extends Controller
         // 4️⃣ Prepare variant data
         // ✅ Prepare variant data including only variant images
         $variantData = $item->variants->map(function ($variant) {
-            $images = [];
-
-            if ($variant->images) {
-                if (is_string($variant->images)) {
-                    $images = json_decode($variant->images, true) ?: [];
-                } elseif (is_array($variant->images)) {
-                    $images = $variant->images;
-                }
-            }
-
+            $images = $variant->images ?? [];
 
             return [
                 'color' => $variant->itemColor->name ?? null,
@@ -145,6 +136,7 @@ class ItemController extends Controller
                 'disabled' => $variant->status !== 'active',
             ];
         });
+
         logger('Step 4: Prepared variant data', ['variantData' => $variantData->toArray()]);
 
         // 5️⃣ Merge all images (item + variant images)
