@@ -248,70 +248,75 @@
                     </thead>
                     <tbody>
                         @forelse ($variants as $variant)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
+                                                                                    <tr>
+                                                                                        <td>{{ $loop->iteration }}</td>
 
-                                {{-- Image --}}
-                                <td>
-                                    @if ($variant->images && count($variant->images) > 0)
-                                        <img src="{{ asset('storage/' . $variant->images[0]) }}"
-                                            class="h-8 w-8 rounded object-cover" alt="Variant Image">
-                                    @else
-                                        —
-                                    @endif
+                                                                                        {{-- Image --}}
+                            @php
+                                $images = is_array($variant->images) ? $variant->images : json_decode($variant->images, true) ?: [];
+                            @endphp
+
+                            <td>
+                                @if (count($images) > 0)
+                                    <img src="{{ asset('storage/' . $images[0]) }}"
+                                         class="h-8 w-8 rounded object-cover"
+                                         alt="Variant Image">
+                                @else
+                                    —
+                                @endif
+                            </td>
 
 
-                                </td>
 
-                                <td>{{ $variant->itemColor->name ?? '—' }}</td>
-                                <td>{{ $variant->itemSize->name ?? '—' }}</td>
+                                                                                        <td>{{ $variant->itemColor->name ?? '—' }}</td>
+                                                                                        <td>{{ $variant->itemSize->name ?? '—' }}</td>
 
-                                <td>
-                                    @if ($variant->itemPackagingType)
-                                        {{ $variant->itemPackagingType->name }}
-                                        ({{ $variant->calculateTotalPieces() }} pcs)
-                                    @else
-                                        —
-                                    @endif
-                                </td>
+                                                                                        <td>
+                                                                                            @if ($variant->itemPackagingType)
+                                                                                                {{ $variant->itemPackagingType->name }}
+                                                                                                ({{ $variant->calculateTotalPieces() }} pcs)
+                                                                                            @else
+                                                                                                —
+                                                                                            @endif
+                                                                                        </td>
 
-                                <td>{{ number_format($variant->price, 2) }}</td>
-                                <td>{{ number_format($variant->discount_price, 2) }}</td>
+                                                                                        <td>{{ number_format($variant->price, 2) }}</td>
+                                                                                        <td>{{ number_format($variant->discount_price, 2) }}</td>
 
-                                {{-- Barcode --}}
-                                <td>{{ $variant->barcode ?? '—' }}</td>
+                                                                                        {{-- Barcode --}}
+                                                                                        <td>{{ $variant->barcode ?? '—' }}</td>
 
-                                <td>{{ $variant->owner->name ?? '—' }}</td>
+                                                                                        <td>{{ $variant->owner->name ?? '—' }}</td>
 
-                                {{-- Status --}}
-                                <td>
-                                    <form method="POST" action="{{ route('admin.variants.updateStatus', $variant->id) }}">
-                                        @csrf
-                                        @method('PUT')
-                                        <select name="status"
-                                            class="dark:text-gray-200 w-full rounded-md border border-gray-300 px-2 py-1 text-sm leading-normal text-gray-800"
-                                            onchange="this.form.submit()">
-                                            <option value="active" {{ $variant->status === 'active' ? 'selected' : '' }}>Active
-                                            </option>
-                                            <option value="inactive" {{ $variant->status === 'inactive' ? 'selected' : '' }}>
-                                                Inactive</option>
-                                            <option value="unavailable"
-                                                {{ $variant->status === 'unavailable' ? 'selected' : '' }}>Unavailable</option>
-                                            <option value="out_of_stock"
-                                                {{ $variant->status === 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
-                                        </select>
+                                                                                        {{-- Status --}}
+                                                                                        <td>
+                                                                                            <form method="POST" action="{{ route('admin.variants.updateStatus', $variant->id) }}">
+                                                                                                @csrf
+                                                                                                @method('PUT')
+                                                                                                <select name="status"
+                                                                                                    class="dark:text-gray-200 w-full rounded-md border border-gray-300 px-2 py-1 text-sm leading-normal text-gray-800"
+                                                                                                    onchange="this.form.submit()">
+                                                                                                    <option value="active" {{ $variant->status === 'active' ? 'selected' : '' }}>Active
+                                                                                                    </option>
+                                                                                                    <option value="inactive" {{ $variant->status === 'inactive' ? 'selected' : '' }}>
+                                                                                                        Inactive</option>
+                                                                                                    <option value="unavailable"
+                                                                                                        {{ $variant->status === 'unavailable' ? 'selected' : '' }}>Unavailable</option>
+                                                                                                    <option value="out_of_stock"
+                                                                                                        {{ $variant->status === 'out_of_stock' ? 'selected' : '' }}>Out of Stock</option>
+                                                                                                </select>
 
-                                    </form>
-                                </td>
+                                                                                            </form>
+                                                                                        </td>
 
-                                {{-- Edit button --}}
-                                <td>
-                                    {{-- <a href="{{ route('admin.variants.edit', $variant->id) }}" --}}
-                                    <a href="#" class="btn btn-secondary btn-sm">
-                                        Edit
-                                    </a>
-                                </td>
-                            </tr>
+                                                                                        {{-- Edit button --}}
+                                                                                        <td>
+                                                                                            {{-- <a href="{{ route('admin.variants.edit', $variant->id) }}" --}}
+                                                                                            <a href="#" class="btn btn-secondary btn-sm">
+                                                                                                Edit
+                                                                                            </a>
+                                                                                        </td>
+                                                                                    </tr>
                         @empty
                             <tr>
                                 <td colspan="11" class="text-center">No variants found</td>
