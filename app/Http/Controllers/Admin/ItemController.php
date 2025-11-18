@@ -124,7 +124,7 @@ class ItemController extends Controller
         // ✅ Prepare variant data including only variant images
         $variantData = $item->variants->map(function ($variant) {
             // Ensure $images is always an array
-            $images = [];
+            $images = is_array($variant->images) ? $variant->images : (json_decode($variant->images, true) ?: []);
 
             if ($variant->images) {
                 if (is_array($variant->images)) {
