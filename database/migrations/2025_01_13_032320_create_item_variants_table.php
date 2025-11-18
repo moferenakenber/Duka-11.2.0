@@ -27,6 +27,8 @@ return new class extends Migration {
             // Status enum
             $table->enum('status', ['active', 'inactive', 'unavailable', 'out_of_stock'])->default('inactive');
             $table->boolean('is_active')->default(0);
+            $table->integer('packaging_total_pieces')->default(1);
+
 
 
             $table->timestamps();
