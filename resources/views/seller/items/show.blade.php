@@ -1,27 +1,5 @@
 @extends('seller.layouts.app')
 
-{{--
-    0 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_1.jpg"
-    1 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_2.jpg"
-    2 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_1.jpg"
-    3 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_color_2.jpg"
-    4 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_red.jpg"
-    5 : "http://duka-11.2.0.local:8086/images/product_images/2_side_color_blue.jpg"
-    6 : "http://duka-11.2.0.local:8086/images/sizes/s.png"
-    7 : "http://duka-11.2.0.local:8086/images/sizes/l.png"
---}}
-
-{{--
-    return view('seller.items.show', compact(
-
-    'item',
-    'sellers',
-    'carts',
-    'allImages',
-    'variantData'
-    ));
---}}
-
 @section('content')
             <div class="max-w-4xl p-2 pb-20 mx-auto">
                 <div class="overflow-hidden bg-white rounded-lg shadow-lg">
@@ -52,9 +30,9 @@
                     </script>
 
                     @php
-    // Get the minimum variant price
-    $minVariant = $item->variants->sortBy('price')->first();
-    $displayPrice = $minVariant->discount_price ?? $minVariant->price;
+                        // Get the minimum variant price
+                        $minVariant = $item->variants->sortBy('price')->first();
+                        $displayPrice = $minVariant->discount_price ?? $minVariant->price;
                     @endphp
 
                     {{-- Product Info --}}
@@ -217,7 +195,7 @@
                                 @php $seen = []; @endphp
                                 @foreach ($item->variants as $variant)
                                     @php
-        $pkg = $variant->itemPackagingType;
+                                     $pkg = $variant->itemPackagingType;
                                     @endphp
                                     @if ($pkg && !in_array($pkg->id, $seen))
                                         @php $seen[] = $pkg->id; @endphp
@@ -321,9 +299,6 @@
                         });
                         },
 
-
-
-
                         watch: {
                             selectedColor(newColor) {
                             if (!newColor) return;
@@ -384,34 +359,15 @@
                             </div>
 
                             <!-- Product Preview -->
-                                                    <div class="flex items-center gap-4 mb-4">
+                         <div class="flex items-center gap-4 mb-4">
 
-                                                            <!-- Variant image -->
-                                {{-- <div class="w-24 h-24 cursor-pointer"
-                                    @click="
-                                        const imgWindow = window.open('', 'ImageViewer', 'width=800,height=600,scrollbars=yes');
-                                        const images = selectedVariant?.images || [previewImage];
-                                        let content = `<html><head><title>Images</title><style>
-                                            body { margin: 0; display: flex; justify-content: center; align-items: center; flex-direction: column; background: #f9f9f9; }
-                                            img { max-width: 90%; max-height: 90%; margin: 10px 0; }
-                                        </style></head><body>`;
-                                        images.forEach(src => {
-                                            content += `<img src='${src}' />`;
-                                        });
-                                        content += `</body></html>`;
-                                        imgWindow.document.write(content);
-                                        imgWindow.document.close();
-                                    ">
-                                    <img :src="previewImage"
-                                        class="object-contain w-full h-full rounded" />
-                                </div> --}}
+                               <!-- Variant image -->
 
                                 <div class="w-24 h-24 cursor-pointer"
                                     @click="viewerImages = selectedVariant?.images || [previewImage]; currentImageIndex = 0; imageViewerOpen = true;">
                                     <img :src="previewImage"
                                         class="object-contain w-full h-full rounded" />
                                 </div>
-
 
                                 <!-- Price Info (Stacked) -->
                                 <div class="flex flex-col">
@@ -653,7 +609,7 @@
 
 @endsection
 
-<script>
+{{-- <script>
     function variantGallery(variants) {
         return {
             variants: variants,
@@ -668,7 +624,7 @@
             }
         }
     }
-</script>
+</script> --}}
 
 <script>
     console.log('variantData:', @json($variantData));

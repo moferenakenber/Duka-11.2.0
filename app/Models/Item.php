@@ -25,6 +25,8 @@ class Item extends Model
         'product_images' => 'array', // Cast JSON column to array
     ];
 
+
+
     // Item belongs to a main category
     public function category()
     {

@@ -142,7 +142,11 @@ class ItemController extends Controller
                 'size' => $variant->itemSize->name ?? null,
                 'packaging' => $variant->itemPackagingType->name ?? null,
                 'img' => !empty($images) ? asset('storage/' . $images[0]) : '/img/default.jpg',
-                'images' => array_map(fn($i) => asset('storage/' . $i), $images),
+                'images' => array_map(
+                    fn($i) => asset('storage/' . ltrim($i, '/')),
+                    $images
+                ),
+
                 'price' => $variant->price,
                 'stock' => $variant->stock,
                 'disabled' => $variant->status !== 'active',

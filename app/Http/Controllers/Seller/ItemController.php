@@ -129,24 +129,32 @@ class ItemController extends Controller
 
         // 🔹 Build variant data array
         $variantData = $item->variants->map(function ($variant) {
-            $variantImages = $variant->images
-                ? collect($variant->images)->map(fn($img) => asset('storage/' . $img))
-                : collect();
+
+            // Decode images safely
+            $rawImages = $variant->images;
+            if (is_string($rawImages)) {
+                $decoded = json_decode($rawImages, true);
+                $rawImages = is_array($decoded) ? $decoded : [];
+            }
+            if (!is_array($rawImages)) {
+                $rawImages = [];
+            }
+
+            $variantImages = collect($rawImages)->map(fn($img) => asset('storage/' . $img));
 
             return [
                 'id' => $variant->id,
                 'color' => $variant->itemColor?->name,
-                'img' => $variantImages->first() ?: ($variant->itemColor ? asset('storage/' . $variant->itemColor->image_path) : null),
+                'img' => $variantImages->first() ?: ($variant->itemColor ? asset('storage/' . $variant->itemColor->image_path) : '/img/default.jpg'),
                 'size' => $variant->itemSize?->name,
                 'packaging' => $variant->itemPackagingType?->name,
-                // 'quantity' => $variant->itemPackagingType?->quantity ?? 1, // ✅ add quantity here
                 'price' => $variant->price,
                 'stock' => $variant->stock,
-                'images' => $variantImages->toArray(),
+                'images' => $variantImages->toArray(), // ✅ now this is a real array
                 'quantity' => $variant->calculateTotalPieces(),
-
             ];
         });
+
 
 
 
