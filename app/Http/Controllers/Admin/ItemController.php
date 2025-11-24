@@ -444,12 +444,23 @@ class ItemController extends Controller
             'status' => 'required|in:active,inactive,unavailable,draft',
         ]);
 
-        $item->update([
-            'status' => $request->status,
-        ]);
+        $newStatus = $request->status;
 
-        return back()->with('success', 'Status updated successfully.');
+        if ($newStatus === 'active') {
+            $hasActiveVariants = $item->variants()->where('status', 'active')->exists();
+
+            if (!$hasActiveVariants) {
+                return back()->withErrors(['status' => 'Cannot set item to active because it has no active variants.']);
+            }
+        }
+
+        $item->status = $newStatus;
+        $item->save();
+
+        // Send a success message for all four statuses
+        return back()->with('success', 'Item status updated to ' . ucfirst($newStatus) . ' successfully.');
     }
+
 
 
 }

@@ -22,16 +22,32 @@
         </div>
     </x-slot>
 
-    @if ($errors->any())
-        <div class="p-4 mt-4 text-red-700 bg-red-100 border-l-4 border-red-500">
-            <h3 class="font-semibold">There were some problems with your input:</h3>
-            <ul class="pl-5 mt-2 list-disc">
-                @foreach ($errors->all() as $error)
-                    <li class="text-sm">{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
+@if ($errors->any())
+    <div x-data="{ show: true }"
+         x-show="show"
+         x-init="setTimeout(() => show = false, 5000)"
+
+        class="p-4 mt-4 text-red-700 bg-red-100 border-l-4 border-red-500"
+        >
+        <h3 class="font-semibold">There were some problems with your input:</h3>
+        <ul class="pl-5 mt-2 list-disc">
+            @foreach ($errors->all() as $error)
+                <li class="text-sm">{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+@if(session('success'))
+    <div x-data="{ show: true }"
+         x-show="show"
+         x-init="setTimeout(() => show = false, 5000)"
+         class="p-4 mt-4 text-green-700 bg-green-100 border-l-4 border-green-500">
+        {{ session('success') }}
+    </div>
+@endif
+
+
 
     <div class="py-12">
         <div class="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -41,10 +57,10 @@
                 <div class="p-6 space-y-6">
 
                     @php
-                        $images = collect(json_decode($item->product_images, true) ?? []);
-                        $images = $images->map(fn($img) => asset($img));
-                        $mainImage = $images->first() ?? asset('images/default.jpg');
-                        $otherImages = $images->slice(1);
+$images = collect(json_decode($item->product_images, true) ?? []);
+$images = $images->map(fn($img) => asset($img));
+$mainImage = $images->first() ?? asset('images/default.jpg');
+$otherImages = $images->slice(1);
                     @endphp
 
                     {{-- Product Info --}}

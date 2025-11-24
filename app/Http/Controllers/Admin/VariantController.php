@@ -20,23 +20,27 @@ class VariantController extends Controller
      */
     public function index(Item $item)
     {
-        // Eager load relationships
-        $item->load(['colors', 'sizes', 'packagingTypes', 'variants']);
+        $item->load(['variants', 'colors', 'sizes', 'packagingTypes']);
 
+        if (request()->wantsJson()) {
+            // Return JSON for Postman / API
+            return response()->json([
+                'item' => $item,
+                'variants' => $item->variants,
+                'colors' => $item->colors,
+                'sizes' => $item->sizes,
+                'packagingTypes' => $item->packagingTypes,
+            ]);
+        }
+
+        // Return Blade view for web
         return view('admin.variants.index', [
             'item' => $item,
             'variants' => $item->variants,
             'inventoryLocations' => ItemInventoryLocation::all(),
         ]);
-        // return view('admin.variants.index', [
-        //     'item' => $item,
-        //     'variants' => $item->variants,
-        //     'colors' => ItemColor::all(),
-        //     'sizes' => ItemSize::all(),
-        //     'packagingTypes' => ItemPackagingType::all(),
-        //     'inventoryLocations' => ItemInventoryLocation::all(),
-        // ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
