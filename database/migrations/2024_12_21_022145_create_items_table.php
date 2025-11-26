@@ -16,6 +16,8 @@ return new class extends Migration {
             // All properties should have images, price, stock
 
             $table->id();
+            $table->string('sku')->unique(); // no "after" needed
+
             $table->string('product_name')->nullable();
             $table->text('product_description')->nullable();
             $table->text('packaging_details')->nullable();

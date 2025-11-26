@@ -130,6 +130,19 @@ class Item extends Model
         return $result;
     }
 
+    protected static function booted()
+    {
+        static::creating(function ($item) {
+            if (!$item->sku) {
+                // Use first 3 letters of product name + random 3 digits
+                $namePart = strtoupper(substr(preg_replace('/[^A-Za-z0-9]/', '', $item->product_name), 0, 3));
+                $randomPart = mt_rand(100, 999);
+                $item->sku = $namePart . $randomPart;
+            }
+        });
+    }
+
+
 }
 
 

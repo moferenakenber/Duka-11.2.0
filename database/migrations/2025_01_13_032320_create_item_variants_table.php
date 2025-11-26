@@ -10,6 +10,9 @@ return new class extends Migration {
         Schema::create('item_variants', function (Blueprint $table) {
             $table->id();
 
+            $table->string('sku')->unique()->nullable(); // no "after" needed
+
+
             // Relationships
             $table->foreignId('item_id')->constrained('items')->onDelete('cascade');
             $table->foreignId('item_color_id')->nullable()->constrained('item_colors')->onDelete('set null');

@@ -37,10 +37,32 @@
                         @if ($item->colors->count())
                             <div class="mt-3">
                                 <h3 class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">Colors</h3>
-                                <div class="flex gap-2">
+
+                                <div class="flex flex-wrap gap-4 mt-2">
                                     @foreach ($item->colors as $color)
-                                        <span class="w-6 h-6 border border-gray-300 rounded-full" title="{{ $color->name }}"
-                                            style="background-color: {{ $color->name }}"></span>
+                                        @php
+        // Robust Color Logic
+        $bgColor = '#cccccc';
+        if (!empty($color->hex_code)) {
+            $bgColor = str_starts_with($color->hex_code, '#')
+                ? $color->hex_code
+                : '#' . $color->hex_code;
+        } elseif (!empty($color->name)) {
+            $bgColor = $color->name;
+        }
+                                        @endphp
+
+                                        <div class="flex flex-col items-center gap-1">
+                                            {{-- Color Circle --}}
+                                            <div class="w-8 h-8 border border-gray-200 rounded-full shadow-sm"
+                                                 style="background-color: {{ $bgColor }};">
+                                            </div>
+
+                                            {{-- Color Name --}}
+                                            <span class="text-xs font-medium text-gray-600 dark:text-gray-400">
+                                                {{ $color->name }}
+                                            </span>
+                                        </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -62,16 +84,54 @@
                         @endif
 
 
+
                         {{-- Packaging --}}
                         @if ($item->packagingTypes->count())
                             <div class="mt-3">
                                 <h3 class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">Packaging</h3>
-                                <div class="flex flex-wrap gap-2">
-                                    @foreach ($item->packagingTypes as $pack)
-                                        <span
-                                            class="px-2 py-1 text-sm font-medium rounded bg-brand-softer text-fg-brand-strong ring-brand-subtle ring-1 ring-inset">
-                                            {{ $pack->name }}
-                                        </span>
+
+                                <div class="flex flex-col items-start gap-2 mt-1">
+                                    @php
+                                        $runningTotal = 1;
+                                        $previousName = 'pcs';
+                                    @endphp
+
+                                    @foreach ($item->packagingTypes as $index => $pack)
+                                        @php
+                                            $currentQty = $pack->pivot->quantity ?? 1;
+
+                                            // 1. Calculate Absolute Total
+                                            if ($index === 0) {
+                                                $absTotal = 1;
+                                            } else {
+                                                $absTotal = $currentQty * $runningTotal;
+                                            }
+
+                                            // 2. Generate Display Text based on specific tier requirements
+                                            if ($index === 0) {
+                                                // Piece: 1 pcs
+                                                $displayText = "1 pcs";
+                                            } elseif ($index === 1) {
+                                                // Packet: 50 pcs (Shows absolute total only)
+                                                $displayText = number_format($absTotal) . " pcs";
+                                            } else {
+                                                // Cartoon (Index 2+): 20 Packets (1,000 pcs)
+                                                // Shows Qty relative to previous pack AND absolute total
+                                                $displayText = "{$currentQty} {$previousName}s (" . number_format($absTotal) . " pcs)";
+                                            }
+                                        @endphp
+
+                                        <div
+                                            class="inline-flex items-center px-2.5 py-1 text-xs font-medium text-white bg-purple-500 rounded-full shadow-sm">
+                                            <span class="font-bold tracking-wide">{{ $pack->name }}:</span>
+                                            <span class="ml-1 text-purple-50">{{ $displayText }}</span>
+                                        </div>
+
+                                        @php
+                                            // Pass variables to next iteration
+                                            $runningTotal = $absTotal;
+                                            $previousName = $pack->name;
+                                        @endphp
                                     @endforeach
                                 </div>
                             </div>
@@ -253,14 +313,14 @@
 
                                                                                         {{-- Image --}}
                             @php
-                                $images = [];
+    $images = [];
 
-                                if (is_array($variant->images)) {
-                                    $images = $variant->images;
-                                } elseif (is_string($variant->images)) {
-                                    $decoded = json_decode($variant->images, true);
-                                    $images = $decoded ?: [];
-                                }
+    if (is_array($variant->images)) {
+        $images = $variant->images;
+    } elseif (is_string($variant->images)) {
+        $decoded = json_decode($variant->images, true);
+        $images = $decoded ?: [];
+    }
                             @endphp
 
                             <td>

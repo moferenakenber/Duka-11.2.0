@@ -111,26 +111,39 @@ class ItemVariant extends Model
 
 
 
-    // Variant.php
     protected static function booted()
     {
         static::saving(function ($variant) {
-            // If price changed, recalc discount price if a percentage exists
+            // ---------- Price / Discount Logic ----------
             if ($variant->isDirty('price') && $variant->discount_percentage !== null) {
                 $variant->discount_price = $variant->price * (1 - $variant->discount_percentage / 100);
             }
 
-            // If discount_price changed manually, recalc percentage
             if ($variant->isDirty('discount_price') && $variant->discount_price !== null) {
                 $variant->discount_percentage = (($variant->price - $variant->discount_price) / $variant->price) * 100;
             }
 
-            // Optional: if no discount_percentage, set discount_price = price
             if ($variant->discount_percentage === null) {
                 $variant->discount_price = $variant->price;
             }
         });
+
+        static::created(function ($variant) {
+            if (!$variant->sku) {
+                $itemSku = $variant->item?->sku ?? 'ITEM';
+                $colorCode = $variant->item_color?->code ?? 'X';
+                $sizeCode = $variant->item_size?->code ?? 'X';
+                $packCode = $variant->item_packaging_type?->code ?? '1';
+
+                $variant->sku = "{$itemSku}-{$colorCode}-{$sizeCode}-{$packCode}-{$variant->id}";
+                $variant->saveQuietly(); // safe, id exists, guaranteed unique
+            }
+        });
+
+
     }
+
+
 
     public function calculateTotalPieces(): int
     {

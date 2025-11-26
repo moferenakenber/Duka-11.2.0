@@ -116,39 +116,103 @@ $otherImages = $images->slice(1);
                                 @endforeach
                             </div>
 
-                            {{-- Colors --}}
-                            @if (!empty($item->colors))
-                                <h3 class="mt-4 font-semibold text-gray-700">Colors</h3>
-                                <div class="flex flex-wrap gap-1 mt-1">
-                                    @foreach ($item->colors as $color)
-                                        <span class="px-2 py-1 text-xs rounded-full"
-                                            style="background-color: {{ $color->hex_code ?: '#ccc' }}">
-                                            {{ $color->name }}
-                                        </span>
-                                    @endforeach
-                                </div>
-                            @endif
+                        {{-- Colors --}}
+            <h3 class="mt-4 font-semibold text-gray-700">Colors</h3>
+            <div class="flex flex-wrap gap-4 mt-2">
+                @if (!empty($item->colors) && $item->colors->count())
+                    @foreach ($item->colors as $color)
+                        @php
+        // Logic to fix missing '#' or fallback to name
+        $bgColor = '#cccccc';
+        if (!empty($color->hex_code)) {
+            $bgColor = str_starts_with($color->hex_code, '#')
+                ? $color->hex_code
+                : '#' . $color->hex_code;
+        } elseif (!empty($color->name)) {
+            $bgColor = $color->name;
+        }
+                        @endphp
 
-                            {{-- Sizes --}}
-                            @if (!empty($item->sizes))
-                                <h3 class="mt-4 font-semibold text-gray-700">Sizes</h3>
-                                <div class="flex flex-wrap gap-1 mt-1">
-                                    @foreach ($item->sizes as $size)
-                                        <span class="px-2 py-1 text-xs bg-gray-200 rounded-full">{{ $size->name }}</span>
-                                    @endforeach
-                                </div>
-                            @endif
+                        <div class="flex flex-col items-center gap-1">
+                            {{-- Color Circle --}}
+                            <div class="w-8 h-8 border border-gray-200 rounded-full shadow-sm"
+                                style="background-color: {{ $bgColor }};">
+                            </div>
 
-                            {{-- Packaging Types --}}
-                            @if (!empty($item->packagingTypes))
-                                <h3 class="mt-4 font-semibold text-gray-700">Packaging Types</h3>
-                                <div class="flex flex-wrap gap-1 mt-1">
-                                    @foreach ($item->packagingTypes as $pack)
-                                        <span
-                                            class="px-2 py-1 text-xs text-white bg-purple-500 rounded-full">{{ $pack->name }}</span>
-                                    @endforeach
-                                </div>
+                            {{-- Color Name --}}
+                            <span class="text-xs font-medium text-gray-600">{{ $color->name }}</span>
+                        </div>
+                    @endforeach
+                @else
+                    <span class="text-xs italic text-gray-500">No colors available</span>
+                @endif
+            </div>
+
+                        {{-- Sizes --}}
+                        <h3 class="mt-4 font-semibold text-gray-700">Sizes</h3>
+                        <div class="flex flex-wrap gap-1 mt-1">
+                            @if (!empty($item->sizes) && $item->sizes->count())
+                                @foreach ($item->sizes as $size)
+                                    <span class="px-2 py-1 text-xs bg-gray-200 rounded-full">{{ $size->name }}</span>
+                                @endforeach
+                            @else
+                                <span class="px-2 py-1 text-xs italic text-gray-500">No sizes available</span>
                             @endif
+                        </div>
+
+
+                        {{-- Packaging Types Display --}}
+                    {{-- Packaging Types Display --}}
+                    @if (!empty($item->packagingTypes) && $item->packagingTypes->count() > 0)
+                        <h3 class="mt-4 font-semibold text-gray-700">Packaging Hierarchy</h3>
+
+                        {{-- 'flex-col' stacks them, 'items-start' keeps them compact width --}}
+                        <div class="flex flex-col items-start gap-2 mt-1">
+
+                            @php
+                                $runningTotal = 1;
+                                $previousName = 'pcs';
+                            @endphp
+
+                            @foreach ($item->packagingTypes as $index => $pack)
+                                @php
+                                    $currentQty = $pack->pivot->quantity ?? 1;
+
+                                    // Logic: Calculate totals
+                                    if ($index === 0) {
+                                        $absTotal = 1;
+                                    } else {
+                                        $absTotal = $currentQty * $runningTotal;
+                                    }
+
+                                    // Logic: Create display string based on specific tier requirements
+                                    if ($index === 0) {
+                                        // Piece: 1 pcs
+                                        $displayText = "1 pcs";
+                                    } elseif ($index === 1) {
+                                        // Packet: 50 pcs (Shows absolute total only)
+                                        $displayText = number_format($absTotal) . " pcs";
+                                    } else {
+                                        // Carton (Index 2+): 20 Packets (1,000 pcs)
+                                        $displayText = "{$currentQty} {$previousName}s (" . number_format($absTotal) . " pcs)";
+                                    }
+                                @endphp
+
+                                {{-- Badge Structure (Stacked, Compact, Purple) --}}
+                                <div
+                                     class="inline-flex items-center px-2.5 py-1 text-xs font-medium text-white bg-purple-500 rounded-full shadow-sm">
+                                    <span class="font-bold tracking-wide">{{ $pack->name }}:</span>
+                                    <span class="ml-1 text-purple-50">{{ $displayText }}</span>
+                                </div>
+
+                                @php
+                                    // Update trackers for the next loop iteration
+                                    $runningTotal = $absTotal;
+                                    $previousName = $pack->name;
+                                @endphp
+                            @endforeach
+                        </div>
+                    @endif
 
                             {{-- Status --}}
                             <h3 class="mt-4 font-semibold text-gray-700">Status</h3>

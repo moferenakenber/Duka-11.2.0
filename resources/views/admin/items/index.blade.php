@@ -34,14 +34,14 @@
 
             <!-- Filters -->
             @php
-                $filters = [
-                    'all' => 'All',
-                    'active' => 'Active',
-                    'inactive' => 'Inactive',
-                    'unavailable' => 'Unavailable',
-                    'draft' => 'Draft',
-                ];
-                $currentFilter = request('filter', 'all');
+$filters = [
+    'all' => 'All',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'unavailable' => 'Unavailable',
+    'draft' => 'Draft',
+];
+$currentFilter = request('filter', 'all');
             @endphp
             <div class="flex flex-wrap gap-2 mb-4">
                 @foreach ($filters as $key => $label)
@@ -53,26 +53,26 @@
             </div>
 
             @php
-                $filteredItems = match ($currentFilter) {
-                    'active' => $items->where('status', 'active'),
-                    'inactive' => $items->where('status', 'inactive'),
-                    'unavailable' => $items->where('status', 'unavailable'),
-                    'draft' => $items->where('status', 'draft'),
-                    default => $items,
-                };
+$filteredItems = match ($currentFilter) {
+    'active' => $items->where('status', 'active'),
+    'inactive' => $items->where('status', 'inactive'),
+    'unavailable' => $items->where('status', 'unavailable'),
+    'draft' => $items->where('status', 'draft'),
+    default => $items,
+};
 
-                $sort = request('sort', 'name');
-                $direction = request('direction', 'asc');
+$sort = request('sort', 'name');
+$direction = request('direction', 'asc');
 
-                if ($sort === 'name') {
-                    $filteredItems =
-                        $direction === 'asc'
-                            ? $filteredItems->sortBy('product_name')
-                            : $filteredItems->sortByDesc('product_name');
-                } elseif ($sort === 'status') {
-                    $filteredItems =
-                        $direction === 'asc' ? $filteredItems->sortBy('status') : $filteredItems->sortByDesc('status');
-                }
+if ($sort === 'name') {
+    $filteredItems =
+        $direction === 'asc'
+        ? $filteredItems->sortBy('product_name')
+        : $filteredItems->sortByDesc('product_name');
+} elseif ($sort === 'status') {
+    $filteredItems =
+        $direction === 'asc' ? $filteredItems->sortBy('status') : $filteredItems->sortByDesc('status');
+}
             @endphp
 
             <!-- Items Table -->
@@ -112,6 +112,8 @@
                                         @endif
                                     </a>
                                 </th>
+                                <th class="px-4 py-2 text-sm font-medium text-left text-gray-900">Active Variants</th>
+
                                 <th class="px-4 py-2 text-sm font-medium text-left text-gray-900">Actions</th>
                             </tr>
                         </thead>
@@ -119,9 +121,13 @@
                             @forelse ($filteredItems as $item)
                                 <tr class="dark:hover:bg-gray-700 hover:bg-gray-50">
                                     <td class="px-4 py-2 text-sm text-gray-800">{{ $item->product_name }}</td>
+
                                     <td
                                         class="{{ $item->status === 'active' ? 'bg-green-100' : ($item->status === 'inactive' ? 'bg-gray-100' : 'bg-yellow-100') }} rounded-sm px-4 py-2 text-sm font-medium text-gray-800">
                                         {{ ucfirst($item->status) }}
+                                    </td>
+                                    <td class="px-4 py-2 text-sm text-gray-800">
+                                        {{ $item->variants->where('is_active', 1)->count() }}
                                     </td>
                                     <td class="px-4 py-2 text-sm text-gray-800">
                                         <a href="{{ route('admin.items.show', $item->id) }}"
