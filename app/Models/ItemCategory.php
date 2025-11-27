@@ -11,11 +11,19 @@ class ItemCategory extends Model
 
     protected $fillable = [
         'category_name',
+        'parent_id', // <-- allow mass assignment
     ];
 
-    public function category()
+    // Parent category
+    public function parent()
     {
-        return $this->belongsTo(ItemCategory::class);
+        return $this->belongsTo(ItemCategory::class, 'parent_id');
+    }
+
+    // Subcategories
+    public function children()
+    {
+        return $this->hasMany(ItemCategory::class, 'parent_id');
     }
 
     // Many-to-Many Relationship with Item
@@ -28,5 +36,4 @@ class ItemCategory extends Model
             'item_id'
         );
     }
-
 }

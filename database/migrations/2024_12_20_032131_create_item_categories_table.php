@@ -14,6 +14,8 @@ return new class extends Migration
         Schema::create('item_categories', function (Blueprint $table) {
             $table->id();
             $table->string('category_name');
+            $table->unsignedBigInteger('parent_id')->nullable();   // <-- Subcategory support
+            $table->foreign('parent_id')->references('id')->on('item_categories')->onDelete('cascade');
             $table->timestamps();
         });
     }

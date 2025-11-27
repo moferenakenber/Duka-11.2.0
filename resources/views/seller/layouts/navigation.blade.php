@@ -21,10 +21,10 @@
     <span class="text-xs dock-label">Home</span>
   </a>
 
-  <!-- Customers Button -->
-  <a href="/seller/customers" class="flex flex-col items-center justify-center text-gray-500">
-    <x-lucide-users class="size-[1.2em] {{ request()->is('seller/customers') ? 'text-[#F6A45D]' : 'text-gray-500' }}" />
-    <span class="text-xs dock-label">Customers</span>
+  <!-- Categories Button (replacing Customers) -->
+  <a href="/seller/categories" class="flex flex-col items-center justify-center text-gray-500">
+    <x-lucide-grid-2x2 class="size-[1.2em] {{ request()->is('seller/categories') ? 'text-[#F6A45D]' : 'text-gray-500' }}" />
+    <span class="text-xs dock-label">Categories</span>
   </a>
 
   <!-- Carts Button -->

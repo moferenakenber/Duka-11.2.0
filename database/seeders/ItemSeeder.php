@@ -2,12 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use \App\Models\Item;
-use \App\Models\ItemCategory;
-use \App\Models\ItemColor;
-use \App\Models\ItemVariant;
+use App\Models\Item;
+use App\Models\ItemColor;
+use App\Models\ItemSize;
+use App\Models\ItemPackagingType;
+use App\Models\ItemVariant;
+use Illuminate\Support\Facades\Log;
+use Exception;
 
 class ItemSeeder extends Seeder
 {
@@ -16,11 +18,7 @@ class ItemSeeder extends Seeder
      */
     public function run(): void
     {
-        // Create 10 items using the factory
-        //ItemCategory::factory(10)->create(); // Create categories first
-
-        //Item::factory()->count(150)->create();
-
+        // Example product names
         $productNames = [
             ////////////////////////////
             // '2 side color',
@@ -252,62 +250,7 @@ class ItemSeeder extends Seeder
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+            // -----------------------------------------------------------------------------------------------------------------
 
 
 
@@ -588,167 +531,65 @@ class ItemSeeder extends Seeder
 
         ];
 
-        $imageUrls = []; // Initialize an empty array for image URLs
+        // Attach existing colors, sizes, and packaging types
+        $colors = ItemColor::all();
+        $sizes = ItemSize::all();
+        $packagingTypes = ItemPackagingType::all();
 
         foreach ($productNames as $productName) {
-
-
-
-            //$itemId = 1;
-            // Generate image URLs for each product (from local storage)
-            $image1Path = 'images/product_images/' . str_replace(' ', '_', $productName) . '_1.jpg'; //Example: product_images/Product_A_1.jpg
-            $image2Path = 'images/product_images/' . str_replace(' ', '_', $productName) . '_2.jpg'; //Example: product_images/Product_A_2.jpg
-
-            $image1Url = asset($image1Path);
-            $image2Url = asset($image2Path);
-
-
-
-            $colorImage1Url = asset('images/product_images/' . str_replace(' ', '_', $productName) . '_color_1.jpg'); //Example: product_images/Product_A_color_1.jpg
-            $colorImage2Url = asset('images/product_images/' . str_replace(' ', '_', $productName) . '_color_2.jpg'); //Example: product_images/Product_A_color_2.jpg
-            $colorImages = [
-                $colorImage1Url,
-                $colorImage2Url,
-            ];
-
+            // Generate images
             $images = [
-                $image1Url,
-                $image2Url,
-                $colorImage1Url,
-                $colorImage2Url,
-            ];
-
-            $colors = [
-                ['name' => 'BONE', 'image_path' => '$colorImages', 'disabled' => false],
-                ['name' => 'WHITE', 'image_path' => '$colorImages', 'disabled' => false],
-                ['name' => 'BLACK', 'image_path' => '$colorImages', 'disabled' => false],
-                ['name' => 'PURPLE', 'image_path' => '$colorImages', 'disabled' => false],
-                ['name' => 'BUTTER CORN', 'image_path' => '$colorImages', 'disabled' => true],
-                ['name' => 'QUARTZ', 'image_path' => '$colorImages', 'disabled' => false],
-            ];
-
-            // $colors = [
-            //     'Red',
-            //     'Blue',
-            //     'Green',
-            //     'Yellow',
-            //     'Black',
-            //     'White',
-            //     'Purple',
-            //     'Orange',
-            //     'Pink',
-            //     'Brown',
-            //     'Gray',
-            // ];
-
-            $sizes = [
-                'Small',
-                'Medium',
-                'Large',
-                'Extra Large',
+                asset("images/product_images/{$productName}_1.jpg"),
+                asset("images/product_images/{$productName}_2.jpg"),
             ];
 
 
 
-            $packagingTypes = [
-                ['name' => 'Piece', 'quantity' => 1],
-                ['name' => 'Doz', 'quantity' => 12],
-                ['name' => 'Bundle', 'quantity' => 10],
-                ['name' => 'Packet', 'quantity' => 50],
-                ['name' => 'Bag', 'quantity' => 100],
-                ['name' => 'Wrapper', 'quantity' => 1],
-                ['name' => 'Bottle', 'quantity' => 1],
-                ['name' => 'Case', 'quantity' => 24],
-                ['name' => 'Crate', 'quantity' => 1000],
-                ['name' => 'Container', 'quantity' => 5000],
-            ];
-
-
-
-
-
-            // // Generate image URLs for each product
-            // $images = [
-            //     'https://via.placeholder.com/' . rand(150, 250), // Example: Random size
-            //     'https://via.placeholder.com/' . rand(250, 400),
-            // ];
-
-
-
-
-
-            // // Add the image URLs to the $imageUrls array
-            // $imageUrls[] = $images;
-
+            // Create the item
             $item = Item::create([
-                'product_images' => json_encode($images), // 1 Example image URLs
-                //'variation' => fake()->word(),// 2
-                //'price' => fake()->randomFloat(2, 10, 500), // 3 Price between 10 and 500
-                'product_name' => $productName,// 4
-                'product_description' => fake()->sentence(),// 5
-                'packaging_details' => json_encode($packagingTypes),// 6 $packagingTypes
-                'status' => fake()->randomElement(['draft', 'active', 'inactive', 'unavailable']),// 7
-                'incomplete' => fake()->boolean(),// 8
-                'category_id' => rand(1, 10), // 9 Assuming categories exist
-                'item_category_id' => rand(1, 10),// 10
-                'selectedCategories' => json_encode(array_rand(range(1, 10), 3)), // 11
-                'newCategoryNames' => json_encode([fake()->word(), fake()->word()]), // 12
-                'sold_count' => rand(0, 500), // 13 Random sold count
-                'discount_price' => null,
-                'discount_percentage' => null,
-
-
-                'created_at' => now(),
-                'updated_at' => now(),
-
+                'product_name' => $productName,
+                'product_description' => fake()->sentence(),
+                'product_images' => json_encode($images),
+                'status' => 'inactive', // All items start inactive
+                'sold_count' => 0,
+                'category_id' => rand(1, 10), // Adjust according to your categories
             ]);
 
-            //  // Now, assign different colors for this item
-            // //foreach ($colors as $color) {
-            //     ItemColor::create([
-            //         'item_id' => $itemId, // Assuming the item ID is 1 for this example
-            //         'name' => $colors[0]['name'], // Example color name
-            //         'image_path' => $colors[0]['image_path'], // Example image path
-            //         'disabled' => $colors[0]['disabled'], // Example disabled status
-            //     ]);
-            // // }
-            // $itemId++;
 
-            // Assign all colors to each item
+            if ($colors->isEmpty() || $sizes->isEmpty() || $packagingTypes->isEmpty()) {
+                throw new Exception('Seed colors, sizes, and packages first!');
+            }
 
-            // foreach ($colors as $color) {
-            //     ItemColor::create([
-            //         'item_id' => $item->id,
-            //         'name' => $color['name'],
-            //         'image_path' => $colorImages[0], // Example image path
-            //         'disabled' => $color['disabled'],
-            //     ]);
-            // }
+            $item->colors()->sync($colors->pluck('id')->toArray());
+            $item->sizes()->sync($sizes->pluck('id')->toArray());
+            $item->packagingTypes()->syncWithPivotValues(
+                $packagingTypes->pluck('id')->toArray(), // just IDs
+                ['quantity' => 1] // optional pivot value
+            );
 
 
-            //   $itemVariation =  ItemVariant::create([
-            //         'item_id' => $item->id,
-            //         'item_color_id' => 1, // color id you manually choose
-            //         'item_size_id' => 1,
-            //         'item_packaging_type_id' => 1,
-            //         'price' => 1,
-            //         'stock' => 10,
-            //         'owner_id' => 1,
-            //     ]);
 
-            // ItemVariant::create([
-            //     'item_id' => $item->id,
-            //     'item_color_id' => 2,
-            //     'item_size_id' => $size->id,
-            //     'item_packaging_type_id' => $packaging->id,
-            //     'price' => 2,
-            //     'stock' => 20,
-            //     'owner_id' => $owner->id,
-            // ]);
+            // Generate all possible variants
+            foreach ($colors as $color) {
+                foreach ($sizes as $size) {
+                    foreach ($packagingTypes as $pkg) {
 
-
+                        ItemVariant::create([
+                            'item_id' => $item->id,
+                            'item_color_id' => $color->id,
+                            'item_size_id' => $size->id,
+                            'item_packaging_type_id' => $pkg->id,
+                            'price' => 0,
+                            'discount_price' => null,
+                            'barcode' => null,
+                            'images' => json_encode([]),
+                            'is_active' => false,
+                            'status' => 'inactive',
+                            // 'sku' => "{$item->sku}-{$color->code}-{$size->code}-{$pkg->code}-{$item->id}",
+                        ]);
+                    }
+                }
+            }
         }
-
-
     }
 }

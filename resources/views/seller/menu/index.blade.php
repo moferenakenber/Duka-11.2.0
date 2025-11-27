@@ -55,6 +55,13 @@
                 <div class="h-px my-4 bg-gray-300"></div>
 
                 <div class="grid grid-cols-2 gap-4 mt-4">
+
+                    <!-- Customers -->
+                    <a href="/seller/customers" class="flex items-center p-4 bg-white rounded-lg hover:bg-gray-100">
+                        <x-lucide-users class="w-6 h-6 mr-2 text-gray-600" />
+                        <span class="ml-2">Customers</span>
+                    </a>
+
                     <a href="#" class="flex items-center p-4 bg-white rounded-lg hover:bg-gray-100">
                         <!-- Lucide Icon -->
                         <x-lucide-trending-up class="w-6 h-6 mr-2 text-gray-600" />

@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\TransferController;
 use App\Http\Controllers\Admin\StockController;
 
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
+use App\Http\Controllers\Seller\CategoryController as SellerCategoryController;
 use App\Http\Controllers\Seller\CustomerController as SellerCustomerController;
 use App\Http\Controllers\Seller\ItemController as SellerItemController;
 use App\Http\Controllers\Seller\CartController as SellerCartController;
@@ -154,6 +155,7 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         // })->name('dashboard');
 
         Route::get('/dashboard', [SellerDashboardController::class, 'index'])->name('dashboard');
+        Route::resource('categories', SellerCategoryController::class);
         Route::resource('customers', SellerCustomerController::class);
         Route::resource('items', SellerItemController::class);
         Route::resource('carts', SellerCartController::class);

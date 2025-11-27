@@ -35,7 +35,8 @@ class ItemVariant extends Model
         'barcode',
         'images',
         'status',
-        'packaging_total_pieces'
+        'packaging_total_pieces',
+        'sku',
     ];
 
 
