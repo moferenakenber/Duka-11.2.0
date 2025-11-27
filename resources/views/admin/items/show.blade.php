@@ -108,13 +108,21 @@ $otherImages = $images->slice(1);
                             @endif
 
                             {{-- Categories --}}
-                            <h3 class="mt-4 font-semibold text-gray-700">Categories</h3>
                             <div class="flex flex-wrap gap-1">
-                                @foreach ($item->categories as $cat)
-                                    <span
-                                        class="px-2 py-1 text-xs text-white bg-blue-500 rounded-full">{{ $cat->category_name }}</span>
-                                @endforeach
+                                @if ($item->category)
+                                    @if ($item->category->parent)
+                                        <span class="px-2 py-1 text-xs text-white bg-green-500 rounded-full">
+                                            {{ $item->category->parent->category_name }}
+                                        </span>
+                                    @endif
+                                    <span class="px-2 py-1 text-xs text-white bg-blue-500 rounded-full">
+                                        {{ $item->category->category_name }}
+                                    </span>
+                                @endif
                             </div>
+
+
+
 
                         {{-- Colors --}}
             <h3 class="mt-4 font-semibold text-gray-700">Colors</h3>
@@ -161,58 +169,44 @@ $otherImages = $images->slice(1);
                         </div>
 
 
-                        {{-- Packaging Types Display --}}
-                    {{-- Packaging Types Display --}}
-                    @if (!empty($item->packagingTypes) && $item->packagingTypes->count() > 0)
-                        <h3 class="mt-4 font-semibold text-gray-700">Packaging Hierarchy</h3>
+                       {{-- Packaging Types Display --}}
+@if (!empty($item->packagingTypes) && $item->packagingTypes->count() > 0)
+    <h3 class="mt-4 font-semibold text-gray-700">Packaging Hierarchy</h3>
 
-                        {{-- 'flex-col' stacks them, 'items-start' keeps them compact width --}}
-                        <div class="flex flex-col items-start gap-2 mt-1">
+    <div class="flex flex-col items-start gap-2 mt-1">
 
-                            @php
-                                $runningTotal = 1;
-                                $previousName = 'pcs';
-                            @endphp
+        @php
+            $packs = $item->packagingTypes->sortBy('pivot_id')->values();
+            $runningTotal = 1;      // total pcs so far
+            $previousName = 'pcs';  // used for parent name
+        @endphp
 
-                            @foreach ($item->packagingTypes as $index => $pack)
-                                @php
-                                    $currentQty = $pack->pivot->quantity ?? 1;
+        @foreach ($packs as $index => $pack)
+            @php
+                $qty = $pack->pivot->quantity ?? 1;
 
-                                    // Logic: Calculate totals
-                                    if ($index === 0) {
-                                        $absTotal = 1;
-                                    } else {
-                                        $absTotal = $currentQty * $runningTotal;
-                                    }
+                if ($index === 0) {
+                    // FIRST LEVEL - base quantity (e.g. packet: 50 pcs)
+                    $runningTotal = $qty;
+                    $display = "{$qty} pcs";
 
-                                    // Logic: Create display string based on specific tier requirements
-                                    if ($index === 0) {
-                                        // Piece: 1 pcs
-                                        $displayText = "1 pcs";
-                                    } elseif ($index === 1) {
-                                        // Packet: 50 pcs (Shows absolute total only)
-                                        $displayText = number_format($absTotal) . " pcs";
-                                    } else {
-                                        // Carton (Index 2+): 20 Packets (1,000 pcs)
-                                        $displayText = "{$currentQty} {$previousName}s (" . number_format($absTotal) . " pcs)";
-                                    }
-                                @endphp
+                } else {
+                    // UPPER LEVELS
+                    $runningTotal = $runningTotal * $qty;
+                    $display = "{$qty} {$previousName}s (" . number_format($runningTotal) . " pcs)";
+                }
 
-                                {{-- Badge Structure (Stacked, Compact, Purple) --}}
-                                <div
-                                     class="inline-flex items-center px-2.5 py-1 text-xs font-medium text-white bg-purple-500 rounded-full shadow-sm">
-                                    <span class="font-bold tracking-wide">{{ $pack->name }}:</span>
-                                    <span class="ml-1 text-purple-50">{{ $displayText }}</span>
-                                </div>
+                $previousName = $pack->name;
+            @endphp
 
-                                @php
-                                    // Update trackers for the next loop iteration
-                                    $runningTotal = $absTotal;
-                                    $previousName = $pack->name;
-                                @endphp
-                            @endforeach
-                        </div>
-                    @endif
+            <div class="inline-flex items-center px-2.5 py-1 text-xs font-medium text-white bg-purple-500 rounded-full shadow-sm">
+                <span class="font-bold tracking-wide">{{ $pack->name }}:</span>
+                <span class="ml-1 text-purple-50">{{ $display }}</span>
+            </div>
+        @endforeach
+
+    </div>
+@endif
 
                             {{-- Status --}}
                             <h3 class="mt-4 font-semibold text-gray-700">Status</h3>

@@ -24,7 +24,7 @@ class ItemCategorySeeder extends Seeder
             ],
             'Files & Folders' => [
                 'Box File', 'Folder', 'Cilp file', 'Clipboard', 'Document Case',
-                'Display book'
+                'Display book', 'Binding'
             ],
             'Desk Accessories' => [
                 'Stapler', 'Puncher', 'Fastener', 'Elastic band',

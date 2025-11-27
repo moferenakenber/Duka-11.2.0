@@ -116,13 +116,14 @@ $mainImage = $images[0] ?? 'images/default.jpg';
                                 @endif
                             </div>
 
-                            <div class="justify-end card-actions">
-                                @foreach ($item->categories as $cat)
-                                    <div class="badge badge-outline">
-                                        {{ $cat->category_name }}
-                                    </div>
-                                @endforeach
+                            <div class="flex flex-wrap justify-end gap-1 card-actions">
+                                @if ($item->category)
+                                    <span class="badge badge-outline">{{ $item->category->category_name }}</span>
+                                @endif
                             </div>
+
+
+
                         </div>
                     </a>
                 @endforeach

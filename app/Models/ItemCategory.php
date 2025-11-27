@@ -26,14 +26,12 @@ class ItemCategory extends Model
         return $this->hasMany(ItemCategory::class, 'parent_id');
     }
 
-    // Many-to-Many Relationship with Item
+    // One-to-many: category → items
     public function items()
     {
-        return $this->belongsToMany(
-            Item::class,
-            'item_category_item',
-            'category_id',
-            'item_id'
-        );
+        return $this->hasMany(Item::class, 'category_id')
+                    ->where('status', 'active'); // only active items
     }
+
+
 }

@@ -12,15 +12,18 @@ class ItemSeeder extends Seeder
     {
         $items = [
             [
-                'name' => 'Noteit',
-                'description' => 'A sample notebook',
-                'category_id' => 1,       // main category ID
-                'subcategory_id' => 2,    // subcategory ID
-                'color_ids' => [1, 2],
-                'size_ids' => [1, 2],
+                'name' => 'Noteit Sticky Note',
+
+                'description' => 'NoteIt / Sticky Notes is a simple and convenient tool that helps you quickly capture your thoughts, reminders, and important information. With the ability to create, edit, and organize notes effortlessly, you can keep track of tasks, ideas, and deadlines in one place. Color-coded notes, search functionality, and optional reminders make it easy to prioritize and find what you need. Perfect for personal, school, or work use, NoteIt keeps your information accessible, organized, and always within reach.',
+
+                'category_id' => 42,       // main category ID
+                'subcategory_id' => 44,    // subcategory ID
+                'color_ids' => [1, 2, 3, 4],
+                'size_ids' => [1, 2, 3],
                 'packagings' => [
                     ['id' => 1, 'quantity' => 1],
-                    ['id' => 2, 'quantity' => 10],
+                    ['id' => 2, 'quantity' => 12],
+                    ['id' => 3, 'quantity' => 18],
                 ],
                 'variant_images' => [
                     // key = colorId-sizeId-packagingId
@@ -41,13 +44,16 @@ class ItemSeeder extends Seeder
             ],
             [
                 'name' => 'Ring',
-                'description' => 'A decorative ring',
-                'category_id' => 5,
-                'subcategory_id' => 8,
-                'color_ids' => [3, 4],
-                'size_ids' => [2, 3],
+
+                'description' => 'Binding rings for punched papers, ideal for making notebooks or custom booklets. Durable and easy to use, these rings securely hold your documents together while allowing for easy page turning and addition or removal of pages as needed. Perfect for organizing notes, presentations, or any collection of loose-leaf papers.',
+
+                'category_id' => 21,
+                'subcategory_id' => 28,
+                'color_ids' => [1, 2, 3, 4, 5],
+                'size_ids' => [19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34],
                 'packagings' => [
-                    ['id' => 2, 'quantity' => 1],
+                    ['id' => 2, 'quantity' => 50],
+                    ['id' => 3, 'quantity' => 18],
                 ],
                 'variant_images' => [
                     '3-2-2' => [

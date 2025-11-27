@@ -96,7 +96,7 @@ class ItemController extends Controller
             'colors',
             'sizes',
             'packagingTypes',
-            'categories'
+            'category.parent', // <-- load the parent of the assigned category
         ]);
         logger('Step 1: Loaded item relations', ['item_id' => $item->id]);
 

@@ -86,56 +86,53 @@
 
 
                         {{-- Packaging --}}
-                        @if ($item->packagingTypes->count())
-                            <div class="mt-3">
-                                <h3 class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">Packaging</h3>
+{{-- Packaging --}}
+@if ($item->packagingTypes->count())
+    <div class="mt-3">
+        <h3 class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">Packaging</h3>
 
-                                <div class="flex flex-col items-start gap-2 mt-1">
-                                    @php
-                                        $runningTotal = 1;
-                                        $previousName = 'pcs';
-                                    @endphp
+        <div class="flex flex-col items-start gap-2 mt-1">
+            @php
+                $runningTotal = 1;          // Start from pcs
+                $previousName = 'pcs';      // First unit
+            @endphp
 
-                                    @foreach ($item->packagingTypes as $index => $pack)
-                                        @php
-                                            $currentQty = $pack->pivot->quantity ?? 1;
+            @foreach ($item->packagingTypes as $index => $pack)
+                @php
+                    $currentQty = $pack->pivot->quantity ?? 1;
 
-                                            // 1. Calculate Absolute Total
-                                            if ($index === 0) {
-                                                $absTotal = 1;
-                                            } else {
-                                                $absTotal = $currentQty * $runningTotal;
-                                            }
+                    // Absolute quantity in pcs
+                    $absTotal = $currentQty * $runningTotal;
 
-                                            // 2. Generate Display Text based on specific tier requirements
-                                            if ($index === 0) {
-                                                // Piece: 1 pcs
-                                                $displayText = "1 pcs";
-                                            } elseif ($index === 1) {
-                                                // Packet: 50 pcs (Shows absolute total only)
-                                                $displayText = number_format($absTotal) . " pcs";
-                                            } else {
-                                                // Cartoon (Index 2+): 20 Packets (1,000 pcs)
-                                                // Shows Qty relative to previous pack AND absolute total
-                                                $displayText = "{$currentQty} {$previousName}s (" . number_format($absTotal) . " pcs)";
-                                            }
-                                        @endphp
+                    // DISPLAY RULES
+                    if ($index === 0) {
+                        // First level (Packet)
+                        // Example: 50 pcs
+                        $displayText = "{$currentQty} pcs";
+                    } else {
+                        // Higher levels
+                        // Example: 18 Packets (900 pcs)
+                        $displayText = "{$currentQty} {$previousName}s (" . number_format($absTotal) . " pcs)";
+                    }
+                @endphp
 
-                                        <div
-                                            class="inline-flex items-center px-2.5 py-1 text-xs font-medium text-white bg-purple-500 rounded-full shadow-sm">
-                                            <span class="font-bold tracking-wide">{{ $pack->name }}:</span>
-                                            <span class="ml-1 text-purple-50">{{ $displayText }}</span>
-                                        </div>
+                <div
+                    class="inline-flex items-center px-2.5 py-1 text-xs font-medium text-white bg-purple-500 rounded-full shadow-sm">
+                    <span class="font-bold tracking-wide">{{ $pack->name }}:</span>
+                    <span class="ml-1 text-purple-50">{{ $displayText }}</span>
+                </div>
 
-                                        @php
-                                            // Pass variables to next iteration
-                                            $runningTotal = $absTotal;
-                                            $previousName = $pack->name;
-                                        @endphp
-                                    @endforeach
-                                </div>
-                            </div>
-                        @endif
+                @php
+                    // Prepare for next loop
+                    $runningTotal = $absTotal;
+                    $previousName = $pack->name;
+                @endphp
+            @endforeach
+        </div>
+    </div>
+@endif
+
+
                     </div>
                 </div>
 

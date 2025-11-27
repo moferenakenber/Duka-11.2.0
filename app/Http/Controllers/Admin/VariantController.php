@@ -20,7 +20,9 @@ class VariantController extends Controller
      */
     public function index(Item $item)
     {
-        $item->load(['variants', 'colors', 'sizes', 'packagingTypes']);
+        $item->load(['variants', 'colors', 'sizes', 'packagingTypes' => function ($q) {
+        $q->withPivot('quantity');
+    } ]);
 
         if (request()->wantsJson()) {
             // Return JSON for Postman / API

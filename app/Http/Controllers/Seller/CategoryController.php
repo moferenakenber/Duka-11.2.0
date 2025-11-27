@@ -52,12 +52,21 @@ class CategoryController extends Controller
      */
     public function show(ItemCategory $category)
     {
-        // Get the immediate subcategories (children) of the main category
-        $subcategories = $category->children()->orderBy('category_name')->get();
+        // Get immediate subcategories and count only active items per subcategory
+        $subcategories = $category->children()
+            ->withCount(['items as active_items_count' => function($query) {
+                $query->where('status', 'active');
+            }])
+            ->orderBy('category_name')
+            ->get();
 
-        // Passes the main category and its children (subcategories) to the show view.
-        return view('seller.categories.show', compact('category', 'subcategories'));
+        // Get only active items in this category
+        $items = $category->items()->where('status', 'active')->orderBy('product_name')->get();
+
+        return view('seller.categories.show', compact('category', 'subcategories', 'items'));
     }
+
+
 
     // The remaining resource methods (create, store, edit, update, destroy)
     // are typically not needed for a Seller role who only views categories.
