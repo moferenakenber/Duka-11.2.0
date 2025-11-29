@@ -16,9 +16,9 @@ class ItemSeeder extends Seeder
 
                 'description' => 'NoteIt / Sticky Notes is a simple and convenient tool that helps you quickly capture your thoughts, reminders, and important information. With the ability to create, edit, and organize notes effortlessly, you can keep track of tasks, ideas, and deadlines in one place. Color-coded notes, search functionality, and optional reminders make it easy to prioritize and find what you need. Perfect for personal, school, or work use, NoteIt keeps your information accessible, organized, and always within reach.',
 
-                'category_id' => 42,       // main category ID
-                'subcategory_id' => 44,    // subcategory ID
-                'color_ids' => [1, 2, 3, 4],
+                'category_id' => 43,       // main category ID
+                'subcategory_id' => 45,    // subcategory ID
+                'color_ids' => [1, 2, 3, 4, 11],
                 'size_ids' => [1, 2, 3],
                 'packagings' => [
                     ['id' => 1, 'quantity' => 1],
@@ -64,19 +64,44 @@ class ItemSeeder extends Seeder
                     ],
                 ],
             ],
+            [
+                'name' => 'Bic Pen',
+                'description' => 'Classic Bic pens for smooth writing, reliable and long-lasting. Ideal for school, office, or personal use.',
+                'category_id' => 11,       // Category ID
+                'subcategory_id' => 12,    // Subcategory ID
+                'color_ids' => [2, 5, 1],  // Available colors
+                'size_ids' => [],           // No sizes
+                'packagings' => [
+                    ['id' => 1, 'quantity' => 1],   // Single pen
+                    ['id' => 2, 'quantity' => 50],  // Packet of 50 pens
+                    ['id' => 3, 'quantity' => 20],  // Box of 20 packets
+                ],
+                'variant_images' => [
+                    '2-0-1' => [ // color_id 2, no size (0), packaging_id 1
+                        asset("images/product_images/Bic_Blue_Single_1.jpg"),
+                    ],
+                    '5-0-2' => [ // color_id 5, no size (0), packaging_id 2
+                        asset("images/product_images/Bic_Black_Packet_1.jpg"),
+                    ],
+                    '1-0-3' => [ // color_id 1, no size (0), packaging_id 3
+                        asset("images/product_images/Bic_Red_Box_1.jpg"),
+                    ],
+                ],
+            ],
+
         ];
 
         foreach ($items as $itemData) {
-            // Set product images
+            $slugName = str_replace(' ', '_', $itemData['name']);
+
+            // Main product images
             $images = [
-                asset("images/product_images/{$itemData['name']}_1.jpg"),
-                asset("images/product_images/{$itemData['name']}_2.jpg"),
+                "images/product_images/{$slugName}_1.jpg",
+                "images/product_images/{$slugName}_2.jpg",
             ];
 
-            // Determine category (use subcategory if exists)
             $assignCategoryId = $itemData['subcategory_id'] ?? $itemData['category_id'];
 
-            // Create the item
             $item = Item::create([
                 'product_name' => $itemData['name'],
                 'product_description' => $itemData['description'],
@@ -86,28 +111,40 @@ class ItemSeeder extends Seeder
                 'category_id' => $assignCategoryId,
             ]);
 
-            // Sync colors & sizes
             $item->colors()->sync($itemData['color_ids']);
             $item->sizes()->sync($itemData['size_ids']);
 
-            // Sync packagings with quantity
+            // Packagings with quantity
             $pivotData = [];
             foreach ($itemData['packagings'] as $pkg) {
                 $pivotData[$pkg['id']] = ['quantity' => $pkg['quantity']];
             }
             $item->packagingTypes()->sync($pivotData);
 
-            // Generate all possible variants
-            foreach ($itemData['color_ids'] as $colorId) {
-                foreach ($itemData['size_ids'] as $sizeId) {
-                    foreach ($itemData['packagings'] as $pkg) {
-                        // Build variant key
-                        $key = "{$colorId}-{$sizeId}-{$pkg['id']}";
+            // Sizes for variant generation
+            $sizes = !empty($itemData['size_ids']) ? $itemData['size_ids'] : [null];
 
-                        // Use variant images if defined, else empty array
+            foreach ($itemData['color_ids'] as $colorId) {
+                foreach ($sizes as $sizeId) {
+                    foreach ($itemData['packagings'] as $pkg) {
+                        $key = "{$colorId}-" . ($sizeId ?? 0) . "-{$pkg['id']}";
+
+                        // Try variant-specific image
                         $variantImages = $itemData['variant_images'][$key] ?? [];
 
-                        \App\Models\ItemVariant::create([
+                        // Fallback to a color-based image if no variant image
+                        if (empty($variantImages)) {
+                            $variantImages = [
+                                "images/product_images/{$slugName}_Color_{$colorId}.jpg"
+                            ];
+                        }
+
+                        // Fallback to default image if still empty
+                        if (empty($variantImages)) {
+                            $variantImages = ["images/product_images/default.jpg"];
+                        }
+
+                        ItemVariant::create([
                             'item_id' => $item->id,
                             'item_color_id' => $colorId,
                             'item_size_id' => $sizeId,
@@ -123,5 +160,6 @@ class ItemSeeder extends Seeder
                 }
             }
         }
+
     }
 }

@@ -101,31 +101,36 @@ class ItemController extends Controller
         if ($item->product_images) {
             $decodedImages = json_decode($item->product_images, true);
             if (is_array($decodedImages)) {
-                $itemImages = collect($decodedImages);
+                $itemImages = collect($decodedImages)
+                    ->filter(fn($img) => !empty($img)) // remove empty entries
+                    ->map(fn($img) => asset($img));
             }
         }
 
         $variantColorImages = $item->variants
-            ->map(fn($variant) => $variant->itemColor ? asset($variant->itemColor->image_path) : null)
-            ->filter()
+            ->map(fn($variant) => $variant->itemColor?->image_path ? asset($variant->itemColor->image_path) : null)
+            ->filter(fn($img) => !empty($img) && $img !== url('/')) // remove empty / root
             ->unique();
 
         $sizeImages = $item->variants
             ->map(fn($variant) => optional($variant->itemSize)->image_path ? asset($variant->itemSize->image_path) : null)
-            ->filter()
+            ->filter(fn($img) => !empty($img) && $img !== url('/'))
             ->unique();
 
         $packagingImages = $item->variants
             ->map(fn($variant) => optional($variant->itemPackagingType)->image_path ? asset($variant->itemPackagingType->image_path) : null)
-            ->filter()
+            ->filter(fn($img) => !empty($img) && $img !== url('/'))
             ->unique();
+
 
         $allImages = $itemImages
             ->merge($variantColorImages)
             ->merge($sizeImages)
             ->merge($packagingImages)
+            ->filter(fn($img) => !empty($img)) // ✅ remove empty entries
             ->unique()
             ->values();
+
 
         // 🔹 Build variant data array
         $variantData = $item->variants->map(function ($variant) {
@@ -140,7 +145,15 @@ class ItemController extends Controller
                 $rawImages = [];
             }
 
-            $variantImages = collect($rawImages)->map(fn($img) => asset('storage/' . $img));
+            $variantImages = collect($rawImages)->map(function ($img) {
+                // If it's already a full URL, use it
+                if (str_starts_with($img, 'http')) {
+                    return $img;
+                }
+                // Otherwise, prefix with asset() pointing to public
+                return asset($img); // <- not storage
+            });
+
 
             return [
                 'id' => $variant->id,
