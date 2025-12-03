@@ -114,8 +114,19 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::post('/{item}', [VariantController::class, 'store'])
                 ->name('variants.store');
 
-            // Variant CRUD (except store)
-            Route::resource('crud', VariantController::class)->except(['store']);
+            // Variant CRUD (except store) with proper route names
+            Route::resource('variants/crud', VariantController::class)
+                ->except(['store'])
+                ->names([
+                    'index' => 'variants.crud.index',
+                    'create' => 'variants.crud.create',
+                    'show' => 'variants.crud.show',
+                    'edit' => 'variants.crud.edit',
+                    'update' => 'variants.crud.update',
+                    'destroy' => 'variants.crud.destroy',
+                ]);
+
+
             // --- Add status update route ---
             Route::put('/{variant}/status', [VariantController::class, 'updateStatus'])
                 ->name('variants.updateStatus');

@@ -13,11 +13,9 @@ class ItemSeeder extends Seeder
         $items = [
             [
                 'name' => 'Noteit Sticky Note',
-
-                'description' => 'NoteIt / Sticky Notes is a simple and convenient tool that helps you quickly capture your thoughts, reminders, and important information. With the ability to create, edit, and organize notes effortlessly, you can keep track of tasks, ideas, and deadlines in one place. Color-coded notes, search functionality, and optional reminders make it easy to prioritize and find what you need. Perfect for personal, school, or work use, NoteIt keeps your information accessible, organized, and always within reach.',
-
-                'category_id' => 43,       // main category ID
-                'subcategory_id' => 45,    // subcategory ID
+                'description' => 'NoteIt / Sticky Notes is a simple and convenient tool...',
+                'category_id' => 43,
+                'subcategory_id' => 45,
                 'color_ids' => [1, 2, 3, 4, 11],
                 'size_ids' => [1, 2, 3],
                 'packagings' => [
@@ -25,28 +23,32 @@ class ItemSeeder extends Seeder
                     ['id' => 2, 'quantity' => 12],
                     ['id' => 3, 'quantity' => 18],
                 ],
-                'variant_images' => [
-                    // key = colorId-sizeId-packagingId
-                    '1-1-1' => [
-                        asset("images/product_images/Noteit_red_small_piece_1.jpg"),
-                        asset("images/product_images/Noteit_red_small_piece_2.jpg"),
-                    ],
-                    '1-2-1' => [
-                        asset("images/product_images/Noteit_red_medium_piece_1.jpg"),
-                    ],
-                    '2-1-1' => [
-                        asset("images/product_images/Noteit_blue_small_piece_1.jpg"),
-                    ],
-                    '2-2-2' => [
-                        asset("images/product_images/Noteit_blue_medium_box_1.jpg"),
+
+                //// >>> NEW — Active packaging per item
+                'active_packaging' => [1, 2],
+
+                //// >>> NEW — Price rules per item
+                'price_rules' => [
+                    'base_price' => 10,      // starting price
+                    'size_increase' => 10,   // +10% per size step
+                    'packaging_discount' => [
+                        1 => 0,
+                        2 => 5,
+                        3 => 12,
                     ],
                 ],
+
+                'variant_images' => [
+                    '1-1-1' => [asset("images/product_images/Noteit_red_small_piece_1.jpg"), asset("images/product_images/Noteit_red_small_piece_2.jpg")],
+                    '1-2-1' => [asset("images/product_images/Noteit_red_medium_piece_1.jpg")],
+                    '2-1-1' => [asset("images/product_images/Noteit_blue_small_piece_1.jpg")],
+                    '2-2-2' => [asset("images/product_images/Noteit_blue_medium_box_1.jpg")],
+                ],
             ],
+
             [
                 'name' => 'Ring',
-
-                'description' => 'Binding rings for punched papers, ideal for making notebooks or custom booklets. Durable and easy to use, these rings securely hold your documents together while allowing for easy page turning and addition or removal of pages as needed. Perfect for organizing notes, presentations, or any collection of loose-leaf papers.',
-
+                'description' => 'Binding rings for punched papers...',
                 'category_id' => 21,
                 'subcategory_id' => 28,
                 'color_ids' => [1, 2, 3, 4, 5],
@@ -55,50 +57,77 @@ class ItemSeeder extends Seeder
                     ['id' => 2, 'quantity' => 50],
                     ['id' => 3, 'quantity' => 18],
                 ],
+
+                //// >>> NEW
+                'active_packaging' => [2], // only packaging 2 is allowed for Ring
+
+                //// >>> NEW — Ring price logic
+                'price_rules' => [
+                    'base_price' => 15,         // smallest size, any color
+                    'size_increase' => 10,      // +10% for each next size
+                    'packaging_discount' => [
+                        2 => 0,
+                        3 => 10,
+                    ],
+                ],
+
                 'variant_images' => [
-                    '3-2-2' => [
-                        asset("images/product_images/Ring_gold_medium_box_1.jpg"),
-                    ],
-                    '4-3-2' => [
-                        asset("images/product_images/Ring_silver_large_box_1.jpg"),
-                    ],
+                    '3-2-2' => [asset("images/product_images/Ring_gold_medium_box_1.jpg")],
+                    '4-3-2' => [asset("images/product_images/Ring_silver_large_box_1.jpg")],
                 ],
             ],
+
             [
                 'name' => 'Bic Pen',
-                'description' => 'Classic Bic pens for smooth writing, reliable and long-lasting. Ideal for school, office, or personal use.',
-                'category_id' => 11,       // Category ID
-                'subcategory_id' => 12,    // Subcategory ID
-                'color_ids' => [2, 5, 1],  // Available colors
-                'size_ids' => [],           // No sizes
+                'description' => 'Classic Bic pens...',
+                'category_id' => 11,
+                'subcategory_id' => 12,
+                'color_ids' => [2, 5, 1],
+                'size_ids' => [], // no sizes
                 'packagings' => [
-                    ['id' => 1, 'quantity' => 1],   // Single pen
-                    ['id' => 2, 'quantity' => 50],  // Packet of 50 pens
-                    ['id' => 3, 'quantity' => 20],  // Box of 20 packets
+                    ['id' => 1, 'quantity' => 1],
+                    ['id' => 2, 'quantity' => 50],
+                    ['id' => 3, 'quantity' => 20],
                 ],
+
+                'active_packaging' => [1, 2],
+
+                //// Price rules
+                'price_rules' => [
+                    'base_price' => 17,             // base price per piece
+                    'size_increase' => 0,           // no size effect
+                    'packaging_discount' => [
+                        1 => 0,
+                        2 => 8,
+                        3 => 10,
+                    ],
+                    //// Color discount as percentage
+                    'color_discount' => [
+                        1 => 0,   // Red = no discount
+                        2 => 12,   // Blue = 5% discount
+                        5 => 6,   // Black = 10% discount
+                    ],
+                ],
+
                 'variant_images' => [
-                    '2-0-1' => [ // color_id 2, no size (0), packaging_id 1
-                        asset("images/product_images/Bic_Blue_Single_1.jpg"),
-                    ],
-                    '5-0-2' => [ // color_id 5, no size (0), packaging_id 2
-                        asset("images/product_images/Bic_Black_Packet_1.jpg"),
-                    ],
-                    '1-0-3' => [ // color_id 1, no size (0), packaging_id 3
-                        asset("images/product_images/Bic_Red_Box_1.jpg"),
-                    ],
+                    '2-0-1' => [asset("images/product_images/Bic_Blue_Single_1.jpg")],
+                    '5-0-2' => [asset("images/product_images/Bic_Black_Packet_1.jpg")],
+                    '1-0-3' => [asset("images/product_images/Bic_Red_Box_1.jpg")],
                 ],
             ],
 
         ];
 
         foreach ($items as $itemData) {
-            $slugName = str_replace(' ', '_', $itemData['name']);
 
-            // Main product images
+            $slugName = str_replace(' ', '_', $itemData['name']);
             $images = [
                 "images/product_images/{$slugName}_1.jpg",
                 "images/product_images/{$slugName}_2.jpg",
             ];
+
+            //// >>> UPDATED — item active if any active packaging exists
+            $shouldBeActive = count($itemData['active_packaging']) > 0;
 
             $assignCategoryId = $itemData['subcategory_id'] ?? $itemData['category_id'];
 
@@ -106,7 +135,7 @@ class ItemSeeder extends Seeder
                 'product_name' => $itemData['name'],
                 'product_description' => $itemData['description'],
                 'product_images' => json_encode($images),
-                'status' => 'inactive',
+                'status' => $shouldBeActive ? 'active' : 'inactive',
                 'sold_count' => 0,
                 'category_id' => $assignCategoryId,
             ]);
@@ -114,52 +143,69 @@ class ItemSeeder extends Seeder
             $item->colors()->sync($itemData['color_ids']);
             $item->sizes()->sync($itemData['size_ids']);
 
-            // Packagings with quantity
+            //// existing logic untouched
             $pivotData = [];
             foreach ($itemData['packagings'] as $pkg) {
                 $pivotData[$pkg['id']] = ['quantity' => $pkg['quantity']];
             }
             $item->packagingTypes()->sync($pivotData);
 
-            // Sizes for variant generation
             $sizes = !empty($itemData['size_ids']) ? $itemData['size_ids'] : [null];
+
+            $quantityMultiplier = 1; // start multiplier
 
             foreach ($itemData['color_ids'] as $colorId) {
                 foreach ($sizes as $sizeId) {
-                    foreach ($itemData['packagings'] as $pkg) {
+
+                    $cumulativeQuantity = 1; // start at 1 for nested multiplication
+
+                    foreach ($itemData['packagings'] as $index => $pkg) {
+                        // calculate cumulative quantity
+                        if ($index == 0) {
+                            $cumulativeQuantity = $pkg['quantity'];
+                        } elseif ($index == 1) {
+                            $cumulativeQuantity = $pkg['quantity']; // 50
+                        } elseif ($index == 2) {
+                            $cumulativeQuantity = $itemData['packagings'][1]['quantity'] * $pkg['quantity']; // 50*20=1000
+                        }
+
+                        $variantShouldBeActive = in_array($pkg['id'], $itemData['active_packaging']);
+
+                        $rules = $itemData['price_rules'];
+
+                        $base = $rules['base_price'];
+                        $sizeSteps = $sizeId ? array_search($sizeId, $itemData['size_ids']) : 0;
+                        $sizeIncrease = $sizeSteps * $rules['size_increase'];
+                        $packDiscount = $rules['packaging_discount'][$pkg['id']] ?? 0;
+                        $colorDiscount = $rules['color_discount'][$colorId] ?? 0;
+
+                        $finalPrice = ($base * $cumulativeQuantity)
+                            * (1 + $sizeIncrease / 100)
+                            * (1 - $packDiscount / 100)
+                            * (1 - $colorDiscount / 100);
+
                         $key = "{$colorId}-" . ($sizeId ?? 0) . "-{$pkg['id']}";
-
-                        // Try variant-specific image
-                        $variantImages = $itemData['variant_images'][$key] ?? [];
-
-                        // Fallback to a color-based image if no variant image
-                        if (empty($variantImages)) {
-                            $variantImages = [
-                                "images/product_images/{$slugName}_Color_{$colorId}.jpg"
-                            ];
-                        }
-
-                        // Fallback to default image if still empty
-                        if (empty($variantImages)) {
+                        $variantImages = $itemData['variant_images'][$key] ?? ["images/product_images/{$slugName}_Color_{$colorId}.jpg"];
+                        if (empty($variantImages))
                             $variantImages = ["images/product_images/default.jpg"];
-                        }
 
                         ItemVariant::create([
                             'item_id' => $item->id,
                             'item_color_id' => $colorId,
                             'item_size_id' => $sizeId,
                             'item_packaging_type_id' => $pkg['id'],
-                            'price' => 0,
+                            'price' => $finalPrice,
                             'discount_price' => null,
                             'barcode' => null,
                             'images' => json_encode($variantImages),
-                            'is_active' => false,
-                            'status' => 'inactive',
+                            'is_active' => $variantShouldBeActive,
+                            'status' => $variantShouldBeActive ? 'active' : 'inactive',
                         ]);
                     }
                 }
             }
-        }
 
+
+        }
     }
 }

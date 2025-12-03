@@ -3,6 +3,7 @@
 @section('content')
 <div class="max-w-4xl p-2 pb-20 mx-auto">
     <div class="overflow-hidden bg-white rounded-lg shadow-lg">
+
         {{-- Swiper Image Slider --}}
         <div class="swiper mySwiper relative h-[400px] w-full">
             <div class="h-full swiper-wrapper">

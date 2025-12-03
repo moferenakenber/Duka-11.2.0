@@ -12,6 +12,8 @@ use App\Models\ItemSize;
 use App\Models\ItemColor;
 use App\Models\ItemPackagingType;
 use App\Models\ItemInventoryLocation;
+use App\Models\Customer;
+use App\Models\User; // for sellers
 
 class VariantController extends Controller
 {
@@ -20,9 +22,14 @@ class VariantController extends Controller
      */
     public function index(Item $item)
     {
-        $item->load(['variants', 'colors', 'sizes', 'packagingTypes' => function ($q) {
-        $q->withPivot('quantity');
-    } ]);
+        $item->load([
+            'variants',
+            'colors',
+            'sizes',
+            'packagingTypes' => function ($q) {
+                $q->withPivot('quantity');
+            }
+        ]);
 
         if (request()->wantsJson()) {
             // Return JSON for Postman / API
@@ -260,18 +267,89 @@ class VariantController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(ItemVariant $variant)
     {
-        //
+        // Load relationships
+        $variant->load('item.colors', 'item.sizes', 'item.packagingTypes', 'customerPrices', 'sellerPrices');
+
+        // Also load all customers and sellers for the dropdown
+        $customers = Customer::all();
+        $sellers = User::where('role', 'seller')->get();
+
+        return view('admin.variants.edit', compact('variant', 'customers', 'sellers'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, ItemVariant $variant)
     {
-        //
+        // Validate input if needed
+        $data = $request->validate([
+            'variants.*.price' => 'required|numeric|min:0',
+            'variants.*.discount_price' => 'nullable|numeric|min:0',
+            'variants.*.barcode' => 'nullable|string|max:255',
+            'variants.*.status' => 'required|in:active,inactive',
+            'variants.*.item_color_id' => 'nullable|exists:item_colors,id',
+            'variants.*.item_size_id' => 'nullable|exists:item_sizes,id',
+            'variants.*.item_packaging_type_id' => 'nullable|exists:item_packaging_types,id',
+            'variants.*.customer_prices.*.customer_id' => 'nullable|exists:users,id',
+            'variants.*.customer_prices.*.price' => 'nullable|numeric|min:0',
+            'variants.*.seller_prices.*.seller_id' => 'nullable|exists:users,id',
+            'variants.*.seller_prices.*.price' => 'nullable|numeric|min:0',
+            'variants.*.seller_prices.*.discount_price' => 'nullable|numeric|min:0',
+            'variants.*.seller_prices.*.discount_ends_at' => 'nullable|date',
+        ]);
+
+
+        // Update variant main fields
+        foreach ($data['variants'] as $v) {
+            $variant->update([
+                'item_color_id' => $v['item_color_id'] ?? null,
+                'item_size_id' => $v['item_size_id'] ?? null,
+                'item_packaging_type_id' => $v['item_packaging_type_id'] ?? null,
+                'price' => $v['price'] ?? 0,
+                'discount_price' => $v['discount_price'] ?? null,
+                'barcode' => $v['barcode'] ?? null,
+                'status' => $v['status'] ?? 'inactive',
+            ]);
+
+            // Handle customer-specific prices
+            if (!empty($v['customer_prices'])) {
+                foreach ($v['customer_prices'] as $cp) {
+                    if ($cp['customer_id']) {
+                        $variant->customerPrices()->updateOrCreate(
+                            ['customer_id' => $cp['customer_id']],
+                            ['price' => $cp['price'] ?? 0]
+                        );
+                    }
+                }
+            }
+
+            // Handle seller-specific prices
+            if (!empty($v['seller_prices'])) {
+                foreach ($v['seller_prices'] as $sp) {
+                    if ($sp['seller_id']) {
+                        $variant->sellerPrices()->updateOrCreate(
+                            ['seller_id' => $sp['seller_id']],
+                            [
+                                'price' => $sp['price'] ?? 0,
+                                'discount_price' => $sp['discount_price'] ?? null,
+                                'discount_ends_at' => $sp['discount_ends_at'] ?? null
+                            ]
+                        );
+                    }
+                }
+            }
+        }
+        return redirect()->route('admin.variants.index', ['item' => $variant->item_id])
+
+            ->with('success', 'Variant updated successfully!');
+
+
+
     }
+
 
     /**
      * Remove the specified resource from storage.

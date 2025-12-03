@@ -1,5 +1,10 @@
 <x-app-layout>
+
     <x-slot name="header">
+        @include('admin.items.partials.header', ['item' => $item])
+    </x-slot>
+
+    {{-- <x-slot name="header">
         <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
                 {{ __('Item Details') }}
@@ -20,7 +25,7 @@
                 </form>
             </div>
         </div>
-    </x-slot>
+    </x-slot> --}}
 
 @if ($errors->any())
     <div x-data="{ show: true }"
@@ -57,16 +62,16 @@
                 <div class="p-6 space-y-6">
 
                     @php
-$images = collect(json_decode($item->product_images, true) ?? []);
-$images = $images->map(fn($img) => asset($img));
-$mainImage = $images->first() ?? asset('images/default.jpg');
-$otherImages = $images->slice(1);
+                        $images = collect(json_decode($item->product_images, true) ?? []);
+                        $images = $images->map(fn($img) => asset($img));
+                        $mainImage = $images->first() ?? asset('images/default.jpg');
+                        $otherImages = $images->slice(1);
                     @endphp
 
                     {{-- Product Info --}}
                     <div class="flex flex-col gap-6 md:flex-row">
                         {{-- Left: Images --}}
-                        <div class="flex flex-col items-center gap-2">
+                        {{-- <div class="flex flex-col items-center gap-2">
                             <div class="w-48 h-48 overflow-hidden shadow-md rounded-xl">
                                 <img src="{{ $mainImage }}" alt="{{ $item->product_name }}" class="object-cover w-full h-full">
                             </div>
@@ -81,177 +86,15 @@ $otherImages = $images->slice(1);
                                     @endforeach
                                 </div>
                             @endif
-                        </div>
+                        </div> --}}
 
                         {{-- Right: Info --}}
                         <div class="flex flex-col flex-1 gap-3">
                             {{-- Product Name & Description --}}
-                            <h2 class="text-2xl font-bold text-gray-800 dark:text-gray-200">{{ $item->product_name }}</h2>
-                            <p class="text-gray-600 dark:text-gray-300 line-clamp-3">{{ $item->product_description }}</p>
-
-                            {{-- Packaging Details --}}
-                            @if ($item->packaging_details)
-                                <p class="mt-1 text-sm italic text-gray-500 dark:text-gray-400">Packaging:
-                                    {{ $item->packaging_details }}</p>
-                            @endif
-
-                            {{-- SKU --}}
-                            @if ($item->sku)
-                                <p class="text-sm text-gray-500 dark:text-gray-400">SKU: <span
-                                        class="font-medium">{{ $item->sku }}</span></p>
-                            @endif
-
-                            {{-- Owner --}}
-                            @if ($item->owner)
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Owner: <span
-                                        class="font-medium">{{ $item->owner->name }}</span></p>
-                            @endif
-
-                            {{-- Categories --}}
-                            <div class="flex flex-wrap gap-1">
-                                @if ($item->category)
-                                    @if ($item->category->parent)
-                                        <span class="px-2 py-1 text-xs text-white bg-green-500 rounded-full">
-                                            {{ $item->category->parent->category_name }}
-                                        </span>
-                                    @endif
-                                    <span class="px-2 py-1 text-xs text-white bg-blue-500 rounded-full">
-                                        {{ $item->category->category_name }}
-                                    </span>
-                                @endif
-                            </div>
 
 
+                            @include('admin.items.partials.item_card', ['item' => $item])
 
-
-                        {{-- Colors --}}
-            <h3 class="mt-4 font-semibold text-gray-700">Colors</h3>
-            <div class="flex flex-wrap gap-4 mt-2">
-                @if (!empty($item->colors) && $item->colors->count())
-                    @foreach ($item->colors as $color)
-                        @php
-        // Logic to fix missing '#' or fallback to name
-        $bgColor = '#cccccc';
-        if (!empty($color->hex_code)) {
-            $bgColor = str_starts_with($color->hex_code, '#')
-                ? $color->hex_code
-                : '#' . $color->hex_code;
-        } elseif (!empty($color->name)) {
-            $bgColor = $color->name;
-        }
-                        @endphp
-
-                        <div class="flex flex-col items-center gap-1">
-                            {{-- Color Circle --}}
-                            <div class="w-8 h-8 border border-gray-200 rounded-full shadow-sm"
-                                style="background-color: {{ $bgColor }};">
-                            </div>
-
-                            {{-- Color Name --}}
-                            <span class="text-xs font-medium text-gray-600">{{ $color->name }}</span>
-                        </div>
-                    @endforeach
-                @else
-                    <span class="text-xs italic text-gray-500">No colors available</span>
-                @endif
-            </div>
-
-                        {{-- Sizes --}}
-                        <h3 class="mt-4 font-semibold text-gray-700">Sizes</h3>
-                        <div class="flex flex-wrap gap-1 mt-1">
-                            @if (!empty($item->sizes) && $item->sizes->count())
-                                @foreach ($item->sizes as $size)
-                                    <span class="px-2 py-1 text-xs bg-gray-200 rounded-full">{{ $size->name }}</span>
-                                @endforeach
-                            @else
-                                <span class="px-2 py-1 text-xs italic text-gray-500">No sizes available</span>
-                            @endif
-                        </div>
-
-
-                       {{-- Packaging Types Display --}}
-@if (!empty($item->packagingTypes) && $item->packagingTypes->count() > 0)
-    <h3 class="mt-4 font-semibold text-gray-700">Packaging Hierarchy</h3>
-
-    <div class="flex flex-col items-start gap-2 mt-1">
-
-        @php
-            $packs = $item->packagingTypes->sortBy('pivot_id')->values();
-            $runningTotal = 1;      // total pcs so far
-            $previousName = 'pcs';  // used for parent name
-        @endphp
-
-        @foreach ($packs as $index => $pack)
-            @php
-                $qty = $pack->pivot->quantity ?? 1;
-
-                if ($index === 0) {
-                    // FIRST LEVEL - base quantity (e.g. packet: 50 pcs)
-                    $runningTotal = $qty;
-                    $display = "{$qty} pcs";
-
-                } else {
-                    // UPPER LEVELS
-                    $runningTotal = $runningTotal * $qty;
-                    $display = "{$qty} {$previousName}s (" . number_format($runningTotal) . " pcs)";
-                }
-
-                $previousName = $pack->name;
-            @endphp
-
-            <div class="inline-flex items-center px-2.5 py-1 text-xs font-medium text-white bg-purple-500 rounded-full shadow-sm">
-                <span class="font-bold tracking-wide">{{ $pack->name }}:</span>
-                <span class="ml-1 text-purple-50">{{ $display }}</span>
-            </div>
-        @endforeach
-
-    </div>
-@endif
-
-                            {{-- Status --}}
-                            <h3 class="mt-4 font-semibold text-gray-700">Status</h3>
-                            <span
-                                class="{{ $item->status == 'active' ? 'bg-green-500 text-white' : ($item->status == 'inactive' ? 'bg-gray-400 text-white' : 'bg-yellow-500 text-white') }} inline-block w-16 rounded-full px-2 py-1 text-center text-xs font-semibold">
-                                {{ ucfirst($item->status) }}
-                            </span>
-
-                            {{-- Variants --}}
-                            <h3 class="mt-4 font-semibold text-gray-700">Variants</h3>
-                            <div class="flex items-center gap-4 mt-1">
-                                <span class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                                    {{ $item->variants->count() }} variant{{ $item->variants->count() !== 1 ? 's' : '' }}
-                                </span>
-                                <a href="{{ route('admin.variants.index', $item->id) }}" class="btn btn-primary btn-sm">
-                                    Manage Variants
-                                </a>
-                            </div>
-
-                            {{-- Update Status --}}
-                            <h3 class="mt-4 font-semibold text-gray-700">Update Status</h3>
-                            <div class="mt-1">
-                                <form action="{{ route('admin.items.updateStatus', $item->id) }}" method="POST"
-                                    class="flex items-center gap-2">
-                                    @csrf
-                                    @method('PATCH')
-                                    <select name="status"
-                                        class="w-full px-3 py-2 text-sm rounded-md select select-bordered sm:w-auto">
-                                        <option value="active" {{ $item->status == 'active' ? 'selected' : '' }}>Active</option>
-                                        <option value="inactive" {{ $item->status == 'inactive' ? 'selected' : '' }}>Inactive
-                                        </option>
-                                        <option value="unavailable" {{ $item->status == 'unavailable' ? 'selected' : '' }}>
-                                            Unavailable</option>
-                                        <option value="draft" {{ $item->status == 'draft' ? 'selected' : '' }}>Draft</option>
-                                    </select>
-
-                                    <button class="btn btn-success btn-sm">Update</button>
-                                </form>
-                            </div>
-
-                            {{-- Created / Updated --}}
-                            <div class="flex gap-4 mt-4 text-xs text-gray-400">
-                                <p>Created: {{ $item->created_at->format('d M, Y') }}</p>
-                                <p>Updated: {{ $item->updated_at->format('d M, Y') }}</p>
-                            </div>
 
                         </div>
                     </div>

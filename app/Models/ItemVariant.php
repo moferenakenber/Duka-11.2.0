@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+
 
 class ItemVariant extends Model
 {
@@ -110,6 +112,19 @@ class ItemVariant extends Model
         return $this->stocks()->sum('quantity');
     }
 
+    // Customer-specific prices
+    public function customerPrices(): HasMany
+    {
+        return $this->hasMany(CustomerPrice::class, 'item_variant_id');
+        // 'item_variant_id' is the foreign key in the customer_prices table pointing to this variant
+    }
+
+    // Seller-specific prices
+    public function sellerPrices(): HasMany
+    {
+        return $this->hasMany(SellerPrice::class, 'item_variant_id');
+        // 'item_variant_id' is the foreign key in the seller_prices table pointing to this variant
+    }
 
 
     protected static function booted()
