@@ -24,7 +24,7 @@
 
             <li>
                 <button type="button"
-                    class="dark:text-white dark:hover:bg-gray-700 flex w-full cursor-default items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100"
+                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg cursor-default dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100"
                     aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
 
                     <x-lucide-box
@@ -35,9 +35,9 @@
                             ? 'text-orange-500 dark:text-white'
                             : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="ms-3 flex-1 whitespace-nowrap text-left rtl:text-right">Products</span>
+                    <span class="flex-1 text-left ms-3 whitespace-nowrap rtl:text-right">Products</span>
 
-                    <svg class="h-3 w-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 1 4 4 4-4" />
                     </svg>
@@ -104,7 +104,7 @@
                     <div class="pl-11">
                         <li>
                             <a href="#"
-                                class="dark:text-white dark:hover:bg-gray-700 group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                class="flex items-center w-full p-2 pl-4 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group hover:bg-gray-100">
                                 Prices
                                 <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
@@ -114,7 +114,7 @@
                     <div class="pl-11">
                         <li>
                             <a href="#"
-                                class="dark:text-white dark:hover:bg-gray-700 group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+                                class="flex items-center w-full p-2 pl-4 text-gray-900 transition duration-75 rounded-lg dark:text-white dark:hover:bg-gray-700 group hover:bg-gray-100">
                                 Discounts and Promotions
                                 <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
                             </a>
@@ -144,7 +144,7 @@
                         class="{{ request()->routeIs('admin.store.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
                     <!-- Text -->
-                    <span class="ms-3 flex-1 whitespace-nowrap">Store</span>
+                    <span class="flex-1 ms-3 whitespace-nowrap">Store</span>
 
                     <!-- Dot indicator on the far right -->
                     <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
@@ -172,7 +172,7 @@
                     <x-lucide-shopping-cart
                         class="{{ request()->routeIs('admin.carts.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="ms-3 flex-1 whitespace-nowrap">Carts</span>
+                    <span class="flex-1 ms-3 whitespace-nowrap">Carts</span>
 
                     {{-- optional badge: only show if $cartCount is provided --}}
                     @isset($cartCount)
@@ -186,7 +186,7 @@
 
             <li>
                 <button type="button"
-                    class="dark:text-white dark:hover:bg-gray-700 flex w-full cursor-default items-center rounded-lg p-2 text-base text-gray-900 transition duration-75 hover:bg-gray-100"
+                    class="flex items-center w-full p-2 text-base text-gray-900 transition duration-75 rounded-lg cursor-default dark:text-white dark:hover:bg-gray-700 hover:bg-gray-100"
                     aria-controls="more-dropdown" data-collapse-toggle="more-dropdown">
 
                     <x-lucide-ellipsis
@@ -202,9 +202,9 @@
                             ? 'text-orange-500 dark:text-white'
                             : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="ms-3 flex-1 whitespace-nowrap text-left rtl:text-right">More</span>
+                    <span class="flex-1 text-left ms-3 whitespace-nowrap rtl:text-right">More</span>
 
-                    <svg class="h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <svg class="w-3 h-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="m1 1 4 4 4-4" />
                     </svg>
@@ -311,6 +311,17 @@
                         </li>
                     </div>
 
+                                        <div class="pl-11">
+                        <li>
+                            <a href="{{ route('admin.sessions.index') }}"
+                                class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.sessions.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
+
+                                Sessions
+                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
+                            </a>
+                        </li>
+                    </div>
+
 
                 </ul>
             </li>
@@ -322,7 +333,7 @@
                     <x-lucide-settings
                         class="{{ request()->routeIs('admin.settings.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
 
-                    <span class="ms-3 flex-1 whitespace-nowrap">Settings</span>
+                    <span class="flex-1 ms-3 whitespace-nowrap">Settings</span>
                 </a>
             </li>
 

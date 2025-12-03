@@ -26,6 +26,7 @@ use App\Http\Controllers\Stockkeeper\MenuController as StockkeeperMenuController
 use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\SessionController;
 
 
 
@@ -76,6 +77,16 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::get('/flowbite', function () {
             return view('flowbite');
         })->name('flowbite');
+
+        // Session management routes
+        Route::prefix('sessions')->group(function () {
+            // List all sessions
+            Route::get('/', [SessionController::class, 'index'])->name('sessions.index');
+
+            // Delete a session to force logout
+            Route::delete('/{id}', [SessionController::class, 'destroy'])->name('sessions.destroy');
+        });
+
 
         // Admin resource routes
         Route::resource('users', UserController::class);
