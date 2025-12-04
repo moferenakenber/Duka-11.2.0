@@ -64,8 +64,17 @@ class SessionController extends Controller
      */
     public function destroy($id)
     {
+        // Delete the session row
         DB::table('sessions')->where('id', $id)->delete();
+
+        // If the session being deleted is the current user's, also log them out
+        if (session()->getId() === $id) {
+            auth()->logout();
+            session()->invalidate();
+            session()->regenerateToken();
+        }
 
         return back()->with('success', 'Session deleted and user will be logged out.');
     }
+
 }
