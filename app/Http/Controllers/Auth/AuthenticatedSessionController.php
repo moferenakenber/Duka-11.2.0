@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 
 class AuthenticatedSessionController extends Controller
@@ -54,39 +56,43 @@ class AuthenticatedSessionController extends Controller
 
     // }
     public function store(LoginRequest $request): RedirectResponse
-{
-    $request->authenticate();
+    {
+        $remember = $request->boolean('remember');
 
-    $request->session()->regenerate();
+        Log::info('Login form submitted', [
+            'email' => $request->input('email'),
+            'remember_input' => $request->input('remember'), // raw input
+            'remember_boolean' => $remember,               // converted to boolean
+        ]);
 
-    // Get the authenticated user
-    $user = auth()->user();
+        if (Auth::attempt($request->only('email', 'password'), $remember)) {
+            $request->session()->regenerate();
 
-    // Log the authenticated user's role
-    Log::info('User authenticated', ['user' => $user]);
-    Log::info('User role after login:', ['role' => auth()->user()->role]);
+            session(['remember_me' => $remember]);
+            session()->save();
 
+            $user = auth()->user();
+            Log::info('User authenticated', [
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'remember_requested' => $remember,
+                'session_id' => session()->getId()
+            ]);
 
-    // Check user role and redirect accordingly
-    if ($user->role === 'Admin') {
-        Log::info('Redirecting user to Admin dashboard', ['user_role' => $user->role]);
-        return redirect()->route('admin.dashboard'); // Admin dashboard route
+            return match ($user->role) {
+                'Admin' => redirect()->route('admin.dashboard'),
+                'Seller' => redirect()->route('seller.dashboard'),
+                'Stock Keeper' => redirect()->route('stock_keeper.dashboard'),
+                default => redirect()->intended('/'),
+            };
+        }
+
+        Log::warning('Login failed', ['email' => $request->input('email')]);
+        return back()->withErrors(['email' => 'Invalid credentials']);
     }
 
-    if ($user->role === 'Seller') {
-        Log::info('Redirecting user to Seller dashboard', ['user_role' => $user->role]);
-        return redirect()->route('seller.dashboard'); // Seller dashboard route
-    }
 
-    if ($user->role === 'Stock Keeper') {
-        Log::info('Redirecting user to Stock Keeper dashboard', ['user_role' => $user->role]);
-        return redirect()->route('stock_keeper.dashboard'); // Stock keeper dashboard route
-    }
 
-    // Default redirect if no role matches
-    Log::warning('No role matched, redirecting to default dashboard', ['user_role' => $user->role]);
-    return redirect()->intended(route('admin.dashboard', absolute: false));
-}
 
     /**
      * Destroy an authenticated session.

@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cookie;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+
 
 class SessionController extends Controller
 {
@@ -14,38 +16,56 @@ class SessionController extends Controller
      */
     public function index()
     {
-        $sessions = DB::table('sessions')->get()->map(function ($session) {
-            return [
-                'id' => $session->id,
+        $currentSessionId = session()->getId();
+        $sessionRow = DB::table('sessions')->where('id', $currentSessionId)->first();
+        Log::info('Current session row', ['session_id' => $currentSessionId, 'row' => $sessionRow]);
+
+        $sessions = DB::table('sessions')->orderBy('last_activity', 'desc')->get();
+
+        $sessions = $sessions->map(function ($session) {
+            $user = $session->user_id ? User::find($session->user_id) : null;
+
+            $payload = @unserialize(base64_decode($session->payload)) ?: [];
+            $rememberMe = $payload['remember_me'] ?? false;
+
+
+            Log::info('Session row', [
+                'session_id' => $session->id,
                 'user_id' => $session->user_id,
-                'username' => $session->user_id ? optional(DB::table('users')->find($session->user_id))->name : 'Visitor',
-                'email' => $session->user_id ? optional(DB::table('users')->find($session->user_id))->email : null,
+                'remember_from_db' => $session->remember_me,
+                'payload_keys' => array_keys($payload),
+            ]);
+
+            $lastActivity = (int) $session->last_activity;
+
+            $sessionLifetime = (int) config('session.lifetime');
+            $expiresAt = now()->createFromTimestamp($lastActivity)->setTimezone(config('app.timezone'))
+                ->addMinutes($rememberMe ? 3 * 24 * 60 : $sessionLifetime);
+
+
+
+
+            return (object) [
+                'id' => $session->id,
+                'user' => $user,
+                'email' => $user?->email,
                 'ip_address' => $session->ip_address,
-                'remember_me' => $session->payload && $this->payloadHasRememberMe($session->payload),
-                'last_activity' => date('Y-m-d H:i:s', $session->last_activity),
-                'expires_at' => date('Y-m-d H:i:s', $session->last_activity + (config('session.lifetime') * 60)),
+                'remember_me' => $rememberMe,
+                'expires_at' => $expiresAt->toDateTimeString(),
             ];
         });
+
 
         return view('admin.sessions.index', compact('sessions'));
     }
 
     /**
-     * Force logout a session
+     * Force logout (delete session)
      */
     public function destroy($id)
     {
         DB::table('sessions')->where('id', $id)->delete();
 
-        return redirect()->route('admin.sessions.index')->with('success', 'Session has been terminated.');
-    }
-
-    /**
-     * Check if the session payload has "remember me" token
-     */
-    private function payloadHasRememberMe($payload)
-    {
-        $data = unserialize(base64_decode($payload));
-        return isset($data['login_web_remember']); // Laravel uses this key internally
+        return back()->with('success', 'Session deleted and user will be logged out.');
     }
 }

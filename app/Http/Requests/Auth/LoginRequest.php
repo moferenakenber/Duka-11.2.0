@@ -54,6 +54,10 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+
+        // ✅ Store remember choice for this login session
+        session(['remember_me_current_session' => $remember]);
+
         // If "remember me" is checked, adjust the cookie to 3 days
         if ($remember) {
             // 3 days in minutes
