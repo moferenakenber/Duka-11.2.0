@@ -219,7 +219,8 @@
                     request()->routeIs('admin.documents.*') ||
                     request()->routeIs('admin.calendars.*') ||
                     request()->routeIs('admin.payments.*') ||
-                    request()->routeIs('admin.tasks.*')
+                    request()->routeIs('admin.tasks.*') ||
+                    request()->routeIs('admin.sessions.*')
                         ? 'block'
                         : 'hidden' }} space-y-2 py-2">
 
@@ -317,7 +318,7 @@
                                 class="dark:text-white dark:hover:bg-gray-700 {{ request()->routeIs('admin.sessions.*') ? 'bg-orange-100 dark:bg-orange-700 dark:text-white' : '' }} group flex w-full items-center rounded-lg p-2 pl-4 text-gray-900 transition duration-75 hover:bg-gray-100">
 
                                 Sessions
-                                <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
+
                             </a>
                         </li>
                     </div>
