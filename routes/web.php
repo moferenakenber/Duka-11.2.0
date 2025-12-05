@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\VariantController;
 use App\Http\Controllers\Admin\TransferController;
 use App\Http\Controllers\Admin\StockController;
 
+use App\Http\Controllers\Admin\DashboardController;
+
 use App\Http\Controllers\Seller\DashboardController as SellerDashboardController;
 use App\Http\Controllers\Seller\CategoryController as SellerCategoryController;
 use App\Http\Controllers\Seller\CustomerController as SellerCustomerController;
@@ -51,9 +53,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         'as' => 'admin.',
     ], function () {
 
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->name('dashboard');
+        Route::get('/dashboard', [DashboardController::class, 'index'])
+            ->name('dashboard');
+
 
         Route::get('/test', function () {
             return view('test');

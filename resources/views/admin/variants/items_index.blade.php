@@ -11,6 +11,7 @@
                 @foreach ($items as $item)
                     <div
                          class="flex flex-col block max-w-sm p-6 border shadow-xs bg-neutral-primary-soft border-default rounded-base">
+
                         {{-- Item Image --}}
                         <a href="#">
                             <img class="object-cover w-full h-40 rounded-base"
@@ -58,6 +59,7 @@
                                 @endforeach
                             </div>
                         @endif
+
                         {{-- Packaging --}}
                         @if ($item->packagingTypes->count())
                             <div class="flex flex-wrap gap-1 mb-2">

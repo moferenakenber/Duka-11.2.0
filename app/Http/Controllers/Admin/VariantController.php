@@ -31,11 +31,35 @@ class VariantController extends Controller
             }
         ]);
 
+        // Get variants collection
+        $variants = $item->variants;
+
+        // --- Filtering by status ---
+        $currentFilter = request('filter', 'all');
+        $variants = match ($currentFilter) {
+            'active' => $variants->where('status', 'active'),
+            'inactive' => $variants->where('status', 'inactive'),
+            'unavailable' => $variants->where('status', 'unavailable'),
+            'draft' => $variants->where('status', 'draft'),
+            default => $variants,
+        };
+
+        // --- Optional: Sorting ---
+        $sort = request('sort', 'id'); // default sort by ID
+        $direction = request('direction', 'asc');
+
+        $variants = match ($sort) {
+            'price' => $direction === 'asc' ? $variants->sortBy('price') : $variants->sortByDesc('price'),
+            'color' => $direction === 'asc' ? $variants->sortBy(fn($v) => $v->itemColor->name ?? '') : $variants->sortByDesc(fn($v) => $v->itemColor->name ?? ''),
+            'packaging' => $direction === 'asc' ? $variants->sortBy(fn($v) => $v->itemPackagingType->name ?? '') : $variants->sortByDesc(fn($v) => $v->itemPackagingType->name ?? ''),
+            default => $direction === 'asc' ? $variants->sortBy('id') : $variants->sortByDesc('id'),
+        };
+
         if (request()->wantsJson()) {
-            // Return JSON for Postman / API
+            // Return JSON for API
             return response()->json([
                 'item' => $item,
-                'variants' => $item->variants,
+                'variants' => $variants,
                 'colors' => $item->colors,
                 'sizes' => $item->sizes,
                 'packagingTypes' => $item->packagingTypes,
@@ -45,10 +69,14 @@ class VariantController extends Controller
         // Return Blade view for web
         return view('admin.variants.index', [
             'item' => $item,
-            'variants' => $item->variants,
+            'variants' => $variants,
+            'currentFilter' => $currentFilter,
+            'sort' => $sort,
+            'direction' => $direction,
             'inventoryLocations' => ItemInventoryLocation::all(),
         ]);
     }
+
 
 
     /**
