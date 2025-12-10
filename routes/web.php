@@ -29,6 +29,7 @@ use App\Models\Stock;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SessionController;
+use App\Http\Controllers\Admin\StoreController;
 
 
 
@@ -94,6 +95,12 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         Route::resource('users', UserController::class);
         Route::resource('customers', CustomerController::class);
         Route::resource('items', ItemController::class);
+        Route::resource('stores', StoreController::class);
+
+        // routes/web.php
+        Route::get('stores/{store}/items', [StoreController::class, 'items'])
+            ->name('stores.items');
+
         // Custom route for saving as draft
         Route::post('save-draft', [ItemController::class, 'saveDraft'])->name('saveDraft');
 

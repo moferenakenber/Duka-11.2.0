@@ -112,6 +112,14 @@ class ItemVariant extends Model
         return $this->stocks()->sum('quantity');
     }
 
+    public function stores()
+    {
+        return $this->belongsToMany(Store::class, 'store_variant')
+            ->withPivot('stock', 'price', 'discount_price', 'discount_ends_at')
+            ->withTimestamps();
+    }
+
+
     // Customer-specific prices
     public function customerPrices(): HasMany
     {

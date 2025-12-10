@@ -12,6 +12,7 @@ use App\Models\ItemPackagingType;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\ItemInventoryLocation;
+use App\Models\Store;
 
 
 //This single line generates the following routes:
@@ -29,8 +30,16 @@ class ItemController extends Controller
     // Display a listing of the items
     public function index()
     {
-        $items = Item::with(['colors', 'sizes', 'packagingTypes', 'variants'])->get();
-        return view('admin.items.index', compact('items'));
+        $items = Item::with([
+            'colors',
+            'sizes',
+            'packagingTypes',
+            'variants.stores' // ⬅ LOAD EACH VARIANT'S STORE STOCK
+        ])->get();
+
+        $stores = Store::all();
+
+        return view('admin.items.index', compact('items', 'stores'));
     }
 
 

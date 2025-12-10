@@ -45,13 +45,10 @@ class Item extends Model
     // }
 
     // Item.php
-   public function category()
-{
-    return $this->belongsTo(ItemCategory::class, 'category_id');
-}
-
-
-
+    public function category()
+    {
+        return $this->belongsTo(ItemCategory::class, 'category_id');
+    }
 
     // Many-to-many with colors
     public function colors()
@@ -105,41 +102,41 @@ class Item extends Model
         return $this->hasMany(ItemImage::class);
     }
 
-   public function getPackagingDisplay(): array
-{
-    // Sort packages by pivot_id to maintain hierarchy
-    $packs = $this->packagingTypes->sortBy('pivot_id')->values();
+    public function getPackagingDisplay(): array
+    {
+        // Sort packages by pivot_id to maintain hierarchy
+        $packs = $this->packagingTypes->sortBy('pivot_id')->values();
 
-    $result = [];
-    $totals = [];
+        $result = [];
+        $totals = [];
 
-    foreach ($packs as $index => $pack) {
-        $qty = $pack->pivot->quantity ?? 1;
+        foreach ($packs as $index => $pack) {
+            $qty = $pack->pivot->quantity ?? 1;
 
-        if ($index === 0) {
-            // Base level (Piece or smallest pack)
-            $totals[$pack->name] = $qty;
-            $result[] = "{$pack->name}: {$qty} pcs";
-        } else {
-            // Total pieces = current quantity * previous total
-            $prevPack = $packs[$index - 1];
-            $totals[$pack->name] = $qty * $totals[$prevPack->name];
+            if ($index === 0) {
+                // Base level (Piece or smallest pack)
+                $totals[$pack->name] = $qty;
+                $result[] = "{$pack->name}: {$qty} pcs";
+            } else {
+                // Total pieces = current quantity * previous total
+                $prevPack = $packs[$index - 1];
+                $totals[$pack->name] = $qty * $totals[$prevPack->name];
 
-            // Build display text showing parent quantities
-            $ancestorText = [];
-            for ($i = $index - 1; $i >= 0; $i--) {
-                $childQty = $packs[$i + 1]->pivot->quantity ?? 1;
-                $ancestorText[] = "{$childQty} {$packs[$i]->name}";
+                // Build display text showing parent quantities
+                $ancestorText = [];
+                for ($i = $index - 1; $i >= 0; $i--) {
+                    $childQty = $packs[$i + 1]->pivot->quantity ?? 1;
+                    $ancestorText[] = "{$childQty} {$packs[$i]->name}";
+                }
+                $ancestorText = array_reverse($ancestorText);
+
+                $display = "{$pack->name}: " . implode(', ', $ancestorText) . " ({$totals[$pack->name]} pcs)";
+                $result[] = $display;
             }
-            $ancestorText = array_reverse($ancestorText);
-
-            $display = "{$pack->name}: " . implode(', ', $ancestorText) . " ({$totals[$pack->name]} pcs)";
-            $result[] = $display;
         }
-    }
 
-    return $result;
-}
+        return $result;
+    }
 
 
     protected static function booted()

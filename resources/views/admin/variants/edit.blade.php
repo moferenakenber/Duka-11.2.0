@@ -19,6 +19,8 @@
             'barcode' => $variant->barcode,
             'status' => $variant->status ?? 'inactive',
             'images' => $variant->images ? json_decode($variant->images) : [],
+            'store_prices' => [], // start empty, only added via the button
+
             'customer_prices' => $variant->customerPrices->map(fn($cp) => [
                 'customer_id' => $cp->customer_id,
                 'price' => $cp->price,
@@ -44,6 +46,52 @@
             <template x-for="(variant, index) in variants" :key="index">
                 <div class="w-full p-5 mb-6 overflow-hidden transition-shadow duration-300 bg-white border border-gray-100 shadow-lg card rounded-3xl hover:shadow-xl">
 
+{{-- Read-only info cards --}}
+<div class="grid grid-cols-1 gap-4 mb-4 md:grid-cols-2 lg:grid-cols-6">
+
+    {{-- ID --}}
+    <div class="p-4 border rounded-lg">
+        <span class="block text-xs text-gray-500">ID</span>
+        <span class="font-semibold text-gray-800">{{ $variant->id }}</span>
+    </div>
+
+    {{-- SKU --}}
+    <div class="p-4 border rounded-lg bg-sky-100">
+        <span class="block text-xs text-gray-500">SKU</span>
+        <span class="font-semibold text-gray-800">{{ $variant->item->sku ?? '—' }}</span>
+    </div>
+
+    {{-- Name --}}
+    <div class="p-4 border rounded-lg">
+        <span class="block text-xs text-gray-500">Name</span>
+        <span class="font-semibold text-gray-800">{{ $variant->item->product_name }}</span>
+    </div>
+
+    {{-- Color --}}
+    <div class="p-4 border rounded-lg">
+        <span class="block text-xs text-gray-500">Color</span>
+        <span class="font-semibold text-gray-800">{{ $variant->itemColor->name ?? '—' }}</span>
+    </div>
+
+    {{-- Size --}}
+    <div class="p-4 border rounded-lg">
+        <span class="block text-xs text-gray-500">Size</span>
+        <span class="font-semibold text-gray-800">{{ $variant->itemSize->name ?? '—' }}</span>
+    </div>
+
+    {{-- Packaging --}}
+    <div class="p-4 border rounded-lg">
+        <span class="block text-xs text-gray-500">Packaging</span>
+        <span class="font-semibold text-gray-800">{{ $variant->itemPackagingType->name ?? '—' }}</span>
+    </div>
+
+    {{-- Barcode --}}
+    <div class="p-4 border rounded-lg">
+        <span class="block text-xs text-gray-500">Barcode</span>
+        <span class="font-semibold text-gray-800">{{ $variant->barcode ?? '—' }}</span>
+    </div>
+</div>
+
                     {{-- Images --}}
                     <div x-data="variantFileUpload(index)" class="mb-4">
                         <label class="label">Variant Images</label>
@@ -63,52 +111,6 @@
 
                     <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
 
-                        {{-- Color --}}
-                        @if ($variant->item->colors->count())
-                        <div>
-                            <label class="block mb-1 text-xs font-semibold text-gray-600">Color</label>
-                            <select x-model="variant.item_color_id" :name="`variants[${index}][item_color_id]`"
-                                    class="w-full h-12 input input-sm input-bordered">
-                                <option value="">Select Color</option>
-                                @foreach ($variant->item->colors as $color)
-                                    <option value="{{ $color->id }}"
-                                        :selected="variant.item_color_id == {{ $color->id }}">{{ $color->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @endif
-
-                        {{-- Size --}}
-                        @if ($variant->item->sizes->count())
-                        <div>
-                            <label class="block mb-1 text-xs font-semibold text-gray-600">Size</label>
-                            <select x-model="variant.item_size_id" :name="`variants[${index}][item_size_id]`"
-                                    class="w-full h-12 input input-sm input-bordered">
-                                <option value="">Select Size</option>
-                                @foreach ($variant->item->sizes as $size)
-                                    <option value="{{ $size->id }}"
-                                        :selected="variant.item_size_id == {{ $size->id }}">{{ $size->name }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        @endif
-
-                        {{-- Packaging --}}
-                        @if ($variant->item->packagingTypes->count())
-                        <div>
-                            <label class="block mb-1 text-xs font-semibold text-gray-600">Packaging</label>
-                            <select x-model="variant.item_packaging_type_id" :name="`variants[${index}][item_packaging_type_id]`"
-                                    class="w-full h-12 input input-sm input-bordered" @change="updateCapacity(index, $event)">
-                                <option value="">Select Packaging</option>
-                                @foreach ($variant->item->packagingTypes as $pack)
-                                    <option value="{{ $pack->id }}" data-quantity="{{ $pack->quantity }}">{{ $pack->name }}</option>
-                                @endforeach
-                            </select>
-                            <span x-text="variant.capacityText" class="ml-2 text-sm text-gray-500"></span>
-                            <input type="hidden" :name="`variants[${index}][total_pieces]`" :value="variant.totalPieces">
-                        </div>
-                        @endif
-
                         {{-- Price --}}
                         <div>
                             <label class="block mb-1 text-xs font-semibold text-gray-600">Price</label>
@@ -123,13 +125,6 @@
                                    class="w-full h-12 input input-sm input-bordered" placeholder="Discount Price">
                         </div>
 
-                        {{-- Barcode --}}
-                        <div>
-                            <label class="block mb-1 text-xs font-semibold text-gray-600">Barcode</label>
-                            <input type="text" x-model="variant.barcode" :name="`variants[${index}][barcode]`"
-                                   class="w-full h-12 input input-sm input-bordered" placeholder="Barcode">
-                        </div>
-
                         {{-- Status --}}
                         <div>
                             <label class="block mb-1 text-xs font-semibold text-gray-600">Status</label>
@@ -141,65 +136,176 @@
                         </div>
                     </div>
 
-                    {{-- Customer-specific prices --}}
-                    <div class="mt-4">
-                        <h3 class="text-sm font-semibold text-gray-700">Customer Prices</h3>
-                        <template x-for="(cp, cIndex) in variant.customer_prices" :key="cIndex">
-                            <div class="flex gap-2 p-2 mt-2 border rounded-lg bg-gray-50">
-                                <select x-model="cp.customer_id"
-                                        :name="`variants[${index}][customer_prices][${cIndex}][customer_id]`"
-                                        class="flex-1 text-base text-black input input-sm input-bordered">
-                                    <option value="">Select Customer</option>
-                                    @foreach($customers as $customer)
-                                        <option value="{{ $customer->id }}">{{ $customer->name }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="number" x-model="cp.price"
-                                       :name="`variants[${index}][customer_prices][${cIndex}][price]`"
-                                       class="text-base text-black input input-sm input-bordered"
-                                       placeholder="Price">
-                                <input type="number" x-model="cp.discount_price"
-                                       :name="`variants[${index}][customer_prices][${cIndex}][discount_price]`"
-                                       class="text-base text-black input input-sm input-bordered"
-                                       placeholder="Discount Price">
-                                <input type="datetime-local" x-model="cp.discount_ends_at"
-                                       :name="`variants[${index}][customer_prices][${cIndex}][discount_ends_at]`"
-                                       class="text-base text-black input input-sm input-bordered">
-                                <button type="button" class="btn btn-error btn-sm" @click="variant.customer_prices.splice(cIndex, 1)">Remove</button>
-                            </div>
-                        </template>
-                        <button type="button" class="mt-2 btn btn-outline btn-sm" @click="variant.customer_prices.push({customer_id:'', price:0, discount_price:null, discount_ends_at:null})">+ Add Customer Price</button>
-                    </div>
+           {{-- Store-specific prices --}}
+<div class="mt-4">
+    <h3 class="text-sm font-semibold text-gray-700">Store Prices</h3>
 
-                    {{-- Seller-specific prices --}}
-                    <div class="mt-4">
-                        <h3 class="text-sm font-semibold text-gray-700">Seller Prices</h3>
-                        <template x-for="(sp, sIndex) in variant.seller_prices" :key="sIndex">
-                            <div class="flex gap-2 p-2 mt-2 border rounded-lg bg-gray-50">
-                                <select x-model="sp.seller_id"
-                                        :name="`variants[${index}][seller_prices][${sIndex}][seller_id]`"
-                                        class="flex-1 text-base text-black input input-sm input-bordered">
-                                    <option value="">Select Seller</option>
-                                    @foreach($sellers as $seller)
-                                        <option value="{{ $seller->id }}">{{ $seller->name }}</option>
-                                    @endforeach
-                                </select>
-                                <input type="number" x-model="sp.price"
-                                       :name="`variants[${index}][seller_prices][${sIndex}][price]`"
-                                       class="text-base text-black input input-sm input-bordered"
-                                       placeholder="Price">
-                                <input type="number" x-model="sp.discount_price"
-                                       :name="`variants[${index}][seller_prices][${sIndex}][discount_price]`"
-                                       class="text-base text-black input input-sm input-bordered"
-                                       placeholder="Discount Price">
-                                <input type="datetime-local" x-model="sp.discount_ends_at"
-                                       :name="`variants[${index}][seller_prices][${sIndex}][discount_ends_at]`"
-                                       class="text-base text-black input input-sm input-bordered">
-                                <button type="button" class="btn btn-error btn-sm" @click="variant.seller_prices.splice(sIndex, 1)">Remove</button>
-                            </div>
-                        </template>
-                        <button type="button" class="mt-2 btn btn-outline btn-sm" @click="variant.seller_prices.push({seller_id:'', price:0, discount_price:null, discount_ends_at:null})">+ Add Seller Price</button>
-                    </div>
+    <template x-for="(st, stIndex) in variant.store_prices" :key="stIndex">
+        <div class="grid grid-cols-1 gap-2 p-2 mt-2 border rounded-lg bg-gray-50 md:grid-cols-6">
+
+            {{-- Store dropdown --}}
+            <div>
+                <label class="block mb-1 text-xs font-semibold text-gray-600">Store</label>
+                <select x-model="st.store_id"
+                        :name="`variants[${index}][store_prices][${stIndex}][store_id]`"
+                        class="w-full h-10 text-sm input input-sm input-bordered">
+                    <option value="">Select Store</option>
+                    @foreach($stores as $store)
+                        <option value="{{ $store->id }}">{{ $store->name }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            {{-- Price --}}
+            <div>
+                <label class="block mb-1 text-xs font-semibold text-gray-600">Price</label>
+                <input type="number"
+                       x-model="st.price"
+                       :name="`variants[${index}][store_prices][${stIndex}][price]`"
+                       class="w-full h-10 text-sm input input-sm input-bordered"
+                       placeholder="Price">
+            </div>
+
+            {{-- Discount Price --}}
+            <div>
+                <label class="block mb-1 text-xs font-semibold text-gray-600">Discount Price</label>
+                <input type="number"
+                       x-model="st.discount_price"
+                       :name="`variants[${index}][store_prices][${stIndex}][discount_price]`"
+                       class="w-full h-10 text-sm input input-sm input-bordered"
+                       placeholder="Discount Price">
+            </div>
+
+            {{-- Discount Ends --}}
+            <div>
+                <label class="block mb-1 text-xs font-semibold text-gray-600">Discount Ends</label>
+                <input type="datetime-local"
+                       x-model="st.discount_ends_at"
+                       :name="`variants[${index}][store_prices][${stIndex}][discount_ends_at]`"
+                       class="w-full h-10 text-sm input input-sm input-bordered">
+            </div>
+
+            {{-- Stock --}}
+            <div>
+                <label class="block mb-1 text-xs font-semibold text-gray-600">Stock</label>
+                <input type="number"
+                       x-model="st.stock"
+                       :name="`variants[${index}][store_prices][${stIndex}][stock]`"
+                       class="w-full h-10 text-sm input input-sm input-bordered"
+                       placeholder="Stock">
+            </div>
+
+            {{-- Remove Button --}}
+            <div class="flex items-end">
+                <button type="button"
+                        class="w-full h-10 btn btn-error btn-sm"
+                        @click="variant.store_prices.splice(stIndex, 1)">
+                    Remove
+                </button>
+            </div>
+
+        </div>
+    </template>
+
+    <button type="button"
+            class="mt-2 btn btn-outline btn-sm"
+            @click="addStorePrice(index)">
+        + Add Store Price
+    </button>
+</div>
+
+
+{{-- Seller-specific prices --}}
+<div class="mt-4">
+    <h3 class="text-sm font-semibold text-gray-700">Seller Prices</h3>
+    <template x-for="(sp, sIndex) in variant.seller_prices" :key="sIndex">
+        <div class="flex gap-2 p-2 mt-2 border rounded-lg bg-gray-50">
+            <select x-model="sp.seller_id"
+                    :name="`variants[${index}][seller_prices][${sIndex}][seller_id]`"
+                    class="flex-1 text-base text-black input input-sm input-bordered">
+                <option value="">Select Seller</option>
+                @foreach($sellers as $seller)
+                    <option value="{{ $seller->id }}">{{ $seller->name }}</option>
+                @endforeach
+            </select>
+            <input type="number" x-model="sp.price"
+                   :name="`variants[${index}][seller_prices][${sIndex}][price]`"
+                   class="text-base text-black input input-sm input-bordered"
+                   placeholder="Price">
+            <input type="number" x-model="sp.discount_price"
+                   :name="`variants[${index}][seller_prices][${sIndex}][discount_price]`"
+                   class="text-base text-black input input-sm input-bordered"
+                   placeholder="Discount Price">
+            <input type="datetime-local" x-model="sp.discount_ends_at"
+                   :name="`variants[${index}][seller_prices][${sIndex}][discount_ends_at]`"
+                   class="text-base text-black input input-sm input-bordered">
+            <button type="button" class="btn btn-error btn-sm" @click="variant.seller_prices.splice(sIndex, 1)">Remove</button>
+        </div>
+    </template>
+    <button type="button" class="mt-2 btn btn-outline btn-sm"
+            @click="variant.seller_prices.push({seller_id:'', price:0, discount_price:null, discount_ends_at:null})">
+        + Add Seller Price
+    </button>
+</div>
+
+{{-- Customer-specific prices --}}
+<div class="mt-4">
+    <h3 class="text-sm font-semibold text-gray-700">Customer Prices</h3>
+    <template x-for="(cp, cIndex) in variant.customer_prices" :key="cIndex">
+        <div class="flex gap-2 p-2 mt-2 border rounded-lg bg-gray-50">
+            <select x-model="cp.customer_id"
+                    :name="`variants[${index}][customer_prices][${cIndex}][customer_id]`"
+                    class="flex-1 text-base text-black input input-sm input-bordered">
+                <option value="">Select Customer</option>
+                @foreach($customers as $customer)
+                    <option value="{{ $customer->id }}">{{ $customer->name }}</option>
+                @endforeach
+            </select>
+            <input type="number" x-model="cp.price"
+                   :name="`variants[${index}][customer_prices][${cIndex}][price]`"
+                   class="text-base text-black input input-sm input-bordered"
+                   placeholder="Price">
+            <input type="number" x-model="cp.discount_price"
+                   :name="`variants[${index}][customer_prices][${cIndex}][discount_price]`"
+                   class="text-base text-black input input-sm input-bordered"
+                   placeholder="Discount Price">
+            <input type="datetime-local" x-model="cp.discount_ends_at"
+                   :name="`variants[${index}][customer_prices][${cIndex}][discount_ends_at]`"
+                   class="text-base text-black input input-sm input-bordered">
+            <button type="button" class="btn btn-error btn-sm" @click="variant.customer_prices.splice(cIndex, 1)">Remove</button>
+        </div>
+    </template>
+    <button type="button" class="mt-2 btn btn-outline btn-sm"
+            @click="variant.customer_prices.push({customer_id:'', price:0, discount_price:null, discount_ends_at:null})">
+        + Add Customer Price
+    </button>
+</div>
+
+{{-- Online-specific prices --}}
+<div class="mt-4">
+    <h3 class="text-sm font-semibold text-gray-700">Online Prices</h3>
+    <template x-for="(op, oIndex) in variant.online_prices" :key="oIndex">
+        <div class="flex gap-2 p-2 mt-2 border rounded-lg bg-gray-50">
+            <input type="number" x-model="op.price"
+                   :name="`variants[${index}][online_prices][${oIndex}][price]`"
+                   class="text-base text-black input input-sm input-bordered"
+                   placeholder="Price">
+            <input type="number" x-model="op.discount_price"
+                   :name="`variants[${index}][online_prices][${oIndex}][discount_price]`"
+                   class="text-base text-black input input-sm input-bordered"
+                   placeholder="Discount Price">
+            <input type="datetime-local" x-model="op.discount_ends_at"
+                   :name="`variants[${index}][online_prices][${oIndex}][discount_ends_at]`"
+                   class="text-base text-black input input-sm input-bordered">
+            <button type="button" class="btn btn-error btn-sm" @click="variant.online_prices.splice(oIndex, 1)">Remove</button>
+        </div>
+    </template>
+    <button type="button" class="mt-2 btn btn-outline btn-sm"
+            @click="variant.online_prices.push({price:0, discount_price:null, discount_ends_at:null})">
+        + Add Online Price
+    </button>
+</div>
+
 
                 </div>
             </template>
@@ -224,8 +330,9 @@
                         barcode: null,
                         status: 'inactive',
                         images: [],
-                        customer_prices: [],
+                        store_prices: [],
                         seller_prices: [],
+                        customer_prices: [],
                     });
                 },
                 updateCapacity(index, event) {
@@ -236,7 +343,17 @@
                 },
                 imageUrl(path) {
                     return path.startsWith('http') ? path : '{{ asset('') }}' + path;
+                },
+                addStorePrice(index) {
+                    this.variants[index].store_prices.push({
+                        store_id: '',
+                        price: 0,
+                        discount_price: null,
+                        discount_ends_at: null,
+                        stock: 0
+                    });
                 }
+
             }
         }
 

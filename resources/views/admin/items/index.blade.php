@@ -31,9 +31,101 @@
 
     <div class="py-6">
         <div class="mx-auto space-y-4 max-w-7xl sm:px-6 lg:px-8">
+            <!-- Filters -->
+@php
+$storesFilter = collect($stores)->pluck('name', 'id')->prepend('All', 'all');
+$currentStore = request('store', 'all');
+
+$statusFilters = [
+    'all' => 'All',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'unavailable' => 'Unavailable',
+    'draft' => 'Draft',
+];
+$currentStatus = request('filter', 'all');
+@endphp
+
+<!-- Filters -->
+<div class="flex flex-wrap gap-6 mb-4">
+    <!-- Store Filter -->
+    <div>
+        <h3 class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">Store</h3>
+        <div class="flex flex-wrap gap-2">
+            @php
+                $storesFilter = collect($stores)->pluck('name', 'id')->prepend('All', 'all');
+                $currentStore = request('store', 'all');
+            @endphp
+            @foreach ($storesFilter as $id => $name)
+                <a href="{{ route('admin.items.index', array_merge(request()->except('page'), ['store' => $id])) }}"
+                   class="{{ $currentStore == $id ? 'bg-orange-500 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-700' }}
+                          rounded-full px-3 py-1 text-sm font-medium transition hover:bg-orange-400">
+                    {{ $name }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+
+    <!-- Status Filter -->
+    <div>
+        <h3 class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">Status</h3>
+        <div class="flex flex-wrap gap-2">
+            @php
+                $statusFilters = [
+                    'all' => 'All',
+                    'active' => 'Active',
+                    'inactive' => 'Inactive',
+                    'unavailable' => 'Unavailable',
+                    'draft' => 'Draft',
+                ];
+                $currentFilter = request('filter', 'all');
+            @endphp
+            @foreach ($statusFilters as $key => $label)
+                <a href="{{ route('admin.items.index', array_merge(request()->except('page'), ['filter' => $key])) }}"
+                   class="{{ $currentFilter === $key ? 'bg-orange-500 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-700' }}
+                          rounded-full px-3 py-1 text-sm font-medium transition hover:bg-orange-400">
+                    {{ $label }}
+                </a>
+            @endforeach
+        </div>
+    </div>
+</div>
+
+
+@php
+$filteredItems = $items;
+
+// Filter by store if selected
+if ($currentStore !== 'all') {
+    $filteredItems = $filteredItems->filter(fn($item) => $item->store_id == $currentStore);
+}
+
+// Filter by status
+$filteredItems = match ($currentStatus) {
+    'active' => $filteredItems->where('status', 'active'),
+    'inactive' => $filteredItems->where('status', 'inactive'),
+    'unavailable' => $filteredItems->where('status', 'unavailable'),
+    'draft' => $filteredItems->where('status', 'draft'),
+    default => $filteredItems,
+};
+
+// Sorting
+$sort = request('sort', 'name');
+$direction = request('direction', 'asc');
+
+if ($sort === 'name') {
+    $filteredItems = $direction === 'asc' ? $filteredItems->sortBy('product_name') : $filteredItems->sortByDesc('product_name');
+} elseif ($sort === 'status') {
+    $filteredItems = $direction === 'asc' ? $filteredItems->sortBy('status') : $filteredItems->sortByDesc('status');
+}
+@endphp
+
+
+
+
 
             <!-- Filters -->
-            @php
+            {{-- @php
 $filters = [
     'all' => 'All',
     'active' => 'Active',
@@ -73,7 +165,7 @@ if ($sort === 'name') {
     $filteredItems =
         $direction === 'asc' ? $filteredItems->sortBy('status') : $filteredItems->sortByDesc('status');
 }
-            @endphp
+            @endphp --}}
 
             <!-- Items Table -->
             <div class="overflow-hidden bg-white rounded-lg shadow-md">

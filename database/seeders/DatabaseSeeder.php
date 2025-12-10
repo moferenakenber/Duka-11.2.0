@@ -34,7 +34,7 @@ class DatabaseSeeder extends Seeder
             ItemVariantSeeder::class,
             ItemImageSeeder::class,
             ItemOwnerSeeder::class,
-
+            StoreSeeder::class,
 
 
 

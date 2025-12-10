@@ -135,22 +135,30 @@
                 </a>
             </li> --}}
 
-            <li>
-                <a href="#" onclick="return false;"
-                    class="{{ request()->routeIs('admin.store.*') ? 'bg-orange-100 dark:bg-orange-700' : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }} flex items-center rounded-lg p-2">
+<li>
+    <a href="{{ route('admin.stores.index') }}"
+       class="{{ request()->routeIs('admin.store.*')
+                 ? 'bg-orange-100 dark:bg-orange-700 text-orange-500 dark:text-white'
+                 : 'text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700' }}
+                 flex items-center rounded-lg p-2">
 
-                    <!-- Icon -->
-                    <x-lucide-store
-                        class="{{ request()->routeIs('admin.store.*') ? 'text-orange-500 dark:text-white' : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }} h-5 w-5 flex-shrink-0 transition duration-75" />
+        <!-- Icon -->
+        <x-lucide-store
+            class="h-5 w-5 flex-shrink-0 transition duration-75
+                   {{ request()->routeIs('admin.stores.*')
+                      ? 'text-orange-500 dark:text-white'
+                      : 'text-gray-500 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white' }}" />
 
-                    <!-- Text -->
-                    <span class="flex-1 ms-3 whitespace-nowrap">Store</span>
+        <!-- Text -->
+        <span class="flex-1 ms-3 whitespace-nowrap">Store</span>
 
-                    <!-- Dot indicator on the far right -->
-                    <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full bg-gray-400"></span>
+        <!-- Dot indicator on the far right -->
+        <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full
+                     {{ request()->routeIs('admin.stores.*') ? 'bg-orange-500' : 'bg-gray-400' }}"></span>
 
-                </a>
-            </li>
+    </a>
+</li>
+
 
 
             <li>

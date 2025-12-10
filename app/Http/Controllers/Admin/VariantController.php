@@ -14,6 +14,7 @@ use App\Models\ItemPackagingType;
 use App\Models\ItemInventoryLocation;
 use App\Models\Customer;
 use App\Models\User; // for sellers
+use App\Models\Store;
 
 class VariantController extends Controller
 {
@@ -295,17 +296,20 @@ class VariantController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
+
     public function edit(ItemVariant $variant)
     {
         // Load relationships
-        $variant->load('item.colors', 'item.sizes', 'item.packagingTypes', 'customerPrices', 'sellerPrices');
+        $variant->load('item.colors', 'item.sizes', 'item.packagingTypes', 'customerPrices', 'sellerPrices', 'stores');
 
-        // Also load all customers and sellers for the dropdown
+        // Load all customers and sellers for the dropdown
         $customers = Customer::all();
         $sellers = User::where('role', 'seller')->get();
+        $stores = Store::all(); // <-- add this
 
-        return view('admin.variants.edit', compact('variant', 'customers', 'sellers'));
+        return view('admin.variants.edit', compact('variant', 'customers', 'sellers', 'stores'));
     }
+
 
     /**
      * Update the specified resource in storage.
