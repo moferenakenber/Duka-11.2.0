@@ -3,36 +3,35 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use App\Models\Store;
 use App\Models\ItemInventoryLocation;
 
 class ItemInventoryLocationSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Create default warehouse if it doesn't exist
-        ItemInventoryLocation::firstOrCreate(
-            ['name' => 'Shop'],
-            ['address' => 'Merkato']
-        );
+        // Ensure there is at least one store
+        $store = Store::first() ?? Store::create(['name' => 'Main Store', 'status' => 'active']);
 
-        // You can add more locations if needed
-        ItemInventoryLocation::firstOrCreate(
-            ['name' => 'Shop Warehouse'],
-            ['address' => 'Merkato']
-        );
+        // Create default inventory locations without location column
+        ItemInventoryLocation::firstOrCreate([
+            'name' => 'Shop',
+            'store_id' => $store->id,
+        ]);
 
-        // You can add more locations if needed
-        ItemInventoryLocation::firstOrCreate(
-            ['name' => 'Wesen Warehouse A'],
-            ['address' => 'Wesen']
-        );
+        ItemInventoryLocation::firstOrCreate([
+            'name' => 'Shop Warehouse',
+            'store_id' => $store->id,
+        ]);
 
-        ItemInventoryLocation::firstOrCreate(
-            ['name' => 'Wesen Warehouse B'],
-            ['address' => 'Wesen']
-        );
+        ItemInventoryLocation::firstOrCreate([
+            'name' => 'Wesen Warehouse A',
+            'store_id' => $store->id,
+        ]);
+
+        ItemInventoryLocation::firstOrCreate([
+            'name' => 'Wesen Warehouse B',
+            'store_id' => $store->id,
+        ]);
     }
 }

@@ -39,6 +39,29 @@ class ItemController extends Controller
 
         $stores = Store::all();
 
+        \Log::info('ITEM VARIANT STORES DEBUG', [
+            'items' => $items->map(function ($item) {
+                return [
+                    'item_id' => $item->id,
+                    'item_name' => $item->product_name,
+                    'variants' => $item->variants->map(function ($variant) {
+                        return [
+                            'variant_id' => $variant->id,
+                            'stores' => $variant->stores->map(function ($store) {
+                                return [
+                                    'store_id' => $store->id,
+                                    'store_name' => $store->name,
+                                    'stock' => $store->pivot->stock,
+                                    'price' => $store->pivot->price,
+                                ];
+                            }),
+                        ];
+                    }),
+                ];
+            }),
+        ]);
+
+
         return view('admin.items.index', compact('items', 'stores'));
     }
 

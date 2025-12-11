@@ -161,6 +161,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         });
 
 
+        // routes/web.php
+        Route::get('stores/{store}/items/{item}/variants', [StoreController::class, 'itemVariants'])
+            ->name('stores.items.variants');
+
 
         Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
 

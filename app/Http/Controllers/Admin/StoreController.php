@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Store;
 use Illuminate\Http\Request;
+use App\Models\ItemVariant;
+use App\Models\ItemStock;
 
 class StoreController extends Controller
 {
@@ -70,10 +72,35 @@ class StoreController extends Controller
 
     public function items(Store $store)
     {
-        // Return a view showing items in this store
-        $items = $store->items; // or whatever relationship you use
+        // Get all items that have at least one variant in this store
+        $items = \App\Models\Item::whereHas('variants.storeVariants', function ($q) use ($store) {
+            $q->where('store_id', $store->id);
+        })->get();
+
         return view('admin.stores.items', compact('store', 'items'));
     }
+
+
+
+    public function itemVariants(Store $store, $itemId)
+    {
+        $variants = \App\Models\ItemVariant::where('item_id', $itemId)
+            ->with([
+                'item',
+                'itemColor',
+                'itemSize',
+                'itemPackagingType',
+                'stores' => function ($q) use ($store) {
+                    $q->where('store_id', $store->id);
+                },
+            ])
+            ->get();
+
+        $item = \App\Models\Item::findOrFail($itemId);
+
+        return view('admin.stores.item_variants', compact('store', 'item', 'variants'));
+    }
+
 
 
 

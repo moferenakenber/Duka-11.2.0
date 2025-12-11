@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <div class="flex justify-between items-center">
+        <div class="flex items-center justify-between">
             <h2 class="text-xl font-semibold text-gray-800 dark:text-gray-200">
                 Items in {{ $store->name }}
             </h2>
@@ -8,33 +8,34 @@
         </div>
     </x-slot>
 
-    <div class="overflow-x-auto mt-4">
+    <div class="mt-4 overflow-x-auto">
         <table class="table w-full table-compact">
             <thead>
                 <tr>
                     <th>ID</th>
                     <th>Product Name</th>
-                    <th>Color</th>
-                    <th>Size</th>
-                    <th>Packaging</th>
-                    <th>Price</th>
-                    <th>Discount Price</th>
-                    <th>Stock</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($variants as $variant)
+                @forelse ($items as $item)
                     <tr>
-                        <td>{{ $variant->id }}</td>
-                        <td>{{ $variant->item->product_name }}</td>
-                        <td>{{ $variant->itemColor->name ?? '—' }}</td>
-                        <td>{{ $variant->itemSize->name ?? '—' }}</td>
-                        <td>{{ $variant->itemPackagingType->name ?? '—' }}</td>
-                        <td>{{ $variant->pivot->price ?? '—' }}</td>
-                        <td>{{ $variant->pivot->discount_price ?? '—' }}</td>
-                        <td>{{ $variant->pivot->stock ?? '—' }}</td>
+                        <td>{{ $item->id }}</td>
+                        <td>{{ $item->product_name }}</td>
+                        <td>
+<a href="{{ route('admin.stores.items.variants', ['store' => $store->id, 'item' => $item->id]) }}" class="btn btn-sm btn-primary">
+    View Variants
+</a>
+
+
+
+                        </td>
                     </tr>
-                @endforeach
+                @empty
+                    <tr>
+                        <td colspan="3" class="text-center">No items in this store</td>
+                    </tr>
+                @endforelse
             </tbody>
         </table>
     </div>

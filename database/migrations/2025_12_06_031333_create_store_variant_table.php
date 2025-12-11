@@ -17,7 +17,7 @@ return new class extends Migration {
             $table->decimal('price', 10, 2)->nullable();
             $table->decimal('discount_price', 10, 2)->nullable();
             $table->timestamp('discount_ends_at')->nullable();
-
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
 

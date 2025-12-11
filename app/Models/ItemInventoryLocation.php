@@ -9,11 +9,16 @@ class ItemInventoryLocation extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'address'];
+    protected $fillable = ['name', 'address', 'store_id'];
 
     // Relation to stocks
     public function stocks()
     {
         return $this->hasMany(ItemStock::class);
+    }
+
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
     }
 }

@@ -152,9 +152,9 @@
         <!-- Text -->
         <span class="flex-1 ms-3 whitespace-nowrap">Store</span>
 
-        <!-- Dot indicator on the far right -->
+        {{-- <!-- Dot indicator on the far right -->
         <span class="me-2 ml-auto flex h-2.5 w-2.5 rounded-full
-                     {{ request()->routeIs('admin.stores.*') ? 'bg-orange-500' : 'bg-gray-400' }}"></span>
+                     {{ request()->routeIs('admin.stores.*') ? 'bg-orange-500' : 'bg-gray-400' }}"></span> --}}
 
     </a>
 </li>

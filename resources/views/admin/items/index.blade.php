@@ -97,8 +97,11 @@ $filteredItems = $items;
 
 // Filter by store if selected
 if ($currentStore !== 'all') {
-    $filteredItems = $filteredItems->filter(fn($item) => $item->store_id == $currentStore);
+    $filteredItems = $filteredItems->filter(function ($item) use ($currentStore) {
+        return $item->variants->flatMap->stores->contains('id', $currentStore);
+    });
 }
+
 
 // Filter by status
 $filteredItems = match ($currentStatus) {
@@ -205,6 +208,8 @@ if ($sort === 'name') {
                                     </a>
                                 </th>
                                 <th class="px-4 py-2 text-sm font-medium text-left text-gray-900">Active Variants</th>
+                                {{-- <th class="px-4 py-2 text-sm font-medium text-left text-gray-900">Store Stock </th> --}}
+
 
                                 <th class="px-4 py-2 text-sm font-medium text-left text-gray-900">Actions</th>
                             </tr>
@@ -221,6 +226,23 @@ if ($sort === 'name') {
                                     <td class="px-4 py-2 text-sm text-gray-800">
                                         {{ $item->variants->where('is_active', 1)->count() }}
                                     </td>
+                                    {{-- <td class="px-4 py-2 text-sm text-gray-800">
+                                        @foreach ($item->variants as $variant)
+                                            @foreach ($variant->stores as $store)
+                                                <div class="mb-1">
+                                                    <span class="font-semibold">{{ $store->name }}:</span>
+                                                    Stock: <span class="text-green-700">{{ $store->pivot->stock }}</span>,
+                                                    Price: <span class="text-blue-700">{{ $store->pivot->price }}</span>
+                                                </div>
+                                            @endforeach
+                                        @endforeach
+
+                                        {{-- If no stock at all
+                                        @if ($item->variants->flatMap->stores->count() === 0)
+                                            <span class="text-sm text-gray-500">Not in any store</span>
+                                        @endif
+                                    </td> --}}
+
                                     <td class="px-4 py-2 text-sm text-gray-800">
                                         <a href="{{ route('admin.items.show', $item->id) }}"
                                             class="text-blue-600 hover:text-blue-800">View</a>

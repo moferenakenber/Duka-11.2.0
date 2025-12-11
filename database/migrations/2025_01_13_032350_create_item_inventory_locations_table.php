@@ -11,6 +11,8 @@ return new class extends Migration {
             $table->id();
             $table->string('name'); // e.g., "Main Warehouse", "Store 1"
             $table->string('address')->nullable();
+            $table->foreignId('store_id')->nullable()->constrained()->cascadeOnDelete();
+
             $table->timestamps();
         });
     }

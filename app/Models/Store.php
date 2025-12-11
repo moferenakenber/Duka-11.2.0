@@ -13,11 +13,29 @@ class Store extends Model
     ];
 
 
-    public function itemVariants()
+    // In Store.php
+    public function itemVariants(Store $store, $itemId)
     {
-        return $this->belongsToMany(ItemVariant::class, 'store_variant')
-            ->withPivot('stock', 'price', 'discount_price', 'discount_ends_at')
-            ->withTimestamps();
+        $variants = \App\Models\ItemVariant::where('item_id', $itemId)
+            ->whereHas('stocks.inventoryLocation', function ($q) use ($store) {
+                $q->where('store_id', $store->id);
+            })
+            ->with(['item', 'itemColor', 'itemSize', 'itemPackagingType', 'stocks.inventoryLocation'])
+            ->get();
+
+        $item = \App\Models\Item::findOrFail($itemId);
+
+        return view('admin.stores.item_variants', compact('store', 'item', 'variants'));
     }
+
+
+
+
+    // App\Models\Store.php
+    public function inventoryLocations()
+    {
+        return $this->hasMany(ItemInventoryLocation::class, 'store_id');
+    }
+
 
 }

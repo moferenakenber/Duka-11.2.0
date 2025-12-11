@@ -192,6 +192,14 @@ class ItemVariant extends Model
         return $found ? $total : 1;
     }
 
+    // app/Models/ItemVariant.php
+
+    // In ItemVariant.php
+    public function storeVariants()
+    {
+        return $this->hasMany(\App\Models\StoreVariant::class, 'item_variant_id');
+    }
+
 
 
 }
