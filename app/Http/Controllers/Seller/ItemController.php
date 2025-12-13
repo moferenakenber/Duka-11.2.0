@@ -9,7 +9,8 @@ use App\Models\User;
 use App\Models\Cart;
 use Illuminate\Support\Facades\Log;
 use App\Models\Customer;
-
+use Illuminate\Support\Facades\Auth;
+use App\Models\ItemVariant;
 
 class ItemController extends Controller
 {
@@ -18,44 +19,72 @@ class ItemController extends Controller
      */
     public function index(Request $request)
     {
-        // ✅ Only show active items
-        $query = Item::with('categories')
-            ->where('status', 'active');
+        // // ✅ Only show active items
+        // $query = Item::with('categories')
+        //     ->where('status', 'active');
 
-        // ✅ Search logic (product name)
-        if ($request->filled('search')) {
-            $query->where('product_name', 'LIKE', '%' . $request->search . '%');
-        }
+        // // ✅ Search logic (product name)
+        // if ($request->filled('search')) {
+        //     $query->where('product_name', 'LIKE', '%' . $request->search . '%');
+        // }
 
-        // ✅ Sorting
-        if ($request->has('sort')) {
-            switch ($request->sort) {
-                case 'price_asc':
-                    $query->orderBy('price', 'asc');
-                    break;
-                case 'price_desc':
-                    $query->orderBy('price', 'desc');
-                    break;
-                case 'sold_asc':
-                    $query->orderBy('sold_count', 'asc');
-                    break;
-                case 'sold_desc':
-                    $query->orderBy('sold_count', 'desc');
-                    break;
-                case 'name_asc':
-                    $query->orderBy('product_name', 'asc');
-                    break;
-                case 'name_desc':
-                    $query->orderBy('product_name', 'desc');
-                    break;
+        // // ✅ Sorting
+        // if ($request->has('sort')) {
+        //     switch ($request->sort) {
+        //         case 'price_asc':
+        //             $query->orderBy('price', 'asc');
+        //             break;
+        //         case 'price_desc':
+        //             $query->orderBy('price', 'desc');
+        //             break;
+        //         case 'sold_asc':
+        //             $query->orderBy('sold_count', 'asc');
+        //             break;
+        //         case 'sold_desc':
+        //             $query->orderBy('sold_count', 'desc');
+        //             break;
+        //         case 'name_asc':
+        //             $query->orderBy('product_name', 'asc');
+        //             break;
+        //         case 'name_desc':
+        //             $query->orderBy('product_name', 'desc');
+        //             break;
+        //     }
+        // }
+
+        // // ✅ Paginate results
+        // $items = $query->paginate(300);
+
+        // return view('seller.items.index', compact('items'));
+
+
+
+        $storeId = Auth::user()->store?->id;
+        Log::info('Seller Store ID: ' . $storeId);
+
+        $items = Item::where('status', 'active')
+            ->with('variants.storeVariants')
+            ->get();
+
+        foreach ($items as $item) {
+            $variants = $item->variants;
+            foreach ($variants as $variant) {
+                $storeVariants = $variant->storeVariants;
+                Log::info("Item {$item->id} - Variant {$variant->id} | Store Variants: " . $storeVariants->count());
             }
         }
 
-        // ✅ Paginate results
-        $items = $query->paginate(300);
 
         return view('seller.items.index', compact('items'));
+
+
+
+
+
+
     }
+
+
 
 
     /**

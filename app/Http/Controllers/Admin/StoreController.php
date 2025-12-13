@@ -6,6 +6,7 @@ use App\Models\Store;
 use Illuminate\Http\Request;
 use App\Models\ItemVariant;
 use App\Models\ItemStock;
+use Illuminate\Support\Facades\DB;
 
 class StoreController extends Controller
 {
@@ -84,22 +85,44 @@ class StoreController extends Controller
 
     public function itemVariants(Store $store, $itemId)
     {
+        // 1. Load item variants
         $variants = \App\Models\ItemVariant::where('item_id', $itemId)
-            ->with([
-                'item',
-                'itemColor',
-                'itemSize',
-                'itemPackagingType',
-                'stores' => function ($q) use ($store) {
-                    $q->where('store_id', $store->id);
-                },
-            ])
+            ->with(['itemColor', 'itemSize', 'itemPackagingType'])
             ->get();
+
+        $variantIds = $variants->pluck('id');
+
+        // 2. Load stock (from item_stocks)
+        $stocks = ItemStock::where('item_inventory_location_id', $store->id)
+            ->whereIn('item_variant_id', $variantIds)
+            ->get()
+            ->keyBy('item_variant_id');
+
+        // 3. Load store_variant (price, discount, active)
+        $storeVariants = DB::table('store_variant')
+            ->where('store_id', $store->id)
+            ->whereIn('item_variant_id', $variantIds)
+            ->get()
+            ->keyBy('item_variant_id');
+
+        // 4. Attach everything to variants
+        foreach ($variants as $variant) {
+            $variant->store_stock = $stocks[$variant->id]->quantity ?? 0;
+
+            $storeVariant = $storeVariants[$variant->id] ?? null;
+
+            $variant->store_price = $storeVariant?->price;
+            $variant->store_discount_price = $storeVariant?->discount_price;
+            $variant->store_active = $storeVariant?->active ?? false;
+        }
+
+
 
         $item = \App\Models\Item::findOrFail($itemId);
 
         return view('admin.stores.item_variants', compact('store', 'item', 'variants'));
     }
+
 
 
 

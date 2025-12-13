@@ -4,8 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
-{
+return new class extends Migration {
     /**
      * Run the migrations.
      */
@@ -22,6 +21,9 @@ return new class extends Migration
             $table->string('password');
             $table->rememberToken();
             $table->timestamps();
+            $table->foreignId('store_id')->nullable()->constrained()->cascadeOnDelete(); // for seller
+            $table->foreignId('inventory_location_id')->nullable()->constrained('item_inventory_locations')->cascadeOnDelete();// for stock_keeper
+
             // Add the 'created_by' field as a foreign key
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null'); // Add foreign key reference to 'users' table
         });

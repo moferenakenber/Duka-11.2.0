@@ -1,22 +1,19 @@
 <x-app-layout>
-  <x-slot name="header">
-    <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-      {{ __('Dashboard') }}
-    </h2>
-  </x-slot>
+    <x-slot name="header">
+        <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
+            {{ __('Dashboard') }}
+        </h2>
+    </x-slot>
 
-  <div class="py-12">
-    <div class="flex flex-col mx-auto max-w-7xl sm:px-6 lg:px-8">
-      <div class="flex-col overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
-        <div class="p-6 text-gray-900 dark:text-gray-100">
+    <div class="py-12">
+        <div class="flex flex-col mx-auto max-w-7xl sm:px-6 lg:px-8">
+            <div class="flex-col overflow-hidden bg-white shadow-sm dark:bg-gray-800 sm:rounded-lg">
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
 
-            <?php
-                // PHP logic to prepare the data structure for the cards:
-                $productOptionSummary = $activeVariants
-                    ->groupBy('item.product_name')
-                    ->map(function ($variants, $productName) {
-
+                    <?php
+                    // PHP logic to prepare the data structure for the cards:
+                    $productOptionSummary = $activeVariants->groupBy('item.product_name')->map(function ($variants, $productName) {
                         // 1. Collect all unique size names (e.g., ['Small', 'Medium', 'Large', 'XL', 'XXL', '3XL'])
                         $uniqueSizesArray = $variants->pluck('size')->filter()->unique('name')->pluck('name')->all();
 
@@ -42,19 +39,19 @@
                             'unique_packaging' => $variants->pluck('itemPackagingType')->filter()->unique('name')->pluck('name')->all(),
                         ];
                     });
-            ?>
+                    ?>
 
-           <p>Welcome, {{ Auth::user()->first_name }}! You are now logged in.</p>
-               {{-- {{ __("You're logged in!") }} --}}
+                    <p>Welcome, {{ Auth::user()->first_name }}! You are now logged in.</p>
+                    {{-- {{ __("You're logged in!") }} --}}
 
-        <div class="flex flex-wrap gap-4 mt-4">
+                    <div class="flex flex-wrap gap-4 mt-4">
 
-            {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                        {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
               <span class="flex w-2.5 h-2.5 bg-blue-600 rounded-full me-1.5 shrink-0"></span>
               Visitors
             </span> --}}
 
-            {{-- @foreach ($activeVariants as $variant)
+                        {{-- @foreach ($activeVariants as $variant)
             <div>
                 {{ $variant->item->product_name }} – Variant
 
@@ -67,47 +64,81 @@
             </div>
             @endforeach --}}
 
-            <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
-                <span class="flex w-2.5 h-2.5 bg-indigo-500 rounded-full me-1.5 shrink-0"></span>
-                Customers: {{ $customersCount }}
-            </span>
+                        <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                            <span class="me-1.5 flex h-2.5 w-2.5 shrink-0 rounded-full bg-indigo-500"></span>
+                            Customers: {{ $customersCount }}
+                        </span>
 
-            <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
-                <span class="flex w-2.5 h-2.5 bg-green-500 rounded-full me-1.5 shrink-0"></span>
-                Products: {{ $productsCount }}
-            </span>
+                        <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                            <span class="me-1.5 flex h-2.5 w-2.5 shrink-0 rounded-full bg-green-500"></span>
+                            Products: {{ $productsCount }}
+                        </span>
 
-            {{--
+                        {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                <span class="flex w-2.5 h-2.5 bg-orange-500 rounded-full me-1.5 shrink-0"></span>
+                Items: {{ $itemsCount ?? 0 }}
+            </span> --}}
+
+                        <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                            <span class="me-1.5 flex h-2.5 w-2.5 shrink-0 rounded-full bg-yellow-500"></span>
+                            Active Variants: {{ $activeVariantsCount ?? 0 }}
+                        </span>
+
+                        <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                            <span class="me-1.5 flex h-2.5 w-2.5 shrink-0 rounded-full bg-purple-500"></span>
+                            Sessions: <strong class="ml-1">{{ $sessionsCount }}</strong>
+                        </span>
+
+
+                        <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                            @foreach ($lowStockItems as $item)
+                                <div class="p-4 transition border rounded shadow hover:shadow-md">
+                                    <h3 class="text-lg font-semibold">{{ $item['product_name'] }}</h3>
+                                    <p>Total Stock: <span class="font-medium">{{ $item['total_stock'] }}</span></p>
+                                    <p>Low Stock Quantity:
+                                        <span class="font-bold text-red-600">
+                                            {{ $item['low_stock_total'] }}
+                                        </span>
+                                    </p>
+                                    @if ($item['is_low'])
+                                        <p class="mt-2 font-semibold text-yellow-800">⚠️ Item is critically low!</p>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+
+
+
+
+
+
+                        {{--
             <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
                 <span class="flex w-2.5 h-2.5 bg-yellow-500 rounded-full me-1.5 shrink-0"></span>
                 Active Variants: {{ $activeVariantsCount }}
             </span> --}}
 
-            <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
-            <span class="flex w-2.5 h-2.5 bg-purple-500 rounded-full me-1.5 shrink-0"></span>
-                 Sessions: <strong class="ml-1">{{ $sessionsCount }}</strong>
-            </span>
 
-            {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                        {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
               <span class="flex w-2.5 h-2.5 bg-blue-200 rounded-full me-1.5 shrink-0"></span>
               Sales
             </span> --}}
 
-            {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                        {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
               <span class="flex w-2.5 h-2.5 bg-teal-500 rounded-full me-1.5 shrink-0"></span>
               Revenue
             </span> --}}
 
-            {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                        {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
               <span class="flex w-2.5 h-2.5 bg-teal-200 rounded-full me-1.5 shrink-0"></span>
               Purchases
             </span> --}}
 
-            {{-- <h3 class="mt-4 text-lg font-semibold">Active Variants</h3> --}}
+                        {{-- <h3 class="mt-4 text-lg font-semibold">Active Variants</h3> --}}
 
 
 
-   {{-- <div class="max-w-xs p-2 mx-auto">
+                        {{-- <div class="max-w-xs p-2 mx-auto">
 
 
     <div class="carousel w-full rounded-lg shadow-xl mb-3 h-[18rem]">
@@ -206,9 +237,9 @@
 
 
 
-          </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </x-app-layout>

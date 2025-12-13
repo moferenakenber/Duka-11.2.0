@@ -46,12 +46,55 @@ class DashboardController extends Controller
             ];
         });
 
+
+        // $seller = Auth::user();
+
+        // $itemsCount = Item::whereHas('variants', function ($q) use ($seller) {
+        //     $q->where('store_id', $seller->store_id); // <-- variants table has store_id
+        // })->count();
+
+        // Get the admin's store ID if needed, or null for all stores
+        $storeId = Auth::user()->store_id; // optional, admin may see all
+
+        $activeVariantsCount = ItemVariant::when($storeId, function ($query) use ($storeId) {
+            $query->where('store_id', $storeId);
+        })
+            ->where('status', 'active')
+            ->count();
+
+
+        $lowStockItems = Item::with(['variants.stocks'])
+            ->get()
+            ->map(function ($item) {
+                $totalStock = $item->variants->flatMap->stocks->sum('quantity');
+                $lowStockTotal = $item->variants->flatMap->stocks
+                    ->where('quantity', '<=', 5)
+                    ->sum('quantity');
+
+                return [
+                    'item_id' => $item->id,
+                    'product_name' => $item->product_name,
+                    'total_stock' => $totalStock,
+                    'low_stock_total' => $lowStockTotal,
+                    'is_low' => $totalStock <= 5, // or any threshold you want
+                ];
+            })
+            ->filter(fn($item) => $item['low_stock_total'] > 0);
+
+
+
+
+
         return view('admin.dashboard.index', compact(
             'sessionsCount',
             'customersCount',
             'productsCount',
             'activeVariants',
             'groupedProducts',
+            // 'itemsCount',
+            'activeVariantsCount',
+            'lowStockItems',
+
         ));
 
     }

@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
 
         // Call other seeders here
         $this->call([
+            ItemInventoryLocationSeeder::class,
+            StoreSeeder::class,
             UserSeeder::class,
             CustomerSeeder::class,
             ItemCategorySeeder::class,
@@ -30,12 +32,10 @@ class DatabaseSeeder extends Seeder
             ItemSizeSeeder::class,
             ItemPackagingTypeSeeder::class,
             ItemSeeder::class,
-            ItemInventoryLocationSeeder::class,
             ItemVariantSeeder::class,
             ItemImageSeeder::class,
             ItemOwnerSeeder::class,
-            StoreSeeder::class,
-
+            StoreVariantSeeder::class,
 
 
 

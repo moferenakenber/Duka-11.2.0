@@ -22,6 +22,8 @@ return new class extends Migration {
 
             $table->string('barcode')->nullable()->unique();
             // Variant-specific fields
+            // the following three have depriciated as price is now in store_variation talble sorry
+            // which means store, seller, customer sould use these from there prespective places
             $table->decimal('price', 10, 2); // base price
             $table->decimal('discount_price', 10, 2)->nullable(); // optional discounted price
             $table->decimal('discount_percentage', 5, 2)->nullable()->default(0); // added this column

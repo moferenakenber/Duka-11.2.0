@@ -33,9 +33,7 @@
         <div class="mx-auto space-y-4 max-w-7xl sm:px-6 lg:px-8">
             <!-- Filters -->
 @php
-$storesFilter = collect($stores)->pluck('name', 'id')->prepend('All', 'all');
-$currentStore = request('store', 'all');
-
+// Status filter options
 $statusFilters = [
     'all' => 'All',
     'active' => 'Active',
@@ -43,28 +41,38 @@ $statusFilters = [
     'unavailable' => 'Unavailable',
     'draft' => 'Draft',
 ];
+
+// Get current status from request, default to 'all'
 $currentStatus = request('filter', 'all');
+
+// Filter items by status
+$filteredItems = match ($currentStatus) {
+    'active' => $items->where('status', 'active'),
+    'inactive' => $items->where('status', 'inactive'),
+    'unavailable' => $items->where('status', 'unavailable'),
+    'draft' => $items->where('status', 'draft'),
+    default => $items,
+};
+
+// Sorting
+$sort = request('sort', 'name');
+$direction = request('direction', 'asc');
+
+if ($sort === 'name') {
+    $filteredItems = $direction === 'asc'
+        ? $filteredItems->sortBy('product_name')
+        : $filteredItems->sortByDesc('product_name');
+} elseif ($sort === 'status') {
+    $filteredItems = $direction === 'asc'
+        ? $filteredItems->sortBy('status')
+        : $filteredItems->sortByDesc('status');
+}
 @endphp
+
 
 <!-- Filters -->
 <div class="flex flex-wrap gap-6 mb-4">
-    <!-- Store Filter -->
-    <div>
-        <h3 class="mb-1 text-sm font-semibold text-gray-700 dark:text-gray-300">Store</h3>
-        <div class="flex flex-wrap gap-2">
-            @php
-                $storesFilter = collect($stores)->pluck('name', 'id')->prepend('All', 'all');
-                $currentStore = request('store', 'all');
-            @endphp
-            @foreach ($storesFilter as $id => $name)
-                <a href="{{ route('admin.items.index', array_merge(request()->except('page'), ['store' => $id])) }}"
-                   class="{{ $currentStore == $id ? 'bg-orange-500 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-700' }}
-                          rounded-full px-3 py-1 text-sm font-medium transition hover:bg-orange-400">
-                    {{ $name }}
-                </a>
-            @endforeach
-        </div>
-    </div>
+
 
     <!-- Status Filter -->
     <div>
@@ -78,15 +86,7 @@ $currentStatus = request('filter', 'all');
                     'unavailable' => 'Unavailable',
                     'draft' => 'Draft',
                 ];
-                $currentFilter = request('filter', 'all');
             @endphp
-            @foreach ($statusFilters as $key => $label)
-                <a href="{{ route('admin.items.index', array_merge(request()->except('page'), ['filter' => $key])) }}"
-                   class="{{ $currentFilter === $key ? 'bg-orange-500 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-700' }}
-                          rounded-full px-3 py-1 text-sm font-medium transition hover:bg-orange-400">
-                    {{ $label }}
-                </a>
-            @endforeach
         </div>
     </div>
 </div>
@@ -94,14 +94,6 @@ $currentStatus = request('filter', 'all');
 
 @php
 $filteredItems = $items;
-
-// Filter by store if selected
-if ($currentStore !== 'all') {
-    $filteredItems = $filteredItems->filter(function ($item) use ($currentStore) {
-        return $item->variants->flatMap->stores->contains('id', $currentStore);
-    });
-}
-
 
 // Filter by status
 $filteredItems = match ($currentStatus) {
@@ -117,58 +109,16 @@ $sort = request('sort', 'name');
 $direction = request('direction', 'asc');
 
 if ($sort === 'name') {
-    $filteredItems = $direction === 'asc' ? $filteredItems->sortBy('product_name') : $filteredItems->sortByDesc('product_name');
-} elseif ($sort === 'status') {
-    $filteredItems = $direction === 'asc' ? $filteredItems->sortBy('status') : $filteredItems->sortByDesc('status');
-}
-@endphp
-
-
-
-
-
-            <!-- Filters -->
-            {{-- @php
-$filters = [
-    'all' => 'All',
-    'active' => 'Active',
-    'inactive' => 'Inactive',
-    'unavailable' => 'Unavailable',
-    'draft' => 'Draft',
-];
-$currentFilter = request('filter', 'all');
-            @endphp
-            <div class="flex flex-wrap gap-2 mb-4">
-                @foreach ($filters as $key => $label)
-                    <a href="{{ route('admin.items.index', array_merge(request()->except('page'), ['filter' => $key])) }}"
-                        class="{{ $currentFilter === $key ? 'bg-orange-500 text-white' : 'bg-gray-200 dark:bg-gray-700 dark:text-gray-200 text-gray-700' }} rounded-full px-3 py-1 text-sm font-medium transition hover:bg-orange-400">
-                        {{ $label }}
-                    </a>
-                @endforeach
-            </div>
-
-            @php
-$filteredItems = match ($currentFilter) {
-    'active' => $items->where('status', 'active'),
-    'inactive' => $items->where('status', 'inactive'),
-    'unavailable' => $items->where('status', 'unavailable'),
-    'draft' => $items->where('status', 'draft'),
-    default => $items,
-};
-
-$sort = request('sort', 'name');
-$direction = request('direction', 'asc');
-
-if ($sort === 'name') {
-    $filteredItems =
-        $direction === 'asc'
+    $filteredItems = $direction === 'asc'
         ? $filteredItems->sortBy('product_name')
         : $filteredItems->sortByDesc('product_name');
 } elseif ($sort === 'status') {
-    $filteredItems =
-        $direction === 'asc' ? $filteredItems->sortBy('status') : $filteredItems->sortByDesc('status');
+    $filteredItems = $direction === 'asc'
+        ? $filteredItems->sortBy('status')
+        : $filteredItems->sortByDesc('status');
 }
-            @endphp --}}
+@endphp
+
 
             <!-- Items Table -->
             <div class="overflow-hidden bg-white rounded-lg shadow-md">
@@ -192,7 +142,7 @@ if ($sort === 'name') {
                                         @endif
                                     </a>
                                 </th>
-                                <th class="px-4 py-2 text-sm font-medium text-left text-gray-900">
+                                {{-- <th class="px-4 py-2 text-sm font-medium text-left text-gray-900">
                                     <a href="{{ route('admin.items.index', array_merge(request()->except('page'), ['sort' => 'status', 'direction' => $sort === 'status' ? $newDirection : 'asc'])) }}"
                                         class="flex items-center space-x-1">
                                         <span>Status</span>
@@ -206,7 +156,7 @@ if ($sort === 'name') {
                                             </svg>
                                         @endif
                                     </a>
-                                </th>
+                                </th> --}}
                                 <th class="px-4 py-2 text-sm font-medium text-left text-gray-900">Active Variants</th>
                                 {{-- <th class="px-4 py-2 text-sm font-medium text-left text-gray-900">Store Stock </th> --}}
 
@@ -219,13 +169,18 @@ if ($sort === 'name') {
                                 <tr class="dark:hover:bg-gray-700 hover:bg-gray-50">
                                     <td class="px-4 py-2 text-sm text-gray-800">{{ $item->product_name }}</td>
 
-                                    <td
+                                    {{-- <td
                                         class="{{ $item->status === 'active' ? 'bg-green-100' : ($item->status === 'inactive' ? 'bg-gray-100' : 'bg-yellow-100') }} rounded-sm px-4 py-2 text-sm font-medium text-gray-800">
                                         {{ ucfirst($item->status) }}
                                     </td>
                                     <td class="px-4 py-2 text-sm text-gray-800">
                                         {{ $item->variants->where('is_active', 1)->count() }}
+                                    </td> --}}
+                                    <td class="px-4 py-2 text-sm text-gray-800">
+                                        Active: {{ $item->active_variants_count }} <br>
+                                        Total Stock: {{ $item->total_stock }}
                                     </td>
+
                                     {{-- <td class="px-4 py-2 text-sm text-gray-800">
                                         @foreach ($item->variants as $variant)
                                             @foreach ($variant->stores as $store)

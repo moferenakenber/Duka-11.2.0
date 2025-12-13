@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
             $table->foreignId('item_variant_id')->constrained('item_variants')->cascadeOnDelete();
 
-            $table->integer('stock')->nullable();
+            // $table->integer('stock')->nullable(); said to be terrible db design
             $table->decimal('price', 10, 2)->nullable();
             $table->decimal('discount_price', 10, 2)->nullable();
             $table->timestamp('discount_ends_at')->nullable();

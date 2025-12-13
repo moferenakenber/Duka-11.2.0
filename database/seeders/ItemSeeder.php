@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\Item;
 use App\Models\ItemVariant;
+use App\Models\ItemStock;
 
 class ItemSeeder extends Seeder
 {
@@ -189,7 +190,7 @@ class ItemSeeder extends Seeder
                         if (empty($variantImages))
                             $variantImages = ["images/product_images/default.jpg"];
 
-                        ItemVariant::create([
+                        $variant = ItemVariant::create([
                             'item_id' => $item->id,
                             'item_color_id' => $colorId,
                             'item_size_id' => $sizeId,
@@ -200,6 +201,13 @@ class ItemSeeder extends Seeder
                             'images' => json_encode($variantImages),
                             'is_active' => $variantShouldBeActive,
                             'status' => $variantShouldBeActive ? 'active' : 'inactive',
+                        ]);
+                        // ----------------------
+// Seed stock for this variant
+                        ItemStock::create([
+                            'item_variant_id' => $variant->id,
+                            'quantity' => rand(0, 20), // random stock for testing
+                            'item_inventory_location_id' => 1,           // assign to a store if needed
                         ]);
                     }
                 }

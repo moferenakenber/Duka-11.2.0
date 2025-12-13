@@ -115,7 +115,7 @@ class ItemVariant extends Model
     public function stores()
     {
         return $this->belongsToMany(Store::class, 'store_variant')
-            ->withPivot('stock', 'price', 'discount_price', 'discount_ends_at')
+            ->withPivot('price', 'discount_price', 'active', 'discount_ends_at')
             ->withTimestamps();
     }
 
@@ -197,8 +197,19 @@ class ItemVariant extends Model
     // In ItemVariant.php
     public function storeVariants()
     {
-        return $this->hasMany(\App\Models\StoreVariant::class, 'item_variant_id');
+        return $this->hasMany(StoreVariant::class, 'item_variant_id', 'id');
     }
+
+    public function item_stock()
+    {
+        return $this->hasOne(ItemStock::class, 'variant_id'); // or hasMany if multiple stocks
+    }
+
+    public function stockAtLocation($storeId)
+    {
+        return $this->stocks()->where('item_inventory_location_id', $storeId)->first()?->quantity ?? 0;
+    }
+
 
 
 

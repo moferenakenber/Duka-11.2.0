@@ -91,4 +91,11 @@ class User extends Authenticatable
     {
         return $this->hasMany(Cart::class);
     }
+
+    // In App\Models\User.php
+    public function store()
+    {
+        return $this->belongsTo(Store::class);
+    }
+
 }

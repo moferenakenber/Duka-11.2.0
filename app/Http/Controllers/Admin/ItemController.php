@@ -30,29 +30,37 @@ class ItemController extends Controller
     // Display a listing of the items
     public function index()
     {
-        $items = Item::with([
-            'colors',
-            'sizes',
-            'packagingTypes',
-            'variants.stores' // ⬅ LOAD EACH VARIANT'S STORE STOCK
-        ])->get();
+        $items = Item::with(['variants.stocks.inventoryLocation'])->get();
+
 
         $stores = Store::all();
 
+        // Add total stock and active variants count per item
+        $items = $items->map(function ($item) {
+            $item->active_variants_count = $item->variants->where('is_active', 1)->count();
+            $item->total_stock = $item->variants->sum(function ($variant) {
+                return $variant->stocks->sum('quantity');
+            });
+
+            return $item;
+        });
+
+
         \Log::info('ITEM VARIANT STORES DEBUG', [
-            'items' => $items->map(function ($item) {
+            'items' => $items->map(function ($item) use ($stores) {
                 return [
                     'item_id' => $item->id,
                     'item_name' => $item->product_name,
-                    'variants' => $item->variants->map(function ($variant) {
+                    'variants' => $item->variants->map(function ($variant) use ($stores) {
                         return [
                             'variant_id' => $variant->id,
-                            'stores' => $variant->stores->map(function ($store) {
+                            'stores' => $stores->map(function ($store) use ($variant) {
+                                $stock = $variant->stocks->firstWhere('item_inventory_location_id', $store->id);
                                 return [
                                     'store_id' => $store->id,
                                     'store_name' => $store->name,
-                                    'stock' => $store->pivot->stock,
-                                    'price' => $store->pivot->price,
+                                    'stock' => $stock?->quantity ?? 0,
+                                    'price' => $variant->price, // or custom price logic
                                 ];
                             }),
                         ];
@@ -60,6 +68,7 @@ class ItemController extends Controller
                 ];
             }),
         ]);
+
 
 
         return view('admin.items.index', compact('items', 'stores'));

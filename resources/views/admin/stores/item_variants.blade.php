@@ -24,15 +24,16 @@
                         <td>{{ $variant->itemColor->name ?? '-' }}</td>
                         <td>{{ $variant->itemSize->name ?? '-' }}</td>
                         <td>{{ $variant->itemPackagingType->name ?? '-' }}</td>
-                        <td>
-                            {{ $variant->stores->first()?->pivot->stock ?? 0 }}
-                        </td>
-                        <td>
-                            {{ $variant->stores->first()?->pivot->price ?? '-' }}
-                        </td>
-                        <td>
-                            {{ $variant->stores->first()?->pivot->active ? 'Active' : 'Inactive' }}
-                        </td>
+<td>{{ $variant->store_stock }}</td>
+
+<td>
+    {{ $variant->store_price ? number_format($variant->store_price, 2) : '-' }}
+</td>
+
+<td>
+    {{ $variant->store_active ? 'Active' : 'Inactive' }}
+</td>
+
 
                     </tr>
                 @empty
