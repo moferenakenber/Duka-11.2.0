@@ -203,7 +203,7 @@ class ItemSeeder extends Seeder
                             'status' => $variantShouldBeActive ? 'active' : 'inactive',
                         ]);
                         // ----------------------
-// Seed stock for this variant
+                        // Seed stock for this variant
                         ItemStock::create([
                             'item_variant_id' => $variant->id,
                             'quantity' => rand(0, 20), // random stock for testing

@@ -17,7 +17,7 @@ class StoreSeeder extends Seeder
             [
                 'name' => 'Main Store',
                 'location' => 'Merkato',
-                'manager' => 'Mili',
+                'manager' => 'Abebe Tesfaye',
             ],
             [
                 'name' => 'Second Store',

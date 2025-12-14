@@ -2,67 +2,54 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Store;
 use App\Models\ItemVariant;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class StoreVariantSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Define the store ID you want to seed data for
-        // Make sure this store exists in your database
-        $storeId = 1;
+        $stores = Store::all();
+        $now = Carbon::now();
 
-        // Get all variant IDs
-        $variantIds = ItemVariant::pluck('id');
+        foreach ($stores as $store) {
 
-        $storeVariants = [];
-        $currentDate = Carbon::now();
+            // 1️⃣ Get items that belong to this store
+            $itemIds = DB::table('item_store')
+                ->where('store_id', $store->id)
+                ->where('active', true)
+                ->pluck('item_id');
 
-        foreach ($variantIds as $variantId) {
-            // Randomly determine if the variant is active for this store
-            $isActive = rand(0, 100) < 95; // 95% chance active
-
-            // Randomly determine if the variant has a discount
-            $hasDiscount = rand(0, 100) < 30; // 30% chance discount
-
-            // Base price of the variant
-            $originalPrice = ItemVariant::find($variantId)->price;
-
-            // Slightly adjust price for the store
-            $priceFactor = rand(95, 105) / 100; // 95% - 105% of base
-            $storePrice = round($originalPrice * $priceFactor, 2);
-
-            $discountPrice = null;
-            $discountEndsAt = null;
-
-            if ($hasDiscount) {
-                $discountFactor = rand(70, 90) / 100; // 70% - 90% of store price
-                $discountPrice = round($storePrice * $discountFactor, 2);
-
-                $discountDays = rand(1, 30); // Discount lasts 1-30 days
-                $discountEndsAt = $currentDate->copy()->addDays($discountDays);
+            if ($itemIds->isEmpty()) {
+                continue;
             }
 
-            $storeVariants[] = [
-                'store_id' => $storeId,
-                'item_variant_id' => $variantId,
-                'price' => $storePrice,
-                'discount_price' => $discountPrice,
-                'discount_ends_at' => $discountEndsAt,
-                'active' => $isActive,
-                'created_at' => $currentDate,
-                'updated_at' => $currentDate,
-            ];
-        }
+            // 2️⃣ Get variants of those items
+            $variants = ItemVariant::whereIn('item_id', $itemIds)->get();
 
-        // Bulk insert for performance
-        DB::table('store_variant')->insert($storeVariants);
+            $rows = [];
+
+            foreach ($variants as $variant) {
+
+                $priceFactor = rand(95, 105) / 100;
+                $price = round($variant->price * $priceFactor, 2);
+
+                $rows[] = [
+                    'store_id' => $store->id,
+                    'item_variant_id' => $variant->id,
+                    'price' => $price,
+                    'active' => rand(0, 100) < 90,
+                    'created_at' => $now,
+                    'updated_at' => $now,
+                ];
+            }
+
+            if (!empty($rows)) {
+                DB::table('store_variant')->insert($rows);
+            }
+        }
     }
 }

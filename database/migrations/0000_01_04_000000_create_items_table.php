@@ -33,8 +33,8 @@ return new class extends Migration {
 
             $table->string('barcode')->nullable()->unique();
             $table->bigInteger('sold_count')->default(0)->nullable(false); // Assuming this is the sold count
-            $table->decimal('discount_price', 10, 2)->nullable();
-            $table->decimal('discount_percentage', 5, 2)->nullable();
+            // $table->decimal('discount_price', 10, 2)->nullable();
+            // $table->decimal('discount_percentage', 5, 2)->nullable();
 
 
             $table->timestamps();

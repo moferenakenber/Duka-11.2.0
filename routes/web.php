@@ -160,6 +160,22 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
 
         });
 
+        // Nested routes for store items & variants
+        Route::prefix('stores/{store}/items')->name('stores.items.')->group(function () {
+
+            // List all variants of a specific item in the store
+            Route::get('{item}/variants', [StoreController::class, 'itemVariants'])
+                ->name('variants');
+
+            // Edit a specific variant of an item in the store
+            Route::get('{item}/variants/{variant}/edit', [StoreController::class, 'editVariant'])
+                ->name('variants.edit');
+
+            // Update a specific variant of an item in the store
+            Route::put('{item}/variants/{variant}', [StoreController::class, 'updateVariant'])
+                ->name('variants.update');
+
+        });
 
         // routes/web.php
         Route::get('stores/{store}/items/{item}/variants', [StoreController::class, 'itemVariants'])

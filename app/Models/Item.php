@@ -138,6 +138,14 @@ class Item extends Model
         return $result;
     }
 
+    public function stores()
+    {
+        return $this->belongsToMany(Store::class)
+            ->withPivot('active')
+            ->withTimestamps();
+    }
+
+
 
     protected static function booted()
     {

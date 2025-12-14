@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use App\Models\ItemVariant;
 class Store extends Model
 {
     protected $fillable = [
@@ -12,30 +12,25 @@ class Store extends Model
         'status',
     ];
 
-
-    // In Store.php
-    public function itemVariants(Store $store, $itemId)
+    // Items in this store
+    public function items()
     {
-        $variants = \App\Models\ItemVariant::where('item_id', $itemId)
-            ->whereHas('stocks.inventoryLocation', function ($q) use ($store) {
-                $q->where('store_id', $store->id);
-            })
-            ->with(['item', 'itemColor', 'itemSize', 'itemPackagingType', 'stocks.inventoryLocation'])
-            ->get();
-
-        $item = \App\Models\Item::findOrFail($itemId);
-
-        return view('admin.stores.item_variants', compact('store', 'item', 'variants'));
+        return $this->belongsToMany(Item::class)
+            ->withPivot('active')
+            ->withTimestamps();
     }
 
-
-
-
-    // App\Models\Store.php
+    // Inventory locations
     public function inventoryLocations()
     {
         return $this->hasMany(ItemInventoryLocation::class, 'store_id');
     }
 
-
+    // Variants for this store with pivot info
+    public function variants()
+    {
+        return $this->belongsToMany(ItemVariant::class, 'store_variant')
+            ->withPivot('price', 'discount_price', 'discount_ends_at')
+            ->withTimestamps();
+    }
 }
