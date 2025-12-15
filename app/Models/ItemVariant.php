@@ -121,18 +121,35 @@ class ItemVariant extends Model
 
 
     // Customer-specific prices
-    public function customerPrices(): HasMany
+    // public function customerPrices(): HasMany
+    // {
+    //     return $this->hasMany(CustomerPrice::class, 'item_variant_id');
+    //     // 'item_variant_id' is the foreign key in the customer_prices table pointing to this variant
+    // }
+
+    // // Seller-specific prices
+    // public function sellerPrices(): HasMany
+    // {
+    //     return $this->hasMany(SellerPrice::class, 'item_variant_id');
+    //     // 'item_variant_id' is the foreign key in the seller_prices table pointing to this variant
+    //}
+
+
+
+    // In ItemVariant.php
+
+    // Store-specific customer prices
+    public function storeCustomerPrices()
     {
-        return $this->hasMany(CustomerPrice::class, 'item_variant_id');
-        // 'item_variant_id' is the foreign key in the customer_prices table pointing to this variant
+        return $this->hasMany(StoreVariantCustomerPrice::class, 'store_variant_id');
     }
 
-    // Seller-specific prices
-    public function sellerPrices(): HasMany
+    // Store-specific seller prices
+    public function storeSellerPrices()
     {
-        return $this->hasMany(SellerPrice::class, 'item_variant_id');
-        // 'item_variant_id' is the foreign key in the seller_prices table pointing to this variant
+        return $this->hasMany(StoreVariantSellerPrice::class, 'store_variant_id');
     }
+
 
 
     protected static function booted()
@@ -197,8 +214,9 @@ class ItemVariant extends Model
     // In ItemVariant.php
     public function storeVariants()
     {
-        return $this->hasMany(StoreVariant::class, 'item_variant_id', 'id');
+        return $this->hasMany(StoreVariant::class, 'item_variant_id');
     }
+
 
     public function item_stock()
     {

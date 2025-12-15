@@ -189,20 +189,23 @@ $sortedVariants = $filteredVariants->sort(function($a, $b) use ($sortField, $sor
         <tbody>
 
             @forelse($sortedVariants as $variant)
-                @php
-                    $images = is_array($variant->images) ? $variant->images : json_decode($variant->images, true) ?? [];
-                @endphp
+
                 <tr>
                     <td>{{ $loop->iteration }}</td>
 
                     {{-- Image --}}
                     <td>
-                        @if (count($images))
-                            <img src="{{ asset('storage/' . $images[0]) }}" class="object-cover w-8 h-8 rounded" alt="Variant Image">
+                        @if (!empty($variant->images))
+                            <img
+                                src="{{ asset($variant->images[0]) }}"
+                                class="object-cover w-8 h-8 rounded"
+                                alt="Variant Image"
+                            >
                         @else
                             —
                         @endif
                     </td>
+
 
                     {{-- Color --}}
                     <td>{!! $render_color($variant) !!}</td>

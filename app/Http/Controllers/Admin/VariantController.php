@@ -16,6 +16,7 @@ use App\Models\Customer;
 use App\Models\User; // for sellers
 use App\Models\Store;
 
+
 class VariantController extends Controller
 {
     /**
@@ -23,6 +24,21 @@ class VariantController extends Controller
      */
     public function index(Item $item)
     {
+        /* ================================
+         * ENTRY POINT
+         * ================================ */
+        Log::info('2L, Variants index called', [
+            'item_id' => $item->id,
+            'request' => request()->all(),
+            'wants_json' => request()->wantsJson(),
+        ]);
+
+        debugbar()->info('1D,Index called for item', $item->id);
+
+
+        /* ================================
+         * LOAD RELATIONS
+         * ================================ */
         $item->load([
             'variants',
             'colors',
@@ -32,11 +48,45 @@ class VariantController extends Controller
             }
         ]);
 
+        /* ================================
+         * Log RELATIONS
+         * ================================ */
+        Log::debug('3L, Item Variation relations loaded', [
+            'variants_count' => $item->variants->count(),
+            'colors_count' => $item->colors->count(),
+            'sizes_count' => $item->sizes->count(),
+            'packaging_types_count' => $item->packagingTypes->count(),
+        ]);
+
+        debugbar()->info('2D, Relations loaded', [
+            'variants' => $item->variants->count(),
+            'colors' => $item->colors->count(),
+            'sizes' => $item->sizes->count(),
+            'packagingTypes' => $item->packagingTypes->count(),
+        ]);
+
+
+        /* ================================
+         * VARIANTS COLLECTION
+         * ================================ */
+
         // Get variants collection
         $variants = $item->variants;
 
+        /* ================================
+         * Log Initial variants collection
+         * ================================ */
+        Log::debug('4L, Initial variants collection', [
+            'count' => $variants->count(),
+        ]);
+
+        /* ================================
+         * FILTERING
+         * ================================ */
+
         // --- Filtering by status ---
         $currentFilter = request('filter', 'all');
+
         $variants = match ($currentFilter) {
             'active' => $variants->where('status', 'active'),
             'inactive' => $variants->where('status', 'inactive'),
@@ -45,9 +95,31 @@ class VariantController extends Controller
             default => $variants,
         };
 
+
+        /* ================================
+         * Log Variants after filtering
+         * ================================ */
+        Log::debug('5L, Variants after filtering', [
+            'after_count' => $variants->count(),
+        ]);
+
+        debugbar()->info('3D,Filter applied', [
+            'filter' => $currentFilter,
+            'count' => $variants->count(),
+        ]);
+
+
+        /* ================================
+         * SORTING
+         * ================================ */
         // --- Optional: Sorting ---
         $sort = request('sort', 'id'); // default sort by ID
         $direction = request('direction', 'asc');
+
+        Log::debug('6L, Sorting variants', [
+            'sort' => $sort,
+            'direction' => $direction,
+        ]);
 
         $variants = match ($sort) {
             'price' => $direction === 'asc' ? $variants->sortBy('price') : $variants->sortByDesc('price'),
@@ -56,7 +128,42 @@ class VariantController extends Controller
             default => $direction === 'asc' ? $variants->sortBy('id') : $variants->sortByDesc('id'),
         };
 
+        Log::debug('7L, Variants sorted', [
+            'first_variant_id' => optional($variants->first())->id,
+        ]);
+
+        debugbar()->info('4D,Sorting applied', [
+            'sort' => $sort,
+            'direction' => $direction,
+            'first_id' => optional($variants->first())->id,
+        ]);
+
+        /* ================================
+         * SAMPLE DATA (SAFE)
+         * ================================ */
+        debugbar()->debug(
+            $variants->take(3)->map(fn($v) => [
+                'id' => $v->id,
+                'status' => $v->status,
+                'price' => $v->price,
+            ]),
+            '5D,Sample variants'
+        );
+
+        Log::debug('8L, First variant structure', $variants->first()?->toArray());
+
+
+        /* ================================
+         * RESPONSE TYPE
+         * ================================ */
         if (request()->wantsJson()) {
+
+            Log::info('9L, Returning JSON response', [
+                'variants_count' => $variants->count(),
+            ]);
+
+            debugbar()->info('6D, Returning JSON response');
+
             // Return JSON for API
             return response()->json([
                 'item' => $item,
@@ -66,6 +173,18 @@ class VariantController extends Controller
                 'packagingTypes' => $item->packagingTypes,
             ]);
         }
+
+        Log::info('10L, Returning Blade view admin.variants.index', [
+            'variants_count' => $variants->count(),
+        ]);
+
+        debugbar()->info('7D, Returning Blade view');
+
+
+
+        /* ================================
+         * VIEW RESPONSE
+         * ================================ */
 
         // Return Blade view for web
         return view('admin.variants.index', [
@@ -299,16 +418,18 @@ class VariantController extends Controller
 
     public function edit(ItemVariant $variant)
     {
-        // Load relationships
-        $variant->load('item.colors', 'item.sizes', 'item.packagingTypes', 'customerPrices', 'sellerPrices', 'stores');
+        // Pick a store, for example the first related store
+        $store = $variant->storeVariants->first()?->store;
 
-        // Load all customers and sellers for the dropdown
+        $variant->load('item.colors', 'item.sizes', 'item.packagingTypes', 'storeVariants.store');
+
         $customers = Customer::all();
         $sellers = User::where('role', 'seller')->get();
-        $stores = Store::all(); // <-- add this
+        $stores = Store::all();
 
-        return view('admin.variants.edit', compact('variant', 'customers', 'sellers', 'stores'));
+        return view('admin.variants.edit', compact('variant', 'customers', 'sellers', 'stores', 'store'));
     }
+
 
 
     /**

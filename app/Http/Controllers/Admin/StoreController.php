@@ -8,6 +8,7 @@ use App\Models\Item;
 use App\Models\ItemVariant;
 use App\Models\ItemStock;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class StoreController extends Controller
 {
@@ -67,6 +68,34 @@ class StoreController extends Controller
             ],
         ];
 
+        $storeVariant = $variant->storeVariants()->where('store_id', $store->id)->first();
+        $sellerPrices = $storeVariant?->sellerPrices ?? collect();
+        $customerPrices = $storeVariant?->customerPrices ?? collect();
+
+        // Prepare data for Alpine
+        $variantData = [
+            'store_price' => $storeVariant?->price ?? $variant->price,
+            'store_discount_price' => $storeVariant?->discount_price ?? null,
+            'store_discount_ends_at' => optional($storeVariant?->discount_ends_at)->format('Y-m-d\TH:i'),
+
+            'seller_prices' => $sellerPrices->map(fn($p) => [
+                'seller_id' => $p->seller_id,
+                'price' => $p->price,
+                'discount_price' => $p->discount_price,
+                'discount_ends_at' => optional($p->discount_ends_at)->format('Y-m-d\TH:i'),
+            ]),
+
+            'customer_prices' => $customerPrices->map(fn($p) => [
+                'customer_id' => $p->customer_id,
+                'price' => $p->price,
+                'discount_price' => $p->discount_price,
+                'discount_ends_at' => optional($p->discount_ends_at)->format('Y-m-d\TH:i'),
+            ]),
+        ];
+
+        // Load relationships
+        $variant->load('item.colors', 'item.sizes', 'item.packagingTypes', 'storeVariants.sellerPrices', 'storeVariants.customerPrices', 'storeVariants');
+
         // Get items linked to this store via store_variant table
         $items = Item::whereHas('variants', function ($q) use ($store) {
             $q->whereIn('id', function ($sub) use ($store) {
@@ -76,7 +105,7 @@ class StoreController extends Controller
             });
         })->get();
 
-        return view('admin.stores.edit_variant', compact('store', 'item', 'variant', 'storeData', 'items'));
+        return view('admin.stores.edit_variant', compact('store', 'item', 'variant', 'storeData', 'items', 'variantData'));
     }
 
 
@@ -85,6 +114,8 @@ class StoreController extends Controller
     public function updateVariant(Request $request, Store $store, Item $item, ItemVariant $variant)
     {
         $data = $request->validate([
+            'store_price' => 'required|numeric|min:0',
+            'store_discount_price' => 'nullable|numeric|min:0',
             'price' => 'required|numeric|min:0',
             'discount_price' => 'nullable|numeric|min:0',
             'stock' => 'nullable|integer|min:0',
@@ -96,15 +127,15 @@ class StoreController extends Controller
         $store->variants()->syncWithoutDetaching([
             $variant->id => [
                 'price' => $data['price'],
-                'discount_price' => $data['discount_price'] ?? null,
-                'stock' => $data['stock'] ?? 0,
+                'discount_price' => $data['discount_price'] !== '' ? $data['discount_price'] : null,
                 'active' => $data['status'] === 'active',
                 'discount_ends_at' => $data['discount_ends_at'] ?? null,
             ]
         ]);
 
-        return redirect()->route('stores.items.variants', [$store->id, $item->id])
+        return redirect()->route('admin.stores.items.variants', [$store->id, $item->id])
             ->with('success', 'Variant updated successfully for this store.');
+
     }
 
 

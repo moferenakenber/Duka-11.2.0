@@ -22,11 +22,11 @@
                     </h2>
 
                     {{-- Store-specific Price --}}
-                    <div class="mt-1">
+                    {{-- <div class="mt-1">
                         <span class="text-2xl font-extrabold text-emerald-600">
                             ${{ number_format($item->store_price ?? $item->price, 2) }}
                         </span>
-                    </div>
+                    </div> --}}
 
                     {{-- Store Status --}}
                     @if(isset($item->pivot))

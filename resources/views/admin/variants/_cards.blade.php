@@ -40,14 +40,15 @@
             {{-- Header: image + color + size --}}
             <div class="flex items-start justify-between pb-3 mb-3 border-b border-base-200">
                 <div class="flex flex-1 gap-3">
-                    {{-- Image --}}
-                    <div class="flex-shrink-0 w-12 h-12 overflow-hidden border rounded-lg shadow-sm border-base-300">
-                        @if(count($images))
-                            <img src="{{ asset('storage/' . $images[0]) }}" class="object-cover w-full h-full" alt="Variant Image">
-                        @else
-                            <div class="flex items-center justify-center w-full h-full text-xs bg-base-200 text-base-content/60">No Img</div>
-                        @endif
-                    </div>
+{{-- Image --}}
+<div class="flex-shrink-0 w-12 h-12 overflow-hidden border rounded-lg shadow-sm border-base-300">
+    @if(count($images))
+        <img src="{{ asset($images[0]) }}" alt="Variant Image" class="object-cover w-full h-full">
+    @else
+        <div class="flex items-center justify-center w-full h-full text-xs bg-base-200 text-base-content/60">No Img</div>
+    @endif
+</div>
+
 
                     {{-- Color & Size --}}
                     <div class="flex flex-col justify-center min-w-0">

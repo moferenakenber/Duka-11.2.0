@@ -67,6 +67,10 @@
                 $valA = $posA !== false ? $posA : 999;
                 $valB = $posB !== false ? $posB : 999;
                 break;
+            case 'price':
+                $valA = $a->price ?? 0;
+                $valB = $b->price ?? 0;
+                break;
             default:
                 $valA = $a->id;
                 $valB = $b->id;
@@ -75,7 +79,51 @@
     });
 @endphp
 
-<div class="flex flex-wrap gap-2 mb-4">
+@php
+function renderPackagingHierarchy($variant) {
+    if (!$variant->itemPackagingType) return '—';
+
+    $pack = $variant->itemPackagingType;
+
+    // Look for the pivot record for this item and this packaging type
+    $pivot = $variant->item->packagingTypes->firstWhere('id', $pack->id)->pivot ?? null;
+    $qty = $pivot->quantity ?? 1;
+
+    // Total pieces
+    $totalPieces = $variant->calculateTotalPieces();
+
+    switch (strtolower($pack->name)) {
+        case 'piece':
+            return "Piece ($qty pcs)";
+        case 'packet':
+            return "Packet ($qty pcs)";
+        case 'cartoon':
+            return "Cartoon ($qty pkt) ($totalPieces pcs)";
+        default:
+            return $pack->name . " ($qty pcs)";
+    }
+}
+@endphp
+
+
+
+
+@php
+$hasColor = $variants->contains(fn($v) => $v->itemColor);
+$hasSize = $variants->contains(fn($v) => $v->itemSize);
+$hasPackaging = $variants->contains(fn($v) => $v->itemPackagingType);
+
+$sortField = request('sort', 'id');
+$sortDirection = request('direction', 'asc');
+$packagingOrder = ['piece', 'packet', 'cartoon'];
+@endphp
+
+
+
+
+<div class="hidden overflow-x-auto shadow-xl md:block rounded-xl bg-base-100">
+
+    <div class="flex flex-wrap gap-2 mb-4">
     @foreach ($filters as $key => $data)
         <a href="{{ request()->fullUrlWithQuery(['filter' => $key]) }}"
            class="rounded-full px-3 py-1 text-sm font-medium transition
@@ -86,23 +134,64 @@
     @endforeach
 </div>
 
-<div class="overflow-x-auto shadow-xl rounded-xl bg-base-100 md:block">
     <table class="table w-full table-sm">
-        <thead>
-            <tr class="bg-base-200">
-                <th>#</th>
-                <th>Image</th>
-                <th>Color</th>
-                @if($has_size)
-                    <th>Size</th>
-                @endif
-                <th>Packaging</th>
-                <th>Price</th>
-                <th>Discount</th>
-                <th>Status</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
+<thead>
+<tr class="bg-base-200">
+    <th>#</th>
+    <th>Image</th>
+
+    @if($hasColor)
+        <th>
+            <a href="{{ request()->fullUrlWithQuery([
+                'sort' => 'color',
+                'direction' => $sortField === 'color' && $sortDirection === 'asc' ? 'desc' : 'asc'
+            ]) }}">
+                Color
+                @if($sortField === 'color') {{ $sortDirection === 'asc' ? '↑' : '↓' }} @endif
+            </a>
+        </th>
+    @endif
+
+    @if($hasSize)
+        <th>
+            <a href="{{ request()->fullUrlWithQuery([
+                'sort' => 'size',
+                'direction' => $sortField === 'size' && $sortDirection === 'asc' ? 'desc' : 'asc'
+            ]) }}">
+                Size
+                @if($sortField === 'size') {{ $sortDirection === 'asc' ? '↑' : '↓' }} @endif
+            </a>
+        </th>
+    @endif
+
+    @if($hasPackaging)
+        <th>
+            <a href="{{ request()->fullUrlWithQuery([
+                'sort' => 'packaging',
+                'direction' => $sortField === 'packaging' && $sortDirection === 'asc' ? 'desc' : 'asc'
+            ]) }}">
+                Packaging
+                @if($sortField === 'packaging') {{ $sortDirection === 'asc' ? '↑' : '↓' }} @endif
+            </a>
+        </th>
+    @endif
+
+    <th>
+        <a href="{{ request()->fullUrlWithQuery([
+            'sort' => 'price',
+            'direction' => $sortField === 'price' && $sortDirection === 'asc' ? 'desc' : 'asc'
+        ]) }}">
+            Price
+            @if($sortField === 'price') {{ $sortDirection === 'asc' ? '↑' : '↓' }} @endif
+        </a>
+    </th>
+
+    <th>Discount</th>
+    <th>Status</th>
+    <th>Actions</th>
+</tr>
+</thead>
+
         <tbody>
             @forelse($sortedVariants as $variant)
                 @php
@@ -112,9 +201,14 @@
                     <td>{{ $loop->iteration }}</td>
 
                     {{-- Image --}}
+                    {{-- Image --}}
                     <td>
-                        @if (count($images))
-                            <img src="{{ asset('storage/' . $images[0]) }}" class="object-cover w-8 h-8 rounded" alt="Variant Image">
+                        @if (!empty($variant->images))
+                            <img
+                                src="{{ asset($variant->images[0]) }}"
+                                class="object-cover w-8 h-8 rounded"
+                                alt="Variant Image"
+                            >
                         @else
                             —
                         @endif
@@ -129,7 +223,12 @@
                     @endif
 
                     {{-- Packaging --}}
-                    <td>{{ $variant->itemPackagingType->name ?? '—' }}</td>
+                    {{-- <td>{{ $variant->itemPackagingType->name ?? '—' }}</td> --}}
+                    {{-- Packaging --}}
+                    <td class="text-xs">
+                        {!! renderPackagingHierarchy($variant) !!}
+                    </td>
+
 
                     {{-- Store Price --}}
                     <td class="font-bold text-success">${{ number_format($variant->store_price ?? 0, 2) }}</td>
@@ -163,4 +262,5 @@
             @endforelse
         </tbody>
     </table>
+
 </div>

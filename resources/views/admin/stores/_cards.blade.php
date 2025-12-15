@@ -29,6 +29,33 @@
     };
 @endphp
 
+@php
+function renderPackagingMobile($variant) {
+    if (!$variant->itemPackagingType) return '—';
+
+    $pack = $variant->itemPackagingType;
+
+    // Get the correct pivot for this variant's packaging type
+    $pivot = $variant->item->packagingTypes->firstWhere('id', $pack->id)->pivot ?? null;
+    $qty = $pivot->quantity ?? 1;
+
+    // Total pieces using your existing function
+    $totalPieces = $variant->calculateTotalPieces();
+
+    switch (strtolower($pack->name)) {
+        case 'piece':
+            return "Piece ($qty pcs)";
+        case 'packet':
+            return "Packet ($qty pcs)";
+        case 'cartoon':
+            return "Cartoon ($qty pkt) ($totalPieces pcs)";
+        default:
+            return $pack->name . " ($qty pcs)";
+    }
+}
+@endphp
+
+
 <div class="space-y-2 md:hidden">
     @forelse($variants as $variant)
         @php
@@ -43,7 +70,7 @@
                     {{-- Image --}}
                     <div class="flex-shrink-0 w-12 h-12 overflow-hidden border rounded-lg shadow-sm border-base-300">
                         @if(count($images))
-                            <img src="{{ asset('storage/' . $images[0]) }}" class="object-cover w-full h-full" alt="Variant Image">
+                            <img src="{{ asset($images[0]) }}" alt="Variant Image" class="object-cover w-full h-full">
                         @else
                             <div class="flex items-center justify-center w-full h-full text-xs bg-base-200 text-base-content/60">No Img</div>
                         @endif
@@ -79,33 +106,45 @@
             </div>
 
             {{-- Attributes: Packaging + Size + Price + Discount --}}
-            <div class="grid grid-cols-4 gap-2 text-xs">
-                <div>
+            <div class="grid items-start grid-cols-4 text-xs gap-x-4">
+
+
+
+                <div class="min-w-0 col-span-2">
                     <span class="block font-medium text-base-content/60">Packaging</span>
-                    <span class="font-bold whitespace-nowrap">
-                        {{ $variant->itemPackagingType ? $variant->itemPackagingType->name . ' (' . $variant->calculateTotalPieces() . ' pcs)' : '—' }}
+                    <span class="block font-bold truncate whitespace-nowrap">
+                        {!! renderPackagingMobile($variant) !!}
                     </span>
                 </div>
+
                 @if($variant->itemSize)
                 <div>
                     <span class="block font-medium text-base-content/60">Size</span>
                     <span class="font-bold whitespace-nowrap">{{ $variant->itemSize->name }}</span>
                 </div>
                 @endif
-                <div>
+                <div class="min-w-0 col-span-1">
                     <span class="block font-medium text-base-content/60">Price</span>
-                    <span class="font-bold text-success">${{ number_format($variant->price, 2) }}</span>
-                </div>
-                <div>
-                    <span class="block font-medium text-base-content/60">Discount</span>
-                    <span class="font-bold text-warning">
-                        {{ $variant->discount_price > 0 ? '$' . number_format($variant->discount_price, 2) : '—' }}
+                    <span class="font-bold text-success whitespace-nowrap">
+                        ${{ number_format($variant->store_price ?? $variant->price, 2) }}
                     </span>
                 </div>
+
+                <div class="min-w-0 col-span-1">
+                    <span class="block font-medium text-base-content/60">Discount</span>
+                    <span class="font-bold text-warning whitespace-nowrap">
+                        {{ ($variant->store_discount_price ?? 0) > 0 ? '$' . number_format($variant->store_discount_price, 2) : '—' }}
+                    </span>
+                </div>
+
+
             </div>
 
             <div class="flex justify-end pt-2 border-t border-base-100">
-                <a href="#" class="btn btn-primary btn-sm">Edit</a>
+                    <a href="{{ route('admin.stores.items.variants.edit', [$store->id, $variant->item_id, $variant->id]) }}"
+                        class="btn btn-primary btn-sm">
+                            Edit
+                        </a>
             </div>
 
         </div>

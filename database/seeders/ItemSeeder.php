@@ -40,10 +40,10 @@ class ItemSeeder extends Seeder
                 ],
 
                 'variant_images' => [
-                    '1-1-1' => [asset("images/product_images/Noteit_red_small_piece_1.jpg"), asset("images/product_images/Noteit_red_small_piece_2.jpg")],
-                    '1-2-1' => [asset("images/product_images/Noteit_red_medium_piece_1.jpg")],
-                    '2-1-1' => [asset("images/product_images/Noteit_blue_small_piece_1.jpg")],
-                    '2-2-2' => [asset("images/product_images/Noteit_blue_medium_box_1.jpg")],
+                    '1-1-1' => ["images/product_images/Noteit_red_small_piece_1.jpg", "images/product_images/Noteit_red_small_piece_2.jpg"],
+                    '1-2-1' => ["images/product_images/Noteit_red_medium_piece_1.jpg"],
+                    '2-1-1' => ["images/product_images/Noteit_blue_small_piece_1.jpg"],
+                    '2-2-2' => ["images/product_images/Noteit_blue_medium_box_1.jpg"],
                 ],
             ],
 
@@ -73,8 +73,8 @@ class ItemSeeder extends Seeder
                 ],
 
                 'variant_images' => [
-                    '3-2-2' => [asset("images/product_images/Ring_gold_medium_box_1.jpg")],
-                    '4-3-2' => [asset("images/product_images/Ring_silver_large_box_1.jpg")],
+                    '3-2-2' => ["images/product_images/Ring_gold_medium_box_1.jpg"],
+                    '4-3-2' => ["images/product_images/Ring_silver_large_box_1.jpg"]
                 ],
             ],
 
@@ -111,9 +111,16 @@ class ItemSeeder extends Seeder
                 ],
 
                 'variant_images' => [
-                    '2-0-1' => [asset("images/product_images/Bic_Blue_Single_1.jpg")],
-                    '5-0-2' => [asset("images/product_images/Bic_Black_Packet_1.jpg")],
-                    '1-0-3' => [asset("images/product_images/Bic_Red_Box_1.jpg")],
+                    'Bic Pen-Blue-Null-1' => [ // ItemName-Color-Size-Packaging
+                        "images/product_images/Bic_Blue_Single_1.jpg",
+                        "images/product_images/Bic_Blue_Single_2.jpg",
+                    ],
+                    'Bic Pen-Black-Null-2' => [
+                        "images/product_images/Bic_Black_Packet_1.jpg",
+                    ],
+                    'Bic Pen-Red-Null-3' => [
+                        "images/product_images/Bic_Red_Box_1.jpg",
+                    ],
                 ],
             ],
 
@@ -185,8 +192,39 @@ class ItemSeeder extends Seeder
                             * (1 - $packDiscount / 100)
                             * (1 - $colorDiscount / 100);
 
-                        $key = "{$colorId}-" . ($sizeId ?? 0) . "-{$pkg['id']}";
-                        $variantImages = $itemData['variant_images'][$key] ?? ["images/product_images/{$slugName}_Color_{$colorId}.jpg"];
+                        $colorName = \App\Models\ItemColor::find($colorId)?->name ?? 'Color_' . $colorId;
+                        $sizeName = $sizeId ? \App\Models\ItemSize::find($sizeId)?->name : 'Null';
+                        $packName = \App\Models\ItemPackagingType::find($pkg['id'])?->name ?? $pkg['id'];
+
+                        $key = "{$itemData['name']}-{$colorName}-{$sizeName}-{$packName}";
+
+                        $variantImages = [];
+                        $slugItem = \Illuminate\Support\Str::slug($itemData['name']);
+                        $slugColor = \Illuminate\Support\Str::slug($colorName);
+                        $slugSize = \Illuminate\Support\Str::slug($sizeName);
+                        $slugPack = \Illuminate\Support\Str::slug($packName);
+
+                        $variantFolder = "images/product_images/{$slugItem}/{$slugColor}/{$slugSize}/{$slugPack}/";
+
+                        // 1️⃣ Create folder if it doesn't exist
+                        $path = public_path($variantFolder);
+                        if (!is_dir($path)) {
+                            mkdir($path, 0755, true); // recursive creation
+                        }
+
+                        // 2️⃣ Generate image paths
+                        $variantImages = [];
+                        for ($i = 1; $i <= 3; $i++) {
+                            $variantImages[] = $variantFolder . "image_{$i}.jpg";
+                        }
+
+
+
+
+
+
+                        //$variantImages = $itemData['variant_images'][$key] ?? ["images/product_images/{$slugName}_Color_{$colorId}.jpg"];
+
                         if (empty($variantImages))
                             $variantImages = ["images/product_images/default.jpg"];
 
@@ -198,7 +236,7 @@ class ItemSeeder extends Seeder
                             'price' => $finalPrice,
                             'discount_price' => null,
                             'barcode' => null,
-                            'images' => json_encode($variantImages),
+                            'images' => $variantImages,
                             'is_active' => $variantShouldBeActive,
                             'status' => $variantShouldBeActive ? 'active' : 'inactive',
                         ]);

@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="text-xl font-semibold leading-tight text-gray-800 dark:text-gray-200">
-            {{ __('Edit Store Variant') }} - {{ $variant->item->product_name }} ({{ $store->name }})
+            {{ __('Edit Variant') }} - {{ $variant->item->product_name }}
         </h2>
     </x-slot>
 
@@ -21,7 +21,7 @@
             'discount_ends_at' => $storePivot?->discount_ends_at?->format('Y-m-d\TH:i') ?? null,
             'barcode' => $variant->barcode,
             'status' => $variant->status ?? 'inactive',
-            'images' => $variant->images ? json_decode($variant->images) : [],
+            'images' => $variant->images ?? [], // no json_decode
         ];
     @endphp
 
