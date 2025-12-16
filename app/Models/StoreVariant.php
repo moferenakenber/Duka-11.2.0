@@ -38,4 +38,17 @@ class StoreVariant extends Model
     {
         return $this->belongsTo(ItemVariant::class, 'item_variant_id');
     }
+
+    // Store.php
+    public function sellers()
+    {
+        return $this->belongsToMany(User::class, 'store_sellers', 'store_id', 'user_id');
+        // Adjust table & columns if different
+    }
+
+    public function customers()
+    {
+        return $this->belongsToMany(Customer::class, 'store_customers', 'store_id', 'customer_id');
+        // Adjust table & columns if different
+    }
 }

@@ -17,10 +17,16 @@ return new class extends Migration {
             $table->decimal('price', 12, 2); // custom price for this seller and store variant
             $table->decimal('discount_price', 12, 2)->nullable();
             $table->timestamp('discount_ends_at')->nullable(); // optional countdown for discount
+            $table->boolean('active')->default(true);
+
 
             $table->timestamps();
 
-            $table->unique(['store_variant_id', 'seller_id']); // one price per seller per store variant
+            // One price per seller per store variant
+            $table->unique(['store_variant_id', 'seller_id'], 'store_variant_seller_unique');
+
+            // Performance
+            $table->index(['seller_id']);
         });
     }
 

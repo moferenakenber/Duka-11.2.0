@@ -15,7 +15,9 @@ class Customer extends Model
         'phone_number',
         'email',
         'city',
-        'created_by'
+        'created_by',
+        'store_id',
+        'tin_number',
     ];
 
     //     public function user()
@@ -26,14 +28,14 @@ class Customer extends Model
 
     /**
      * Get the user that created the customer.
-      */
+     */
     // public function createdBy()
     // {
     //     return $this->belongsTo(User::class, 'created_by');
     // }
 
 
-        /**
+    /**
      * Get the creator (user) who created this customer.
      */
     public function creator()

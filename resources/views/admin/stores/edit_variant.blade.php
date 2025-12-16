@@ -23,40 +23,39 @@
         }
 
         // Store-specific pivot
+
         $pivot = $store->variants()->where('item_variant_id', $variant->id)->first()?->pivot;
 
-        // Example seller & customer pivot (adjust according to your DB structure)
         $sellerPivot = $pivot?->seller ?? null;
         $customerPivot = $pivot?->customer ?? null;
+
+        $storeDiscountEnds = $pivot?->discount_ends_at ? \Carbon\Carbon::parse($pivot->discount_ends_at)->format('Y-m-d\TH:i') : null;
+        $sellerDiscountEnds = $sellerPivot?->discount_ends_at ? \Carbon\Carbon::parse($sellerPivot->discount_ends_at)->format('Y-m-d\TH:i') : null;
+        $customerDiscountEnds = $customerPivot?->discount_ends_at ? \Carbon\Carbon::parse($customerPivot->discount_ends_at)->format('Y-m-d\TH:i') : null;
 
         $variantData = [
             'store_price' => $pivot->price ?? 0,
             'store_discount_price' => $pivot->discount_price ?? null,
-            'store_discount_ends_at' => optional($pivot)?->discount_ends_at?->format('Y-m-d\TH:i'),
+            'store_discount_ends_at' => $storeDiscountEnds,
 
-            'seller_price' => $sellerPivot->price ?? null,
-            'seller_discount_price' => $sellerPivot->discount_price ?? null,
-            'seller_discount_ends_at' => optional($sellerPivot)?->discount_ends_at?->format('Y-m-d\TH:i'),
+            'seller_price' => $sellerPivot?->price,
+            'seller_discount_price' => $sellerPivot?->discount_price,
+            'seller_discount_ends_at' => $sellerDiscountEnds,
 
-            'customer_price' => $customerPivot->price ?? null,
-            'customer_discount_price' => $customerPivot->discount_price ?? null,
-            'customer_discount_ends_at' => optional($customerPivot)?->discount_ends_at?->format('Y-m-d\TH:i'),
+            'customer_price' => $customerPivot?->price,
+            'customer_discount_price' => $customerPivot?->discount_price,
+            'customer_discount_ends_at' => $customerDiscountEnds,
 
             'status' => $pivot->status ?? 'inactive',
         ];
+@endphp
 
-    @endphp
+<div class="p-6 mb-6 rounded-xl bg-base-200" x-data="storeVariantForm({{ json_encode($variantData) }})">
 
-    <div class="p-6 mb-6 rounded-xl bg-base-200" x-data="storeVariantForm({{ json_encode($variantData) }})">
-
-       <form method="POST" action="{{ route('admin.stores.items.variants.update', [$store->id, $variant->item_id, $variant->id]) }}" enctype="multipart/form-data">
-    @csrf
-    @method('PUT')
-
-
-
-
-            {{-- ================= READ-ONLY VARIANT INFO ================= --}}
+    <form method="POST" action="{{ route('admin.stores.items.variants.update', [$store->id, $variant->item_id, $variant->id]) }}" enctype="multipart/form-data">
+        @csrf
+        @method('PUT')
+          {{-- ================= READ-ONLY VARIANT INFO ================= --}}
             <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-6">
                 <div class="p-4 border rounded-lg">
                     <span class="block text-xs text-gray-500">Variant ID</span>
@@ -103,71 +102,78 @@
                 </div>
             </div>
 
-            {{-- ================= EDITABLE FIELDS ================= --}}
-            <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-3 lg:grid-cols-6">
 
-                {{-- Store price (read-only) --}}
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Store Price</label>
-                    <input type="number" step="0.01" name="store_price" x-model.number="store_price" class="w-full input input-sm input-bordered">
+        {{-- STORE PRICE --}}
+        <div>
+            <label class="block mb-1 text-xs font-semibold text-gray-600">Store Price</label>
+            <input type="number" step="0.01" name="store_price" x-model.number="store_price" class="w-full input input-sm input-bordered">
+        </div>
 
-                </div>
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Store Discount Price</label>
-                    <input type="number" step="0.01" value="{{ $variantData['store_discount_price'] }}" class="w-full bg-gray-100 input input-sm input-bordered" readonly>
-                </div>
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Store Discount Ends</label>
-                    <input type="datetime-local" value="{{ $variantData['store_discount_ends_at'] }}" class="w-full bg-gray-100 input input-sm input-bordered" readonly>
-                </div>
+        <div>
+            <label class="block mb-1 text-xs font-semibold text-gray-600">Store Discount Price</label>
+            <input type="number" step="0.01" x-model.number="store_discount_price" class="w-full input input-sm input-bordered" readonly>
+        </div>
 
-                {{-- Seller Price --}}
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Seller Price</label>
+
+        {{-- SELLER PRICE --}}
+        <div x-data="{ showSeller: {{ $sellerPivot ? 'true' : 'false' }} }">
+            <label class="block mb-1 text-xs font-semibold text-gray-600">Seller Price</label>
+
+            <template x-if="showSeller">
+                <div class="space-y-1">
                     <input type="number" step="0.01" name="seller_price" x-model.number="seller_price" class="w-full input input-sm input-bordered">
-                </div>
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Seller Discount Price</label>
-                    <input type="number" step="0.01" name="seller_discount_price" x-model.number="seller_discount_price" class="w-full input input-sm input-bordered">
-                </div>
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Seller Discount Ends</label>
+                    <input type="number" step="0.01" name="seller_discount_price" x-model.number="seller_discount_price" placeholder="Discount Price" class="w-full input input-sm input-bordered">
                     <input type="datetime-local" name="seller_discount_ends_at" x-model="seller_discount_ends_at" class="w-full input input-sm input-bordered">
                 </div>
+            </template>
 
-                {{-- Customer Price --}}
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Customer Price</label>
+            <template x-if="!showSeller">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-gray-500">No Seller Price</span>
+                    <button type="button" class="btn btn-xs btn-outline" @click="showSeller = true; seller_price = 0;">Add Seller Price</button>
+                </div>
+            </template>
+        </div>
+
+        {{-- CUSTOMER PRICE --}}
+        <div x-data="{ showCustomer: {{ $customerPivot ? 'true' : 'false' }} }" class="mt-4">
+            <label class="block mb-1 text-xs font-semibold text-gray-600">Customer Price</label>
+
+            <template x-if="showCustomer">
+                <div class="space-y-1">
                     <input type="number" step="0.01" name="customer_price" x-model.number="customer_price" class="w-full input input-sm input-bordered">
-                </div>
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Customer Discount Price</label>
-                    <input type="number" step="0.01" name="customer_discount_price" x-model.number="customer_discount_price" class="w-full input input-sm input-bordered">
-                </div>
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Customer Discount Ends</label>
+                    <input type="number" step="0.01" name="customer_discount_price" x-model.number="customer_discount_price" placeholder="Discount Price" class="w-full input input-sm input-bordered">
                     <input type="datetime-local" name="customer_discount_ends_at" x-model="customer_discount_ends_at" class="w-full input input-sm input-bordered">
                 </div>
+            </template>
 
-                {{-- Status --}}
-                <div>
-                    <label class="block mb-1 text-xs font-semibold text-gray-600">Status</label>
-                    <select name="status" x-model="status" class="w-full input input-sm input-bordered">
-                        <option value="active">Active</option>
-                        <option value="inactive">Inactive</option>
-                    </select>
+            <template x-if="!showCustomer">
+                <div class="flex items-center gap-2">
+                    <span class="text-sm text-gray-500">No Customer Price</span>
+                    <button type="button" class="btn btn-xs btn-outline" @click="showCustomer = true; customer_price = 0;">Add Customer Price</button>
                 </div>
+            </template>
+        </div>
 
-            </div>
+        {{-- STATUS --}}
+<div class="mt-4">
+    <label class="block mb-1 text-base font-semibold text-gray-600">Status</label>
+    <select name="status" x-model="status" class="w-full input input-bordered !text-2xl !py-2">
+        <option value="active">Active</option>
+        <option value="inactive">Inactive</option>
+    </select>
+</div>
 
-            {{-- ================= ACTIONS ================= --}}
-            <div class="flex justify-end gap-3 pt-4 border-t">
-                <a href="{{ route('admin.stores.items.variants', [$store->id, $variant->item_id]) }}" class="btn btn-ghost">Cancel</a>
-                <button type="submit" class="btn btn-primary">Update Store Variant</button>
-            </div>
 
-        </form>
-    </div>
+
+        {{-- ACTIONS --}}
+        <div class="flex justify-end gap-3 pt-4 mt-4 border-t">
+            <a href="{{ route('admin.stores.items.variants', [$store->id, $variant->item_id]) }}" class="btn btn-ghost">Cancel</a>
+            <button type="submit" class="btn btn-primary">Update Store Variant</button>
+        </div>
+    </form>
+</div>
+
 
     {{-- ================= ALPINE ================= --}}
     <script>
@@ -186,8 +192,29 @@ function storeVariantForm(data) {
         customer_discount_ends_at: data.customer_discount_ends_at,
 
         status: data.status,
+
+        // Log everything in one place
+        logAll() {
+            console.log('--- Variant Prices & Status ---');
+            console.log('Store:', {
+                price: this.store_price,
+                discount_price: this.store_discount_price,
+                discount_ends_at: this.store_discount_ends_at,
+            });
+            console.log('Seller:', {
+                price: this.seller_price,
+                discount_price: this.seller_discount_price,
+                discount_ends_at: this.seller_discount_ends_at,
+            });
+            console.log('Customer:', {
+                price: this.customer_price,
+                discount_price: this.customer_discount_price,
+                discount_ends_at: this.customer_discount_ends_at,
+            });
+            console.log('Status:', this.status);
+            console.log('------------------------------');
+        }
     }
 }
-
     </script>
 </x-app-layout>

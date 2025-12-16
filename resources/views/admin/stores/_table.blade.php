@@ -194,9 +194,15 @@ $packagingOrder = ['piece', 'packet', 'cartoon'];
 
         <tbody>
             @forelse($sortedVariants as $variant)
-                @php
-                    $images = is_array($variant->images) ? $variant->images : json_decode($variant->images, true) ?? [];
-                @endphp
+
+            @php
+                $images = is_array($variant->images) ? $variant->images : json_decode($variant->images, true) ?? [];
+
+                // Copy price_ladder into a local variable
+                $priceLadder = $variant->price_ladder ?? [];
+                $lastPrice = !empty($priceLadder) ? end($priceLadder) : null;
+            @endphp
+
                 <tr>
                     <td>{{ $loop->iteration }}</td>
 
@@ -230,20 +236,23 @@ $packagingOrder = ['piece', 'packet', 'cartoon'];
                     </td>
 
 
-                    {{-- Store Price --}}
-                    <td class="font-bold text-success">${{ number_format($variant->store_price ?? 0, 2) }}</td>
-
-                    {{-- Store Discount --}}
-                    <td class="font-bold text-warning">
-                        {{ $variant->store_discount_price > 0 ? '$' . number_format($variant->store_discount_price, 2) : '—' }}
+                    {{-- Store Price / Final Price --}}
+                    <td class="font-bold text-success">
+                        ${{ number_format($lastPrice['price'] ?? 0, 2) }}
                     </td>
 
-                    {{-- Store Active Status --}}
+                    {{-- Discount Price --}}
+                    <td class="font-bold text-warning">
+                        {{ !empty($lastPrice['discount_price']) ? '$' . number_format($lastPrice['discount_price'], 2) : '—' }}
+                    </td>
+
+                    {{-- Status --}}
                     <td>
-                        <span class="badge text-white {{ $variant->store_active ? 'bg-green-600' : 'bg-gray-500' }}">
-                            {{ $variant->store_active ? 'Active' : 'Inactive' }}
+                        <span class="badge text-white {{ $lastPrice ? 'bg-green-600' : 'bg-gray-500' }}">
+                            {{ $lastPrice ? 'Active' : 'Inactive' }}
                         </span>
                     </td>
+
 
                     {{-- Actions --}}
                     <td>

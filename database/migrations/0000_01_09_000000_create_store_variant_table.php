@@ -19,6 +19,7 @@ return new class extends Migration {
             $table->timestamp('discount_ends_at')->nullable();
             $table->boolean('active')->default(true);
             $table->timestamps();
+            $table->unique(['store_id', 'item_variant_id']);
         });
 
     }

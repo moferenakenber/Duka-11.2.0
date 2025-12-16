@@ -59,7 +59,15 @@ function renderPackagingMobile($variant) {
 <div class="space-y-2 md:hidden">
     @forelse($variants as $variant)
         @php
+            // Images
             $images = is_array($variant->images) ? $variant->images : json_decode($variant->images, true) ?? [];
+
+            // Price ladder (copy to local var to avoid PHP error)
+            $priceLadder = $variant->price_ladder ?? [];
+            $lastPrice = !empty($priceLadder) ? end($priceLadder) : null;
+
+            // Status badge
+            $statusClass = $getStatusBadgeClass($variant->status);
         @endphp
 
         <div class="p-4 border shadow-lg card card-compact bg-base-100 border-base-200 rounded-xl">
@@ -126,14 +134,14 @@ function renderPackagingMobile($variant) {
                 <div class="min-w-0 col-span-1">
                     <span class="block font-medium text-base-content/60">Price</span>
                     <span class="font-bold text-success whitespace-nowrap">
-                        ${{ number_format($variant->store_price ?? $variant->price, 2) }}
+                        ${{ number_format($lastPrice['final'] ?? 0, 2) }}
                     </span>
                 </div>
 
                 <div class="min-w-0 col-span-1">
                     <span class="block font-medium text-base-content/60">Discount</span>
                     <span class="font-bold text-warning whitespace-nowrap">
-                        {{ ($variant->store_discount_price ?? 0) > 0 ? '$' . number_format($variant->store_discount_price, 2) : '—' }}
+                        {{ !empty($lastPrice['discount_price']) ? '$' . number_format($lastPrice['discount_price'], 2) : '—' }}
                     </span>
                 </div>
 

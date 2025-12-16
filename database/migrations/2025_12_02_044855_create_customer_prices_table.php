@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->decimal('price', 12, 2)->default(0);
             $table->decimal('discount_price', 12, 2)->nullable();
             $table->timestamp('discount_ends_at')->nullable();
+
             $table->timestamps();
 
         });

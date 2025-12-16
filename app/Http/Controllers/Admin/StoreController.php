@@ -9,6 +9,8 @@ use App\Models\ItemVariant;
 use App\Models\ItemStock;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use App\Services\PriceProvider;
 
 class StoreController extends Controller
 {
@@ -47,66 +49,82 @@ class StoreController extends Controller
 
     // Edit form
 // Show edit form for a specific variant in a store
+
+
     public function editVariant(Store $store, Item $item, ItemVariant $variant)
     {
-        // Prepare storeData for Alpine.js
-        $storeData = [
-            'id' => $store->id,
-            'name' => $store->name,
-            'location' => $store->location,
-            'status' => $store->status,
-            'store_prices' => [
-                [
-                    'variant_id' => $variant->id,
-                    'item_id' => $variant->item_id,
-                    'price' => $variant->store_price ?? $variant->price,
-                    'discount_price' => $variant->store_discount_price ?? 0,
-                    'stock' => $variant->store_stock ?? 0,
-                    'status' => $variant->store_active ? 'active' : 'inactive',
-                    'discount_ends_at' => $variant->discount_ends_at?->format('Y-m-d\TH:i') ?? null,
-                ]
-            ],
-        ];
+        $variant->load(
+            'item.colors',
+            'item.sizes',
+            'item.packagingTypes',
+            'storeVariants.sellerPrices',
+            'storeVariants.customerPrices',
+            'storeVariants'
+        );
 
         $storeVariant = $variant->storeVariants()->where('store_id', $store->id)->first();
-        $sellerPrices = $storeVariant?->sellerPrices ?? collect();
-        $customerPrices = $storeVariant?->customerPrices ?? collect();
+        $storeSellers = $store->sellers ?? collect();
+        $storeCustomers = $store->customers ?? collect();
 
-        // Prepare data for Alpine
+        // Prepare sellers data
+        $sellersData = $storeSellers->map(function ($seller) use ($storeVariant) {
+            $price = $storeVariant?->sellerPrices?->firstWhere('seller_id', $seller->id);
+            return [
+                'id' => $seller->id,
+                'name' => $seller->name,
+                'price' => $price->price ?? 0,
+                'discount_price' => $price->discount_price ?? 0,
+                'discount_ends_at' => $price?->discount_ends_at
+                    ? Carbon::parse($price->discount_ends_at)->format('Y-m-d\TH:i')
+                    : null,
+            ];
+        });
+
+        // Prepare customers data
+        $customersData = $storeCustomers->map(function ($customer) use ($storeVariant) {
+            $price = $storeVariant?->customerPrices?->firstWhere('customer_id', $customer->id);
+            return [
+                'id' => $customer->id,
+                'name' => $customer->first_name . ' ' . $customer->last_name,
+                'price' => $price->price ?? 0,
+                'discount_price' => $price->discount_price ?? 0,
+                'discount_ends_at' => $price?->discount_ends_at
+                    ? Carbon::parse($price->discount_ends_at)->format('Y-m-d\TH:i')
+                    : null,
+            ];
+        });
+
+        // Variant data for Alpine.js
         $variantData = [
             'store_price' => $storeVariant?->price ?? $variant->price,
-            'store_discount_price' => $storeVariant?->discount_price ?? null,
-            'store_discount_ends_at' => optional($storeVariant?->discount_ends_at)->format('Y-m-d\TH:i'),
-
-            'seller_prices' => $sellerPrices->map(fn($p) => [
-                'seller_id' => $p->seller_id,
-                'price' => $p->price,
-                'discount_price' => $p->discount_price,
-                'discount_ends_at' => optional($p->discount_ends_at)->format('Y-m-d\TH:i'),
-            ]),
-
-            'customer_prices' => $customerPrices->map(fn($p) => [
-                'customer_id' => $p->customer_id,
-                'price' => $p->price,
-                'discount_price' => $p->discount_price,
-                'discount_ends_at' => optional($p->discount_ends_at)->format('Y-m-d\TH:i'),
-            ]),
+            'store_discount_price' => $storeVariant?->discount_price ?? 0,
+            'store_discount_ends_at' => $storeVariant?->discount_ends_at
+                ? Carbon::parse($storeVariant->discount_ends_at)->format('Y-m-d\TH:i')
+                : null,
+            'status' => $storeVariant?->status ?? 'inactive',
+            'sellers' => $sellersData,
+            'customers' => $customersData,
         ];
 
-        // Load relationships
-        $variant->load('item.colors', 'item.sizes', 'item.packagingTypes', 'storeVariants.sellerPrices', 'storeVariants.customerPrices', 'storeVariants');
+        // CENTRAL LOG
+        \Log::info('Edit Variant Debug', [
+            'store_id' => $store->id,
+            'variant_id' => $variant->id,
+            'storeVariant' => $storeVariant?->toArray(),
+            'sellersData' => $sellersData->toArray(),
+            'customersData' => $customersData->toArray(),
+            'variantData' => $variantData,
+        ]);
 
-        // Get items linked to this store via store_variant table
-        $items = Item::whereHas('variants', function ($q) use ($store) {
-            $q->whereIn('id', function ($sub) use ($store) {
-                $sub->select('item_variant_id')
-                    ->from('store_variant')
-                    ->where('store_id', $store->id);
-            });
-        })->get();
 
-        return view('admin.stores.edit_variant', compact('store', 'item', 'variant', 'storeData', 'items', 'variantData'));
+        return view('admin.stores.edit_variant', compact(
+            'store',
+            'item',
+            'variant',
+            'variantData'
+        ));
     }
+
 
 
 
@@ -179,18 +197,61 @@ class StoreController extends Controller
             ->get()
             ->keyBy('item_variant_id');
 
-        // 4️⃣ Attach store-specific data to each variant
+        // Optional: get seller and customer IDs from request or context
+        $sellerId = request('seller_id');      // nullable
+        $customerId = request('customer_id');  // nullable
+
+        // 4️⃣ Attach stock and price ladder to each variant
         foreach ($variants as $variant) {
             $variant->store_stock = $stocks[$variant->id]->quantity ?? 0;
 
             $storeVariant = $storeVariants[$variant->id] ?? null;
 
-            $variant->store_price = $storeVariant?->price ?? $variant->price;
-            $variant->store_discount_price = $storeVariant?->discount_price ?? 0;
-            $variant->store_active = $storeVariant?->active ?? false;
+            if ($storeVariant) {
+                // Use PriceProvider to get full ladder
+                $variant->price_ladder = PriceProvider::getPriceLadder(
+                    storeVariantId: $storeVariant->id,
+                    storeId: $store->id,
+                    sellerId: $sellerId,
+                    customerId: $customerId
+                );
+
+                // Get the final price
+                $variant->final_price = PriceProvider::getFinalPrice($variant->price_ladder);
+            } else {
+                // No store variant exists
+                $variant->price_ladder = [];
+                $variant->final_price = null;
+            }
         }
 
         $item = Item::findOrFail($itemId);
+
+        // 🧾 ✅ SINGLE LOG ENTRY (everything in one place)
+        // 🧾 ✅ SINGLE LOG ENTRY
+        Log::info('Store Item Variants Loaded', [
+            'store' => [
+                'id' => $store->id,
+                'name' => $store->name,
+            ],
+            'item' => [
+                'id' => $item->id,
+                'name' => $item->product_name,
+            ],
+            'seller_id' => $sellerId,
+            'customer_id' => $customerId,
+            'variants' => $variants->map(function ($v) {
+                return [
+                    'id' => $v->id,
+                    'color' => $v->itemColor->name ?? null,
+                    'size' => $v->itemSize->name ?? null,
+                    'packaging' => $v->itemPackagingType->name ?? null,
+                    'stock' => $v->store_stock,
+                    'price_ladder' => $v->price_ladder,
+                    'final_price' => $v->final_price,
+                ];
+            })->toArray(),
+        ]);
 
         return view('admin.stores.item_variants', compact('store', 'item', 'variants'));
     }

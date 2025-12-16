@@ -33,4 +33,14 @@ class Store extends Model
             ->withPivot('price', 'discount_price', 'discount_ends_at')
             ->withTimestamps();
     }
+
+    public function sellers()
+    {
+        return $this->hasMany(User::class)->where('role', 'seller');
+    }
+
+    public function customers()
+    {
+        return $this->hasMany(Customer::class);
+    }
 }

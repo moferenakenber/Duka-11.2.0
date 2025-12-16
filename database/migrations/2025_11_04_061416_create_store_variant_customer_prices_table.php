@@ -14,10 +14,14 @@ return new class extends Migration {
             $table->decimal('price', 12, 2);
             $table->decimal('discount_price', 12, 2)->nullable();
             $table->timestamp('discount_ends_at')->nullable();
+            $table->boolean('active')->default(true);
             $table->timestamps();
 
-            // Shorter index name to avoid MySQL limit
-            $table->unique(['store_variant_id', 'customer_id'], 'store_var_cust_unique'); // one price per customer per store variant
+            // One price per customer per store variant
+            $table->unique(['store_variant_id', 'customer_id'], 'store_variant_customer_unique');
+
+            // Performance
+            $table->index(['customer_id']);
         });
     }
 
