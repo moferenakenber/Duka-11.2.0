@@ -190,6 +190,8 @@ class StoreController extends Controller
                 }
             ],
 
+            'discount_ends_at' => 'nullable|date',
+
             'manual_status' => ['required', 'in:auto,forced'],
 
             'forced_status' => [
@@ -375,32 +377,12 @@ class StoreController extends Controller
     ) {
         $data = $request->validate([
             'seller_id' => 'required|exists:users,id',
-
             'price' => ['required', 'numeric', 'min:0'],
-
-            'discount_price' => [
-                'nullable',
-                'numeric',
-                'min:0',
-                'lte:price',
-            ],
-
-            'discount_ends_at' => [
-                'nullable',
-                'date',
-                function ($attr, $value, $fail) use ($request) {
-                    if ($request->discount_price > 0 && !$value) {
-                        $fail('Discount end date is required when a discount is set.');
-                    }
-                }
-            ],
+            'discount_price' => ['nullable', 'numeric', 'min:0', 'lte:price'],
+            'discount_ends_at' => ['nullable', 'date'],
         ]);
 
-
-        // Get the store_variant row
-        $storeVariant = $variant->storeVariants()
-            ->where('store_id', $store->id)
-            ->firstOrFail();
+        $storeVariant = $variant->storeVariants()->where('store_id', $store->id)->firstOrFail();
 
         StoreVariantSellerPrice::updateOrCreate(
             [
@@ -415,9 +397,23 @@ class StoreController extends Controller
             ]
         );
 
+        // ✅ Return JSON instead of redirect
+        if ($request->expectsJson() || $request->isJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Seller price saved successfully'
+            ]);
+        }
 
-        return back()->with('success', 'Seller price saved successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Seller price saved successfully'
+        ]);
     }
+
+
+
+
 
     public function updateCustomerPrice(
         Request $request,
@@ -427,27 +423,22 @@ class StoreController extends Controller
     ) {
         $data = $request->validate([
             'customer_id' => 'required|exists:customers,id',
-
             'price' => ['required', 'numeric', 'min:0'],
-
-            'discount_price' => [
-                'nullable',
-                'numeric',
-                'min:0',
-                'lte:price',
-            ],
-
+            'discount_price' => ['nullable', 'numeric', 'min:0', 'lte:price'],
             'discount_ends_at' => [
                 'nullable',
                 'date',
-                function ($attr, $value, $fail) use ($request) {
+                function ($attribute, $value, $fail) use ($request) {
                     if ($request->discount_price > 0 && !$value) {
                         $fail('Discount end date is required when a discount is set.');
+                    }
+
+                    if ($value && strtotime($value) <= now()->timestamp) {
+                        $fail('Discount end date must be in the future.');
                     }
                 }
             ],
         ]);
-
 
         // Get the store_variant row
         $storeVariant = $variant->storeVariants()
@@ -467,8 +458,11 @@ class StoreController extends Controller
             ]
         );
 
-
-        return back()->with('success', 'Customer price saved successfully.');
+        return response()->json([
+            'success' => true,
+            'message' => 'Customer price saved successfully'
+        ]);
     }
+
 
 }

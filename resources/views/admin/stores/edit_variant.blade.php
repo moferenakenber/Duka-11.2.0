@@ -5,7 +5,14 @@
         </h2>
     </x-slot>
 
-<div class="p-6 mb-6 rounded-xl bg-base-200" x-data="storeVariantForm(@js($variantData))">
+<div class="p-6 mb-6 rounded-xl bg-base-200"
+     x-data="storeVariantForm({
+        ...@js($variantData),
+        storeId: {{ $store->id }},
+        itemId: {{ $item->id }},
+        variantId: {{ $variant->id }}
+     })">
+
 
     <div x-show="showMessage"
         x-transition
@@ -92,58 +99,80 @@
 
         </div>
 
+        {{-- STORE DISCOUNT ENDS --}}
+        <div class="mb-4" x-show="store_discount_price > 0">
+            <label class="block mb-1 text-xs font-semibold text-gray-600">Discount Ends</label>
+            <input type="datetime-local"
+                name="store_discount_ends_at"
+                x-model="store_discount_ends_at"
+                class="w-full input input-sm input-bordered">
+        </div>
+
         {{-- SELLERS --}}
        <div class="mb-6">
             <label class="block mb-2 text-xs font-semibold text-gray-600">Sellers Prices</label>
 
+
             <template x-for="(seller, index) in sellers" :key="seller.id">
-                <div class="p-4 mb-2 space-y-2 border rounded-lg bg-sky-50">
+                <div
+                    class="relative p-4 mb-2 space-y-2 border rounded-lg bg-sky-50"
+                    x-show="!seller._deleted_ui"
+
+                >
+                    <!-- Toast Notification above card -->
+                    <div
+                        x-show="seller.saved"
+                        x-transition
+                        class="absolute px-3 py-1 text-sm text-green-700 -translate-x-1/2 bg-green-100 rounded shadow -top-8 left-1/2"
+                    >
+                        Saved successfully!
+                    </div>
+
+
+                    <!-- Seller Header -->
                     <div class="flex items-center justify-between">
                         <span class="font-semibold" x-text="seller.name"></span>
 
                         <div class="flex gap-1">
-                            <button type="button" class="btn btn-xs btn-outline"
-                                x-show="!seller.editing"
-                                @click="seller.editing = true">Edit</button>
-                            <button type="button" class="btn btn-xs btn-success"
-                                x-show="seller.editing"
-                                @click="saveSeller(index)">Save</button>
-                            <button type="button" class="btn btn-xs btn-warning"
-                                x-show="seller.editing"
-                                @click="seller.editing = false">Cancel</button>
+                            <button type="button" class="btn btn-xs btn-outline" x-show="!seller.editing"
+                                    @click="seller._backup = JSON.parse(JSON.stringify(seller)); seller.editing = true">
+                                Edit
+                            </button>
+
+                            <button type="button" class="btn btn-xs btn-success" x-show="seller.editing"
+                                    @click="saveSeller(index)">
+                                Save
+                            </button>
+
+                            <button type="button" class="btn btn-xs btn-warning" x-show="seller.editing"
+                                    @click="Object.assign(seller, seller._backup); seller.editing = false">
+                                Cancel
+                            </button>
+
+                            <button type="button" class="btn btn-xs btn-error" x-show="seller.editing"
+                                    @click="deleteSeller(index)">
+                                Delete
+                            </button>
                         </div>
                     </div>
 
+                    <!-- Seller info -->
                     <div x-show="!seller.editing" class="space-y-1 text-gray-700">
                         <div>Price: <span x-text="seller.price"></span></div>
-                        <div>Discount Price: <span x-text="seller.discount_price"></span></div>
+                        <div>Discount Price: <span x-text="seller.discount_price ?? '—'"></span></div>
                         <div>Discount Ends: <span x-text="seller.discount_ends_at ?? '—'"></span></div>
                     </div>
 
+                    <!-- Edit mode inputs -->
                     <div x-show="seller.editing" class="space-y-2">
-                        <input type="number"
-                            :name="`seller_price[${index}]`"
-                            x-model.number="seller.price"
-                            placeholder="Price"
-                            class="w-full input input-sm input-bordered"
-                            :disabled="!seller.editing">
-
-                        <input type="number"
-                            :name="`seller_discount_price[${index}]`"
-                            x-model.number="seller.discount_price"
-                            placeholder="Discount Price"
-                            class="w-full input input-sm input-bordered"
-                            :disabled="!seller.editing">
-
-                        <input type="datetime-local"
-                            :name="`seller_discount_ends_at[${index}]`"
-                            x-model="seller.discount_ends_at"
-                            class="w-full input input-sm input-bordered"
-                            :disabled="!seller.editing">
+                        <input type="number" :name="`seller_price[${index}]`" x-model.number="seller.price" placeholder="Price" class="w-full input input-sm input-bordered">
+                        <input type="number" :name="`seller_discount_price[${index}]`" x-model.number="seller.discount_price" placeholder="Discount Price" class="w-full input input-sm input-bordered">
+                        <input type="datetime-local" :name="`seller_discount_ends_at[${index}]`" x-model="seller.discount_ends_at" class="w-full input input-sm input-bordered" :min="new Date().toISOString().slice(0,16)">
                     </div>
-
                 </div>
             </template>
+
+
 
             {{-- Add Seller Toggle --}}
             <div class="mt-4">
@@ -186,7 +215,7 @@
                                         new: true,
                                         editing: false,
                                         price: newSellerPrice || 0,
-                                        discount_price: newSellerDiscountPrice || 0,
+                                        discount_price: newSellerDiscountPrice ? Number(newSellerDiscountPrice) : null,
                                         discount_ends_at: newSellerDiscountEndsAt || null,
                                     });
                                     newSellerId = '';
@@ -208,60 +237,67 @@
        <div class="mb-6">
             <label class="block mb-2 text-xs font-semibold text-gray-600">Customers Prices</label>
 
-            <template x-for="(customer, index) in customers" :key="customer.id">
-                <div class="p-4 mb-2 space-y-2 border rounded-lg bg-green-50">
+           <template x-for="(customer, index) in customers" :key="customer.id">
+                <div
+                    class="relative p-4 mb-2 space-y-2 border rounded-lg bg-green-50"
+                    x-show="!customer._deleted_ui"
+                >
+                    <!-- Toast Notification -->
+                    <div
+                        x-show="customer.saved"
+                        x-transition
+                        class="absolute px-3 py-1 text-sm text-green-700 -translate-x-1/2 bg-green-100 rounded shadow -top-8 left-1/2"
+                    >
+                        Saved successfully!
+                    </div>
+
+                    <!-- Customer Header -->
                     <div class="flex items-center justify-between">
-                        <!-- Show name always -->
                         <span class="font-semibold" x-text="customer.name"></span>
 
-                        <!-- Edit / Save / Cancel buttons -->
                         <div class="flex gap-1">
-                            <button type="button" class="btn btn-xs btn-outline"
-                                x-show="!customer.editing"
-                                @click="customer.editing = true">Edit</button>
+                            <button type="button" class="btn btn-xs btn-outline" x-show="!customer.editing"
+                                    @click="customer._backup = JSON.parse(JSON.stringify(customer)); customer.editing = true">
+                                Edit
+                            </button>
 
-                            <button type="button" class="btn btn-xs btn-success"
-                                x-show="customer.editing"
-                                @click="saveCustomer(index)">Save</button>
+                            <button type="button" class="btn btn-xs btn-success" x-show="customer.editing"
+                                    @click="saveCustomer(index)">
+                                Save
+                            </button>
 
-                            <button type="button" class="btn btn-xs btn-warning"
-                                x-show="customer.editing"
-                                @click="customer.editing = false">Cancel</button>
+                            <button type="button" class="btn btn-xs btn-warning" x-show="customer.editing"
+                                    @click="Object.assign(customer, customer._backup); customer.editing = false">
+                                Cancel
+                            </button>
+
+                            <button type="button" class="btn btn-xs btn-error" x-show="customer.editing"
+                                    @click="deleteCustomer(index)">
+                                Delete
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Customer data as text when not editing -->
+                    <!-- Customer info -->
                     <div x-show="!customer.editing" class="space-y-1 text-gray-700">
                         <div>Price: <span x-text="customer.price"></span></div>
-                        <div>Discount Price: <span x-text="customer.discount_price"></span></div>
+                        <div>Discount Price: <span x-text="customer.discount_price ?? '—'"></span></div>
                         <div>Discount Ends: <span x-text="customer.discount_ends_at ?? '—'"></span></div>
                     </div>
 
-                    <!-- Inputs when editing -->
+                    <!-- Edit mode inputs -->
                     <div x-show="customer.editing" class="space-y-2">
-                        <input type="number"
-                            :name="`customer_price[${index}]`"
-                            x-model.number="customer.price"
-                            placeholder="Price"
-                            class="w-full input input-sm input-bordered"
-                            :disabled="!customer.editing">
-
-                        <input type="number"
-                            :name="`customer_discount_price[${index}]`"
-                            x-model.number="customer.discount_price"
-                            placeholder="Discount Price"
-                            class="w-full input input-sm input-bordered"
-                            :disabled="!customer.editing">
-
+                        <input type="number" :name="`customer_price[${index}]`" x-model.number="customer.price" placeholder="Price" class="w-full input input-sm input-bordered">
+                        <input type="number" :name="`customer_discount_price[${index}]`" x-model.number="customer.discount_price" placeholder="Discount Price" class="w-full input input-sm input-bordered">
                         <input type="datetime-local"
                             :name="`customer_discount_ends_at[${index}]`"
                             x-model="customer.discount_ends_at"
                             class="w-full input input-sm input-bordered"
-                            :disabled="!customer.editing">
+                            :min="new Date().toISOString().slice(0,16)">
                     </div>
-
                 </div>
             </template>
+
 
             {{-- Add Customer Toggle --}}
            {{-- Add Customer Toggle --}}
@@ -306,7 +342,7 @@
                                         new: true,
                                         editing: false,
                                         price: newCustomerPrice || 0,
-                                        discount_price: newCustomerDiscountPrice || 0,
+                                        discount_price: newCustomerDiscountPrice ? Number(newCustomerDiscountPrice) : null,
                                         discount_ends_at: newCustomerDiscountEndsAt || null,
                                     });
                                     // reset
@@ -380,9 +416,15 @@
 <script>
 function storeVariantForm(data) {
     return {
-        store_price: data.store_price,
-        store_discount_price: data.store_discount_price,
-        store_discount_ends_at: data.store_discount_ends_at,
+
+        storeId: data.storeId,
+        itemId: data.itemId,
+        variantId: data.variantId,
+        store_price: data.store_price ?? 0,
+        store_discount_price: data.store_discount_price ?? 0,
+        //store_discount_ends_at: data.store_discount_ends_at ?? '',
+        store_discount_ends_at: data.store_discount_ends_at ?? null,
+
 
         manual_status: data.manual_status ?? 'auto',
         forced_status: data.forced_status ?? null,
@@ -391,8 +433,9 @@ function storeVariantForm(data) {
 
 
 
-        sellers: data.sellers.map(s => ({...s, new: false, editing: false})), // mark existing as not new, add editing flag
-        customers: data.customers.map(c => ({...c, new: false, editing: false})),
+        sellers: data.sellers.map(s => ({ ...s, new: false, editing: false, saved: false })),
+        customers: data.customers.map(c => ({ ...c, new: false, editing: false, saved: false })),
+
 
         activeSellerId: '',
         activeCustomerId: '',
@@ -422,6 +465,25 @@ function storeVariantForm(data) {
         get activeCustomer() {
             return this.customers.find(c => c.id == this.activeCustomerId)
         },
+
+        async updateSellerPrice() {
+    try {
+        const res = await fetch(`/admin/stores/${this.storeId}/items/${this.itemId}/variants/${this.variantId}/seller-price`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+            },
+            body: JSON.stringify({ seller_price: this.sellerPrice })
+        });
+
+        if (!res.ok) throw new Error('Request failed');
+        const data = await res.json();
+        console.log('Updated:', data);
+    } catch (e) {
+        console.error(e);
+    }
+},
 
         // Log function
         logAll() {
@@ -462,6 +524,9 @@ function storeVariantForm(data) {
             return Number(discount) <= Number(price);
         },
 
+
+
+
         message: '',           // global message
         messageType: 'success', // 'success' | 'error'
         showMessage: false,
@@ -472,6 +537,16 @@ function storeVariantForm(data) {
             this.showMessage = true;
             setTimeout(() => this.showMessage = false, 3000); // hide after 3s
         },
+
+        deleteSeller(index) {
+            if (!confirm('Delete this seller price?')) return;
+
+            this.sellers[index]._delete = true;
+            this.sellers[index]._deleted_ui = true;
+        },
+
+
+
 
         saveSeller(index) {
             let seller = this.sellers[index];
@@ -486,12 +561,13 @@ function storeVariantForm(data) {
                 return;
             }
 
-
-            fetch('/admin/stores/save-seller-price', {
+            fetch(`/admin/stores/${this.storeId}/items/${this.itemId}/variants/${this.variantId}/seller-price`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
                 body: JSON.stringify({
-                    store_variant_id: seller.store_variant_id,
                     seller_id: seller.id,
                     price: seller.price,
                     discount_price: seller.discount_price,
@@ -502,49 +578,75 @@ function storeVariantForm(data) {
             .then(res => {
                 if (res.success) {
                     seller.editing = false;
-                    seller.rowMessage = 'Updated successfully!';
-                    setTimeout(() => seller.rowMessage = '', 3000);
-                    this.showTempMessage('Seller price updated successfully!', 'success');
+                    seller.saved = true; // ✅ show notification
+                    setTimeout(() => seller.saved = false, 3000); // hide after 3s
                 } else {
                     this.showTempMessage('Failed to update seller price.', 'error');
                 }
-            });
-        },
-
-
-        saveCustomer(index) {
-            let customer = this.customers[index];
-            if (!this.isDiscountValid(customer.price, customer.discount_price)) {
-                this.showTempMessage('Customer discount cannot exceed price', 'error');
-                return;
-            }
-
-            if (customer.discount_price > 0 && !customer.discount_ends_at) {
-                this.showTempMessage('Customer discount requires an end date', 'error');
-                return;
-            }
-
-            fetch('/admin/stores/save-customer-price', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
-                body: JSON.stringify({
-                    store_variant_id: customer.store_variant_id,
-                    customer_id: customer.id,
-                    price: customer.price,
-                    discount_price: customer.discount_price,
-                    discount_ends_at: customer.discount_ends_at
-                })
             })
-            .then(res => res.json())
-            .then(res => {
-                if (res.success) {
-                    customer.editing = false;
-                    this.showTempMessage('Customer price updated successfully!', 'success');
-                } else {
-                    this.showTempMessage('Failed to update customer price.', 'error');
-                }
+            .catch(err => {
+                console.error(err);
+                this.showTempMessage('Failed to update seller price.', 'error');
             });
         },
+
+
+        deleteCustomer(index) {
+    if (!confirm('Delete this customer price?')) return;
+    this.customers[index]._delete = true;
+    this.customers[index]._deleted_ui = true;
+},
+
+saveCustomer(index) {
+    let customer = this.customers[index];
+
+    // Validate discount
+    if (!this.isDiscountValid(customer.price, customer.discount_price)) {
+        this.showTempMessage('Customer discount cannot exceed price', 'error');
+        return;
+    }
+
+    // Discount end date must exist if discount > 0
+    if (customer.discount_price > 0 && !customer.discount_ends_at) {
+        this.showTempMessage('Customer discount requires an end date', 'error');
+        return;
+    }
+
+    // Discount end date must be in the future
+    if (customer.discount_ends_at && new Date(customer.discount_ends_at) <= new Date()) {
+        this.showTempMessage('Discount end date must be in the future', 'error');
+        return;
+    }
+
+    fetch(`/admin/stores/${this.storeId}/items/${this.itemId}/variants/${this.variantId}/customer-price`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            customer_id: customer.id,
+            price: customer.price,
+            discount_price: customer.discount_price,
+            discount_ends_at: customer.discount_ends_at
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success) {
+            customer.editing = false;
+            customer.saved = true; // show notification
+            setTimeout(() => customer.saved = false, 3000);
+        } else {
+            this.showTempMessage('Failed to update customer price', 'error');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        this.showTempMessage('Failed to update customer price', 'error');
+    });
+},
+
     }
 }
 </script>
