@@ -24,11 +24,14 @@
                 </div>';
     };
 
-    $getStatusBadgeClass = fn($status) => match ($status) {
-        true, 'active' => 'bg-success',
-        false, 'inactive' => 'bg-base-content/60',
-        default => 'bg-base-content/60',
-    };
+        $getStatusBadgeClass = fn($status) => match ($status) {
+                'active' => 'bg-green-600',
+                'inactive' => 'bg-gray-500',
+                'out_of_stock' => 'bg-yellow-500',
+                'unavailable' => 'bg-red-600',
+                default => 'bg-gray-400',
+            };
+
 
     $filters = [
         'all' => ['label' => 'All', 'color' => 'bg-orange-500 text-white'],
@@ -36,13 +39,14 @@
         'inactive' => ['label' => 'Inactive', 'color' => 'bg-gray-500 text-white'],
     ];
 
-    $currentFilter = request('filter', 'all');
+   $currentFilter = request('filter', 'all');
 
-    $filteredVariants = match ($currentFilter) {
-        'active' => $variants->where('store_active', true),
-        'inactive' => $variants->where('store_active', false),
-        default => $variants,
-    };
+$filteredVariants = match ($currentFilter) {
+    'active' => $variants->filter(fn($v) => $v->status === 'active'),
+    'inactive' => $variants->filter(fn($v) => $v->status === 'inactive'),
+    default => $variants,
+};
+
 
     $sortField = request('sort', 'id');
     $sortDirection = request('direction', 'asc');
@@ -247,12 +251,43 @@ $packagingOrder = ['piece', 'packet', 'cartoon'];
                     </td>
 
                     {{-- Status --}}
-                    <td>
-                        <span class="badge text-white {{ $lastPrice ? 'bg-green-600' : 'bg-gray-500' }}">
-                            {{ $lastPrice ? 'Active' : 'Inactive' }}
-                        </span>
-                    </td>
+@php
+    $isForced = $variant->manual_status === 'forced';
 
+    $label = $isForced ? 'FORCED' : 'AUTOMATIC';
+
+    $value = $isForced
+        ? ($variant->forced_status ?? 'inactive')
+        : $variant->status;
+@endphp
+
+<td>
+    <div class="flex flex-col items-center text-center">
+        {{-- Label --}}
+        <div class="text-xs text-gray-400">
+            {{ $label }}
+        </div>
+
+        {{-- Value --}}
+        <span class="badge text-white text-xs {{ $getStatusBadgeClass($value) }}">
+            {{ strtoupper(str_replace('_', ' ', $value)) }}
+        </span>
+    </div>
+</td>
+
+
+
+
+                    {{-- <td>
+                    @if($variant->store_active)
+                        <span class="text-white badge bg-success">Active</span>
+                    @else
+                        <span class="text-white bg-gray-500 badge">Inactive</span>
+                        @if(!empty($variant->price_ladder))
+                            <span class="ml-1 badge bg-warning">Priced</span>
+                        @endif
+                    @endif
+                    </td> --}}
 
                     {{-- Actions --}}
                     <td>

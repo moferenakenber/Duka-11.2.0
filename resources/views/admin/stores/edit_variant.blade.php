@@ -5,165 +5,365 @@
         </h2>
     </x-slot>
 
-    @php
-        // Packaging rendering helper
-        function renderPackagingHierarchy($variant) {
-            if (!$variant->itemPackagingType) return '—';
-            $pack = $variant->itemPackagingType;
-            $pivot = $variant->item->packagingTypes->firstWhere('id', $pack->id)?->pivot;
-            $qty = $pivot->quantity ?? 1;
-            $totalPieces = method_exists($variant, 'calculateTotalPieces') ? $variant->calculateTotalPieces() : 0;
+<div class="p-6 mb-6 rounded-xl bg-base-200" x-data="storeVariantForm(@js($variantData))">
 
-            return match(strtolower($pack->name)) {
-                'piece' => "Piece ($qty pcs)",
-                'packet' => "Packet ($qty pcs)",
-                'cartoon' => "Cartoon ($qty pkt) ($totalPieces pcs)",
-                default => $pack->name . " ($qty pcs)",
-            };
-        }
+    <div x-show="showMessage"
+        x-transition
+        :class="messageType === 'success' ? 'bg-green-200 text-green-800' : 'bg-red-200 text-red-800'"
+        class="fixed z-50 px-4 py-2 font-semibold rounded shadow top-4 right-4">
+        <span x-text="message"></span>
+    </div>
 
-        // Store-specific pivot
 
-        $pivot = $store->variants()->where('item_variant_id', $variant->id)->first()?->pivot;
+        <form
+            method="POST"
+            action="{{ route('admin.stores.items.variants.update', [$store->id, $variant->item_id, $variant->id]) }}"
+            @submit.prevent="
+                if (!isDiscountValid(store_price, store_discount_price)) {
+                    showTempMessage('Discount price cannot exceed price', 'error');
+                    return;
+                }
 
-        $sellerPivot = $pivot?->seller ?? null;
-        $customerPivot = $pivot?->customer ?? null;
+                if (store_discount_price > 0 && !store_discount_ends_at) {
+                    showTempMessage('Discount end date is required when a discount is set', 'error');
+                    return;
+                }
 
-        $storeDiscountEnds = $pivot?->discount_ends_at ? \Carbon\Carbon::parse($pivot->discount_ends_at)->format('Y-m-d\TH:i') : null;
-        $sellerDiscountEnds = $sellerPivot?->discount_ends_at ? \Carbon\Carbon::parse($sellerPivot->discount_ends_at)->format('Y-m-d\TH:i') : null;
-        $customerDiscountEnds = $customerPivot?->discount_ends_at ? \Carbon\Carbon::parse($customerPivot->discount_ends_at)->format('Y-m-d\TH:i') : null;
+                $el.submit();
+            "
+        >
 
-        $variantData = [
-            'store_price' => $pivot->price ?? 0,
-            'store_discount_price' => $pivot->discount_price ?? null,
-            'store_discount_ends_at' => $storeDiscountEnds,
 
-            'seller_price' => $sellerPivot?->price,
-            'seller_discount_price' => $sellerPivot?->discount_price,
-            'seller_discount_ends_at' => $sellerDiscountEnds,
 
-            'customer_price' => $customerPivot?->price,
-            'customer_discount_price' => $customerPivot?->discount_price,
-            'customer_discount_ends_at' => $customerDiscountEnds,
-
-            'status' => $pivot->status ?? 'inactive',
-        ];
-@endphp
-
-<div class="p-6 mb-6 rounded-xl bg-base-200" x-data="storeVariantForm({{ json_encode($variantData) }})">
-
-    <form method="POST" action="{{ route('admin.stores.items.variants.update', [$store->id, $variant->item_id, $variant->id]) }}" enctype="multipart/form-data">
         @csrf
         @method('PUT')
-          {{-- ================= READ-ONLY VARIANT INFO ================= --}}
-            <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-6">
-                <div class="p-4 border rounded-lg">
-                    <span class="block text-xs text-gray-500">Variant ID</span>
-                    <span class="font-semibold">{{ $variant->id }}</span>
-                </div>
-                <div class="p-4 border rounded-lg bg-sky-50">
-                    <span class="block text-xs text-gray-500">SKU</span>
-                    <span class="font-semibold">{{ $variant->item->sku ?? '—' }}</span>
-                </div>
-                <div class="p-4 border rounded-lg">
-                    <span class="block text-xs text-gray-500">Product</span>
-                    <span class="font-semibold">{{ $variant->item->product_name }}</span>
-                </div>
-                <div class="p-4 border rounded-lg">
-                    <span class="block text-xs text-gray-500">Color</span>
-                    <span class="font-semibold">{{ $variant->itemColor->name ?? '—' }}</span>
-                </div>
-                <div class="p-4 border rounded-lg">
-                    <span class="block text-xs text-gray-500">Size</span>
-                    <span class="font-semibold">{{ $variant->itemSize->name ?? '—' }}</span>
-                </div>
-                <div class="p-4 border rounded-lg">
-                    <span class="block text-xs text-gray-500">Packaging</span>
-                    <span class="text-sm font-semibold">{!! renderPackagingHierarchy($variant) !!}</span>
-                </div>
-                <div class="p-4 border rounded-lg">
-                    <span class="block text-xs text-gray-500">Barcode</span>
-                    <span class="font-semibold">{{ $variant->barcode ?? '—' }}</span>
-                </div>
-            </div>
 
-            {{-- ================= VARIANT IMAGES (READ-ONLY) ================= --}}
-            <div class="mb-6">
-                <label class="block mb-2 text-xs font-semibold text-gray-600">
-                    Variant Images (Global)
-                </label>
-                <div class="flex gap-2">
-                    @foreach($variant->images ?? [] as $img)
-                        <img src="{{ asset($img) }}" class="object-cover w-20 h-20 border rounded-lg">
-                    @endforeach
-                    @if(empty($variant->images))
-                        <span class="text-xs text-gray-400">No images</span>
-                    @endif
-                </div>
+        {{-- ================= READ-ONLY VARIANT INFO ================= --}}
+        <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-6">
+            <div class="p-4 border rounded-lg">
+                <span class="block text-xs text-gray-500">Variant ID</span>
+                <span class="font-semibold">{{ $variant->id }}</span>
             </div>
-
+            <div class="p-4 border rounded-lg bg-sky-50">
+                <span class="block text-xs text-gray-500">SKU</span>
+                <span class="font-semibold">{{ $variant->item->sku ?? '—' }}</span>
+            </div>
+            <div class="p-4 border rounded-lg">
+                <span class="block text-xs text-gray-500">Product</span>
+                <span class="font-semibold">{{ $variant->item->product_name }}</span>
+            </div>
+            <div class="p-4 border rounded-lg">
+                <span class="block text-xs text-gray-500">Color</span>
+                <span class="font-semibold">{{ $variant->itemColor->name ?? '—' }}</span>
+            </div>
+            <div class="p-4 border rounded-lg">
+                <span class="block text-xs text-gray-500">Size</span>
+                <span class="font-semibold">{{ $variant->itemSize->name ?? '—' }}</span>
+            </div>
+            <div class="p-4 border rounded-lg">
+                <span class="block text-xs text-gray-500">Packaging</span>
+                <span class="text-sm font-semibold" x-text="variantPackaging"></span>
+            </div>
+            <div class="p-4 border rounded-lg">
+                <span class="block text-xs text-gray-500">Barcode</span>
+                <span class="font-semibold">{{ $variant->barcode ?? '—' }}</span>
+            </div>
+        </div>
 
         {{-- STORE PRICE --}}
-        <div>
+        <div class="mb-4">
             <label class="block mb-1 text-xs font-semibold text-gray-600">Store Price</label>
             <input type="number" step="0.01" name="store_price" x-model.number="store_price" class="w-full input input-sm input-bordered">
         </div>
 
-        <div>
+        <div class="mb-6">
             <label class="block mb-1 text-xs font-semibold text-gray-600">Store Discount Price</label>
-            <input type="number" step="0.01" x-model.number="store_discount_price" class="w-full input input-sm input-bordered" readonly>
+            <input type="number"
+                step="0.01"
+                name="store_discount_price"
+                x-model.number="store_discount_price"
+                :class="!isDiscountValid(store_price, store_discount_price) ? 'border-red-500' : ''"
+                class="w-full input input-sm input-bordered">
+
+            <p x-show="!isDiscountValid(store_price, store_discount_price)"
+            class="mt-1 text-xs text-red-600">
+            Discount cannot be higher than price
+            </p>
+
+        </div>
+
+        {{-- SELLERS --}}
+       <div class="mb-6">
+            <label class="block mb-2 text-xs font-semibold text-gray-600">Sellers Prices</label>
+
+            <template x-for="(seller, index) in sellers" :key="seller.id">
+                <div class="p-4 mb-2 space-y-2 border rounded-lg bg-sky-50">
+                    <div class="flex items-center justify-between">
+                        <span class="font-semibold" x-text="seller.name"></span>
+
+                        <div class="flex gap-1">
+                            <button type="button" class="btn btn-xs btn-outline"
+                                x-show="!seller.editing"
+                                @click="seller.editing = true">Edit</button>
+                            <button type="button" class="btn btn-xs btn-success"
+                                x-show="seller.editing"
+                                @click="saveSeller(index)">Save</button>
+                            <button type="button" class="btn btn-xs btn-warning"
+                                x-show="seller.editing"
+                                @click="seller.editing = false">Cancel</button>
+                        </div>
+                    </div>
+
+                    <div x-show="!seller.editing" class="space-y-1 text-gray-700">
+                        <div>Price: <span x-text="seller.price"></span></div>
+                        <div>Discount Price: <span x-text="seller.discount_price"></span></div>
+                        <div>Discount Ends: <span x-text="seller.discount_ends_at ?? '—'"></span></div>
+                    </div>
+
+                    <div x-show="seller.editing" class="space-y-2">
+                        <input type="number"
+                            :name="`seller_price[${index}]`"
+                            x-model.number="seller.price"
+                            placeholder="Price"
+                            class="w-full input input-sm input-bordered"
+                            :disabled="!seller.editing">
+
+                        <input type="number"
+                            :name="`seller_discount_price[${index}]`"
+                            x-model.number="seller.discount_price"
+                            placeholder="Discount Price"
+                            class="w-full input input-sm input-bordered"
+                            :disabled="!seller.editing">
+
+                        <input type="datetime-local"
+                            :name="`seller_discount_ends_at[${index}]`"
+                            x-model="seller.discount_ends_at"
+                            class="w-full input input-sm input-bordered"
+                            :disabled="!seller.editing">
+                    </div>
+
+                </div>
+            </template>
+
+            {{-- Add Seller Toggle --}}
+            <div class="mt-4">
+                <button type="button" class="btn btn-xs btn-outline" @click="showAddSeller = !showAddSeller">
+                    Add Seller
+                </button>
+
+                <div x-show="showAddSeller" x-cloak class="p-4 mt-2 space-y-2 border rounded-lg bg-sky-100">
+                    {{-- Label for select --}}
+                    <label class="block text-xs font-semibold text-gray-600">Select Seller</label>
+                    <select x-model="newSellerId" class="w-full input input-bordered input-lg">
+                        <option value="">Select Seller</option>
+                        <template x-for="seller in availableSellers" :key="seller.id">
+                            <option :value="seller.id" x-text="seller.name"></option>
+                        </template>
+                    </select>
+
+                    <div x-show="newSellerId" class="grid grid-cols-1 gap-2 mt-2 md:grid-cols-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Price</label>
+                            <input type="number" x-model.number="newSellerPrice" placeholder="Price" class="w-full input input-sm input-bordered">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Discount Price</label>
+                            <input type="number" x-model.number="newSellerDiscountPrice" placeholder="Discount Price" class="w-full input input-sm input-bordered">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Discount Ends</label>
+                            <input type="datetime-local" x-model="newSellerDiscountEndsAt" class="w-full input input-sm input-bordered">
+                        </div>
+
+                        <div class="md:col-span-3">
+                            <button type="button" class="w-full py-2 text-sm btn btn-outline"
+                                @click="
+                                    let s = availableSellers.find(s => s.id == newSellerId);
+                                    sellers.push({
+                                        ...s,
+                                        new: true,
+                                        editing: false,
+                                        price: newSellerPrice || 0,
+                                        discount_price: newSellerDiscountPrice || 0,
+                                        discount_ends_at: newSellerDiscountEndsAt || null,
+                                    });
+                                    newSellerId = '';
+                                    newSellerPrice = 0;
+                                    newSellerDiscountPrice = 0;
+                                    newSellerDiscountEndsAt = null;
+                                    showAddSeller = false;
+                                ">
+                                Confirm Add
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
 
-        {{-- SELLER PRICE --}}
-        <div x-data="{ showSeller: {{ $sellerPivot ? 'true' : 'false' }} }">
-            <label class="block mb-1 text-xs font-semibold text-gray-600">Seller Price</label>
+        {{-- CUSTOMERS --}}
+       <div class="mb-6">
+            <label class="block mb-2 text-xs font-semibold text-gray-600">Customers Prices</label>
 
-            <template x-if="showSeller">
-                <div class="space-y-1">
-                    <input type="number" step="0.01" name="seller_price" x-model.number="seller_price" class="w-full input input-sm input-bordered">
-                    <input type="number" step="0.01" name="seller_discount_price" x-model.number="seller_discount_price" placeholder="Discount Price" class="w-full input input-sm input-bordered">
-                    <input type="datetime-local" name="seller_discount_ends_at" x-model="seller_discount_ends_at" class="w-full input input-sm input-bordered">
+            <template x-for="(customer, index) in customers" :key="customer.id">
+                <div class="p-4 mb-2 space-y-2 border rounded-lg bg-green-50">
+                    <div class="flex items-center justify-between">
+                        <!-- Show name always -->
+                        <span class="font-semibold" x-text="customer.name"></span>
+
+                        <!-- Edit / Save / Cancel buttons -->
+                        <div class="flex gap-1">
+                            <button type="button" class="btn btn-xs btn-outline"
+                                x-show="!customer.editing"
+                                @click="customer.editing = true">Edit</button>
+
+                            <button type="button" class="btn btn-xs btn-success"
+                                x-show="customer.editing"
+                                @click="saveCustomer(index)">Save</button>
+
+                            <button type="button" class="btn btn-xs btn-warning"
+                                x-show="customer.editing"
+                                @click="customer.editing = false">Cancel</button>
+                        </div>
+                    </div>
+
+                    <!-- Customer data as text when not editing -->
+                    <div x-show="!customer.editing" class="space-y-1 text-gray-700">
+                        <div>Price: <span x-text="customer.price"></span></div>
+                        <div>Discount Price: <span x-text="customer.discount_price"></span></div>
+                        <div>Discount Ends: <span x-text="customer.discount_ends_at ?? '—'"></span></div>
+                    </div>
+
+                    <!-- Inputs when editing -->
+                    <div x-show="customer.editing" class="space-y-2">
+                        <input type="number"
+                            :name="`customer_price[${index}]`"
+                            x-model.number="customer.price"
+                            placeholder="Price"
+                            class="w-full input input-sm input-bordered"
+                            :disabled="!customer.editing">
+
+                        <input type="number"
+                            :name="`customer_discount_price[${index}]`"
+                            x-model.number="customer.discount_price"
+                            placeholder="Discount Price"
+                            class="w-full input input-sm input-bordered"
+                            :disabled="!customer.editing">
+
+                        <input type="datetime-local"
+                            :name="`customer_discount_ends_at[${index}]`"
+                            x-model="customer.discount_ends_at"
+                            class="w-full input input-sm input-bordered"
+                            :disabled="!customer.editing">
+                    </div>
+
                 </div>
             </template>
 
-            <template x-if="!showSeller">
-                <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-500">No Seller Price</span>
-                    <button type="button" class="btn btn-xs btn-outline" @click="showSeller = true; seller_price = 0;">Add Seller Price</button>
+            {{-- Add Customer Toggle --}}
+           {{-- Add Customer Toggle --}}
+            <div class="mt-4">
+                <button type="button" class="btn btn-xs btn-outline" @click="showAddCustomer = !showAddCustomer">
+                    Add Customer
+                </button>
+
+                <div x-show="showAddCustomer" x-cloak class="p-4 mt-2 space-y-2 bg-green-100 border rounded-lg">
+                    {{-- Label for select --}}
+                    <label class="block text-xs font-semibold text-gray-600">Select Customer</label>
+                    <select x-model="newCustomerId" class="w-full input input-bordered input-lg">
+                        <option value="">Select Customer</option>
+                        <template x-for="customer in availableCustomers" :key="customer.id">
+                            <option :value="customer.id" x-text="customer.name"></option>
+                        </template>
+                    </select>
+
+                    <!-- Inputs appear only when a customer is selected -->
+                    <div x-show="newCustomerId" class="grid grid-cols-1 gap-2 mt-2 md:grid-cols-3">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Price</label>
+                            <input type="number" x-model.number="newCustomerPrice" placeholder="Price" class="w-full input input-sm input-bordered">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Discount Price</label>
+                            <input type="number" x-model.number="newCustomerDiscountPrice" placeholder="Discount Price" class="w-full input input-sm input-bordered">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-600">Discount Ends</label>
+                            <input type="datetime-local" x-model="newCustomerDiscountEndsAt" class="w-full input input-sm input-bordered">
+                        </div>
+
+                        <div class="md:col-span-3">
+                            <button type="button" class="w-full py-2 text-sm btn btn-outline"
+                                @click="
+                                    let c = availableCustomers.find(c => c.id == newCustomerId);
+                                    customers.push({
+                                        ...c,
+                                        new: true,
+                                        editing: false,
+                                        price: newCustomerPrice || 0,
+                                        discount_price: newCustomerDiscountPrice || 0,
+                                        discount_ends_at: newCustomerDiscountEndsAt || null,
+                                    });
+                                    // reset
+                                    newCustomerId = '';
+                                    newCustomerPrice = 0;
+                                    newCustomerDiscountPrice = 0;
+                                    newCustomerDiscountEndsAt = null;
+                                    showAddCustomer = false;
+                                ">
+                                Confirm Add
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </template>
+            </div>
+
         </div>
 
-        {{-- CUSTOMER PRICE --}}
-        <div x-data="{ showCustomer: {{ $customerPivot ? 'true' : 'false' }} }" class="mt-4">
-            <label class="block mb-1 text-xs font-semibold text-gray-600">Customer Price</label>
-
-            <template x-if="showCustomer">
-                <div class="space-y-1">
-                    <input type="number" step="0.01" name="customer_price" x-model.number="customer_price" class="w-full input input-sm input-bordered">
-                    <input type="number" step="0.01" name="customer_discount_price" x-model.number="customer_discount_price" placeholder="Discount Price" class="w-full input input-sm input-bordered">
-                    <input type="datetime-local" name="customer_discount_ends_at" x-model="customer_discount_ends_at" class="w-full input input-sm input-bordered">
-                </div>
-            </template>
-
-            <template x-if="!showCustomer">
-                <div class="flex items-center gap-2">
-                    <span class="text-sm text-gray-500">No Customer Price</span>
-                    <button type="button" class="btn btn-xs btn-outline" @click="showCustomer = true; customer_price = 0;">Add Customer Price</button>
-                </div>
-            </template>
-        </div>
 
         {{-- STATUS --}}
-<div class="mt-4">
-    <label class="block mb-1 text-base font-semibold text-gray-600">Status</label>
-    <select name="status" x-model="status" class="w-full input input-bordered !text-2xl !py-2">
-        <option value="active">Active</option>
-        <option value="inactive">Inactive</option>
-    </select>
-</div>
+        {{-- STATUS MODE --}}
+        <div class="mb-4">
+            <label class="block mb-1 text-base font-semibold text-gray-600">
+                Status Mode
+            </label>
 
+            <select
+                name="manual_status"
+                x-model="manual_status"
+                class="w-full input input-bordered"
+            >
+                <option value="auto">Automatic (System Managed)</option>
+                <option value="forced">Forced (Manual)</option>
+            </select>
+
+            <p class="mt-1 text-xs text-gray-500">
+                Automatic = system decides based on stock & rules
+            </p>
+        </div>
+
+        {{-- FORCED STATUS --}}
+        <div class="mb-6" x-show="manual_status === 'forced'" x-transition>
+            <label class="block mb-1 text-base font-semibold text-gray-600">
+                Forced Status
+            </label>
+
+            <select
+                name="forced_status"
+                x-model="forced_status"
+                class="w-full input input-bordered"
+            >
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+                <option value="out_of_stock">Out of Stock</option>
+                <option value="unavailable">Unavailable</option>
+            </select>
+        </div>
 
 
         {{-- ACTIONS --}}
@@ -171,50 +371,184 @@
             <a href="{{ route('admin.stores.items.variants', [$store->id, $variant->item_id]) }}" class="btn btn-ghost">Cancel</a>
             <button type="submit" class="btn btn-primary">Update Store Variant</button>
         </div>
+
     </form>
 </div>
 
 
     {{-- ================= ALPINE ================= --}}
-    <script>
+<script>
 function storeVariantForm(data) {
     return {
         store_price: data.store_price,
         store_discount_price: data.store_discount_price,
         store_discount_ends_at: data.store_discount_ends_at,
 
-        seller_price: data.seller_price,
-        seller_discount_price: data.seller_discount_price,
-        seller_discount_ends_at: data.seller_discount_ends_at,
+        manual_status: data.manual_status ?? 'auto',
+        forced_status: data.forced_status ?? null,
 
-        customer_price: data.customer_price,
-        customer_discount_price: data.customer_discount_price,
-        customer_discount_ends_at: data.customer_discount_ends_at,
+        active: data.active,
 
-        status: data.status,
 
-        // Log everything in one place
+
+        sellers: data.sellers.map(s => ({...s, new: false, editing: false})), // mark existing as not new, add editing flag
+        customers: data.customers.map(c => ({...c, new: false, editing: false})),
+
+        activeSellerId: '',
+        activeCustomerId: '',
+
+        availableSellers: data.available_sellers ?? [],
+        availableCustomers: data.available_customers ?? [],
+
+        variantPackaging: data.packaging_name ?? '—',
+
+                showAddSeller: false,
+                newSellerId: '',
+                newSellerPrice: 0,
+                newSellerDiscountPrice: 0,
+                newSellerDiscountEndsAt: null,
+
+                showAddCustomer: false,
+                newCustomerId: '',
+                newCustomerPrice: 0,
+                newCustomerDiscountPrice: 0,
+                newCustomerDiscountEndsAt: null,
+
+
+        get activeSeller() {
+            return this.sellers.find(s => s.id == this.activeSellerId)
+        },
+
+        get activeCustomer() {
+            return this.customers.find(c => c.id == this.activeCustomerId)
+        },
+
+        // Log function
         logAll() {
-            console.log('--- Variant Prices & Status ---');
-            console.log('Store:', {
+            console.group('Store Variant Edit');
+            console.log('Store', {
                 price: this.store_price,
                 discount_price: this.store_discount_price,
                 discount_ends_at: this.store_discount_ends_at,
+                status: this.status,
             });
-            console.log('Seller:', {
-                price: this.seller_price,
-                discount_price: this.seller_discount_price,
-                discount_ends_at: this.seller_discount_ends_at,
+
+            if (this.activeSeller) {
+                console.log('Seller', {
+                    id: this.activeSeller.id,
+                    price: this.activeSeller.price,
+                    discount_price: this.activeSeller.discount_price,
+                    discount_ends_at: this.activeSeller.discount_ends_at,
+                });
+            } else {
+                console.log('Seller', 'No seller selected');
+            }
+
+            if (this.activeCustomer) {
+                console.log('Customer', {
+                    id: this.activeCustomer.id,
+                    price: this.activeCustomer.price,
+                    discount_price: this.activeCustomer.discount_price,
+                    discount_ends_at: this.activeCustomer.discount_ends_at,
+                });
+            } else {
+                console.log('Customer', 'No customer selected');
+            }
+            console.groupEnd();
+        },
+
+        isDiscountValid(price, discount) {
+            if (discount === null || discount === '' || discount === 0) return true;
+            return Number(discount) <= Number(price);
+        },
+
+        message: '',           // global message
+        messageType: 'success', // 'success' | 'error'
+        showMessage: false,
+
+        showTempMessage(msg, type = 'success') {
+            this.message = msg;
+            this.messageType = type;
+            this.showMessage = true;
+            setTimeout(() => this.showMessage = false, 3000); // hide after 3s
+        },
+
+        saveSeller(index) {
+            let seller = this.sellers[index];
+
+            if (!this.isDiscountValid(seller.price, seller.discount_price)) {
+                this.showTempMessage('Seller discount cannot exceed price', 'error');
+                return;
+            }
+
+            if (seller.discount_price > 0 && !seller.discount_ends_at) {
+                this.showTempMessage('Seller discount requires an end date', 'error');
+                return;
+            }
+
+
+            fetch('/admin/stores/save-seller-price', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                body: JSON.stringify({
+                    store_variant_id: seller.store_variant_id,
+                    seller_id: seller.id,
+                    price: seller.price,
+                    discount_price: seller.discount_price,
+                    discount_ends_at: seller.discount_ends_at
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    seller.editing = false;
+                    seller.rowMessage = 'Updated successfully!';
+                    setTimeout(() => seller.rowMessage = '', 3000);
+                    this.showTempMessage('Seller price updated successfully!', 'success');
+                } else {
+                    this.showTempMessage('Failed to update seller price.', 'error');
+                }
             });
-            console.log('Customer:', {
-                price: this.customer_price,
-                discount_price: this.customer_discount_price,
-                discount_ends_at: this.customer_discount_ends_at,
+        },
+
+
+        saveCustomer(index) {
+            let customer = this.customers[index];
+            if (!this.isDiscountValid(customer.price, customer.discount_price)) {
+                this.showTempMessage('Customer discount cannot exceed price', 'error');
+                return;
+            }
+
+            if (customer.discount_price > 0 && !customer.discount_ends_at) {
+                this.showTempMessage('Customer discount requires an end date', 'error');
+                return;
+            }
+
+            fetch('/admin/stores/save-customer-price', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': '{{ csrf_token() }}' },
+                body: JSON.stringify({
+                    store_variant_id: customer.store_variant_id,
+                    customer_id: customer.id,
+                    price: customer.price,
+                    discount_price: customer.discount_price,
+                    discount_ends_at: customer.discount_ends_at
+                })
+            })
+            .then(res => res.json())
+            .then(res => {
+                if (res.success) {
+                    customer.editing = false;
+                    this.showTempMessage('Customer price updated successfully!', 'success');
+                } else {
+                    this.showTempMessage('Failed to update customer price.', 'error');
+                }
             });
-            console.log('Status:', this.status);
-            console.log('------------------------------');
-        }
+        },
     }
 }
-    </script>
+</script>
+
+
+
 </x-app-layout>

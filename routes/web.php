@@ -175,6 +175,14 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::put('{item}/variants/{variant}', [StoreController::class, 'updateVariant'])
                 ->name('variants.update');
 
+            // ✅ Add seller price
+            Route::post('{item}/variants/{variant}/seller-price', [StoreController::class, 'updateSellerPrice'])
+                ->name('variants.seller-price');
+
+            // ✅ Add customer price
+            Route::post('{item}/variants/{variant}/customer-price', [StoreController::class, 'updateCustomerPrice'])
+                ->name('variants.customer-price');
+
         });
 
         // routes/web.php

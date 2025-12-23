@@ -68,6 +68,8 @@ function renderPackagingMobile($variant) {
 
             // Status badge
             $statusClass = $getStatusBadgeClass($variant->status);
+            $storeVariant = $variant->storeVariants->firstWhere('store_id', $store->id);
+            $displayPrice = $storeVariant->price ?? $variant->price; // fallback if store variant not found
         @endphp
 
         <div class="p-4 border shadow-lg card card-compact bg-base-100 border-base-200 rounded-xl">
@@ -134,7 +136,7 @@ function renderPackagingMobile($variant) {
                 <div class="min-w-0 col-span-1">
                     <span class="block font-medium text-base-content/60">Price</span>
                     <span class="font-bold text-success whitespace-nowrap">
-                        ${{ number_format($lastPrice['final'] ?? 0, 2) }}
+                        ${{ number_format($displayPrice, 2) }}
                     </span>
                 </div>
 

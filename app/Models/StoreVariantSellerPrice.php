@@ -24,8 +24,9 @@ class StoreVariantSellerPrice extends Model
         return $this->belongsTo(StoreVariant::class, 'store_variant_id');
     }
 
-    public function seller(): BelongsTo
+    public function seller()
     {
         return $this->belongsTo(User::class, 'seller_id');
     }
+
 }

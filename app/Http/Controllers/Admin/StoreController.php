@@ -11,6 +11,13 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use App\Services\PriceProvider;
+use App\Models\User;
+use App\Models\Customer;
+use App\Models\StoreVariantSellerPrice;
+use App\Models\StoreVariantCustomerPrice;
+use App\Models\StoreVariant;
+
+
 
 class StoreController extends Controller
 {
@@ -53,69 +60,93 @@ class StoreController extends Controller
 
     public function editVariant(Store $store, Item $item, ItemVariant $variant)
     {
-        $variant->load(
+        // Eager load necessary relationships
+        $variant->load([
             'item.colors',
             'item.sizes',
             'item.packagingTypes',
-            'storeVariants.sellerPrices',
-            'storeVariants.customerPrices',
+            'storeVariants.sellerPrices.seller',
+            'storeVariants.customerPrices.customer',
             'storeVariants'
-        );
+        ]);
 
+        // Get the store-specific variant pivot
         $storeVariant = $variant->storeVariants()->where('store_id', $store->id)->first();
-        $storeSellers = $store->sellers ?? collect();
-        $storeCustomers = $store->customers ?? collect();
 
-        // Prepare sellers data
-        $sellersData = $storeSellers->map(function ($seller) use ($storeVariant) {
-            $price = $storeVariant?->sellerPrices?->firstWhere('seller_id', $seller->id);
-            return [
-                'id' => $seller->id,
-                'name' => $seller->name,
-                'price' => $price->price ?? 0,
-                'discount_price' => $price->discount_price ?? 0,
-                'discount_ends_at' => $price?->discount_ends_at
-                    ? Carbon::parse($price->discount_ends_at)->format('Y-m-d\TH:i')
-                    : null,
-            ];
-        });
+        // Sellers associated with this store variant
+        $sellersData = $storeVariant
+            ? $storeVariant->sellerPrices->map(function ($price) {
+                return [
+                    'id' => $price->seller->id,
+                    'name' => $price->seller->first_name . ' ' . $price->seller->last_name,
+                    'price' => $price->price,
+                    'discount_price' => $price->discount_price ?? 0,
+                    'discount_ends_at' => $price->discount_ends_at
+                        ? Carbon::parse($price->discount_ends_at)->format('Y-m-d\TH:i')
+                        : null,
+                ];
+            })->toArray()
+            : [];
 
-        // Prepare customers data
-        $customersData = $storeCustomers->map(function ($customer) use ($storeVariant) {
-            $price = $storeVariant?->customerPrices?->firstWhere('customer_id', $customer->id);
-            return [
-                'id' => $customer->id,
-                'name' => $customer->first_name . ' ' . $customer->last_name,
-                'price' => $price->price ?? 0,
-                'discount_price' => $price->discount_price ?? 0,
-                'discount_ends_at' => $price?->discount_ends_at
-                    ? Carbon::parse($price->discount_ends_at)->format('Y-m-d\TH:i')
-                    : null,
-            ];
-        });
+        // Customers associated with this store variant
+        $customersData = $storeVariant
+            ? $storeVariant->customerPrices->map(function ($price) {
+                return [
+                    'id' => $price->customer->id,
+                    'name' => $price->customer->first_name . ' ' . $price->customer->last_name,
+                    'price' => $price->price,
+                    'discount_price' => $price->discount_price ?? 0,
+                    'discount_ends_at' => $price->discount_ends_at
+                        ? Carbon::parse($price->discount_ends_at)->format('Y-m-d\TH:i')
+                        : null,
+                ];
+            })->toArray()
+            : [];
 
-        // Variant data for Alpine.js
+        // Available sellers for adding new ones
+        $availableSellers = User::where('role', 'seller')
+            ->where('store_id', $store->id)
+            ->select('id', 'first_name', 'last_name')
+            ->get()
+            ->map(fn($u) => [
+                'id' => $u->id,
+                'name' => trim($u->first_name . ' ' . $u->last_name),
+            ])->toArray();
+
+        // Available customers for adding new ones
+        $availableCustomers = Customer::where('store_id', $store->id)
+            ->select('id', 'first_name', 'last_name')
+            ->get()
+            ->map(fn($c) => [
+                'id' => $c->id,
+                'name' => trim($c->first_name . ' ' . $c->last_name),
+            ])->toArray();
+
+        // Alpine.js variant data
         $variantData = [
-            'store_price' => $storeVariant?->price ?? $variant->price,
-            'store_discount_price' => $storeVariant?->discount_price ?? 0,
-            'store_discount_ends_at' => $storeVariant?->discount_ends_at
-                ? Carbon::parse($storeVariant->discount_ends_at)->format('Y-m-d\TH:i')
-                : null,
-            'status' => $storeVariant?->status ?? 'inactive',
+            'store_price' => $storeVariant->price ?? 0,
+            'store_discount_price' => $storeVariant->discount_price ?? 0,
+            'store_discount_ends_at' => optional($storeVariant->discount_ends_at)?->format('Y-m-d\TH:i'),
+            'manual_status' => $storeVariant->manual_status ?? 'auto',
+            'forced_status' => $storeVariant->forced_status, // ✅ ADD THIS
+            'active' => $storeVariant->active ?? true,
             'sellers' => $sellersData,
             'customers' => $customersData,
+            'available_sellers' => $availableSellers,
+            'available_customers' => $availableCustomers,
+            'packaging_name' => $storeVariant?->itemPackagingType->name ?? $variant->itemPackagingType?->name ?? '—',
+
         ];
 
-        // CENTRAL LOG
+        // Debug log
         \Log::info('Edit Variant Debug', [
             'store_id' => $store->id,
             'variant_id' => $variant->id,
             'storeVariant' => $storeVariant?->toArray(),
-            'sellersData' => $sellersData->toArray(),
-            'customersData' => $customersData->toArray(),
+            'sellersData' => $sellersData,
+            'customersData' => $customersData,
             'variantData' => $variantData,
         ]);
-
 
         return view('admin.stores.edit_variant', compact(
             'store',
@@ -128,33 +159,83 @@ class StoreController extends Controller
 
 
 
+
+
     // Update store-specific variant
-    public function updateVariant(Request $request, Store $store, Item $item, ItemVariant $variant)
-    {
+    public function updateVariant(
+        Request $request,
+        Store $store,
+        Item $item,
+        ItemVariant $variant
+    ) {
+        Log::info('Variant Update Request', $request->all());
+
         $data = $request->validate([
-            'store_price' => 'required|numeric|min:0',
-            'store_discount_price' => 'nullable|numeric|min:0',
-            'price' => 'required|numeric|min:0',
-            'discount_price' => 'nullable|numeric|min:0',
-            'stock' => 'nullable|integer|min:0',
-            'status' => 'required|in:active,inactive',
-            'discount_ends_at' => 'nullable|date',
+            'store_price' => ['required', 'numeric', 'min:0'],
+
+            'store_discount_price' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                'lte:store_price',
+            ],
+
+            'store_discount_ends_at' => [
+                'nullable',
+                'date',
+                function ($attr, $value, $fail) use ($request) {
+                    if ($request->store_discount_price > 0 && !$value) {
+                        $fail('Discount end date is required when a discount is set.');
+                    }
+                }
+            ],
+
+            'manual_status' => ['required', 'in:auto,forced'],
+
+            'forced_status' => [
+                'nullable',
+                'in:active,inactive,out_of_stock,unavailable',
+                function ($attr, $value, $fail) use ($request) {
+                    if ($request->manual_status === 'forced' && !$value) {
+                        $fail('Forced status is required when manual mode is forced.');
+                    }
+                }
+            ],
         ]);
 
-        // Update or insert store-variant pivot
+        $pivotData = [
+            'price' => $data['store_price'],
+            'discount_price' => $data['store_discount_price'] ?? null,
+            'discount_ends_at' => $data['store_discount_ends_at'] ?? null,
+
+            'manual_status' => $data['manual_status'],
+        ];
+
+        if ($data['manual_status'] === 'forced') {
+            $pivotData['forced_status'] = $data['forced_status'];
+            $pivotData['active'] = $data['forced_status'] !== 'inactive';
+        } else {
+            // AUTO MODE — clear forced state
+            $pivotData['forced_status'] = null;
+            $pivotData['active'] = true;
+        }
+
         $store->variants()->syncWithoutDetaching([
-            $variant->id => [
-                'price' => $data['price'],
-                'discount_price' => $data['discount_price'] !== '' ? $data['discount_price'] : null,
-                'active' => $data['status'] === 'active',
-                'discount_ends_at' => $data['discount_ends_at'] ?? null,
-            ]
+            $variant->id => $pivotData,
         ]);
 
-        return redirect()->route('admin.stores.items.variants', [$store->id, $item->id])
-            ->with('success', 'Variant updated successfully for this store.');
+        Log::info('Variant updated', [
+            'store_id' => $store->id,
+            'variant_id' => $variant->id,
+            'manual_status' => $pivotData['manual_status'],
+            'forced_status' => $pivotData['forced_status'] ?? null,
+        ]);
 
+        return redirect()
+            ->route('admin.stores.items.variants', [$store->id, $item->id])
+            ->with('success', 'Variant updated successfully for this store.');
     }
+
 
 
     // Delete store
@@ -177,84 +258,88 @@ class StoreController extends Controller
     // Show variants of a specific item in this store
     public function itemVariants(Store $store, $itemId)
     {
-        // 1️⃣ Load all variants of the item
-        $variants = ItemVariant::where('item_id', $itemId)
-            ->with(['itemColor', 'itemSize', 'itemPackagingType'])
-            ->get();
+        $sellerId = request('seller_id');      // optional
+        $customerId = request('customer_id');  // optional
 
-        $variantIds = $variants->pluck('id');
+        // 1️⃣ Load item with all variants and relations
+        $item = Item::with([
+            'variants.itemColor',
+            'variants.itemSize',
+            'variants.itemPackagingType',
+            'variants.storeVariants' // Eloquent relation we'll define below
+        ])->findOrFail($itemId);
 
-        // 2️⃣ Load stock in this store
+        $variants = $item->variants;
+
+        // 2️⃣ Load stock for these variants in the store
         $stocks = ItemStock::where('item_inventory_location_id', $store->id)
-            ->whereIn('item_variant_id', $variantIds)
+            ->whereIn('item_variant_id', $variants->pluck('id'))
             ->get()
             ->keyBy('item_variant_id');
 
-        // 3️⃣ Load store-specific variant data
-        $storeVariants = DB::table('store_variant')
-            ->where('store_id', $store->id)
-            ->whereIn('item_variant_id', $variantIds)
-            ->get()
-            ->keyBy('item_variant_id');
-
-        // Optional: get seller and customer IDs from request or context
-        $sellerId = request('seller_id');      // nullable
-        $customerId = request('customer_id');  // nullable
-
-        // 4️⃣ Attach stock and price ladder to each variant
+        // 3️⃣ Attach store-specific data
         foreach ($variants as $variant) {
+            // Stock
             $variant->store_stock = $stocks[$variant->id]->quantity ?? 0;
 
-            $storeVariant = $storeVariants[$variant->id] ?? null;
+            // StoreVariant relation for this store
+            $storeVariant = $variant->storeVariants
+                ->where('store_id', $store->id)
+                ->first();
 
             if ($storeVariant) {
-                // Use PriceProvider to get full ladder
+                $variant->store_variant_id = $storeVariant->id;
+                $variant->store_price = $storeVariant->price;
+                $variant->store_discount_price = $storeVariant->discount_price;
+                $variant->discount_ends_at = $storeVariant->discount_ends_at;
+                $variant->manual_status = $storeVariant->manual_status ?? 'auto';
+                $variant->forced_status = $storeVariant->forced_status;
+
+                // Compute status using model accessor
+                $variant->status = $storeVariant->computed_status;
+                $variant->store_active = $storeVariant->computed_status === 'active';
+
+                // Price ladder & final price
                 $variant->price_ladder = PriceProvider::getPriceLadder(
                     storeVariantId: $storeVariant->id,
                     storeId: $store->id,
                     sellerId: $sellerId,
                     customerId: $customerId
                 );
-
-                // Get the final price
                 $variant->final_price = PriceProvider::getFinalPrice($variant->price_ladder);
             } else {
-                // No store variant exists
+                $variant->manual_status = 'auto';
+                $variant->forced_status = null;
+                $variant->status = 'inactive';
+                $variant->store_active = false;
                 $variant->price_ladder = [];
                 $variant->final_price = null;
             }
         }
 
-        $item = Item::findOrFail($itemId);
-
-        // 🧾 ✅ SINGLE LOG ENTRY (everything in one place)
-        // 🧾 ✅ SINGLE LOG ENTRY
+        // 🧾 Log variants
         Log::info('Store Item Variants Loaded', [
-            'store' => [
-                'id' => $store->id,
-                'name' => $store->name,
-            ],
-            'item' => [
-                'id' => $item->id,
-                'name' => $item->product_name,
-            ],
+            'store' => ['id' => $store->id, 'name' => $store->name],
+            'item' => ['id' => $item->id, 'name' => $item->product_name],
             'seller_id' => $sellerId,
             'customer_id' => $customerId,
-            'variants' => $variants->map(function ($v) {
-                return [
-                    'id' => $v->id,
-                    'color' => $v->itemColor->name ?? null,
-                    'size' => $v->itemSize->name ?? null,
-                    'packaging' => $v->itemPackagingType->name ?? null,
-                    'stock' => $v->store_stock,
-                    'price_ladder' => $v->price_ladder,
-                    'final_price' => $v->final_price,
-                ];
-            })->toArray(),
+            'variants' => $variants->map(fn($v) => [
+                'id' => $v->id,
+                'color' => $v->itemColor->name ?? null,
+                'size' => $v->itemSize->name ?? null,
+                'packaging' => $v->itemPackagingType->name ?? null,
+                'stock' => $v->store_stock,
+                'manual_status' => $v->manual_status,
+                'forced_status' => $v->forced_status,
+                'actual_status' => $v->status,
+                'price_ladder' => $v->price_ladder,
+                'final_price' => $v->final_price,
+            ])->toArray(),
         ]);
 
         return view('admin.stores.item_variants', compact('store', 'item', 'variants'));
     }
+
 
     // Update store-specific variant status
     public function updateVariantStatus(Request $request, Store $store, $variantId)
@@ -281,4 +366,109 @@ class StoreController extends Controller
 
         return back()->with('success', 'Variant updated successfully for this store.');
     }
+
+    public function updateSellerPrice(
+        Request $request,
+        Store $store,
+        Item $item,
+        ItemVariant $variant
+    ) {
+        $data = $request->validate([
+            'seller_id' => 'required|exists:users,id',
+
+            'price' => ['required', 'numeric', 'min:0'],
+
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                'lte:price',
+            ],
+
+            'discount_ends_at' => [
+                'nullable',
+                'date',
+                function ($attr, $value, $fail) use ($request) {
+                    if ($request->discount_price > 0 && !$value) {
+                        $fail('Discount end date is required when a discount is set.');
+                    }
+                }
+            ],
+        ]);
+
+
+        // Get the store_variant row
+        $storeVariant = $variant->storeVariants()
+            ->where('store_id', $store->id)
+            ->firstOrFail();
+
+        StoreVariantSellerPrice::updateOrCreate(
+            [
+                'store_variant_id' => $storeVariant->id,
+                'seller_id' => $data['seller_id'],
+            ],
+            [
+                'price' => $data['price'],
+                'discount_price' => $data['discount_price'] > 0 ? $data['discount_price'] : null,
+                'discount_ends_at' => $data['discount_price'] > 0 ? $data['discount_ends_at'] : null,
+                'active' => true,
+            ]
+        );
+
+
+        return back()->with('success', 'Seller price saved successfully.');
+    }
+
+    public function updateCustomerPrice(
+        Request $request,
+        Store $store,
+        Item $item,
+        ItemVariant $variant
+    ) {
+        $data = $request->validate([
+            'customer_id' => 'required|exists:customers,id',
+
+            'price' => ['required', 'numeric', 'min:0'],
+
+            'discount_price' => [
+                'nullable',
+                'numeric',
+                'min:0',
+                'lte:price',
+            ],
+
+            'discount_ends_at' => [
+                'nullable',
+                'date',
+                function ($attr, $value, $fail) use ($request) {
+                    if ($request->discount_price > 0 && !$value) {
+                        $fail('Discount end date is required when a discount is set.');
+                    }
+                }
+            ],
+        ]);
+
+
+        // Get the store_variant row
+        $storeVariant = $variant->storeVariants()
+            ->where('store_id', $store->id)
+            ->firstOrFail();
+
+        StoreVariantCustomerPrice::updateOrCreate(
+            [
+                'store_variant_id' => $storeVariant->id,
+                'customer_id' => $data['customer_id'],
+            ],
+            [
+                'price' => $data['price'],
+                'discount_price' => $data['discount_price'] > 0 ? $data['discount_price'] : null,
+                'discount_ends_at' => $data['discount_price'] > 0 ? $data['discount_ends_at'] : null,
+                'active' => true,
+            ]
+        );
+
+
+        return back()->with('success', 'Customer price saved successfully.');
+    }
+
 }
