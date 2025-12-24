@@ -264,7 +264,7 @@ $packagingOrder = ['piece', 'packet', 'cartoon'];
 <td>
     <div class="flex flex-col items-center text-center">
         {{-- Label --}}
-        <div class="text-xs text-gray-400">
+        <div class="text-xs text-gray-500">
             {{ $label }}
         </div>
 

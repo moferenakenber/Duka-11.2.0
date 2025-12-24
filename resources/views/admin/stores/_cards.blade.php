@@ -18,15 +18,13 @@
                 </div>';
     };
 
-    $getStatusBadgeClass = function ($status) {
-        return match($status) {
-            'active' => 'bg-success',
-            'inactive' => 'bg-base-content/60',
-            'unavailable' => 'bg-warning',
-            'out_of_stock' => 'bg-error',
-            default => 'bg-base-content/60',
-        };
-    };
+            $getStatusBadgeClass = fn($status) => match ($status) {
+                'active' => 'bg-green-600',
+                'inactive' => 'bg-gray-500',
+                'out_of_stock' => 'bg-yellow-500',
+                'unavailable' => 'bg-red-600',
+                default => 'bg-gray-400',
+            };
 @endphp
 
 @php
@@ -95,24 +93,30 @@ function renderPackagingMobile($variant) {
                     </div>
                 </div>
 
-                {{-- Status dropdown --}}
-                <div class="flex flex-col items-end flex-shrink-0 gap-2">
-                    <form method="POST" action="{{ route('admin.variants.updateStatus', $variant->id) }}">
-                        @csrf
-                        @method('PUT')
-                        <div class="flex items-center gap-2">
-                            <span class="w-2 h-2 rounded-full inline-block {{ $getStatusBadgeClass($variant->status) }}"></span>
-                            <select name="status"
-                                    class="min-w-[140px] h-8 px-2 text-sm select select-bordered"
-                                    onchange="this.form.submit()">
-                                <option value="active" {{ $variant->status === 'active' ? 'selected' : '' }}>Active</option>
-                                <option value="inactive" {{ $variant->status === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                                <option value="unavailable" {{ $variant->status === 'unavailable' ? 'selected' : '' }}>Unavailable</option>
-                                <option value="out_of_stock" {{ $variant->status === 'out_of_stock' ? 'selected' : '' }}>O/S</option>
-                            </select>
+                {{-- Status --}}
+                @php
+                    $isForced = $variant->manual_status === 'forced';
+
+                    $label = $isForced ? 'FORCED' : 'AUTOMATIC';
+
+                    $value = $isForced
+                        ? ($variant->forced_status ?? 'inactive')
+                        : $variant->status;
+                @endphp
+
+                    <div class="flex flex-col items-center mt-2 text-center">
+                        {{-- Label --}}
+                        <div class="text-xs text-gray-500">
+                            {{ $label }}
                         </div>
-                    </form>
-                </div>
+
+                        {{-- Value --}}
+                        <span class="badge text-xs text-white {{ $getStatusBadgeClass($value) }}">
+                            {{ strtoupper(str_replace('_', ' ', $value)) }}
+                        </span>
+                    </div>
+
+
             </div>
 
             {{-- Attributes: Packaging + Size + Price + Discount --}}
