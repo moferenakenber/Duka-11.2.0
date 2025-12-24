@@ -127,12 +127,14 @@ $packagingOrder = ['piece', 'packet', 'cartoon'];
 
 <div class="hidden overflow-x-auto shadow-xl md:block rounded-xl bg-base-100">
 
-    <div class="flex flex-wrap gap-2 mb-4">
+<div class="flex flex-wrap gap-2 mb-4">
     @foreach ($filters as $key => $data)
         <a href="{{ request()->fullUrlWithQuery(['filter' => $key]) }}"
-           class="rounded-full px-3 py-1 text-sm font-medium transition
-                  {{ $currentFilter === $key ? $data['color'] : 'bg-gray-200 text-gray-700' }}
-                  hover:opacity-90">
+           class="rounded-full px-4 py-1.5 text-sm font-semibold border transition-all duration-200
+                  {{ $currentFilter === $key
+                     ? 'bg-[#f6a45d]/20 border-[#f6a45d]/40 text-orange-900 shadow-sm'
+                     : 'bg-gray-100 border-transparent text-gray-600 hover:bg-gray-200 hover:text-gray-800'
+                  }}">
             {{ $data['label'] }}
         </a>
     @endforeach
