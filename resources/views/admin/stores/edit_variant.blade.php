@@ -22,30 +22,7 @@
     </div>
 
 
-        <form
-            method="POST"
-            action="{{ route('admin.stores.items.variants.update', [$store->id, $variant->item_id, $variant->id]) }}"
-            @submit.prevent="
-                if (!isDiscountValid(store_price, store_discount_price)) {
-                    showTempMessage('Discount price cannot exceed price', 'error');
-                    return;
-                }
-
-                if (store_discount_price > 0 && !store_discount_ends_at) {
-                    showTempMessage('Discount end date is required when a discount is set', 'error');
-                    return;
-                }
-
-                $el.submit();
-            "
-        >
-
-
-
-        @csrf
-        @method('PUT')
-
-        {{-- ================= READ-ONLY VARIANT INFO ================= --}}
+            {{-- ================= READ-ONLY VARIANT INFO ================= --}}
         <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-6">
             <div class="p-4 border rounded-lg">
                 <span class="block text-xs text-gray-500">Variant ID</span>
@@ -76,6 +53,33 @@
                 <span class="font-semibold">{{ $variant->barcode ?? '—' }}</span>
             </div>
         </div>
+
+
+
+        <form
+            method="POST"
+            action="{{ route('admin.stores.items.variants.update', [$store->id, $variant->item_id, $variant->id]) }}"
+            @submit.prevent="
+                if (!isDiscountValid(store_price, store_discount_price)) {
+                    showTempMessage('Discount price cannot exceed price', 'error');
+                    return;
+                }
+
+                if (store_discount_price > 0 && !store_discount_ends_at) {
+                    showTempMessage('Discount end date is required when a discount is set', 'error');
+                    return;
+                }
+
+                $el.submit();
+            "
+        >
+
+
+
+        @csrf
+        @method('PUT')
+
+
 
         {{-- STORE PRICE --}}
         <div class="mb-4">
@@ -165,9 +169,28 @@
 
                     <!-- Edit mode inputs -->
                     <div x-show="seller.editing" class="space-y-2">
-                        <input type="number" :name="`seller_price[${index}]`" x-model.number="seller.price" placeholder="Price" class="w-full input input-sm input-bordered">
-                        <input type="number" :name="`seller_discount_price[${index}]`" x-model.number="seller.discount_price" placeholder="Discount Price" class="w-full input input-sm input-bordered">
-                        <input type="datetime-local" :name="`seller_discount_ends_at[${index}]`" x-model="seller.discount_ends_at" class="w-full input input-sm input-bordered" :min="new Date().toISOString().slice(0,16)">
+                        <input type="number"
+                                :name="`seller_price[${index}]`"
+                                x-model.number="seller.price"
+                                placeholder="Price"
+                                class="w-full input input-sm input-bordered"
+                                :disabled="!seller.editing">
+
+
+                        <input type="number"
+                                :name="`seller_discount_price[${index}]`"
+                                x-model.number="seller.discount_price"
+                                placeholder="Discount Price"
+                                class="w-full input input-sm input-bordered"
+                                :disabled="!seller.editing">
+
+
+                        <input type="datetime-local"
+                                :name="seller.editing ? `seller_discount_ends_at[${index}]` : null"
+                                x-model="seller.discount_ends_at"
+                                class="w-full input input-sm input-bordered"
+                                :disabled="!seller.editing"
+                                :min="new Date().toISOString().slice(0,16)">
                     </div>
                 </div>
             </template>
@@ -287,14 +310,28 @@
 
                     <!-- Edit mode inputs -->
                     <div x-show="customer.editing" class="space-y-2">
-                        <input type="number" :name="`customer_price[${index}]`" x-model.number="customer.price" placeholder="Price" class="w-full input input-sm input-bordered">
-                        <input type="number" :name="`customer_discount_price[${index}]`" x-model.number="customer.discount_price" placeholder="Discount Price" class="w-full input input-sm input-bordered">
+                        <input type="number"
+                            :name="customer.editing ? `customer_price[${index}]` : null"
+                            x-model.number="customer.price"
+                            placeholder="Price"
+                            class="w-full input input-sm input-bordered"
+                            :disabled="!customer.editing">
+
+                        <input type="number"
+                            :name="customer.editing ? `customer_discount_price[${index}]` : null"
+                            x-model.number="customer.discount_price"
+                            placeholder="Discount Price"
+                            class="w-full input input-sm input-bordered"
+                            :disabled="!customer.editing">
+
                         <input type="datetime-local"
-                            :name="`customer_discount_ends_at[${index}]`"
+                            :name="customer.editing ? `customer_discount_ends_at[${index}]` : null"
                             x-model="customer.discount_ends_at"
                             class="w-full input input-sm input-bordered"
+                            :disabled="!customer.editing"
                             :min="new Date().toISOString().slice(0,16)">
                     </div>
+
                 </div>
             </template>
 
