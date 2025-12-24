@@ -70,6 +70,7 @@ class StoreController extends Controller
             'storeVariants'
         ]);
 
+
         // Get the store-specific variant pivot
         $storeVariant = $variant->storeVariants()->where('store_id', $store->id)->first();
 
@@ -377,13 +378,29 @@ class StoreController extends Controller
     ) {
         $data = $request->validate([
             'seller_id' => 'required|exists:users,id',
-            'price' => ['required', 'numeric', 'min:0'],
+            'price' => ['nullable', 'numeric', 'min:0'],
             'discount_price' => ['nullable', 'numeric', 'min:0', 'lte:price'],
             'discount_ends_at' => ['nullable', 'date'],
+            '_delete' => ['nullable', 'boolean'],
         ]);
 
         $storeVariant = $variant->storeVariants()->where('store_id', $store->id)->firstOrFail();
 
+        if (!empty($data['_delete'])) {
+            // Delete seller price
+            StoreVariantSellerPrice::where('store_variant_id', $storeVariant->id)
+                ->where('seller_id', $data['seller_id'])
+                ->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Seller price deleted successfully',
+                'deleted' => true, // ✅ extra flag for frontend
+                'seller_id' => $data['seller_id']
+            ]);
+        }
+
+        // Otherwise, create/update
         StoreVariantSellerPrice::updateOrCreate(
             [
                 'store_variant_id' => $storeVariant->id,
@@ -397,19 +414,14 @@ class StoreController extends Controller
             ]
         );
 
-        // ✅ Return JSON instead of redirect
-        if ($request->expectsJson() || $request->isJson()) {
-            return response()->json([
-                'success' => true,
-                'message' => 'Seller price saved successfully'
-            ]);
-        }
-
         return response()->json([
             'success' => true,
-            'message' => 'Seller price saved successfully'
+            'message' => 'Seller price saved successfully',
+            'deleted' => false,
+            'seller_id' => $data['seller_id']
         ]);
     }
+
 
 
 
@@ -423,7 +435,7 @@ class StoreController extends Controller
     ) {
         $data = $request->validate([
             'customer_id' => 'required|exists:customers,id',
-            'price' => ['required', 'numeric', 'min:0'],
+            'price' => ['nullable', 'numeric', 'min:0'],
             'discount_price' => ['nullable', 'numeric', 'min:0', 'lte:price'],
             'discount_ends_at' => [
                 'nullable',
@@ -438,13 +450,28 @@ class StoreController extends Controller
                     }
                 }
             ],
+            '_delete' => ['nullable', 'boolean'],
         ]);
 
-        // Get the store_variant row
         $storeVariant = $variant->storeVariants()
             ->where('store_id', $store->id)
             ->firstOrFail();
 
+        // Handle deletion
+        if (!empty($data['_delete'])) {
+            StoreVariantCustomerPrice::where('store_variant_id', $storeVariant->id)
+                ->where('customer_id', $data['customer_id'])
+                ->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Customer price deleted successfully',
+                'deleted' => true,
+                'customer_id' => $data['customer_id']
+            ]);
+        }
+
+        // Otherwise, create/update
         StoreVariantCustomerPrice::updateOrCreate(
             [
                 'store_variant_id' => $storeVariant->id,
@@ -460,9 +487,12 @@ class StoreController extends Controller
 
         return response()->json([
             'success' => true,
-            'message' => 'Customer price saved successfully'
+            'message' => 'Customer price saved successfully',
+            'deleted' => false,
+            'customer_id' => $data['customer_id']
         ]);
     }
+
 
 
 }

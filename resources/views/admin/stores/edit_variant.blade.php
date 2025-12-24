@@ -23,36 +23,49 @@
 
 
             {{-- ================= READ-ONLY VARIANT INFO ================= --}}
-        <div class="grid grid-cols-1 gap-4 mb-6 md:grid-cols-2 lg:grid-cols-6">
-            <div class="p-4 border rounded-lg">
-                <span class="block text-xs text-gray-500">Variant ID</span>
-                <span class="font-semibold">{{ $variant->id }}</span>
-            </div>
-            <div class="p-4 border rounded-lg bg-sky-50">
-                <span class="block text-xs text-gray-500">SKU</span>
-                <span class="font-semibold">{{ $variant->item->sku ?? '—' }}</span>
-            </div>
-            <div class="p-4 border rounded-lg">
-                <span class="block text-xs text-gray-500">Product</span>
-                <span class="font-semibold">{{ $variant->item->product_name }}</span>
-            </div>
-            <div class="p-4 border rounded-lg">
-                <span class="block text-xs text-gray-500">Color</span>
-                <span class="font-semibold">{{ $variant->itemColor->name ?? '—' }}</span>
-            </div>
-            <div class="p-4 border rounded-lg">
-                <span class="block text-xs text-gray-500">Size</span>
-                <span class="font-semibold">{{ $variant->itemSize->name ?? '—' }}</span>
-            </div>
-            <div class="p-4 border rounded-lg">
-                <span class="block text-xs text-gray-500">Packaging</span>
-                <span class="text-sm font-semibold" x-text="variantPackaging"></span>
-            </div>
-            <div class="p-4 border rounded-lg">
-                <span class="block text-xs text-gray-500">Barcode</span>
-                <span class="font-semibold">{{ $variant->barcode ?? '—' }}</span>
-            </div>
-        </div>
+<div class="grid grid-cols-2 gap-3 mb-6 md:grid-cols-4 lg:grid-cols-7">
+
+    <div class="p-3 border rounded-xl bg-[#f6a45d]/10 border-[#f6a45d]/30 shadow-sm">
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-orange-800/70">Variant ID</span>
+        <span class="font-mono text-sm font-semibold text-orange-900">{{ $variant->id }}</span>
+    </div>
+
+    <div class="p-3 border-2 rounded-xl bg-[#f6a45d]/20 border-[#f6a45d]/40 shadow-sm">
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-orange-900/70">SKU</span>
+        <span class="font-bold text-orange-950">{{ $variant->item->sku ?? '—' }}</span>
+    </div>
+
+    <div class="p-3 border rounded-xl bg-[#f6a45d]/10 border-[#f6a45d]/30 shadow-sm col-span-2 md:col-span-1">
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-orange-800/70">Product</span>
+        <span class="block font-semibold text-orange-900 truncate">{{ $variant->item->product_name }}</span>
+    </div>
+
+    @if($variant->itemColor && $variant->itemColor->name)
+    <div class="p-3 border rounded-xl bg-[#f6a45d]/10 border-[#f6a45d]/30 shadow-sm">
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-orange-800/70">Color</span>
+        <span class="font-semibold text-orange-900">{{ $variant->itemColor->name }}</span>
+    </div>
+    @endif
+
+    @if($variant->itemSize && $variant->itemSize->name)
+    <div class="p-3 border rounded-xl bg-[#f6a45d]/10 border-[#f6a45d]/30 shadow-sm">
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-orange-800/70">Size</span>
+        <span class="font-semibold text-orange-900">{{ $variant->itemSize->name }}</span>
+    </div>
+    @endif
+
+    <div class="p-3 border rounded-xl bg-[#f6a45d]/10 border-[#f6a45d]/30 shadow-sm" x-show="variantPackaging">
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-orange-800/70">Packaging</span>
+        <span class="text-sm font-semibold text-orange-900" x-text="variantPackaging"></span>
+    </div>
+
+    @if($variant->barcode)
+    <div class="p-3 border rounded-xl bg-[#f6a45d]/10 border-[#f6a45d]/30 shadow-sm col-span-2 md:col-span-1">
+        <span class="block text-[10px] font-bold uppercase tracking-wider text-orange-800/70">Barcode</span>
+        <span class="font-mono text-sm font-semibold text-orange-900">{{ $variant->barcode }}</span>
+    </div>
+    @endif
+</div>
 
 
 
@@ -208,7 +221,7 @@
                     <label class="block text-xs font-semibold text-gray-600">Select Seller</label>
                     <select x-model="newSellerId" class="w-full input input-bordered input-lg">
                         <option value="">Select Seller</option>
-                        <template x-for="seller in availableSellers" :key="seller.id">
+                        <template x-for="seller in filteredAvailableSellers" :key="seller.id">
                             <option :value="seller.id" x-text="seller.name"></option>
                         </template>
                     </select>
@@ -348,7 +361,7 @@
                     <label class="block text-xs font-semibold text-gray-600">Select Customer</label>
                     <select x-model="newCustomerId" class="w-full input input-bordered input-lg">
                         <option value="">Select Customer</option>
-                        <template x-for="customer in availableCustomers" :key="customer.id">
+                        <template x-for="customer in filteredAvailableCustomers" :key="customer.id">
                             <option :value="customer.id" x-text="customer.name"></option>
                         </template>
                     </select>
@@ -477,8 +490,8 @@ function storeVariantForm(data) {
         activeSellerId: '',
         activeCustomerId: '',
 
-        availableSellers: data.available_sellers ?? [],
-        availableCustomers: data.available_customers ?? [],
+        //availableSellers: data.available_sellers ?? [],
+        //availableCustomers: data.available_customers ?? [],
 
         variantPackaging: data.packaging_name ?? '—',
 
@@ -493,6 +506,19 @@ function storeVariantForm(data) {
                 newCustomerPrice: 0,
                 newCustomerDiscountPrice: 0,
                 newCustomerDiscountEndsAt: null,
+
+        get filteredAvailableSellers() {
+            return this.availableSellers.filter(s =>
+                !this.sellers.some(existing => existing.id === s.id)
+            );
+        },
+
+        get filteredAvailableCustomers() {
+            return this.availableCustomers.filter(c =>
+                !this.customers.some(existing => existing.id === c.id)
+            );
+        },
+
 
 
         get activeSeller() {
@@ -575,12 +601,36 @@ function storeVariantForm(data) {
             setTimeout(() => this.showMessage = false, 3000); // hide after 3s
         },
 
-        deleteSeller(index) {
-            if (!confirm('Delete this seller price?')) return;
+deleteSeller(index) {
+    let seller = this.sellers[index];
+    if (!confirm('Delete this seller price?')) return;
 
-            this.sellers[index]._delete = true;
-            this.sellers[index]._deleted_ui = true;
+    fetch(`/admin/stores/${this.storeId}/items/${this.itemId}/variants/${this.variantId}/seller-price`, {
+        method: 'POST', // or 'DELETE' if you have a route for that
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
+        body: JSON.stringify({
+            seller_id: seller.id,
+            _delete: true
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success && res.deleted) {
+            // remove from UI
+            this.sellers[index]._deleted_ui = true;
+            this.showTempMessage('Seller price deleted', 'success');
+        } else {
+            this.showTempMessage('Failed to delete seller price', 'error');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        this.showTempMessage('Failed to delete seller price', 'error');
+    });
+},
 
 
 
@@ -628,11 +678,36 @@ function storeVariantForm(data) {
         },
 
 
-        deleteCustomer(index) {
+deleteCustomer(index) {
+    let customer = this.customers[index];
     if (!confirm('Delete this customer price?')) return;
-    this.customers[index]._delete = true;
-    this.customers[index]._deleted_ui = true;
+
+    fetch(`/admin/stores/${this.storeId}/items/${this.itemId}/variants/${this.variantId}/customer-price`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+        },
+        body: JSON.stringify({
+            customer_id: customer.id,
+            _delete: true
+        })
+    })
+    .then(res => res.json())
+    .then(res => {
+        if (res.success && res.deleted) {
+            this.customers[index]._deleted_ui = true;
+            this.showTempMessage('Customer price deleted', 'success');
+        } else {
+            this.showTempMessage('Failed to delete customer price', 'error');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        this.showTempMessage('Failed to delete customer price', 'error');
+    });
 },
+
 
 saveCustomer(index) {
     let customer = this.customers[index];
