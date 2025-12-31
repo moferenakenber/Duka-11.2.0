@@ -8,6 +8,7 @@
 <div class="p-6 mb-6 rounded-xl bg-base-200"
      x-data="storeVariantForm({
         ...@js($variantData),
+        {{-- availableSellers: @js($variantData['available_sellers'] ?? []), --}}
         storeId: {{ $store->id }},
         itemId: {{ $item->id }},
         variantId: {{ $variant->id }}
@@ -490,8 +491,8 @@ function storeVariantForm(data) {
         activeSellerId: '',
         activeCustomerId: '',
 
-        //availableSellers: data.available_sellers ?? [],
-        //availableCustomers: data.available_customers ?? [],
+        availableSellers: data.available_sellers ?? [],
+        availableCustomers: data.available_customers ?? [],
 
         variantPackaging: data.packaging_name ?? '—',
 
@@ -508,6 +509,9 @@ function storeVariantForm(data) {
                 newCustomerDiscountEndsAt: null,
 
         get filteredAvailableSellers() {
+            console.log("Filtering sellers...");
+            console.log("availableSellers =", this.availableSellers);
+            console.log("current sellers =", this.sellers);
             return this.availableSellers.filter(s =>
                 !this.sellers.some(existing => existing.id === s.id)
             );
@@ -621,6 +625,7 @@ deleteSeller(index) {
         if (res.success && res.deleted) {
             // remove from UI
             this.sellers[index]._deleted_ui = true;
+            this.sellers.splice(index, 1);
             this.showTempMessage('Seller price deleted', 'success');
         } else {
             this.showTempMessage('Failed to delete seller price', 'error');
@@ -697,6 +702,7 @@ deleteCustomer(index) {
     .then(res => {
         if (res.success && res.deleted) {
             this.customers[index]._deleted_ui = true;
+            this.customers.splice(index, 1);
             this.showTempMessage('Customer price deleted', 'success');
         } else {
             this.showTempMessage('Failed to delete customer price', 'error');
