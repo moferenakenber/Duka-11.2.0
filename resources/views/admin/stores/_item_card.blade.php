@@ -29,13 +29,33 @@
                 </div>
             </div>
 
-            {{-- Right: Variant Badge --}}
-            <div class="flex items-center self-start order-first sm:order-last sm:self-center">
-                <div class="flex items-center gap-2 px-5 py-2.5 border-2 rounded-2xl bg-[#f6a45d] text-white shadow-lg shadow-[#f6a45d]/30">
-                    <i data-lucide="layers" class="w-5 h-5 text-white"></i>
-                    <span class="text-sm font-black tracking-tighter uppercase">Variants: {{ $variants->count() }}</span>
-                </div>
-            </div>
+{{-- Right: Variant Badge + Delete Button --}}
+<div class="flex items-center self-start gap-2 sm:order-last sm:self-center">
+
+    {{-- Variants Badge --}}
+    <div class="flex items-center gap-2 px-5 py-2.5 border-2 rounded-2xl bg-[#f6a45d] text-white shadow-lg shadow-[#f6a45d]/30">
+        <i data-lucide="layers" class="w-5 h-5 text-white"></i>
+        <span class="text-sm font-black tracking-tighter uppercase">
+            Variants: {{ $variants->count() }}
+        </span>
+    </div>
+
+    {{-- Delete All Variants Button --}}
+    <form method="POST"
+          action="{{ route('admin.stores.items.variants.destroy', [$store->id, $item->id]) }}"
+          onsubmit="return confirm('Are you sure you want to remove all variants of this item from the store?');">
+        @csrf
+        @method('DELETE')
+        <button type="submit" class="px-4 py-2 text-xs font-bold text-white uppercase rounded-full shadow-md bg-rose-600 hover:bg-rose-700">
+            Delete All
+        </button>
+    </form>
+
+</div>
+
+
+
+
 
         </div>
     </div>

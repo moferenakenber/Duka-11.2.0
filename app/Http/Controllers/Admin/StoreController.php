@@ -493,6 +493,25 @@ class StoreController extends Controller
         ]);
     }
 
+    public function deleteAllStoreVariants(Store $store, $itemId)
+    {
+        $item = Item::with('variants.storeVariants')->findOrFail($itemId);
+
+        foreach ($item->variants as $variant) {
+            $storeVariant = $variant->storeVariants
+                ->where('store_id', $store->id)
+                ->first();
+
+            if ($storeVariant) {
+                $storeVariant->delete();
+            }
+        }
+
+        return redirect()->route('admin.stores.items', $store->id)
+            ->with('success', 'Item removed from this store successfully.');
+    }
+
+
 
 
 }

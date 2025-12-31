@@ -20,6 +20,43 @@
         </div>
     </x-slot>
 
+    {{-- resources/views/admin/variants/_messages.blade.php --}}
+
+    {{-- Success Message --}}
+    @if(session('success'))
+        <div x-data="{ showToast: true }" x-show="showToast" x-transition
+            class="px-4 mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8"
+            x-init="setTimeout(() => showToast = false, 3000)">
+            <div class="flex items-center justify-between p-4 bg-green-100 border border-green-300 rounded-lg shadow-sm">
+                <div class="flex items-center gap-2 text-green-900">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    <span class="text-sm font-semibold">{{ session('success') }}</span>
+                </div>
+                <button @click="showToast = false" class="text-green-900 hover:text-green-700">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    @endif
+
+    {{-- Error Message --}}
+    @if(session('error'))
+        <div x-data="{ showToast: true }" x-show="showToast" x-transition
+            class="px-4 mx-auto mt-4 max-w-7xl sm:px-6 lg:px-8"
+            x-init="setTimeout(() => showToast = false, 3000)">
+            <div class="flex items-center justify-between p-4 bg-red-100 border border-red-300 rounded-lg shadow-sm">
+                <div class="flex items-center gap-2 text-red-900">
+                    <i data-lucide="alert-circle" class="w-5 h-5"></i>
+                    <span class="text-sm font-semibold">{{ session('error') }}</span>
+                </div>
+                <button @click="showToast = false" class="text-red-900 hover:text-red-700">
+                    <i data-lucide="x" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </div>
+    @endif
+
+
     {{-- Main Content Container --}}
     <div class="px-4 py-6 mx-auto max-w-7xl sm:px-6 lg:px-8">
 

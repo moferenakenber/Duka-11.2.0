@@ -167,6 +167,9 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
             Route::get('{item}/variants', [StoreController::class, 'itemVariants'])
                 ->name('variants');
 
+            // Delete an item from a store
+
+
             // Edit a specific variant of an item in the store
             Route::get('{item}/variants/{variant}/edit', [StoreController::class, 'editVariant'])
                 ->name('variants.edit');
@@ -188,6 +191,10 @@ Route::group(['middleware' => ['auth', 'verified']], function () {
         // routes/web.php
         Route::get('stores/{store}/items/{item}/variants', [StoreController::class, 'itemVariants'])
             ->name('stores.items.variants');
+
+        Route::delete('stores/{store}/items/{item}/variants', [StoreController::class, 'deleteAllStoreVariants'])
+            ->name('stores.items.variants.destroy');
+
 
 
         Route::match(['get', 'post'], '/cart/{cart}/add', [CartController::class, 'addItem'])->name('cart.add');
