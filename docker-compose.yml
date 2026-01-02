@@ -1,0 +1,42 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: laravel_app
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_URL=http://localhost:8181
+      - DB_CONNECTION=mysql
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_DATABASE=duka_11_2_0
+      - DB_USERNAME=root
+      - DB_PASSWORD=root
+      - SESSION_DRIVER=file
+    ports:
+      - "8181:80"
+    volumes:
+      - .:/var/www/html:cached           # Sync your project folder
+      - /var/www/html/vendor             # Use container vendor
+      - /var/www/html/node_modules       # Use container node_modules
+      - /var/www/html/public/storage     # Storage folder inside container
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    container_name: laravel_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: duka_11_2_0
+    ports:
+      - "3308:3306"
+    volumes:
+      - dbdata:/var/lib/mysql
+
+volumes:
+  dbdata:
+
