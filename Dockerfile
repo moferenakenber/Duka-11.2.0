@@ -25,29 +25,13 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 RUN curl -fsSL https://deb.nodesource.com/setup_23.x | bash - \
     && apt-get install -y nodejs
 
-# 5. Enable Apache rewrite module and configure DocumentRoot
-RUN a2enmod rewrite ssl \
+# 5. Clean Apache Config (Cloudflare Friendly)
+RUN a2enmod rewrite ssl headers \
     && a2ensite default-ssl \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/default-ssl.conf \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
 
-# Update the redirect config to handle BOTH port 80 and 443
-RUN echo '<VirtualHost *:80>\n\
-    ServerName www.mezgebedirijit.com\n\
-    Redirect permanent / https://mezgebedirijit.com/\n\
-</VirtualHost>\n\
-<VirtualHost *:443>\n\
-    ServerName www.mezgebedirijit.com\n\
-    SSLEngine on\n\
-    SSLCertificateFile /etc/letsencrypt/live/mezgebedirijit.com/fullchain.pem\n\
-    SSLCertificateKeyFile /etc/letsencrypt/live/mezgebedirijit.com/privkey.pem\n\
-    Redirect permanent / https://mezgebedirijit.com/\n\
-</VirtualHost>' > /etc/apache2/conf-available/fix-www.conf \
-    && a2enconf fix-www
-
-# 5b. NEW: Redirecting Apache to your real Let's Encrypt certificates
-# REPLACE 'yourdomain.com' with your actual domain name (e.g., barchuma.com)
 # 5b. Point SSL config to your REAL Let's Encrypt certificates
 RUN sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/letsencrypt/live/mezgebedirijit.com/fullchain.pem|g' /etc/apache2/sites-available/default-ssl.conf \
     && sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/letsencrypt/live/mezgebedirijit.com/privkey.pem|g' /etc/apache2/sites-available/default-ssl.conf
