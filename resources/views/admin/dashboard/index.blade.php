@@ -79,7 +79,7 @@
                 Items: {{ $itemsCount ?? 0 }}
             </span> --}}
 
-                        <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
+                        {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
                             <span class="me-1.5 flex h-2.5 w-2.5 shrink-0 rounded-full bg-yellow-500"></span>
                             Active Variants: {{ $activeVariantsCount ?? 0 }}
                         </span>
@@ -105,7 +105,7 @@
                                     @endif
                                 </div>
                             @endforeach
-                        </div>
+                        </div> --}}
 
 
 
