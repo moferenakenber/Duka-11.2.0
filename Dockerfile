@@ -26,9 +26,16 @@ RUN curl -fsSL https://deb.nodesource.com/setup_23.x | bash - \
     && apt-get install -y nodejs
 
 # 5. Enable Apache rewrite module and configure DocumentRoot
-RUN a2enmod rewrite \
+RUN a2enmod rewrite ssl \
+    && a2ensite default-ssl \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/default-ssl.conf \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
+
+# 5b. NEW: Redirecting Apache to your real Let's Encrypt certificates
+# REPLACE 'yourdomain.com' with your actual domain name (e.g., barchuma.com)
+RUN sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/letsencrypt/live/yourdomain.com/fullchain.pem|g' /etc/apache2/sites-available/default-ssl.conf \
+    && sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/letsencrypt/live/yourdomain.com/privkey.pem|g' /etc/apache2/sites-available/default-ssl.conf
 
 # 6. Get Composer from official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
