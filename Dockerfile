@@ -32,12 +32,17 @@ RUN a2enmod rewrite ssl \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/default-ssl.conf \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
 
-# Add this inside your Step 5 RUN command block:
-RUN a2enmod rewrite \
-    && echo '<VirtualHost *:80>\n\
-    RewriteEngine On\n\
-    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\n\
-    RewriteRule ^(.*)$ https://%1$1 [R=301,L]\n\
+# Update the redirect config to handle BOTH port 80 and 443
+RUN echo '<VirtualHost *:80>\n\
+    ServerName www.mezgebedirijit.com\n\
+    Redirect permanent / https://mezgebedirijit.com/\n\
+</VirtualHost>\n\
+<VirtualHost *:443>\n\
+    ServerName www.mezgebedirijit.com\n\
+    SSLEngine on\n\
+    SSLCertificateFile /etc/letsencrypt/live/mezgebedirijit.com/fullchain.pem\n\
+    SSLCertificateKeyFile /etc/letsencrypt/live/mezgebedirijit.com/privkey.pem\n\
+    Redirect permanent / https://mezgebedirijit.com/\n\
 </VirtualHost>' > /etc/apache2/conf-available/fix-www.conf \
     && a2enconf fix-www
 
