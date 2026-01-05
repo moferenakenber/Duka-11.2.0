@@ -34,8 +34,9 @@ RUN a2enmod rewrite ssl \
 
 # 5b. NEW: Redirecting Apache to your real Let's Encrypt certificates
 # REPLACE 'yourdomain.com' with your actual domain name (e.g., barchuma.com)
-RUN sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/letsencrypt/live/yourdomain.com/fullchain.pem|g' /etc/apache2/sites-available/default-ssl.conf \
-    && sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/letsencrypt/live/yourdomain.com/privkey.pem|g' /etc/apache2/sites-available/default-ssl.conf
+# 5b. Point SSL config to your REAL Let's Encrypt certificates
+RUN sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/letsencrypt/live/mezgebedirijit.com/fullchain.pem|g' /etc/apache2/sites-available/default-ssl.conf \
+    && sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/letsencrypt/live/mezgebedirijit.com/privkey.pem|g' /etc/apache2/sites-available/default-ssl.conf
 
 # 6. Get Composer from official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
