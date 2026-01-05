@@ -12,6 +12,7 @@ services:
       - "443:443"
     volumes:
       - .:/var/www/html:cached          # Sync your project folder
+      - /etc/letsencrypt:/etc/letsencrypt:ro
       - /var/www/html/vendor            # Use container vendor
       - /var/www/html/node_modules      # Use container node_modules
       - /var/www/html/public/storage    # Storage folder inside container
