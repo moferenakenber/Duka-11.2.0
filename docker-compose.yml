@@ -19,7 +19,7 @@ services:
 
   db:
     image: mysql:8.0
-    container_name: laravel_db
+    container_name: Duka_db
     restart: always
     env_file:
       - .env           # ✅ Uses the same file for MYSQL_ROOT_PASSWORD
