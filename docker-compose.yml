@@ -3,25 +3,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: laravel_app
-    environment:
-      - APP_ENV=local
-      - APP_DEBUG=true
-      - APP_URL=http://localhost:8181
-      - DB_CONNECTION=mysql
-      - DB_HOST=db
-      - DB_PORT=3306
-      - DB_DATABASE=duka_11_2_0
-      - DB_USERNAME=root
-      - DB_PASSWORD=root
-      - SESSION_DRIVER=file
+    container_name: Duka_app
+    restart: unless-stopped
+    env_file:
+      - .env       # ✅ Pulls all your APP_KEY, DB_PASS, etc. securely
     ports:
       - "8181:80"
     volumes:
-      - .:/var/www/html:cached           # Sync your project folder
-      - /var/www/html/vendor             # Use container vendor
-      - /var/www/html/node_modules       # Use container node_modules
-      - /var/www/html/public/storage     # Storage folder inside container
+      - .:/var/www/html:cached          # Sync your project folder
+      - /var/www/html/vendor            # Use container vendor
+      - /var/www/html/node_modules      # Use container node_modules
+      - /var/www/html/public/storage    # Storage folder inside container
     depends_on:
       - db
 
@@ -29,11 +21,10 @@ services:
     image: mysql:8.0
     container_name: laravel_db
     restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: duka_11_2_0
+    env_file:
+      - .env           # ✅ Uses the same file for MYSQL_ROOT_PASSWORD
     ports:
-      - "3308:3306"
+      - "3308:3306"    # ✅ Security: Only allows YOU (via SSH/Local)
     volumes:
       - dbdata:/var/lib/mysql
 
