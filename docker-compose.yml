@@ -13,9 +13,13 @@ services:
     volumes:
       - .:/var/www/html:cached          # Sync your project folder
       - /etc/letsencrypt:/etc/letsencrypt:ro
-      - /var/www/html/vendor            # Use container vendor
-      - /var/www/html/node_modules      # Use container node_modules
-      - /var/www/html/public/storage    # Storage folder inside container
+      # Map your host certificates to the internal path we set in Dockerfile
+      - /etc/letsencrypt/live/mezgebedirijit.com/fullchain.pem:/etc/apache2/ssl/fullchain.pem:ro
+      - /etc/letsencrypt/live/mezgebedirijit.com/privkey.pem:/etc/apache2/ssl/privkey.pem:ro
+     # Named Volumes to protect container-built dependencies
+      - vendor_data:/var/www/html/vendor
+      - node_data:/var/www/html/node_modules
+      - storage_data:/var/www/html/storage
     depends_on:
       - db
 
@@ -32,4 +36,7 @@ services:
 
 volumes:
   dbdata:
+  vendor_data:
+  node_data:
+  storage_data:
 

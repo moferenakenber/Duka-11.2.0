@@ -29,12 +29,12 @@ RUN curl -fsSL https://deb.nodesource.com/setup_23.x | bash - \
 RUN a2enmod rewrite ssl headers \
     && a2ensite default-ssl \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/default-ssl.conf \
-    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
+    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/default-ssl.conf
 
-# 5b. Point SSL config to your REAL Let's Encrypt certificates
-RUN sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/letsencrypt/live/mezgebedirijit.com/fullchain.pem|g' /etc/apache2/sites-available/default-ssl.conf \
-    && sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/letsencrypt/live/mezgebedirijit.com/privkey.pem|g' /etc/apache2/sites-available/default-ssl.conf
+# 5b. FIX: Point to /etc/apache2/ssl/ instead of hardcoded Let's Encrypt paths
+# This allows us to mount whatever certs we have into a standard folder
+RUN sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/apache2/ssl/fullchain.pem|g' /etc/apache2/sites-available/default-ssl.conf \
+    && sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/apache2/ssl/privkey.pem|g' /etc/apache2/sites-available/default-ssl.conf
 
 # 6. Get Composer from official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -49,9 +49,10 @@ RUN npm install
 # 9. Copy the rest of the app
 COPY . .
 
-# 10. Final optimizations
-RUN composer dump-autoload
-RUN chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
+# 10. FINAL FIX: Permission handling
+# We move chown to an entrypoint script or do it globally here
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # EXPOSE MODIFIED: Added 443 for HTTPS traffic
 EXPOSE 80 443
