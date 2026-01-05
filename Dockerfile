@@ -32,6 +32,15 @@ RUN a2enmod rewrite ssl \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/default-ssl.conf \
     && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/apache2.conf
 
+# Add this inside your Step 5 RUN command block:
+RUN a2enmod rewrite \
+    && echo '<VirtualHost *:80>\n\
+    RewriteEngine On\n\
+    RewriteCond %{HTTP_HOST} ^www\.(.*)$ [NC]\n\
+    RewriteRule ^(.*)$ https://%1$1 [R=301,L]\n\
+</VirtualHost>' > /etc/apache2/conf-available/fix-www.conf \
+    && a2enconf fix-www
+
 # 5b. NEW: Redirecting Apache to your real Let's Encrypt certificates
 # REPLACE 'yourdomain.com' with your actual domain name (e.g., barchuma.com)
 # 5b. Point SSL config to your REAL Let's Encrypt certificates
