@@ -8,7 +8,8 @@ services:
     env_file:
       - .env       # ✅ Pulls all your APP_KEY, DB_PASS, etc. securely
     ports:
-      - "8181:80"
+      - "80:80"
+      - "443:443"
     volumes:
       - .:/var/www/html:cached          # Sync your project folder
       - /var/www/html/vendor            # Use container vendor
