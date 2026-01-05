@@ -82,14 +82,14 @@
                         {{-- <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
                             <span class="me-1.5 flex h-2.5 w-2.5 shrink-0 rounded-full bg-yellow-500"></span>
                             Active Variants: {{ $activeVariantsCount ?? 0 }}
-                        </span>
+                        </span> --}}
 
                         <span class="flex items-center text-sm font-medium text-gray-900 dark:text-white me-3">
                             <span class="me-1.5 flex h-2.5 w-2.5 shrink-0 rounded-full bg-purple-500"></span>
                             Sessions: <strong class="ml-1">{{ $sessionsCount }}</strong>
                         </span>
 
-
+                        {{--
                         <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                             @foreach ($lowStockItems as $item)
                                 <div class="p-4 transition border rounded shadow hover:shadow-md">
