@@ -54,4 +54,5 @@ COPY . .
 RUN composer dump-autoload
 RUN chown -R www-data:www-data storage bootstrap/cache && chmod -R 775 storage bootstrap/cache
 
-EXPOSE 80
+# EXPOSE MODIFIED: Added 443 for HTTPS traffic
+EXPOSE 80 443
