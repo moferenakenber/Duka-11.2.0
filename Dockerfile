@@ -25,16 +25,31 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 RUN curl -fsSL https://deb.nodesource.com/setup_23.x | bash - \
     && apt-get install -y nodejs
 
+# 5. Clean Apache Config (Cloudflare / Proxy Friendly)
+RUN a2enmod rewrite headers \
+    && sed -i 's|/var/www/html|/var/www/html/public|g' \
+       /etc/apache2/sites-available/000-default.conf
+
+# Prepare SSL vhost (disabled by default)
+RUN sed -i 's|/var/www/html|/var/www/html/public|g' \
+       /etc/apache2/sites-available/default-ssl.conf \
+ && sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/apache2/ssl/fullchain.pem|g' \
+       /etc/apache2/sites-available/default-ssl.conf \
+ && sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/apache2/ssl/privkey.pem|g' \
+       /etc/apache2/sites-available/default-ssl.conf
+
+
+
 # 5. Clean Apache Config (Cloudflare Friendly)
-RUN a2enmod rewrite ssl headers \
-    && a2ensite default-ssl \
-    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
-    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/default-ssl.conf
+#RUN a2enmod rewrite ssl headers \
+#    && a2ensite default-ssl \
+#    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+#    && sed -i 's|/var/www/html|/var/www/html/public|g' /etc/apache2/sites-available/default-ssl.conf
 
 # 5b. FIX: Point to /etc/apache2/ssl/ instead of hardcoded Let's Encrypt paths
 # This allows us to mount whatever certs we have into a standard folder
-RUN sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/apache2/ssl/fullchain.pem|g' /etc/apache2/sites-available/default-ssl.conf \
-    && sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/apache2/ssl/privkey.pem|g' /etc/apache2/sites-available/default-ssl.conf
+#RUN sed -i 's|/etc/ssl/certs/ssl-cert-snakeoil.pem|/etc/apache2/ssl/fullchain.pem|g' /etc/apache2/sites-available/default-ssl.conf \
+#    && sed -i 's|/etc/ssl/private/ssl-cert-snakeoil.key|/etc/apache2/ssl/privkey.pem|g' /etc/apache2/sites-available/default-ssl.conf
 
 # 6. Get Composer from official image
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -56,3 +71,9 @@ RUN chown -R www-data:www-data /var/www/html \
 
 # EXPOSE MODIFIED: Added 443 for HTTPS traffic
 EXPOSE 80 443
+
+# SSL related
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+ENTRYPOINT ["docker-entrypoint.sh"]

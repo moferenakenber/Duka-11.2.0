@@ -8,14 +8,15 @@ services:
     env_file:
       - .env       # ✅ Pulls all your APP_KEY, DB_PASS, etc. securely
     ports:
-      - "80:80"
-      - "443:443"
+      - "8094:80"
+      #- "443:443"
     volumes:
       - .:/var/www/html:cached          # Sync your project folder
-      - /etc/letsencrypt:/etc/letsencrypt:ro
+      #- /etc/letsencrypt:/etc/letsencrypt:ro
       # Map your host certificates to the internal path we set in Dockerfile
-      - /etc/letsencrypt/live/mezgebedirijit.com/fullchain.pem:/etc/apache2/ssl/fullchain.pem:ro
-      - /etc/letsencrypt/live/mezgebedirijit.com/privkey.pem:/etc/apache2/ssl/privkey.pem:ro
+      #- /etc/letsencrypt/live/mezgebedirijit.com/fullchain.pem:/etc/apache2/ssl/fullchain.pem:ro
+      #- /etc/letsencrypt/live/mezgebedirijit.com/privkey.pem:/etc/apache2/ssl/privkey.pem:ro
+
      # Named Volumes to protect container-built dependencies
       - vendor_data:/var/www/html/vendor
       - node_data:/var/www/html/node_modules
@@ -28,9 +29,11 @@ services:
     container_name: Duka_db
     restart: always
     env_file:
-      - .env           # ✅ Uses the same file for MYSQL_ROOT_PASSWORD
+      - .env
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
-      - "3308:3306"    # ✅ Security: Only allows YOU (via SSH/Local)
+      - "3309:3306"    # ✅ Security: Only allows YOU (via SSH/Local)
     volumes:
       - dbdata:/var/lib/mysql
 
