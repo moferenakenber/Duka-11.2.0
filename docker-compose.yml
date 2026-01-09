@@ -9,7 +9,7 @@ services:
       - .env       # ✅ Pulls all your APP_KEY, DB_PASS, etc. securely
     ports:
       - "${APP_PORT}:80"
-      #- "443:443"
+      - "443:443"
     volumes:
       - .:/var/www/html:cached          # Sync your project folder
       #- /etc/letsencrypt:/etc/letsencrypt:ro
