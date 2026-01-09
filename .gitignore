@@ -20,4 +20,5 @@ yarn-error.log
 /.idea
 /.vscode
 /.zed
-.env.docker
+.env2.docker2
+.gitignore
