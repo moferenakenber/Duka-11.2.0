@@ -22,3 +22,4 @@ yarn-error.log
 /.zed
 .env2.docker2
 .gitignore
+/deploy.sh
