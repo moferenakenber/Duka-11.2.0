@@ -50,26 +50,26 @@
             <div class="flex items-center justify-between mt-4 font-fancy">
                 <!-- Left: Current Price and Original Price -->
                 <div class="flex items-center gap-2">
-                    <span class="text-3xl font-bold text-red-500">฿{{ number_format($displayPrice, 0) }}</span>
+                    <span class="text-3xl font-bold text-red-500">฿{{ number_format($minStoreVariant->discount_price ?? $minStoreVariant->price, 0) }}</span>
 
                     @if ($minVariant->discount_price)
-                        <span class="ml-1 text-sm text-gray-400 line-through">฿{{ number_format($minVariant->price, 0) }}</span>
+                        <span class="ml-1 text-sm text-gray-400 line-through">฿{{ number_format($minStoreVariant->price, 0) }}</span>
                     @endif
                 </div>
 
                 <!-- Right: Discount Percentage -->
                 <div class="flex items-center gap-2">
-                    @if ($minVariant->discount_price)
+                    @if ($minStoreVariant->discount_price)
                         <div>
                             <span class="px-3 py-1 text-xs text-white bg-yellow-500 rounded-full">
-                                -{{ $minVariant->discount_percentage }}%
+                                -{{ $minStoreVariant->discount_percentage }}%
                             </span>
                         </div>
                     @endif
                 </div>
             </div>
 
-            @if ($item->has_discount)
+            @if ($minStoreVariant->discount_price)
                 <div class="mt-4">
                     <span class="px-3 py-1 text-xs text-white bg-yellow-500 rounded">Discount Available</span>
                 </div>

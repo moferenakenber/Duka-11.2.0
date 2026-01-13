@@ -66,8 +66,10 @@ COPY . .
 
 # 10. FINAL FIX: Permission handling
 # We move chown to an entrypoint script or do it globally here
-RUN chown -R www-data:www-data /var/www/html \
-    && chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+# 10. Set default ownership (build-time)
+RUN mkdir -p storage bootstrap/cache \
+    && chown -R www-data:www-data /var/www/html
+
 
 # EXPOSE MODIFIED: Added 443 for HTTPS traffic
 EXPOSE 80 443

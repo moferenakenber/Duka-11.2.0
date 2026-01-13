@@ -12,6 +12,9 @@ use App\Models\Customer;
 use Illuminate\Support\Facades\Auth;
 use App\Models\ItemVariant;
 
+use App\Services\PriceProvider;
+
+
 class ItemController extends Controller
 {
     /**
@@ -106,137 +109,272 @@ class ItemController extends Controller
     /**
      * Display the specified resource.
      */
+    // public function show(Item $item)
+    // {
+    //     $item->load([
+    //         'variants.itemColor',
+    //         'variants.itemSize',
+    //         'variants.itemPackagingType',
+    //         // 'variants.itemPackagingTypeitem',
+    //         'variants.owner',
+    //     ]);
+
+    //     $itemArray = $item->toArray();
+    //     Log::info('Item: ' . print_r($itemArray, true));
+
+
+    //     // Ensure item has variants
+    //     // $item->load(['variants']);
+
+    //     // Add dd() to inspect the data
+    //     //dd($item->variants); // This will dump the variants and stop the execution
+    //     // 🔹 Build image collections here (same logic as in your Blade file)
+    //     $itemImages = collect();
+    //     if ($item->product_images) {
+    //         $decodedImages = json_decode($item->product_images, true);
+    //         if (is_array($decodedImages)) {
+    //             $itemImages = collect($decodedImages)
+    //                 ->filter(fn($img) => !empty($img)) // remove empty entries
+    //                 ->map(fn($img) => asset($img));
+    //         }
+    //     }
+
+    //     $variantColorImages = $item->variants
+    //         ->map(fn($variant) => $variant->itemColor?->image_path ? asset($variant->itemColor->image_path) : null)
+    //         ->filter(fn($img) => !empty($img) && $img !== url('/')) // remove empty / root
+    //         ->unique();
+
+    //     $sizeImages = $item->variants
+    //         ->map(fn($variant) => optional($variant->itemSize)->image_path ? asset($variant->itemSize->image_path) : null)
+    //         ->filter(fn($img) => !empty($img) && $img !== url('/'))
+    //         ->unique();
+
+    //     $packagingImages = $item->variants
+    //         ->map(fn($variant) => optional($variant->itemPackagingType)->image_path ? asset($variant->itemPackagingType->image_path) : null)
+    //         ->filter(fn($img) => !empty($img) && $img !== url('/'))
+    //         ->unique();
+
+
+    //     $allImages = $itemImages
+    //         ->merge($variantColorImages)
+    //         ->merge($sizeImages)
+    //         ->merge($packagingImages)
+    //         ->filter(fn($img) => !empty($img)) // ✅ remove empty entries
+    //         ->unique()
+    //         ->values();
+
+
+    //     // 🔹 Build variant data array
+    //     $variantData = $item->variants->map(function ($variant) {
+
+    //         // Decode images safely
+    //         $rawImages = $variant->images;
+    //         if (is_string($rawImages)) {
+    //             $decoded = json_decode($rawImages, true);
+    //             $rawImages = is_array($decoded) ? $decoded : [];
+    //         }
+    //         if (!is_array($rawImages)) {
+    //             $rawImages = [];
+    //         }
+
+    //         $variantImages = collect($rawImages)->map(function ($img) {
+    //             // If it's already a full URL, use it
+    //             if (str_starts_with($img, 'http')) {
+    //                 return $img;
+    //             }
+    //             // Otherwise, prefix with asset() pointing to public
+    //             return asset($img); // <- not storage
+    //         });
+
+
+    //         return [
+    //             'id' => $variant->id,
+    //             'color' => $variant->itemColor?->name,
+    //             'img' => $variantImages->first() ?: ($variant->itemColor ? asset('storage/' . $variant->itemColor->image_path) : '/img/default.jpg'),
+    //             'size' => $variant->itemSize?->name,
+    //             'packaging' => $variant->itemPackagingType?->name,
+    //             'price' => $variant->price,
+    //             'stock' => $variant->stock,
+    //             'images' => $variantImages->toArray(), // ✅ now this is a real array
+    //             'quantity' => $variant->calculateTotalPieces(),
+    //         ];
+    //     });
+
+
+
+
+
+
+    //     $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
+
+    //     // All carts created by this seller (auth user) that belong to a customer
+    //     // $carts = Cart::with('customer')
+    //     //     ->where('user_id', auth()->id())
+    //     //     ->whereNotNull('customer_id')
+    //     //     ->get();
+
+    //     $customersWithOpenCarts = Customer::whereHas('carts', function ($query) {
+    //         $query->where('status', 'open');
+    //     })->get();
+
+    //     // 🔹 Now your logs will actually have data
+    //     // Log::info('Item images:', $itemImages->toArray());
+    //     // Log::info('Color images:', $variantColorImages->toArray());
+    //     // Log::info('Size images:', $sizeImages->toArray());
+    //     // Log::info('Packaging images:', $packagingImages->toArray());
+    //     // Log::info('All images merged:', $allImages->toArray());
+    //     // Log::info('Variant data:', $variantData->toArray());
+    //     // Log::info('Item variants:', $item->variants->toArray());
+    //     // Log::info('cart data:', Cart::where('user_id', auth()->id())->whereNotNull('customer_id')->get()->toArray());
+    //     // Log::info('Sellers data:', $sellers->toArray());
+
+
+    //     // dd($item->variants->pluck('image_path'));
+
+    //     return view('seller.items.show', compact(
+
+    //         'item',
+    //         'sellers',
+    //         'customersWithOpenCarts',
+    //         'allImages',
+    //         'variantData'
+    //     ));
+    // }
+
     public function show(Item $item)
     {
+        $store = Auth::user()->store;
+        $storeId = $store?->id;
+
+        $sellerId = request('seller_id');      // optional
+        $customerId = request('customer_id');  // optional
+
+        // Load variants with all needed relations
         $item->load([
             'variants.itemColor',
             'variants.itemSize',
             'variants.itemPackagingType',
-            // 'variants.itemPackagingTypeitem',
+            'variants.storeVariants', // store-specific data
             'variants.owner',
         ]);
 
-        $itemArray = $item->toArray();
-        Log::info('Item: ' . print_r($itemArray, true));
+        Log::info('Loaded variants relations', [
+            'variants' => $item->variants->toArray(),
+        ]);
+
+        $storeVariants = $item->variants
+            ->flatMap(fn($v) => $v->storeVariants); // only one per variant now
+
+        $minStoreVariant = $storeVariants
+            ->filter(fn($sv) => $sv->computed_status === 'active')
+            ->sortBy(fn($sv) => $sv->discount_price ?? $sv->price)
+            ->first();
 
 
-        // Ensure item has variants
-        // $item->load(['variants']);
 
-        // Add dd() to inspect the data
-        //dd($item->variants); // This will dump the variants and stop the execution
-        // 🔹 Build image collections here (same logic as in your Blade file)
+        // 🔹 Build item images
         $itemImages = collect();
         if ($item->product_images) {
             $decodedImages = json_decode($item->product_images, true);
             if (is_array($decodedImages)) {
                 $itemImages = collect($decodedImages)
-                    ->filter(fn($img) => !empty($img)) // remove empty entries
+                    ->filter(fn($img) => !empty($img))
                     ->map(fn($img) => asset($img));
             }
         }
 
         $variantColorImages = $item->variants
-            ->map(fn($variant) => $variant->itemColor?->image_path ? asset($variant->itemColor->image_path) : null)
-            ->filter(fn($img) => !empty($img) && $img !== url('/')) // remove empty / root
+            ->map(fn($v) => $v->itemColor?->image_path ? asset($v->itemColor->image_path) : null)
+            ->filter(fn($img) => !empty($img) && $img !== url('/'))
             ->unique();
 
         $sizeImages = $item->variants
-            ->map(fn($variant) => optional($variant->itemSize)->image_path ? asset($variant->itemSize->image_path) : null)
+            ->map(fn($v) => $v->itemSize?->image_path ? asset($v->itemSize->image_path) : null)
             ->filter(fn($img) => !empty($img) && $img !== url('/'))
             ->unique();
 
         $packagingImages = $item->variants
-            ->map(fn($variant) => optional($variant->itemPackagingType)->image_path ? asset($variant->itemPackagingType->image_path) : null)
+            ->map(fn($v) => $v->itemPackagingType?->image_path ? asset($v->itemPackagingType->image_path) : null)
             ->filter(fn($img) => !empty($img) && $img !== url('/'))
             ->unique();
-
 
         $allImages = $itemImages
             ->merge($variantColorImages)
             ->merge($sizeImages)
             ->merge($packagingImages)
-            ->filter(fn($img) => !empty($img)) // ✅ remove empty entries
+            ->filter(fn($img) => !empty($img))
             ->unique()
             ->values();
 
+        // 🔹 Build enriched variant data using StoreVariant
+        $variantData = $item->variants->map(function ($variant) use ($storeId, $sellerId, $customerId) {
 
-        // 🔹 Build variant data array
-        $variantData = $item->variants->map(function ($variant) {
+            // Get the store-specific variant
+            $storeVariant = $variant->storeVariants->where('store_id', $storeId)->first();
 
-            // Decode images safely
+            // Stock, price, discount, status
+            $store_stock = $storeVariant?->stock ?? 0;
+            $price = $storeVariant?->price ?? $variant->price;
+            $discount_price = $storeVariant?->discount_price;
+            $status = $storeVariant?->computed_status ?? 'inactive';
+            $store_active = $status === 'active';
+
+            // Price ladder & final price
+            $price_ladder = $storeVariant
+                ? PriceProvider::getPriceLadder(
+                    storeVariantId: $storeVariant->id,
+                    storeId: $storeId,
+                    sellerId: $sellerId,
+                    customerId: $customerId
+                )
+                : [];
+            $final_price = $storeVariant ? PriceProvider::getFinalPrice($price_ladder) : null;
+
+            // Decode variant images
             $rawImages = $variant->images;
             if (is_string($rawImages)) {
                 $decoded = json_decode($rawImages, true);
                 $rawImages = is_array($decoded) ? $decoded : [];
             }
-            if (!is_array($rawImages)) {
-                $rawImages = [];
-            }
-
-            $variantImages = collect($rawImages)->map(function ($img) {
-                // If it's already a full URL, use it
-                if (str_starts_with($img, 'http')) {
-                    return $img;
-                }
-                // Otherwise, prefix with asset() pointing to public
-                return asset($img); // <- not storage
-            });
-
+            $variantImages = collect($rawImages)->map(fn($img) => str_starts_with($img, 'http') ? $img : asset($img));
 
             return [
                 'id' => $variant->id,
                 'color' => $variant->itemColor?->name,
-                'img' => $variantImages->first() ?: ($variant->itemColor ? asset('storage/' . $variant->itemColor->image_path) : '/img/default.jpg'),
+                'img' => $variantImages->first() ?: ($variant->itemColor ? asset($variant->itemColor->image_path) : '/img/default.jpg'),
                 'size' => $variant->itemSize?->name,
                 'packaging' => $variant->itemPackagingType?->name,
-                'price' => $variant->price,
-                'stock' => $variant->stock,
-                'images' => $variantImages->toArray(), // ✅ now this is a real array
+                'price' => $price,
+                'discount_price' => $discount_price,
+                'stock' => $store_stock,
+                'status' => $status,
+                'store_active' => $store_active,
+                'images' => $variantImages->toArray(),
                 'quantity' => $variant->calculateTotalPieces(),
+                'price_ladder' => $price_ladder,
+                'final_price' => $final_price,
             ];
         });
 
+        // 🔹 Sellers and customers with open carts
+        $sellers = User::where('role', 'seller')->get();
+        $customersWithOpenCarts = Customer::whereHas('carts', fn($q) => $q->where('status', 'open'))->get();
 
-
-
-
-
-        $sellers = User::where('role', 'seller')->get(); // assuming sellers have 'seller' role
-
-        // All carts created by this seller (auth user) that belong to a customer
-        // $carts = Cart::with('customer')
-        //     ->where('user_id', auth()->id())
-        //     ->whereNotNull('customer_id')
-        //     ->get();
-
-        $customersWithOpenCarts = Customer::whereHas('carts', function ($query) {
-            $query->where('status', 'open');
-        })->get();
-
-        // 🔹 Now your logs will actually have data
-        // Log::info('Item images:', $itemImages->toArray());
-        // Log::info('Color images:', $variantColorImages->toArray());
-        // Log::info('Size images:', $sizeImages->toArray());
-        // Log::info('Packaging images:', $packagingImages->toArray());
-        // Log::info('All images merged:', $allImages->toArray());
-        // Log::info('Variant data:', $variantData->toArray());
-        // Log::info('Item variants:', $item->variants->toArray());
-        // Log::info('cart data:', Cart::where('user_id', auth()->id())->whereNotNull('customer_id')->get()->toArray());
-        // Log::info('Sellers data:', $sellers->toArray());
-
-
-        // dd($item->variants->pluck('image_path'));
-
+        // 🔹 Return view with everything ready
         return view('seller.items.show', compact(
-
             'item',
             'sellers',
             'customersWithOpenCarts',
             'allImages',
-            'variantData'
+            'variantData',
+            'minStoreVariant'
         ));
     }
+
+
+
+
+
 
     /**
      * Show the form for editing the specified resource.
