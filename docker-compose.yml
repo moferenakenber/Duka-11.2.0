@@ -5,6 +5,11 @@ services:
       dockerfile: Dockerfile
     container_name: Duka_app
     restart: unless-stopped
+    logging:                 # <--- NEW
+      driver: "json-file"    # <--- NEW
+      options:               # <--- NEW
+        max-size: "100m"     # <--- NEW
+        max-file: "3"        # <--- NEW
     env_file:
       - .env       # ✅ Pulls all your APP_KEY, DB_PASS, etc. securely
     ports:
@@ -28,6 +33,12 @@ services:
     image: mysql:8.0
     container_name: Duka_db
     restart: always
+    logging:                 # <--- NEW
+      driver: "json-file"    # <--- NEW
+      options:               # <--- NEW
+        max-size: "100m"     # <--- NEW
+        max-file: "3"        # <--- NEW
+    command: --binlog-expire-logs-seconds=259200 # <--- NEW: FIXES THE 23GB BLOAT
     env_file:
       - .env
     environment:
