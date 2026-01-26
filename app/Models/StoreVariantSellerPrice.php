@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StoreVariantSellerPrice extends Model
 {
-    protected $table = 'store_variant_seller_prices';
+    protected $table = 'store_variants_seller_prices';
 
     protected $fillable = [
         'store_variant_id',
@@ -19,7 +19,7 @@ class StoreVariantSellerPrice extends Model
 
     protected $dates = ['discount_ends_at'];
 
-    public function storeVariant(): BelongsTo
+    public function storeVariants(): BelongsTo
     {
         return $this->belongsTo(StoreVariant::class, 'store_variant_id');
     }

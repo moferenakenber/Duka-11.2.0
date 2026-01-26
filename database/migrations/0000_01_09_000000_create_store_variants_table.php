@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up()
     {
-        Schema::create('store_variant', function (Blueprint $table) {
+        Schema::create('store_variants', function (Blueprint $table) {
             $table->id();
 
             $table->foreignId('store_id')->constrained()->cascadeOnDelete();
@@ -32,6 +32,6 @@ return new class extends Migration {
 
     public function down(): void
     {
-        Schema::dropIfExists('store_variant');
+        Schema::dropIfExists('store_variants');
     }
 };

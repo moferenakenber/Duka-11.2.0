@@ -9,6 +9,8 @@ use App\Models\User;      // sellers
 use App\Models\Customer;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use App\Models\ItemStock;
+
 
 class StoreVariantSeeder extends Seeder
 {
@@ -45,7 +47,7 @@ class StoreVariantSeeder extends Seeder
                 $basePrice = round($variant->price * $priceFactor, 2);
 
                 // Insert store_variant row and get ID immediately
-                $storeVariantId = DB::table('store_variant')->insertGetId([
+                $storeVariantId = DB::table('store_variants')->insertGetId([
                     'store_id' => $store->id,
                     'item_variant_id' => $variant->id,
                     'price' => $basePrice,
@@ -56,12 +58,19 @@ class StoreVariantSeeder extends Seeder
                     'updated_at' => $now,
                 ]);
 
+                // <<< ADD ITEM STOCK HERE >>>
+                ItemStock::create([
+                    'store_variant_id' => $storeVariantId,
+                    'quantity' => rand(0, 20),
+                    'item_inventory_location_id' => 1,
+                ]);
+
                 // Seller prices
                 foreach ($sellers as $seller) {
                     $factor = rand(90, 110) / 100;
                     $sellerPrice = round($basePrice * $factor, 2);
 
-                    DB::table('store_variant_seller_prices')->insert([
+                    DB::table('store_variants_seller_prices')->insert([
                         'store_variant_id' => $storeVariantId,
                         'seller_id' => $seller->id,
                         'price' => $sellerPrice,
@@ -78,7 +87,7 @@ class StoreVariantSeeder extends Seeder
                     $factor = rand(85, 105) / 100;
                     $customerPrice = round($basePrice * $factor, 2);
 
-                    DB::table('store_variant_customer_prices')->insert([
+                    DB::table('store_variants_customer_prices')->insert([
                         'store_variant_id' => $storeVariantId,
                         'customer_id' => $customer->id,
                         'price' => $customerPrice,
@@ -93,10 +102,10 @@ class StoreVariantSeeder extends Seeder
 
 
             if (!empty($storeVariantRows)) {
-                DB::table('store_variant')->insert($storeVariantRows);
+                DB::table('store_variants')->insert($storeVariantRows);
 
                 // Retrieve the IDs of inserted store_variants to update seller/customer rows
-                $insertedStoreVariants = DB::table('store_variant')
+                $insertedStoreVariants = DB::table('store_variants')
                     ->where('store_id', $store->id)
                     ->whereIn('item_variant_id', $variants->pluck('id'))
                     ->get()
@@ -119,11 +128,11 @@ class StoreVariantSeeder extends Seeder
                 }
 
                 if (!empty($sellerPriceRows)) {
-                    DB::table('store_variant_seller_prices')->insert($sellerPriceRows);
+                    DB::table('store_variants_seller_prices')->insert($sellerPriceRows);
                 }
 
                 if (!empty($customerPriceRows)) {
-                    DB::table('store_variant_customer_prices')->insert($customerPriceRows);
+                    DB::table('store_variants_customer_prices')->insert($customerPriceRows);
                 }
             }
         }

@@ -7,9 +7,9 @@ use Illuminate\Support\Facades\Schema;
 return new class extends Migration {
     public function up(): void
     {
-        Schema::create('store_variant_customer_prices', function (Blueprint $table) {
+        Schema::create('store_variants_customer_prices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_variant_id')->constrained('store_variant')->cascadeOnDelete();
+            $table->foreignId('store_variant_id')->constrained('store_variants')->cascadeOnDelete();
             $table->foreignId('customer_id')->constrained('customers')->cascadeOnDelete();
             $table->decimal('price', 12, 2);
             $table->decimal('discount_price', 12, 2)->nullable();

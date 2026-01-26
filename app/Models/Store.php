@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ItemVariant;
+use App\Models\itemVariant;
 class Store extends Model
 {
     protected $fillable = [
@@ -27,12 +27,12 @@ class Store extends Model
     }
 
     // Variants for this store with pivot info
+// Store.php
     public function variants()
     {
-        return $this->belongsToMany(ItemVariant::class, 'store_variant')
-            ->withPivot('price', 'discount_price', 'discount_ends_at')
-            ->withTimestamps();
+        return $this->hasMany(StoreVariant::class);
     }
+
 
     public function sellers()
     {

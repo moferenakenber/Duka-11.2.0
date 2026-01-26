@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StoreVariantCustomerPrice extends Model
 {
-    protected $table = 'store_variant_customer_prices';
+    protected $table = 'store_variants_customer_prices';
 
     protected $fillable = [
         'store_variant_id',

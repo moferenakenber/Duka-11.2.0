@@ -309,24 +309,28 @@ class ItemController extends Controller
         // 🔹 Build enriched variant data using StoreVariant
         $variantData = $item->variants->map(function ($variant) use ($storeId, $sellerId, $customerId) {
 
+            // XXXXXXXXX not first
             // Get the store-specific variant
             $storeVariant = $variant->storeVariants->where('store_id', $storeId)->first();
 
             // Stock, price, discount, status
+            // XXXXXXXXX not .$storeVariant?->stock ?? 0; stock is in its on table
             $store_stock = $storeVariant?->stock ?? 0;
+            // XXXXXXXXX not $variant->price; seller or customer ->>>>>> we have a price service
             $price = $storeVariant?->price ?? $variant->price;
             $discount_price = $storeVariant?->discount_price;
+            // XXXXXXXXX not what is computed_status
             $status = $storeVariant?->computed_status ?? 'inactive';
             $store_active = $status === 'active';
 
             // Price ladder & final price
             $price_ladder = $storeVariant
                 ? PriceProvider::getPriceLadder(
-                    storeVariantId: $storeVariant->id,
-                    storeId: $storeId,
-                    sellerId: $sellerId,
-                    customerId: $customerId
-                )
+                        storeVariantId: $storeVariant->id,
+                        storeId: $storeId,
+                        sellerId: $sellerId,
+                        customerId: $customerId
+                    )
                 : [];
             $final_price = $storeVariant ? PriceProvider::getFinalPrice($price_ladder) : null;
 
@@ -344,6 +348,7 @@ class ItemController extends Controller
                 'img' => $variantImages->first() ?: ($variant->itemColor ? asset($variant->itemColor->image_path) : '/img/default.jpg'),
                 'size' => $variant->itemSize?->name,
                 'packaging' => $variant->itemPackagingType?->name,
+                //use service provider
                 'price' => $price,
                 'discount_price' => $discount_price,
                 'stock' => $store_stock,

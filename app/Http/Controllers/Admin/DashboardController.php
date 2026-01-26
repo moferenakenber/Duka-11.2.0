@@ -63,7 +63,7 @@ class DashboardController extends Controller
             ->count();
 
 
-        $lowStockItems = Item::with(['variants.stocks'])
+        $lowStockItems = Item::with(['variants.storeVariants.stocks'])
             ->get()
             ->map(function ($item) {
                 $totalStock = $item->variants->flatMap->stocks->sum('quantity');

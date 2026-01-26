@@ -30,20 +30,21 @@
             console.log('$allImages', @json($allImages));
         </script>
 
-       @php
+        @php
             $store = auth()->user()->store;
 
             $minStoreVariant = $store
-                ? $store->variants()               // store → store_variant pivot
-                        ->whereHas('item', function($q) use ($item) {
-                            $q->where('id', $item->id); // only variants for this item
-                        })
-                        ->orderBy('pivot_price', 'asc') // price is on pivot
-                        ->first()
+                ? $store->variants()
+                    ->whereHas('variant.item', function ($q) use ($item) {
+                        $q->where('id', $item->id);
+                    })
+                    ->orderBy('price', 'asc')
+                    ->first()
                 : null;
 
-            $displayPrice = $minStoreVariant?->pivot->discount_price ?? $minStoreVariant?->pivot->price ?? null;
+            $displayPrice = $minStoreVariant->discount_price ?? $minStoreVariant->price ?? null;
         @endphp
+
 
 
 
@@ -63,30 +64,32 @@
 
             <div class="flex items-center justify-between mt-4 font-fancy">
                 <!-- Left: Current Price and Original Price -->
-                <div class="flex items-center gap-2">
-                    @if($minStoreVariant)
-                        <span class="text-3xl font-bold text-red-500">
-                            ฿{{ number_format($minStoreVariant->pivot->discount_price ?? $minStoreVariant->pivot->price, 2) }}
-                        </span>
+<div class="flex items-center justify-between mt-4 font-fancy">
+    <div class="flex items-center gap-2">
+        @if($minStoreVariant)
+            <span class="text-3xl font-bold text-red-500">
+                ฿{{ number_format($minStoreVariant->discount_price ?? $minStoreVariant->price, 2) }}
+            </span>
 
-                        @if ($minStoreVariant->pivot->discount_price)
-                            <span class="ml-1 text-sm text-gray-400 line-through">
-                                ฿{{ number_format($minStoreVariant->pivot->price, 2) }}
-                            </span>
-                        @endif
-                    @else
-                        <span class="text-gray-400">Price unavailable</span>
-                    @endif
-                </div>
+            @if ($minStoreVariant->discount_price)
+                <span class="ml-1 text-sm text-gray-400 line-through">
+                    ฿{{ number_format($minStoreVariant->price, 2) }}
+                </span>
+            @endif
+        @endif
+    </div>
+</div>
+
 
                 <!-- Right: Discount Percentage -->
                 <div class="flex items-center gap-2">
-                    @if ($minStoreVariant?->pivot->discount_price)
-                        @php
-                            $original = $minStoreVariant->pivot->price;
-                            $discounted = $minStoreVariant->pivot->discount_price;
-                            $discountPercent = round((($original - $discounted) / $original) * 100);
-                        @endphp
+@if ($minStoreVariant?->discount_price)
+    @php
+        $original = $minStoreVariant->price;
+        $discounted = $minStoreVariant->discount_price;
+        $discountPercent = round((($original - $discounted) / $original) * 100);
+    @endphp
+
                         <div>
                             <span class="px-3 py-1 text-xs text-white bg-yellow-500 rounded-full">
                                 -{{ $discountPercent }}%
@@ -124,6 +127,8 @@
                         selectedSize: null,
                         selectedPackaging: null,
                         selectedPrice: null,
+                        //XXXXXXXXXXXXXXX -------------->  selectedDiscountPrice
+
                         selectedStock: null,
                         showDiscountSelector: false,
                         selectedCart: null,
@@ -425,6 +430,27 @@
 
                     <!-- Price Info (Stacked) -->
                     <div class="flex flex-col">
+
+                        <!------------------------------------------------------------>
+<!-- Left: Current Price and Original Price -->
+<div class="flex items-center gap-2">
+    @if($minStoreVariant)
+        <span class="text-3xl font-bold text-red-500">
+            ฿{{ number_format($minStoreVariant->discount_price ?? $minStoreVariant->price, 2) }}
+        </span>
+
+        @if ($minStoreVariant->discount_price)
+            <span class="ml-1 text-sm text-gray-400 line-through">
+                ฿{{ number_format($minStoreVariant->price, 2) }}
+            </span>
+        @endif
+    @else
+        <span class="text-gray-400">Price unavailable</span>
+    @endif
+</div>
+
+                        <!------------------------------------------------------------>
+
                         <!-- Main Price -->
                         <div class="text-lg font-semibold text-red-500">
                             ฿

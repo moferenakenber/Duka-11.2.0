@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class StoreVariant extends Model
 {
-    protected $table = 'store_variant';
+    protected $table = 'store_variants';
 
     protected $fillable = [
         'store_id',
@@ -58,6 +58,12 @@ class StoreVariant extends Model
     {
         return $this->belongsTo(ItemVariant::class, 'item_variant_id');
     }
+
+    public function stocks()
+    {
+        return $this->hasMany(ItemStock::class, 'store_variant_id');
+    }
+
 
     public function customerPrices()
     {

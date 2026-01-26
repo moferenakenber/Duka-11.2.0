@@ -293,11 +293,11 @@ class ItemSeeder extends Seeder
 
                         // ----------------------
                         // Seed stock for this variant
-                        ItemStock::create([
-                            'item_variant_id' => $variant->id,
-                            'quantity' => rand(0, 20), // random stock for testing
-                            'item_inventory_location_id' => 1,           // assign to a store if needed
-                        ]);
+                        // ItemStock::create([
+                        //     '_variant_id' => $variant->id,
+                        //     'quantity' => rand(0, 20), // random stock for testing
+                        //     'item_inventory_location_id' => 1,           // assign to a store if needed
+                        // ]);
                     }
                 }
             }

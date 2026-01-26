@@ -46,17 +46,23 @@ class DashboardController extends Controller
 
         // 2️⃣ Load stock for all variants in this store at once
         $variantIds = $items->flatMap(fn($item) => $item->variants->pluck('id'))->unique();
+        $storeVariantIds = $items->flatMap(fn($item) => $item->variants->pluck('storeVariants.*.id'))
+            ->flatten()
+            ->unique();
+
         $stocks = ItemStock::where('item_inventory_location_id', $storeId)
-            ->whereIn('item_variant_id', $variantIds)
+            ->whereIn('store_variant_id', $storeVariantIds)
             ->get()
-            ->keyBy('item_variant_id');
+            ->keyBy('store_variant_id');
+
 
         // 3️⃣ Attach store-specific data to each variant
         foreach ($items as $item) {
             foreach ($item->variants as $variant) {
-                $variant->store_stock = $stocks[$variant->id]->quantity ?? 0;
-
                 $storeVariant = $variant->storeVariants->where('store_id', $storeId)->first();
+
+                $variant->store_stock = $stocks[$storeVariant->id]->quantity ?? 0;
+
 
                 if ($storeVariant) {
                     $variant->store_variant_id = $storeVariant->id;

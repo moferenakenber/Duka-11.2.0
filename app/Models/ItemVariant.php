@@ -102,10 +102,11 @@ class ItemVariant extends Model
         return $this->belongsTo(User::class, 'owner_id');
     }
 
-    public function stocks()
+    public function storeVariants()
     {
-        return $this->hasMany(ItemStock::class, 'item_variant_id');
+        return $this->hasMany(StoreVariant::class, 'item_variant_id');
     }
+
 
     public function totalStock()
     {
@@ -117,6 +118,18 @@ class ItemVariant extends Model
         return $this->belongsToMany(Store::class, 'store_variant')
             ->withPivot('price', 'discount_price', 'active', 'discount_ends_at')
             ->withTimestamps();
+    }
+
+    public function stocks()
+    {
+        return $this->hasManyThrough(
+            ItemStock::class,
+            StoreVariant::class,
+            'item_variant_id',
+            'store_variant_id',
+            'id',
+            'id'
+        );
     }
 
 
@@ -208,15 +221,6 @@ class ItemVariant extends Model
 
         return $found ? $total : 1;
     }
-
-    // app/Models/ItemVariant.php
-
-    // In ItemVariant.php
-    public function storeVariants()
-    {
-        return $this->hasMany(StoreVariant::class, 'item_variant_id');
-    }
-
 
     public function item_stock()
     {

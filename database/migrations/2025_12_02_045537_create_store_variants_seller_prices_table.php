@@ -10,9 +10,9 @@ return new class extends Migration {
      */
     public function up(): void
     {
-        Schema::create('store_variant_seller_prices', function (Blueprint $table) {
+        Schema::create('store_variants_seller_prices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('store_variant_id')->constrained('store_variant')->cascadeOnDelete(); // store-specific
+            $table->foreignId('store_variant_id')->constrained('store_variants')->cascadeOnDelete(); // store-specific
             $table->foreignId('seller_id')->constrained('users')->cascadeOnDelete(); // assuming sellers are users
             $table->decimal('price', 12, 2); // custom price for this seller and store variant
             $table->decimal('discount_price', 12, 2)->nullable();

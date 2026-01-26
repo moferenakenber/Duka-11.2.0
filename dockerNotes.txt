@@ -1,0 +1,11 @@
+Commands and Notes
+
+
+docker ps -> shows what's up and running
+docker-compose ps -> if at a location with no docker related file -> "no configuration file provided: not found" if not then results.
+-- Dockerfile & docker-compose.yml -- files are needed to make one.
+
+docker-compose up --build -> reads the docker-compose.yml file.
+docker-compose up -d -> "d" means detached from the terminal and so you can close the terminal.
+
+docker exec -it duka_app php artisan migrate:fresh --seed

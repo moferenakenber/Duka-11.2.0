@@ -223,9 +223,14 @@ class StoreController extends Controller
             $pivotData['active'] = true;
         }
 
-        $store->variants()->syncWithoutDetaching([
-            $variant->id => $pivotData,
-        ]);
+        StoreVariant::updateOrCreate(
+            [
+                'store_id' => $store->id,
+                'item_variant_id' => $variant->id,
+            ],
+            $pivotData
+        );
+
 
         Log::info('Variant updated', [
             'store_id' => $store->id,
@@ -274,21 +279,25 @@ class StoreController extends Controller
 
         $variants = $item->variants;
 
-        // 2️⃣ Load stock for these variants in the store
-        $stocks = ItemStock::where('item_inventory_location_id', $store->id)
+        // 1️⃣ Load store variants
+        $storeVariants = StoreVariant::where('store_id', $store->id)
             ->whereIn('item_variant_id', $variants->pluck('id'))
             ->get()
             ->keyBy('item_variant_id');
 
+        // 2️⃣ Load stock for these variants
+        $stocks = ItemStock::where('item_inventory_location_id', $store->id)
+            ->whereIn('store_variant_id', $storeVariants->pluck('id'))
+            ->get()
+            ->keyBy('store_variant_id');
+
         // 3️⃣ Attach store-specific data
         foreach ($variants as $variant) {
             // Stock
-            $variant->store_stock = $stocks[$variant->id]->quantity ?? 0;
 
-            // StoreVariant relation for this store
-            $storeVariant = $variant->storeVariants
-                ->where('store_id', $store->id)
-                ->first();
+            $storeVariant = $storeVariants[$variant->id] ?? null;
+            $variant->store_stock = $stocks[$storeVariant->id]->quantity ?? 0;
+
 
             if ($storeVariant) {
                 $variant->store_variant_id = $storeVariant->id;

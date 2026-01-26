@@ -22,7 +22,7 @@ class PriceProvider
         $prices = [];
 
         // 1️⃣ Base Store Variant Price
-        $storeVariant = DB::table('store_variant')
+        $storeVariant = DB::table('store_variants')
             ->where('id', $storeVariantId)
             ->where('store_id', $storeId)
             ->first();
