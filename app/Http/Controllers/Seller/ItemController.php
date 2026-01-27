@@ -326,11 +326,11 @@ class ItemController extends Controller
             // Price ladder & final price
             $price_ladder = $storeVariant
                 ? PriceProvider::getPriceLadder(
-                        storeVariantId: $storeVariant->id,
-                        storeId: $storeId,
-                        sellerId: $sellerId,
-                        customerId: $customerId
-                    )
+                    storeVariantId: $storeVariant->id,
+                    storeId: $storeId,
+                    sellerId: $sellerId,
+                    customerId: $customerId
+                )
                 : [];
             $final_price = $storeVariant ? PriceProvider::getFinalPrice($price_ladder) : null;
 
@@ -340,7 +340,20 @@ class ItemController extends Controller
                 $decoded = json_decode($rawImages, true);
                 $rawImages = is_array($decoded) ? $decoded : [];
             }
+
             $variantImages = collect($rawImages)->map(fn($img) => str_starts_with($img, 'http') ? $img : asset($img));
+
+            $seller_price_record = $storeVariant
+                ? $storeVariant->sellerPrices()
+                    ->where('seller_id', auth()->id())
+                    ->where('active', true)
+                    ->first()
+                : null;
+
+            $seller_price = $seller_price_record?->price ?? null;
+
+
+
 
             return [
                 'id' => $variant->id,
@@ -358,12 +371,21 @@ class ItemController extends Controller
                 'quantity' => $variant->calculateTotalPieces(),
                 'price_ladder' => $price_ladder,
                 'final_price' => $final_price,
+                'seller_price' => $seller_price,
+                'seller_discount_price' => $seller_price_record?->discount_price ?? null,
+
+
             ];
         });
 
         // 🔹 Sellers and customers with open carts
         $sellers = User::where('role', 'seller')->get();
         $customersWithOpenCarts = Customer::whereHas('carts', fn($q) => $q->where('status', 'open'))->get();
+
+        $displayPrice = $variantData
+            ->where('status', 'active')
+            ->min('final_price') ?? $variantData->min('price');
+
 
         // 🔹 Return view with everything ready
         return view('seller.items.show', compact(
@@ -372,7 +394,8 @@ class ItemController extends Controller
             'customersWithOpenCarts',
             'allImages',
             'variantData',
-            'minStoreVariant'
+            'minStoreVariant',
+            'displayPrice'
         ));
     }
 
