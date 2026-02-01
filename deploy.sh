@@ -7,10 +7,19 @@ echo "Starting Full Deployment..."
 echo "Pulling latest changes from Git..."
 git pull origin main
 
-# 2️⃣ Build and start containers
-echo "Rebuilding and starting containers..."
-sudo docker compose pull           # optional, update images
-sudo docker compose up --detach --build app db
+# 2️⃣ STOP and REMOVE everything
+# This kills orphaned containers and clears the networking cache
+echo "Stopping and removing old containers..."
+sudo docker compose down --remove-orphans
+
+# 3️⃣ FORCE REBUILD (No Cache)
+# This ensures your PHP syntax fix and new Dockerfile steps are applied
+echo "Building fresh images..."
+sudo docker compose build --no-cache
+
+# 4️⃣ Start fresh
+echo "Launching containers..."
+sudo docker compose up -detach --build app db
 
 # 3️⃣ Wait for MySQL to be ready
 echo "Waiting for MySQL to be ready..."
