@@ -19,7 +19,7 @@ sudo docker compose build --no-cache
 
 # 4️⃣ Start fresh
 echo "Launching containers..."
-sudo docker compose up -detach --build app db
+sudo docker compose up -d --build app db
 
 # 3️⃣ Wait for MySQL to be ready
 echo "Waiting for MySQL to be ready..."
