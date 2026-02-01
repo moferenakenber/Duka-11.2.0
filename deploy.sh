@@ -10,7 +10,7 @@ git pull origin main
 # 2️⃣ STOP and REMOVE everything
 # This kills orphaned containers and clears the networking cache
 echo "Stopping and removing old containers..."
-sudo docker compose down --remove-orphans
+sudo docker compose down -v --remove-orphans
 
 # 3️⃣ FORCE REBUILD (No Cache)
 # This ensures your PHP syntax fix and new Dockerfile steps are applied
