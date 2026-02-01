@@ -34,7 +34,7 @@ sudo docker compose exec app npm run build
 
 # 5️⃣ Run Laravel migrations and seed
 echo "Running migrations..."
-sudo docker compose exec app php artisan migrate:fresh --force
+sudo docker compose exec app php artisan migrate:refresh --force
 
 echo "Seeding database..."
 sudo docker compose exec app php artisan db:seed --force
