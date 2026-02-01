@@ -1,25 +1,33 @@
 #!/bin/bash
 set -e
 
-echo "Starting Full Deployment..."
+echo "🚀 Starting Smart Deployment..."
 
-# 1️⃣ Pull the latest code
-echo "Pulling latest changes from Git..."
-git pull origin main
+# 1️⃣ Fetch changes without merging yet
+git fetch origin main
 
-# 2️⃣ STOP and REMOVE everything
-# This kills orphaned containers and clears the networking cache
-echo "Stopping and removing old containers..."
-sudo docker compose down -v --remove-orphans
+# 2️⃣ Check for Docker-related changes
+# This compares your local code to the incoming Git changes
+DOCKER_CHANGES=$(git diff --name-only HEAD origin/main | grep -E 'docker|Dockerfile|docker-compose|.env' || true)
 
-# 3️⃣ FORCE REBUILD (No Cache)
-# This ensures your PHP syntax fix and new Dockerfile steps are applied
-echo "Building fresh images..."
-sudo docker compose build --no-cache
+# 3️⃣ Pull the latest code
+git merge origin main
 
-# 4️⃣ Start fresh
-echo "Launching containers..."
-sudo docker compose up -d --build app db
+if [ -n "$DOCKER_CHANGES" ]; then
+    echo "⚙️ Docker changes detected. Running Deep Build..."
+    sudo docker compose down --remove-orphans
+    sudo docker compose build --no-cache
+    sudo docker compose up -d
+else
+    echo "🏃 No Docker changes. Fast-tracking deployment..."
+    sudo docker compose up -d --build app
+fi
+
+# 4️⃣ Wait for MySQL
+echo "Waiting for MySQL..."
+until sudo docker compose exec db mysqladmin ping -h "localhost" --silent; do
+    echo -n "."; sleep 1
+done
 
 # 3️⃣ Wait for MySQL to be ready
 echo "Waiting for MySQL to be ready..."
