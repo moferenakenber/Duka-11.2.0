@@ -180,7 +180,8 @@ return [
 
         Watchers\LogWatcher::class => [
             'enabled' => env('TELESCOPE_LOG_WATCHER', true),
-            'level' => 'error',
+            //'level' => 'error',
+            'level' => 'debug', // 👈 This ensures Info, Notice, and Debug are all caught
         ],
 
         Watchers\MailWatcher::class => env('TELESCOPE_MAIL_WATCHER', true),
