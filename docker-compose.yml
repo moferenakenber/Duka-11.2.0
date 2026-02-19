@@ -38,7 +38,7 @@ services:
       options:               # <--- NEW
         max-size: "100m"     # <--- NEW
         max-file: "3"        # <--- NEW
-    command: --binlog-expire-logs-seconds=259200 # <--- NEW: FIXES THE 23GB BLOAT
+    command: ["mysqld", "--binlog-expire-logs-seconds=259200", "--max-binlog-size=100M"]
     env_file:
       - .env
     environment:
