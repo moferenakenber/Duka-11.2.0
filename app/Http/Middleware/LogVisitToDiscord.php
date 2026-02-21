@@ -11,6 +11,7 @@ class LogVisitToDiscord
 {
     public function handle(Request $request, Closure $next): Response
     {
+        \Log::info('DISCORD MIDDLEWARE HIT: ' . $request->fullUrl());
         // 1. Skip common "noise" visits (like favicons or the health check itself)
         $path = $request->path();
         $ignoredPaths = ['favicon.ico', 'health', 'robots.txt'];
