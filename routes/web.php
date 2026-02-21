@@ -37,6 +37,14 @@ Route::get('/welcome', function () {
     return view('welcome');
 })->name('welcome');
 
+Route::get('/health', function () {
+    return response()->json([
+        'status' => 'ok',
+        'database' => DB::connection()->getPdo() ? 'connected' : 'fail',
+        'time' => now()->toDateTimeString(),
+    ]);
+});
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -1,6 +1,19 @@
 #!/bin/bash
 set -e
 
+# YOUR DISCORD URL
+
+WEBHOOK_URL="https://discord.com/api/webhooks/1474657844451086386/N6NZm690JGGN7M4Ve8jdvKfdP4gc0b4Q4VqjTq_MlcKZGBcdZ84IUW5E3Hml0OhGz3Vf"
+
+# 🛑 This function runs ONLY if a command fails
+failure_notice() {
+    MESSAGE="❌ **Deployment FAILED!** \n**Step:** The last command failed. \n**Check the terminal for details.**"
+    curl -H "Content-Type: application/json" -X POST -d "{\"content\": \"$MESSAGE\"}" $WEBHOOK_URL
+}
+
+# "Trap" any error and run the failure_notice function
+trap 'failure_notice' ERR
+
 echo "🚀 Starting Smart Deployment..."
 
 # 1️⃣ Fetch changes without merging yet
@@ -18,6 +31,9 @@ if [ -n "$DOCKER_CHANGES" ]; then
     sudo docker compose down --remove-orphans
     sudo docker compose build --no-cache
     sudo docker compose up -d
+
+    # Clean up old images to save space
+    sudo docker image prune -f
 else
     echo "🏃 No Docker changes. Fast-tracking deployment..."
     sudo docker compose up -d --build app
@@ -37,19 +53,27 @@ done
 echo "MySQL is ready!"
 
 # 4️⃣ Compile frontend assets
+echo "📦 Installing npm dependencies..."
+sudo docker compose exec app npm install
+
+# 4️⃣.2 Compile frontend assets
 echo "Compiling frontend assets..."
 sudo docker compose exec app npm run build
 
 # 5️⃣ Run Laravel migrations and seed
 echo "Running migrations..."
-sudo docker compose exec app php artisan migrate:fresh --force
+# no new one's along as possibe
+# sudo docker compose exec app php artisan migrate:fresh --force
+sudo docker compose exec app php artisan migrate --force
 
-echo "Seeding database..."
-sudo docker compose exec app php artisan db:seed --force
+echo "Seeding database Temporarily paused..."
+# echo "Seeding database..."
+# sudo docker compose exec app php artisan db:seed --force
 
 # 6️⃣ Link storage
-echo "Linking storage..."
-sudo docker compose exec app php artisan storage:link --force
+echo "Seeding database Temporarily paused..."
+# echo "Linking storage..."
+# sudo docker compose exec app php artisan storage:link --force
 
 # 7️⃣ Clear and optimize cache
 echo "Optimizing Laravel performance..."
@@ -57,3 +81,15 @@ sudo docker compose exec app php artisan optimize:clear
 sudo docker compose exec app php artisan optimize
 
 echo "Deployment complete! Site is live."
+
+# Discord Notification
+MESSAGE="🚀 **Deployment Successful!** \n**Project:** Your-App-Name \n**Time:** $(date '+%Y-%m-%d %H:%M:%S') \n**Status:** Assets built and Migrations synced."
+
+curl -H "Content-Type: application/json" \
+     -X POST \
+     -d "{\"content\": \"$MESSAGE\"}" \
+     $WEBHOOK_URL
+
+# ✅ Successful Finish Notification
+echo "Deployment complete!"
+
