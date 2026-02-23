@@ -5,68 +5,66 @@ namespace App\Http\Middleware;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 
 class LogVisitToDiscord
 {
+    /**
+     * Handle an incoming request.
+     */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        // 1. Let the request finish first (User sees the page)
+        $response = $next($request);
+
+        // 2. NOW run the Discord logic before the process dies
+        $this->logToDiscord($request);
+
+        return $response;
     }
 
-    // This runs AFTER the user sees the page
-    public function terminate(Request $request, Response $response): void
+    private function logToDiscord(Request $request): void
     {
-        $path = $request->path();
-        $ignoredPaths = ['favicon.ico', 'health', 'robots.txt', 'api/*'];
-
-        foreach ($ignoredPaths as $ignored) {
-            if ($request->is($ignored))
-                return;
-        }
-
         $url = env('DISCORD_WEBHOOK_URL');
         if (!$url)
             return;
 
-        $ip = $request->ip();
-
-        // 1. Get Geo Data (Free API - no key required for low traffic)
-        $geo = Http::get("http://ip-api.com/json/{$ip}?fields=status,country,countryCode,city")->json();
-
-        $location = "📍 Unknown";
-        if ($geo && $geo['status'] === 'success') {
-            $flag = $this->getFlagEmoji($geo['countryCode']);
-            $location = "{$flag} {$geo['city']}, {$geo['country']}";
+        // Skip ignored paths
+        if ($request->is('favicon.ico', 'robots.txt', 'api/*', 'build/*', 'assets/*')) {
+            return;
         }
 
-        // 2. Send to Discord
-        Http::async()->post($url, [
-            'embeds' => [
-                [
-                    'title' => "🛰️ Live Visit Detected",
-                    'color' => 3066993, // A nice blue color
-                    'description' => "**URL:** " . $request->fullUrl() . "\n" .
-                        "**Location:** {$location}\n" .
-                        "**IP:** `{$ip}`\n" .
-                        "**User:** " . ($request->user() ? "👤 " . $request->user()->first_name : "👤 Guest"),
-                    'timestamp' => now()->toIso8601String(),
+        try {
+            $ip = $request->ip();
+
+            // Cache GeoIP for 24 hours so we don't spam the API
+            $geo = Cache::remember("geo_ip_{$ip}", 86400, function () use ($ip) {
+                $res = Http::get("http://ip-api.com/json/{$ip}?fields=status,country,countryCode,city");
+                return $res->successful() ? $res->json() : null;
+            });
+
+            $location = ($geo && ($geo['status'] ?? '') === 'success')
+                ? "{$geo['city']}, {$geo['country']}"
+                : "📍 Unknown";
+
+            // SYNC POST: No async() here. We want PHP to wait for Discord.
+            Http::timeout(5)->post($url, [
+                'embeds' => [
+                    [
+                        'title' => "🛰️ Live Visit Detected",
+                        'color' => 3066993,
+                        'description' => "**URL:** " . $request->fullUrl() .
+                            "\n**Location:** {$location}" .
+                            "\n**IP:** `{$ip}`" .
+                            "\n**User:** " . ($request->user() ? "👤 " . $request->user()->first_name : "👤 Guest"),
+                        'timestamp' => now()->toIso8601String(),
+                    ]
                 ]
-            ]
-        ]);
-    }
-
-    /**
-     * Converts ISO country code to Emoji Flag
-     */
-    private function getFlagEmoji($countryCode): string
-    {
-        if (empty($countryCode))
-            return "🏳️";
-
-        // Convert 'US' to Unicode regional indicator symbols
-        return implode('', array_map(function ($char) {
-            return mb_convert_encoding('&#' . (127397 + ord($char)) . ';', 'UTF-8', 'HTML-ENTITIES');
-        }, str_split(strtoupper($countryCode))));
+            ]);
+        } catch (\Exception $e) {
+            // Silently log if Discord fails
+            \Log::error("Discord Middleware Error: " . $e->getMessage());
+        }
     }
 }
