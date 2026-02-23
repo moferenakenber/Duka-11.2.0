@@ -83,7 +83,7 @@ sudo docker compose exec app php artisan optimize
 echo "Deployment complete! Site is live."
 
 # Discord Notification
-MESSAGE="🚀 **Deployment Successful!** \n**Project:** Your-App-Name \n**Time:** $(date '+%Y-%m-%d %H:%M:%S') \n**Status:** Assets built and Migrations synced."
+MESSAGE="🚀 **Deployment Successful!** \n**Project:** DukaBlade \n**Time:** $(date '+%Y-%m-%d %H:%M:%S') \n**Status:** Assets built and Migrations synced."
 
 curl -H "Content-Type: application/json" \
      -X POST \
