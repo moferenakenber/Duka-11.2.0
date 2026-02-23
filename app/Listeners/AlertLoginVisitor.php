@@ -6,8 +6,9 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Events\Attributes\Listen;
+use Illuminate\Events\Attributes\Listen; // <--- 1. MUST HAVE THIS
 
+#[Listen(Login::class)] // <--- 2. MUST HAVE THIS ATTRIBUTE
 class AlertLoginVisitor
 {
     public function handle(Login $event): void

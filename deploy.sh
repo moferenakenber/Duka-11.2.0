@@ -29,7 +29,7 @@ git merge origin main
 if [ -n "$DOCKER_CHANGES" ]; then
     echo "⚙️ Docker changes detected. Running Deep Build..."
     sudo docker compose down --remove-orphans
-    sudo docker compose build --no-cache
+    sudo docker compose build
     sudo docker compose up -d
 
     # Clean up old images to save space
